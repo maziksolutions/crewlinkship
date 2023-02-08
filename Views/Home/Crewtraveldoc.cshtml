@@ -1,0 +1,479 @@
+﻿@{
+    ViewBag.Title = "Crewtraveldoc";
+}
+<div id="user-profile">
+    <div class="row">
+        <div class="col-12">
+            <div class="card profile-with-cover m-b-0">
+                <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
+                <div class="media profil-cover-details w-100">
+                    <div class="media-body pt-5 px-2">
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
+                                <div>Master | BAKERLOO</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <nav class="navbar navbar-profile align-self-end m-r-30">
+                    <div id="navigation">
+                        <ul>
+                            <li class="has-sub active">
+                                <a href="">Personal Details</a>
+                                <ul>
+                                    <li><a class="details" href="javascript:;">Particulars</a></li>
+                                    <li><a class="addressdetails" href="javascript:;">Address</a></li>
+                                    <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="has-sub">
+                                <a href="">Documents</a>
+                                <ul>
+                                    <li><a class="license" href="javascript:;">License</a></li>
+                                    <li><a class="courses" href="javascript:;">Courses</a></li>
+                                    <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+
+                            <li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="partialModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header  navbar-dark">
+                <h5 class="modal-title">
+                    <img class="brand-logo" alt="stack admin logo" src="app-assets/images/logo/Crewlink-logo-light.png">
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+@*Particulars*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .details").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Details",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@*Address*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .addressdetails").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Address",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@*Bankdetails*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .Bankdetails").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Bankdetails",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@*License*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .license").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/License",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+@*Courses*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .courses").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Courses",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+@*OtherDocuments*@
+<script type="text/javascript">
+    $(function () {
+        $("#navigation .otherDocuments").click(function () {
+            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/OtherDocuments",
+                data: '{customerId: "' + customerId + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+<!-- / main menu-->
+<div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="col-xl-6 col-lg-12">
+                <h4 class="content-header-title m-b-10 m-t-5">Travel Document Details</h4>
+            </div>
+            <div class="col-xl-6 col-lg-12 nopl">
+
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row match-height" id="switch">
+                <div class="col-lg-12 col-md-12 col-12">
+
+                    <section id="descriptioin" class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12">
+                                    <h4 class="card-title p-t-5 proper-case">Passport</h4>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-inline float-right">
+                                        <select class="form-control form-small m-r-10">
+                                            <option>Original Data</option>
+                                            <option>Archived Data</option>
+                                        </select>
+                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip"
+                                                data-trigger="hover" data-placement="top" data-title="Add">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+
+                            <div id="goal-list-scroll" class="table-responsive position-relative">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Country</th>
+                                            <th> Number</th>
+                                            <th>Place of Issue</th>
+                                            <th>Date of Issue</th>
+                                            <th>Date of Expiry</th>
+                                            <th>Minimum 3 Blank Pages</th>
+                                            <th>ECNR</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i> </td>
+                                            <td>India</td>
+                                            <td>T2151499</td>
+                                            <td>Madurai</td>
+                                            <td>30-Jul-2019</td>
+                                            <td>29-Jul-2029</td>
+                                            <td>Yes</td>
+                                            <td>Yes</td>
+                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+                    <section id="descriptioin" class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12">
+                                    <h4 class="card-title p-t-5 proper-case">Visa</h4>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-inline float-right">
+                                        <select class="form-control form-small m-r-10">
+                                            <option>Original Data</option>
+                                            <option>Archived Data</option>
+                                        </select>
+                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip"
+                                                data-trigger="hover" data-placement="top" data-title="Add">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+
+                            <div id="goal-list-scroll" class="table-responsive position-relative">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Country</th>
+                                            <th>Visa Type</th>
+                                            <th>Number</th>
+                                            <th>Place of Issue</th>
+                                            <th>Date of Issue</th>
+                                            <th>Date of Expiry</th>
+                                            <th>Visa</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
+                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+                    <section id="descriptioin" class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12">
+                                    <h4 class="card-title p-t-5 proper-case">Seaman Book (C.D.C)</h4>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-inline float-right">
+                                        <select class="form-control form-small m-r-10">
+                                            <option>Original Data</option>
+                                            <option>Archived Data</option>
+                                        </select>
+                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip"
+                                                data-trigger="hover" data-placement="top" data-title="Add">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+
+                            <div id="goal-list-scroll" class="table-responsive position-relative">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Country</th>
+                                            <th>Number</th>
+                                            <th>Place of Issue</th>
+                                            <th>Date of Issue</th>
+                                            <th>Date of Expiry</th>
+                                            <th>Minimum 3 Blank Pages</th>
+                                            <th>Verification</th>
+                                            <th>Verified</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>----</td>
+                                            <td>Yes</td>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
+                                            <td>Yes</td>
+                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+
+                    <section id="descriptioin" class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12">
+                                    <h4 class="card-title p-t-5 proper-case">Yellow Fever Vaccination</h4>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-inline float-right">
+                                        <select class="form-control form-small m-r-10">
+                                            <option>Original Data</option>
+                                            <option>Archived Data</option>
+                                        </select>
+                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip"
+                                                data-trigger="hover" data-placement="top" data-title="Add">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Country</th>
+                                            <th>Number</th>
+                                            <th>Place of Issue</th>
+                                            <th>Date of Issue</th>
+                                            <th>Issued by Doctor</th>
+                                            <th>Vaccine Batch</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fas fa-paperclip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true" data-original-title="" title=""></i></td>
+                                            <td>----</td>
+                                            <td>J5256</td>
+                                            <td>Mumbai</td>
+                                            <td>28-Feb-2016</td>
+                                            <td>Airport Health Organisation, Mumbai</td>
+                                            <td>J5256</td>
+                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true" data-original-title="" title=""></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true" data-original-title="" title=""></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="sidenav-overlay"></div>

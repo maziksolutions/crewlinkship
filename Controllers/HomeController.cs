@@ -42,6 +42,36 @@ namespace crewlinkship.Controllers
 
             return PartialView("Details");
         }
+        public ActionResult Address()
+        {
 
+            return PartialView("Address");
+        }
+        public ActionResult Bankdetails()
+        {
+
+            return PartialView("Bankdetails");
+        }
+        public ActionResult License()
+        {
+
+            return PartialView("License");
+        }
+        public ActionResult Courses()
+        {
+
+            return PartialView("Courses");
+        }
+        public ActionResult OtherDocuments()
+        {
+
+            return PartialView("OtherDocuments");
+        }
+        public ActionResult Crewtraveldoc()
+        {
+
+            return PartialView("Crewtraveldoc");
+        }
     }
+    
 }
