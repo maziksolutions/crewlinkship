@@ -33,5 +33,15 @@ namespace crewlinkship.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult OpenPopup()
+        {
+            return View();
+        }
+        public ActionResult Details()
+        {
+
+            return PartialView("Details");
+        }
+
     }
 }

@@ -36,8 +36,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div id='myModal' class='modal'>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div id='myModalContent'></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+
                             <div id="goal-list-scroll" class="table-responsive position-relative">
-                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
                                     <thead>
                                         <tr>
                                             <th>Sr.<br>No.</th>
@@ -60,7 +74,8 @@
                                             <td scope="row">
                                                 <a href="#"><i class="fas fa-ellipsis-v"></i></a>
                                                 <span>Master</span>
-                                                <p>Mark Okyere Paintsil</p>
+                                                <a class="details" href="javascript:;">Mark Okyere Paintsil</a>
+                                           
                                             </td>
                                             <td align="center">123</td>
                                             <td>Indian</td>
@@ -89,13 +104,63 @@
                                             <td>10-Jul-2020</td>
                                             <td>&nbsp;</td>
                                         </tr>
-                                       
-                                       
-                                       
-                                        
+
                                     </tbody>
+
                                 </table>
-                            </div>
+                       
+                                <div id="partialModal" class="modal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header  navbar-dark">
+                                                <h5 class="modal-title">
+                                                    <img class="brand-logo" alt="stack admin logo" src="app-assets/images/logo/Crewlink-logo-light.png">
+                                                </h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                              
+                                <script type="text/javascript">
+                                    $(function () {
+                                        $("#CustomerGrid .details").click(function () {
+                                            var customerId = $(this).closest("tr").find("td").eq(0).html();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Home/Details",
+                                                data: '{customerId: "' + customerId + '" }',
+                                                contentType: "application/json; charset=utf-8",
+                                                dataType: "html",
+                                                success: function (response) {
+                                                    $("#partialModal").find(".modal-body").html(response);
+                                                    $("#partialModal").modal('show');
+                                                },
+                                                failure: function (response) {
+                                                    alert(response.responseText);
+                                                },
+                                                error: function (response) {
+                                                    alert(response.responseText);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+
+
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -103,3 +168,47 @@
             </div>
         </div>
     </div>
+</div>
+
+@*@section scripts
+{
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        var TeamDetailPostBackURL = '/Home/Details';
+        $(function () {
+            $(".anchorDetail").click(function () {
+                debugger;
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+            //$("#closebtn").on('click',function(){
+            //    $('#myModal').modal('hide');
+
+            $("#closbtn").click(function () {
+                $('#myModal').modal('hide');
+            });
+        });
+
+    </script>
+
+}*@
