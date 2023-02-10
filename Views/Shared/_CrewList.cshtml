@@ -8,15 +8,20 @@
             <div class="col-xl-6 col-lg-12">
                 <div class="form-inline float-right m-b-10">
                     <select class="form-control form-small">
-                        <option>Original Data</option>
-                        <option>Archived Data</option>
+                        <option>Atlantic Crewlist</option>
+                        <option>FPD01 Crewlist</option>
+                        <option>IMO</option>
+                        <option>OCIMF</option>
+                        <option>OLP Crew list</option>
                     </select>
                     <span class="p-l-10 p-r-10">|</span>
-                    <button class="btn btn-info form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip"
+
+                    <button class="btn btn-dark form-small p-t-3 p-b-3 m-r-5 " type="button" data-toggle="tooltip"
                             data-trigger="hover" data-placement="top" data-title="Print">
                         <i class="fas fa-print"></i>
                     </button>
                 </div>
+
             </div>
         </div>
         <div class="content-body">
@@ -27,29 +32,22 @@
                             <div class="row">
                                 <div class="col-xl-8 col-lg-12">
                                     <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                        <span>Total crew on board (21)</span> <i class="fa fa-square red m-l-10"></i> <span><a href="" class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a href="" class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a href="" class="black">Extended Contract (4)</a></span> <i class="fa fa-square m-l-10"></i> <span><a href="" class="black">Reduced Contract (4)</a></span>
+                                        <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract (4)</a></span>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-12">
                                     <div class="float-right total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                        <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a> <span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i> <a href="#" class="black">Vessel Details</a>
+                                        @*<i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a> <span class="p-l-10 p-r-10"> | </span>*@ <i class="fas fa-ship p-r-5"></i> <a class="black">Vessel Details</a>
                                     </div>
                                 </div>
                             </div>
-
                             <div id='myModal' class='modal'>
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div id='myModalContent'></div>
                                     </div>
                                 </div>
-
                             </div>
-
-
-
-
-
                             <div id="goal-list-scroll" class="table-responsive position-relative">
                                 <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
                                     <thead>
@@ -72,10 +70,9 @@
                                         <tr>
                                             <td scope="row">1</td>
                                             <td scope="row">
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
                                                 <span>Master</span>
                                                 <a class="details" href="javascript:;">Mark Okyere Paintsil</a>
-                                           
                                             </td>
                                             <td align="center">123</td>
                                             <td>Indian</td>
@@ -84,7 +81,7 @@
                                             <td>02-Sep-2019<br>Lome</td>
                                             <td class="red">02-Mar-2020</td>
                                             <td scope="row">
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
                                                 <span>Chief Engineer</span>
                                                 <p>Irudhya Salden</p>
                                             </td>
@@ -92,7 +89,7 @@
                                         <tr>
                                             <td scope="row">2</td>
                                             <td scope="row">
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
                                                 <span>Chief Officer</span>
                                                 <p class="green">Shailendra Singh Mourya</p>
                                             </td>
@@ -104,11 +101,8 @@
                                             <td>10-Jul-2020</td>
                                             <td>&nbsp;</td>
                                         </tr>
-
                                     </tbody>
-
                                 </table>
-                       
                                 <div id="partialModal" class="modal" tabindex="-1" role="dialog">
                                     <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
@@ -129,7 +123,6 @@
                                     </div>
                                 </div>
                                 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-                              
                                 <script type="text/javascript">
                                     $(function () {
                                         $("#CustomerGrid .details").click(function () {
@@ -143,6 +136,9 @@
                                                 success: function (response) {
                                                     $("#partialModal").find(".modal-body").html(response);
                                                     $("#partialModal").modal('show');
+                                                    $('#partialModal').on('hidden.bs.modal', function () {
+                                                        location.reload();
+                                                    })
                                                 },
                                                 failure: function (response) {
                                                     alert(response.responseText);
@@ -154,13 +150,6 @@
                                         });
                                     });
                                 </script>
-
-
-
-
-
-
-
                             </div>
                         </div>
                     </div>
@@ -169,46 +158,3 @@
         </div>
     </div>
 </div>
-
-@*@section scripts
-{
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script>
-        var TeamDetailPostBackURL = '/Home/Details';
-        $(function () {
-            $(".anchorDetail").click(function () {
-                debugger;
-                var $buttonClicked = $(this);
-                var id = $buttonClicked.attr('data-id');
-                var options = { "backdrop": "static", keyboard: true };
-                $.ajax({
-                    type: "GET",
-                    url: TeamDetailPostBackURL,
-                    contentType: "application/json; charset=utf-8",
-                    data: { "Id": id },
-                    datatype: "json",
-                    success: function (data) {
-                        debugger;
-                        $('#myModalContent').html(data);
-                        $('#myModal').modal(options);
-                        $('#myModal').modal('show');
-
-                    },
-                    error: function () {
-                        alert("Dynamic content load failed.");
-                    }
-                });
-            });
-            //$("#closebtn").on('click',function(){
-            //    $('#myModal').modal('hide');
-
-            $("#closbtn").click(function () {
-                $('#myModal').modal('hide');
-            });
-        });
-
-    </script>
-
-}*@

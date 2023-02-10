@@ -47,142 +47,299 @@
 </head>
 <body class="vertical-layout vertical-overlay-menu 2-columns   menu-expanded fixed-navbar"
       data-open="click" data-menu="vertical-overlay-menu" data-col="2-columns">
-    <header>
-        <nav class="header-navbar navbar-expand-md navbar navbar-with-menu fixed-top navbar-dark navbar-shadow navbar-brand-center">
-            <div class="navbar-wrapper">
-                <div class="navbar-header">
-                    <ul class="nav navbar-nav flex-row">
-                        <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" href="index.html">
-                                <img class="brand-logo" alt="stack admin logo" src="app-assets/images/logo/Crewlink-logo-light.png">
-                                <!--<h2 class="brand-text">Stack</h2>-->
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu fixed-top navbar-dark navbar-shadow navbar-brand-center">
+        <div class="navbar-wrapper">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav flex-row">
+                    <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="https://localhost:44336/">
+                            <img class="brand-logo" alt="stack admin logo" src="app-assets/images/logo/Crewlink-logo-light.png">
+                            <!--<h2 class="brand-text">Stack</h2>-->
+                        </a>
+                    </li>
+                    <li class="nav-item d-md-none">
+                        <a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-ellipsis-v"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-container content">
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+                    <ul class="nav navbar-nav mr-auto float-left">
+                        <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu"></i></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav float-right">
+
+                        <li>
+                            <fieldset class="form-inline position-relative" style="margin: 10px 10px 10px 0">
+                                <input type="text" class="form-control" placeholder="Search Vessel" style="padding-top: 7px; padding-bottom: 7px; font-size: 12px; font-weight: 100">
+                                <div class="form-control-position" style="top: 0"> <i class="ft-search"></i> </div>
+                            </fieldset>
+                        </li>
+
+                        <li class="dropdown dropdown-notification nav-item">
+                            <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
+                                <i class="ficon ft-bell"></i>
                             </a>
                         </li>
-                        <li class="nav-item d-md-none">
-                            <a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-ellipsis-v"></i></a>
+                        <li class="dropdown dropdown-notification nav-item">
+                            <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
+                                <i class="ficon ft-mail"></i>
+                            </a>
                         </li>
+                        <li class="dropdown dropdown-user nav-item">
+                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                <span class="avatar avatar-online">
+                                    <img src="app-assets/images/portrait/small/avatar.png" alt="avatar"><i></i>
+                                </span>
+                                <!--<span class="user-name">John Doe</span>-->
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a>
+                                <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
+                                <a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a>
+                                <a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+                            </div>
+                        </li>
+                        <li class="nav-item d-md-block"><a class="nav-link nav-link-label" href="#"><i class="ficon ft-help-circle"></i></a></li>
+
                     </ul>
                 </div>
-                <div class="navbar-container content">
-                    <div class="collapse navbar-collapse" id="navbar-mobile">
-                        <ul class="nav navbar-nav mr-auto float-left">
-                            <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu"></i></a></li>
-                        </ul>
-                        <ul class="nav navbar-nav float-right">
-
-                            <li>
-                                <fieldset class="form-inline position-relative" style="margin: 10px 10px 10px 0">
-                                    <input type="text" class="form-control" placeholder="Search Vessel" style="padding-top: 7px; padding-bottom: 7px; font-size: 12px; font-weight: 100">
-                                    <div class="form-control-position" style="top: 0"> <i class="ft-search"></i> </div>
-                                </fieldset>
-                            </li>
-
-                            <li class="dropdown dropdown-notification nav-item">
-                                <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-                                    <i class="ficon ft-bell"></i>
-                                </a>
-                            </li>
-                            <li class="dropdown dropdown-notification nav-item">
-                                <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-                                    <i class="ficon ft-mail"></i>
-                                </a>
-                            </li>
-                            <li class="dropdown dropdown-user nav-item">
-                                <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                                    <span class="avatar avatar-online">
-                                        <img src="app-assets/images/portrait/small/avatar.png" alt="avatar"><i></i>
-                                    </span>
-                                    <!--<span class="user-name">John Doe</span>-->
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a>
-                                    <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
-                                    <a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a>
-                                    <a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+            </div>
+            <div id="user-profile">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card profile-with-cover m-b-0">
+                            <div class="card-img-top img-fluid bg-cover height-50" style="background: #E3EBF3"></div>
+                            <div class="media profil-cover-details w-100">
+                                <div class="media-left profile-image pl-2 pt-2">
+                                    <img src="~/Images/ship-pic.jpg" class="rounded-circle img-border height-75" alt="Card image">
                                 </div>
-                            </li>
-                            <li class="nav-item d-md-block"><a class="nav-link nav-link-label" href="#"><i class="ficon ft-help-circle"></i></a></li>
-
-                        </ul>
-                    </div>
-                </div>
-                <div id="user-profile">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card profile-with-cover m-b-0">
-                                <div class="card-img-top img-fluid bg-cover height-50" style="background: #E3EBF3"></div>
-                                <div class="media profil-cover-details w-100">
-                                    <div class="media-left profile-image pl-2 pt-2">
-                                        <img src="ship-pic.jpg" class="rounded-circle img-border height-75" alt="Card image">
-                                    </div>
-                                    <div class="media-body pt-2-5 px-2">
-                                        <div class="row">
-                                            <div class="col">
-                                                <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 10px">Bakerloo</h3>
-                                                <span style="font-size: 12px">Oil Tanker | Panama</span>
-                                            </div>
+                                <div class="media-body pt-2-5 px-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 10px">Bakerloo</h3>
+                                            <span style="font-size: 12px">Oil Tanker | Panama</span>
                                         </div>
                                     </div>
                                 </div>
-                                <nav class="navbar navbar-profile align-self-end m-r-30">
-                                    <div id="navigation">
-                                        <ul>
-                                            <li class="has-sub active">
-                                                <a href="">Crewlist</a>
-                                                <ul>
-                                                    <li><a href="crewlist.html">Current Crewlist</a></li>
-                                                    <li><a href="crewlist-history.html">Crewlist History</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="vessel-particular.html">Particular</a></li>
-                                            <li><a href="vessel-distribution.html">Vessel Distribution</a></li>
-                                            <li><a href="certificate.html">Certificate</a></li>
-                                            <li><a href="safe-manning.html">Safe Manning</a></li>
-                                            <li class="has-sub">
-                                                <a href="">Matrix</a>
-                                                <ul>
-                                                    <li><a href="vessel-matrix.html">Vessel License Matrix</a></li>
-                                                    <li><a href="vessel-course-matrix.html">Vessel Course Matrix</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="voyege-history.html">Voyege History</a></li>
-                                            <li><a href="vessel-cba.html">CBA</a></li>
-                                            <li><a href="correspondance.html">vessel Correspondance</a></li>
-                                            <li class="icon" data-toggle="tooltip"
-                                                data-trigger="hover" data-placement="top" data-title="Event Log"><a href=""><i class="fa fa-file"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </nav>
-
                             </div>
+                            <nav class="navbar navbar-profile align-self-end m-r-30">
+                                <div id="navigation">
+                                    <ul>
+                                        <li class="has-sub active">
+                                            <a href="">Crewlist</a>
+                                            <ul>
+                                                <li><a href="https://localhost:44336/">Current Crewlist</a></li>
+                                                <li><a href="crewlist-history.html">Crewlist History</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="https://VesselParticular/">Particular</a></li>
+                                        <li><a >Vessel Distribution</a></li>
+                                        <li><a href="certificate.html">Certificate</a></li>
+                                        <li><a href="safe-manning.html">Safe Manning</a></li>
+                                        <li class="has-sub">
+                                            <a href="">Matrix</a>
+                                            <ul>
+                                                <li><a href="vessel-matrix.html">Vessel License Matrix</a></li>
+                                                <li><a href="vessel-course-matrix.html">Vessel Course Matrix</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="voyege-history.html">Voyege History</a></li>
+                                        <li><a href="vessel-cba.html">CBA</a></li>
+                                        <li><a href="correspondance.html">vessel Correspondance</a></li>
+                                        @*<li class="icon" data-toggle="tooltip"
+                                            data-trigger="hover" data-placement="top" data-title="Event Log"><a href=""><i class="fa fa-file"></i></a></li>*@
+                                    </ul>
+                                </div>
+                            </nav>
+
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-        </nav>
-        <partial name="_CrewList.cshtml" />
+    </nav>
 
-    </header>
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow menu-border">
+        <!-- main menu content-->
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                <li class=" navigation-header">
+                    <span>Crewlink</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
+                                            data-original-title="General"></i>
+                </li>
+                <li class=" nav-item">
+                    <a href="index.html"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                </li>
+                <li class=" nav-item">
+                    <a href="#"><i class="ft-monitor"></i><span class="menu-title" data-i18n="">Seafarers</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" href="#">New Applicant</a>
+
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Pending Approvals</a>
+
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Crew Details</a>
+
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">NTBR List</a>
+
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">InActive List</a>
+
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item">
+                    <a href="#"><i class="ft-layout"></i><span class="menu-title" data-i18n="">Vessel Details</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" href="#">Vessel</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item">
+                    <a href="#"><i class="ft-zap"></i><span class="menu-title" data-i18n="">Portage Bill</span></a>
+
+                </li>
+                <li class=" nav-item">
+                    <a href="email-application.html"><i class="ft-mail"></i><span class="menu-title" data-i18n="">Register</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" href="#">Seafarer Registers</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Vessel Registers</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Account Registers</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Vendor Registers</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Reason Registers</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Travel Registers</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item">
+                    <a href="chat-application.html"><i class="ft-message-square"></i><span class="menu-title" data-i18n="">DMS</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" href="#">DMD Manuals</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Red Documents</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Authority Corresspondence</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class=" nav-item">
+                    <a href="project-summary.html"><i class="ft-airplay"></i><span class="menu-title" data-i18n="">User Management</span></a>
+                </li>
+                <li class=" nav-item">
+                    <a href="chat-application.html"><i class="ft-message-square"></i><span class="menu-title" data-i18n="">Reports</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" href="#">PGI Reports</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="#">Manning</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /main menu content-->
+    </div>
+    <partial name="_CrewList.cshtml" />
+    @*<partial name="VesselParticular.cshtml" />*@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+    <div class="sidenav-overlay"></div>
 
-    @*<footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2023 - crewlinkship - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>*@
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-   
-    @RenderSection("Scripts", required: false)
+    <footer class="footer footer-static footer-transparent">
+        <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+            <span class="float-md-left d-block d-md-inline-block">
+                Copyright <a class="text-bold-800 grey darken-2" href="#"
+                             target="_blank">AtlantsCrewlink.</a> &copy; 2016 <a class="text-bold-800 grey darken-2" href="#"
+                                                                                 target="_blank">Privacy Policy </a> . <a class="text-bold-800 grey darken-2" href="#"
+                                                                                                                          target="_blank">Terms of Use  </a>, All rights reserved.
+            </span>
+        </p>
+    </footer>
+    <!-- BEGIN VENDOR JS-->
+    <script src="app-assets/vendors/js/vendors.min.js" type="text/javascript"></script>
+    <!-- BEGIN VENDOR JS-->
+    <!-- BEGIN PAGE VENDOR JS-->
+    <script src="app-assets/vendors/js/extensions/jquery.knob.min.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/extensions/knob.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/raphael-min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/morris.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/jvector/jquery-jvectormap-2.0.3.min.js"
+            type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/jvector/jquery-jvectormap-world-mill.js"
+            type="text/javascript"></script>
+    <script src="app-assets/data/jvector/visitor-data.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/chart.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/jquery.sparkline.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/extensions/unslider-min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="app-assets/css/core/colors/palette-climacon.css">
+    <link rel="stylesheet" type="text/css" href="app-assets/fonts/simple-line-icons/style.min.css">
+    <!-- END PAGE VENDOR JS-->
+    <!-- BEGIN STACK JS-->
+    <script src="app-assets/js/core/app-menu.js" type="text/javascript"></script>
+    <script src="app-assets/js/core/app.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/customizer.js" type="text/javascript"></script>
+    <!-- END STACK JS-->
+    <!-- BEGIN PAGE LEVEL JS-->
+    <script src="app-assets/js/scripts/pages/dashboard-analytics.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL JS-->
+    <!-- BEGIN PAGE VENDOR JS-->
+    <script src="app-assets/vendors/js/charts/flot/jquery.flot.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/flot/jquery.flot.pie.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/flot/jquery.flot.resize.js" type="text/javascript"></script>
+    <!-- END PAGE VENDOR JS-->
+    <!-- BEGIN PAGE LEVEL JS-->
+    <script src="app-assets/js/scripts/charts/flot/pie/donut-hole.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/charts/flot/pie/interactive-pie.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/charts/flot/pie/label-formatter.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/charts/flot/pie/pie.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/charts/flot/pie/rectangular-pie.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/charts/flot/pie/tilted-pie.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL JS-->
+    <script src="assets/js/menumaker.js"></script>
+
+    <script src="app-assets/vendors/js/forms/icheck/icheck.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js"
+            type="text/javascript"></script>
+    <script src="app-assets/vendors/js/forms/toggle/switchery.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/forms/select/select2.full.min.js" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"
+            type="text/javascript"></script>
+    <script src="https://www.google.com/jsapi" type="text/javascript"></script>
+    <script src="app-assets/vendors/js/charts/jquery.sparkline.min.js" type="text/javascript"></script>
+    <script src="app-assets/js/scripts/tables/components/table-components.js"
+            type="text/javascript"></script>
+    @*@RenderSection("Scripts", required: false)*@
 </body>
 
 </html>
