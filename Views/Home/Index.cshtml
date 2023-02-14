@@ -1,5 +1,344 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿    <!-- / main menu-->
+    <div class="app-content content fixed-navbar-inner">
+        <div class="content-wrapper">
+            <div class="content-header row"> </div>
+            <div class="content-body">
+                <!--stats-->
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="media-body text-left w-100">
+                                            <h3 class="primary">340</h3>
+                                            <span>Onboard crew</span>
+                                        </div>
+                                        <div class="media-right media-middle"> <i class="fa fa-list-ul fa-2x primary font-large-1 float-right"></i> </div>
+                                    </div>
+                                    <div class="progress progress-sm mt-1 mb-0">
+                                        <div class="progress-bar bg-primary bg-lighten-1" role="progressbar" style="width: 100%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="media-body text-left w-100">
+                                            <h3 class="primary">650</h3>
+                                            <span>Available crew</span>
+                                        </div>
+                                        <div class="media-right media-middle"> <i class="fa fa-users fa-2x primary font-large-1 float-right"></i> </div>
+                                    </div>
+                                    <div class="progress progress-sm mt-1 mb-0">
+                                        <div class="progress-bar bg-primary bg-lighten-1" role="progressbar" style="width: 100%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="media-body text-left w-100">
+                                            <h3 class="primary">120</h3>
+                                            <span>Pending approval</span>
+                                        </div>
+                                        <div class="media-right media-middle"> <i class="fa fa-hourglass-half fa-2x font-large-1 float-right primary"></i> </div>
+                                    </div>
+                                    <div class="progress progress-sm mt-1 mb-0">
+                                        <div class="progress-bar bg-primary bg-lighten-1" role="progressbar" style="width: 100%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="media-body text-left w-100">
+                                            <h3 class="primary">40</h3>
+                                            <span>Vessels</span>
+                                        </div>
+                                        <div class="media-right media-middle"> <i class="fa fa-ship fa-2x primary font-large-1 float-right"></i> </div>
+                                    </div>
+                                    <div class="progress progress-sm mt-1 mb-0">
+                                        <div class="progress-bar bg-primary bg-lighten-1" role="progressbar" style="width: 100%" aria-valuenow="25"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/stats-->
+                <!-- Analytics spakline & chartjs  -->
+                <div class="row" style="display: none ">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="card">
+                            <div class="card-header border-0-bottom">
+                                <h4 class="card-title">Visitors Overview</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="row my-1">
+                                        <div class="col-lg-4 col-12">
+                                            <div class="text-center">
+                                                <h3>23,454</h3>
+                                                <p class="text-muted">Page Views <span class="success"><i class="ft-arrow-up"></i> 8.16%</span> </p>
+                                                <div id="sp-tristate-bar-total-revenue"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-12">
+                                            <div class="text-center">
+                                                <h3>6,630</h3>
+                                                <p class="text-muted">Unique Visitor <span class="danger"><i class="ft-arrow-down"></i> 2.30%</span> </p>
+                                                <div id="sp-stacked-bar-total-sales"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-12">
+                                            <div class="text-center">
+                                                <h3>86,578</h3>
+                                                <p class="text-muted">Total Visits <span class="warning"><i class="ft-arrow-up"></i> 4.27%</span> </p>
+                                                <div id="sp-bar-total-cost"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="chartjs">
+                                                <canvas id="line-stacked-area" height="300"></canvas>
+                                            </div>
+                                            <ul class="list-inline text-center mt-1">
+                                                <li class="mr-1">
+                                                    <h6><i class="fa fa-circle success"></i> <span>Page Views</span> </h6>
+                                                </li>
+                                                <li class="mr-1">
+                                                    <h6><i class="fa fa-circle warning"></i> <span>Total Visits</span> </h6>
+                                                </li>
+                                                <li class="mr-1">
+                                                    <h6><i class="fa fa-circle danger"></i> <span>Unique Visitor</span> </h6>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row match-height">
+                    <div class="col-xl-6 col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h4 class="card-title">Crew Retention Rate</h4>
+                                <div class="heading-elements">
+                                    <input type="radio" checked>
+                                    On Board&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio">
+                                    Full&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox">
+                                    All SMC's
+                                </div>
+                            </div>
+                            <div class="card-body"> <img src="~/Images/Chart-1.png" width="100%" height="300px"> </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h4 class="card-title">Top 10 Crew Nationality</h4>
+                            </div>
+                            <div class="card-body"> <img src="~/Images/Chart-4.png" width="100%" height="300px"> </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Analytics spakline & chartjs  -->
+                <!-- Audience by country & users visit-->
+                <div class="row match-height">
+                    <div class="col-xl-6 col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h4 class="card-title">Crew Details</h4>
+                                <div class="heading-elements">
+                                    <input type="checkbox">
+                                    All SMC's
+                                </div>
+                            </div>
+                            <div class="card-body"> <img src="~/Images/Chart-2.png" width="100%" height="300px"> </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h4 class="card-title">Crew RElief Statistic</h4>
+                            </div>
+                            <div class="card-body"> <img src="~/Images/Chart-3.png" width="100%" height="300px"> </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Audience by country  & users visit -->
+                <!-- Analytics map based session -->
+                <div class="row match-height">
+                    <!-- Donut hole Chart -->
+                    <div class="col-md-6 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Cadet Intake Statistic</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>2016</th>
+                                            <th>2017</th>
+                                            <th>2018</th>
+                                            <th>2019</th>
+                                            <th>2020</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">Cadet Intake</td>
+                                            <td align="right">354</td>
+                                            <td align="right">394</td>
+                                            <td align="right">450</td>
+                                            <td align="right">357</td>
+                                            <td align="right">45</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Cadets Inactive</td>
+                                            <td align="right">7</td>
+                                            <td align="right">21</td>
+                                            <td align="right">13</td>
+                                            <td align="right">31</td>
+                                            <td align="right">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Cadets on board-on leave</td>
+                                            <td align="right">245</td>
+                                            <td align="right">307</td>
+                                            <td align="right">343</td>
+                                            <td align="right">323</td>
+                                            <td align="right">125</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Promoted Officers inactive</td>
+                                            <td align="right">14</td>
+                                            <td align="right">18</td>
+                                            <td align="right">23</td>
+                                            <td align="right">24</td>
+                                            <td align="right">7</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Peomoted officers on board-on leave</td>
+                                            <td align="right">161</td>
+                                            <td align="right">141</td>
+                                            <td align="right">142</td>
+                                            <td align="right">100</td>
+                                            <td align="right">35</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Rating Inactive</td>
+                                            <td align="right">0</td>
+                                            <td align="right">1</td>
+                                            <td align="right">1</td>
+                                            <td align="right">2</td>
+                                            <td align="right">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">Rating on board-on leave</td>
+                                            <td align="right">18</td>
+                                            <td align="right">12</td>
+                                            <td align="right">41</td>
+                                            <td align="right">35</td>
+                                            <td align="right">2</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Interactive Pie Chart -->
+                    <div class="col-md-6 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Certificates Expiry</h4>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body"> <img src="~/Images/Pie-Chart-2.png" width="100%"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Analytics map based session -->
+                <!-- Bounce Rate & List -->
+                <div class="row match-height">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Crew Nationality Distribution</h4>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body"> <img src="~/Images/Pie-Chart-1.png" width="100%"> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Relief Overdue SMC Wise</h4>
+                                <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>SMC</th>
+                                            <th align="right">Officers</th>
+                                            <th align="right">Rating</th>
+                                            <th align="right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">Crewlink-IND</td>
+                                            <td align="right">19</td>
+                                            <td align="right">23</td>
+                                            <td align="right">36</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Bounce Rate & List -->
+
+            </div>
+        </div>
+    </div>
+    <div class="sidenav-overlay"></div>
+    <!-- ////////////////////////////////////////////////////////////////////////////-->
 

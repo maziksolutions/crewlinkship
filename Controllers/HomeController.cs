@@ -72,6 +72,20 @@ namespace crewlinkship.Controllers
 
             return PartialView("Crewtraveldoc");
         }
+
+        public ActionResult VesselParticular()
+        {
+
+            return View("VesselParticular");
+        }
+
+        public ActionResult Crewlist()
+        {
+
+            return View("Crewlist");
+        }
+
+
     }
-    
+
 }
