@@ -1,4 +1,5 @@
-﻿@{
+﻿@model crewlinkship.Models.TblCrewLicense
+@{
     ViewBag.Title = "License";
 }
 <div id="user-profile">
@@ -10,10 +11,12 @@
                     <div class="media-body pt-5 px-2">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;"><span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3"></span></h3>
-                                <div></div>
-                            </div>
-
+                                @foreach (TblCrewDetail item in ViewBag.rankName)
+                                {
+                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                }
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -244,13 +247,13 @@
                                 <div class="col-xl-6 col-lg-12">
                                     <div class="float-right">
                                         @*<div class="form-inline">
-                                            <select class="form-control form-small m-r-10">
-                                                <option>Original Data</option>
-                                                <option>Archived Data</option>
-                                            </select>
+                                                <select class="form-control form-small m-r-10">
+                                                    <option>Original Data</option>
+                                                    <option>Archived Data</option>
+                                                </select>
 
-                                            <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Add" data-original-title="" title=""> <i class="fas fa-plus" aria-hidden="true"></i></button>
-                                        </div>*@
+                                                <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Add" data-original-title="" title=""> <i class="fas fa-plus" aria-hidden="true"></i></button>
+                                            </div>*@
                                     </div>
                                 </div>
                             </div>
@@ -267,48 +270,22 @@
                                             <th>Issue Date</th>
                                             <th>Expiry Date</th>
                                             <th>Authority</th>
-                                            <th>Limitation Remark</th>
-                                            <th>Verified</th>
-                                            <th>&nbsp;</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Master - F.G</td>
-                                            <td>IFOO-8674</td>
-                                            <td>Mumbai</td>
-                                            <td>India</td>
-                                            <td>29-Jun-16</td>
-                                            <td>28-Jun-21</td>
-                                            <td>Government of India</td>
-                                            <td>Nil</td>
-                                            <td>No @*<i class="fas fa-paperclip m-l-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
-                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i>*@</td>
-                                        </tr>
-                                        <tr>
-                                            <td>DCE -Chem- M</td>
-                                            <td>DCN02MUM16001221</td>
-                                            <td>Mumbai</td>
-                                            <td>India</td>
-                                            <td>15-Jul-16</td>
-                                            <td>14-Jul-21</td>
-                                            <td>Government of India</td>
-                                            <td>Nil</td>
-                                            <td>No @*<i class="fas fa-paperclip m-l-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
-                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i>*@</td>
-                                        </tr>
-                                        <tr>
-                                            <td>DCE-OIL - M</td>
-                                            <td>DCN02MUM16001222</td>
-                                            <td>Mumbai</td>
-                                            <td>India</td>
-                                            <td>15-Jul-16</td>
-                                            <td>14-Jul-21</td>
-                                            <td>Government of India</td>
-                                            <td>Nil</td>
-                                            <td>No @*<i class="fas fa-paperclip m-l-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Attachement" aria-hidden="true"></i></td>
-                                            <td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i>*@</td>
-                                        </tr>
+                                        @foreach (TblCrewLicense item in ViewBag.nationalLicence)
+                                        {
+                                    <tr>
+                                        <td>@item.License?.LicenceName</td>
+                                        <td>@item.LicenseNumber</td>
+                                        <td>@item.PlaceOfIssue</td>
+                                        <td>@item.Country?.CountryName</td>
+                                        <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                        <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                        <td>@item.Authority?.Authorities</td>
+                                    </tr>
+                                        }
+                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -322,11 +299,11 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-12">
                                     @*<div class="form-inline float-right">
-                                        <select class="form-control form-small m-r-10">
-                                            <option>Select Country</option>
-                                        </select>
-                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Add" data-original-title="" title=""> <i class="fas fa-plus" aria-hidden="true"></i></button>
-                                    </div>*@
+                                            <select class="form-control form-small m-r-10">
+                                                <option>Select Country</option>
+                                            </select>
+                                            <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Add" data-original-title="" title=""> <i class="fas fa-plus" aria-hidden="true"></i></button>
+                                        </div>*@
                                 </div>
                             </div>
                         </div>
@@ -342,22 +319,21 @@
                                             <th>Issue Date</th>
                                             <th>Expiry Date</th>
                                             <th>Authority</th>
-                                            <th>Limitation Remark</th>
-                                            <th>Verified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                        </tr>
+                                        @foreach (TblCrewLicense item in ViewBag.flagLicence)
+                                        {
+                                    <tr>
+                                        <td>@item.License?.LicenceName</td>
+                                        <td>@item.LicenseNumber</td>
+                                        <td>@item.PlaceOfIssue</td>
+                                        <td>@item.Country?.CountryName</td>
+                                        <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                        <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                        <td>@item.Authority?.Authorities</td>
+                                    </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

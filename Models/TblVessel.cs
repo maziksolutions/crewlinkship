@@ -13,6 +13,7 @@ namespace crewlinkship.Models
             TblCrewDetailPlanVessels = new HashSet<TblCrewDetail>();
             TblCrewDetailVessels = new HashSet<TblCrewDetail>();
             TblCrewLists = new HashSet<TblCrewList>();
+            TblVesselCbas = new HashSet<TblVesselCba>();
         }
 
         public int VesselId { get; set; }
@@ -213,7 +214,12 @@ namespace crewlinkship.Models
         public int? MainEngineCount { get; set; }
         public bool? IsOperational { get; set; }
 
+        public TblManager Manager { get; set; }
+        public TblManager Crewmanager { get; set; }
+        public virtual TblVendorRegister VendorRegisterHm { get; set; }
+        public virtual TblSeaport PortOfTakeovers { get; set; }
         public virtual TblBuilder Builder { get; set; }
+        public virtual TblVendorRegister VendorRegisterPi { get; set; }
         public virtual TblClassification Classification { get; set; }
         public virtual TblDisponentOwner DisponentOwner { get; set; }
         public virtual TblEcdi Ecdisid1Navigation { get; set; }
@@ -237,5 +243,6 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCrewDetail> TblCrewDetailPlanVessels { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetailVessels { get; set; }
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }
+        public virtual ICollection<TblVesselCba> TblVesselCbas { get; set; }
     }
 }

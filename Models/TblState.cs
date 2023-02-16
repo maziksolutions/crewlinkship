@@ -14,6 +14,7 @@ namespace crewlinkship.Models
             TblCities = new HashSet<TblCity>();
             TblCrewAddresses = new HashSet<TblCrewAddress>();
             TblCrewBankDetails = new HashSet<TblCrewBankDetail>();
+            TblCrewCorrespondenceAddresses = new HashSet<TblCrewCorrespondenceAddress>();
             TblDisponentOwners = new HashSet<TblDisponentOwner>();
             TblEcdis = new HashSet<TblEcdi>();
             TblEngineModels = new HashSet<TblEngineModel>();
@@ -38,6 +39,7 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCity> TblCities { get; set; }
         public virtual ICollection<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual ICollection<TblCrewBankDetail> TblCrewBankDetails { get; set; }
+        public virtual ICollection<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
         public virtual ICollection<TblDisponentOwner> TblDisponentOwners { get; set; }
         public virtual ICollection<TblEcdi> TblEcdis { get; set; }
         public virtual ICollection<TblEngineModel> TblEngineModels { get; set; }

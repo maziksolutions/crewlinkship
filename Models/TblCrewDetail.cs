@@ -12,9 +12,12 @@ namespace crewlinkship.Models
             TblCdcs = new HashSet<TblCdc>();
             TblCrewAddresses = new HashSet<TblCrewAddress>();
             TblCrewBankDetails = new HashSet<TblCrewBankDetail>();
+            TblCrewCorrespondenceAddresses = new HashSet<TblCrewCorrespondenceAddress>();
+            TblCrewCorrespondences = new HashSet<TblCrewCorrespondence>();
             TblCrewCourses = new HashSet<TblCrewCourse>();
             TblCrewLicenses = new HashSet<TblCrewLicense>();
             TblCrewLists = new HashSet<TblCrewList>();
+            TblCrewOtherDocuments = new HashSet<TblCrewOtherDocument>();
         }
 
         public int CrewId { get; set; }
@@ -92,8 +95,11 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCdc> TblCdcs { get; set; }
         public virtual ICollection<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual ICollection<TblCrewBankDetail> TblCrewBankDetails { get; set; }
+        public virtual ICollection<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
+        public virtual ICollection<TblCrewCorrespondence> TblCrewCorrespondences { get; set; }
         public virtual ICollection<TblCrewCourse> TblCrewCourses { get; set; }
         public virtual ICollection<TblCrewLicense> TblCrewLicenses { get; set; }
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }
+        public virtual ICollection<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
     }
 }

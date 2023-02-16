@@ -7,6 +7,11 @@ namespace crewlinkship.Models
 {
     public partial class TblOtherDocument
     {
+        public TblOtherDocument()
+        {
+            TblCrewOtherDocuments = new HashSet<TblCrewOtherDocument>();
+        }
+
         public int DocumentId { get; set; }
         public int? CountryId { get; set; }
         public string DocumentName { get; set; }
@@ -20,5 +25,6 @@ namespace crewlinkship.Models
         public bool? IsCheckDoc { get; set; }
 
         public virtual TblCountry Country { get; set; }
+        public virtual ICollection<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
     }
 }

@@ -2,7 +2,49 @@
 @model IEnumerable<crewlinkship.Models.TblCrewList>
     @{
         ViewData["Title"] = "crewlinkship";
+       
+
     }
+
+@*<nav class="header-navbar navbar-expand-md navbar navbar-with-menu fixed-top navbar-dark navbar-shadow navbar-brand-center">
+    <div class="navbar-wrapper">        
+        <div id="user-profile">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card profile-with-cover m-b-0">
+                        <div class="card-img-top img-fluid bg-cover height-50" style="background: #E3EBF3"></div>
+                        <div class="media profil-cover-details w-100">
+                            <div class="media-left profile-image pl-2 pt-2">
+                                <img src="ship-pic.jpg" class="rounded-circle img-border height-75" alt="Card image">
+                            </div>
+                            <div class="media-body pt-2-5 px-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 10px">
+                                                @ViewBag.VesselName (@ViewBag.shipType)
+                                            </h3>
+                                            <span style="font-size: 12px">@ViewBag.imo | @ViewBag.flag</span>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <nav class="navbar navbar-profile align-self-end m-r-30">
+                            <div id="navigation">
+                                <ul>
+                                    <li class="has-sub active"> <a href="crewlist.html">Crewlist</a>  </li>
+                                    <li><a href="vessel-particular.html">Particular</a></li>                                   
+                                    <li><a href="vessel-cba.html">CBA</a></li>
+                                    
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>*@
+
 <div class="app-content content fixed-navbar-inner">
     <div class="content-wrapper">
         <div class="content-header row">
@@ -70,22 +112,24 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <td scope="row"><span>@item.Rank.Code</span></td>
-                    <td scope="row">
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                    <tr>
+                        <td scope="row"><span>@item.Rank.Code</span></td>
+                        <td scope="row">
+                            <a href="#"><i class="fas fa-ellipsis-v"></i></a>
 
-                        <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "") </a>
-                    </td>
-                    <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
-                    <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
-                    <td>@item.SignOnDate?.ToString("dd/MM/yyyy")</td>
-                    <td class="red">@item.DueDate?.ToString("dd/MM/yyyy")</td>
-                    <td scope="row">
-                        @(item.ReliverRank!=null? item.ReliverRank.Code :""):@*<a class="details" style="color: #0068F7" href="javascript:;">
-                @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")</a>*@
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                            <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "") </a>
+                        </td>
+                        <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
+                        <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
+                        <td>@item.SignOnDate?.ToString("dd/MM/yyyy")</td>
+                        <td class="red">@item.DueDate?.ToString("dd/MM/yyyy")</td>
+                        <td scope="row">
+                            @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a class="details" style="color: #0068F7" href="javascript:;">
+            @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")</a>
+                            <a href="#"><i class="fas fa-ellipsis-v"></i></a>
 
-                    </td>
+                        </td>
+                    </tr>
                 }
                     </tbody>
                 </table>

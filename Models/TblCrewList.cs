@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -13,6 +14,7 @@ namespace crewlinkship.Models
         public int? CrewId { get; set; }
         public DateTime? SignOnDate { get; set; }
         public DateTime? DueDate { get; set; }
+        [ForeignKey("Reliever")]
         public int? Reliever1 { get; set; }
         public int? Reliever2 { get; set; }
         public string ReptriationPort { get; set; }
@@ -33,6 +35,7 @@ namespace crewlinkship.Models
         public int? PlanActivityCode { get; set; }
 
         public virtual TblCrewDetail Crew { get; set; }
+        public virtual TblCrewDetail Reliever { get; set; }
         public virtual TblRankRegister Rank { get; set; }
         public virtual TblRankRegister ReliverRank { get; set; }
         public virtual TblVessel Vessel { get; set; }

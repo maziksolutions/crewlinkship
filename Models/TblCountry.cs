@@ -15,6 +15,7 @@ namespace crewlinkship.Models
             TblCities = new HashSet<TblCity>();
             TblCrewAddresses = new HashSet<TblCrewAddress>();
             TblCrewBankDetails = new HashSet<TblCrewBankDetail>();
+            TblCrewCorrespondenceAddresses = new HashSet<TblCrewCorrespondenceAddress>();
             TblCrewDetails = new HashSet<TblCrewDetail>();
             TblCrewLicenses = new HashSet<TblCrewLicense>();
             TblDisponentOwners = new HashSet<TblDisponentOwner>();
@@ -30,6 +31,7 @@ namespace crewlinkship.Models
             TblSeaports = new HashSet<TblSeaport>();
             TblStates = new HashSet<TblState>();
             TblVendorRegisters = new HashSet<TblVendorRegister>();
+            TblVesselCbas = new HashSet<TblVesselCba>();
             TblVessels = new HashSet<TblVessel>();
             TblVisas = new HashSet<TblVisa>();
         }
@@ -55,6 +57,7 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCity> TblCities { get; set; }
         public virtual ICollection<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual ICollection<TblCrewBankDetail> TblCrewBankDetails { get; set; }
+        public virtual ICollection<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetails { get; set; }
         public virtual ICollection<TblCrewLicense> TblCrewLicenses { get; set; }
         public virtual ICollection<TblDisponentOwner> TblDisponentOwners { get; set; }
@@ -70,6 +73,7 @@ namespace crewlinkship.Models
         public virtual ICollection<TblSeaport> TblSeaports { get; set; }
         public virtual ICollection<TblState> TblStates { get; set; }
         public virtual ICollection<TblVendorRegister> TblVendorRegisters { get; set; }
+        public virtual ICollection<TblVesselCba> TblVesselCbas { get; set; }
         public virtual ICollection<TblVessel> TblVessels { get; set; }
         public virtual ICollection<TblVisa> TblVisas { get; set; }
     }

@@ -11,6 +11,7 @@ namespace crewlinkship.Models
         {
             TblCrewCourses = new HashSet<TblCrewCourse>();
             TblCrewLicenses = new HashSet<TblCrewLicense>();
+            TblCrewOtherDocuments = new HashSet<TblCrewOtherDocument>();
         }
 
         public int AuthorityId { get; set; }
@@ -34,5 +35,6 @@ namespace crewlinkship.Models
         public virtual TblState State { get; set; }
         public virtual ICollection<TblCrewCourse> TblCrewCourses { get; set; }
         public virtual ICollection<TblCrewLicense> TblCrewLicenses { get; set; }
+        public virtual ICollection<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
     }
 }
