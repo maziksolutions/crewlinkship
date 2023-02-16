@@ -1,4 +1,5 @@
-﻿@{
+﻿@using crewlinkship.Models
+@{
     ViewBag.Title = "Crewtraveldoc";
 }
 <div id="user-profile">
@@ -6,21 +7,26 @@
         <div class="col-12">
             <div class="card profile-with-cover m-b-0">
                 <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
-                <div class="media profil-cover-details w-100">
-                    <div class="media-body pt-5 px-2">
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
-                                <div>Master | BAKERLOO</div>
+                <div class="media profil-cover-details w-100">                    
+                        <div class="media-body pt-5 px-2">
+                            <div class="row">
+                                <div class="col">
+                                    @foreach (TblCrewDetail item in ViewBag.rankName)
+                                    {
+
+                                    <h3 class="card-title m-b-0" style="font-size: 1.4rem;"> @item.FirstName @item.MiddleName @item.LastName<span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3"> @item.Status</span></h3>
+                                    <div> @item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                    }
+                                    </div>
+
                             </div>
                         </div>
-                    </div>
                 </div>
                 <nav class="navbar navbar-profile align-self-end m-r-30">
                     <div id="navigation">
                         <ul>
                             <li class="has-sub active">
-                                <a >Personal Details</a>
+                                <a>Personal Details</a>
                                 <ul>
                                     <li><a class="details" href="javascript:;">Particulars</a></li>
                                     <li><a class="addressdetails" href="javascript:;">Address</a></li>
@@ -248,24 +254,27 @@
                                     <thead>
                                         <tr>
                                             <th>Country</th>
-                                            <th> Number</th>
-                                            <th>Place of Issue</th>
+                                            <th>PassportNumber</th>
+                                            <th>Place</th>
                                             <th>Date of Issue</th>
                                             <th>Date of Expiry</th>
-                                            <th>Minimum 3 Blank Pages</th>
+                                            <th>Minimum Blank Pages</th>
                                             <th>ECNR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>India</td>
-                                            <td>T2151499</td>
-                                            <td>Madurai</td>
-                                            <td>30-Jul-2019</td>
-                                            <td>29-Jul-2029</td>
-                                            <td>Yes</td>
-                                            <td>Yes</td>
-                                        </tr>
+                                        @foreach (TblPassport ppt in ViewBag.passport)
+                                        {
+                                            <tr>
+                                                <td>@ppt.Country?.CountryName</td>
+                                                <td>@ppt.PassportNumber</td>
+                                                <td>@ppt.Place</td>
+                                                <td>@(ppt.Doi == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", ppt.Doi))</td>
+                                                <td>@(ppt.Doe == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", ppt.Doe))</td>
+                                                <td>@ppt.BlankPages</td>
+                                                <td>@ppt.Ecnr</td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -286,23 +295,27 @@
                                         <tr>
                                             <th>Country</th>
                                             <th>Visa Type</th>
-                                            <th>Number</th>
-                                            <th>Place of Issue</th>
+                                            <th>Visa Number</th>
+                                            <th>Place</th>
                                             <th>Date of Issue</th>
                                             <th>Date of Expiry</th>
-                                            <th>Visa</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach (TblVisa visa in ViewBag.visa)
+                                        {
                                         <tr>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
+                                            <td>@visa.Country?.CountryName</td>
+                                            <td>@visa.VisaType</td>
+                                            <td>@visa.VisaNumber</td>
+                                            <td>@visa.Place</td>
+                                            <td>@(visa.Doi == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", visa.Doi))</td>
+                                            <td>@(visa.Doe == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", visa.Doe))</td>
+
                                         </tr>
-                                    </tbody>
+                                        }
+                                        </tbody>
                                 </table>
                             </div>
                         </div>
@@ -321,26 +334,25 @@
                                     <thead>
                                         <tr>
                                             <th>Country</th>
-                                            <th>Number</th>
-                                            <th>Place of Issue</th>
+                                            <th>CDC Number</th>
+                                            <th>Place</th>
                                             <th>Date of Issue</th>
                                             <th>Date of Expiry</th>
-                                            <th>Minimum 3 Blank Pages</th>
-                                            <th>Verification</th>
-                                            <th>Verified</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>Yes</td>
-                                            <td>----</td>
-                                            <td>Yes</td>
-                                        </tr>
+                                        @foreach (TblCdc cdc in ViewBag.cdc)
+                                        {
+                                            <tr>
+                                                <td>@cdc.Country?.CountryName</td>
+                                                <td>@cdc.Cdcnumber</td>
+                                                <td>@cdc.Place</td>
+                                                <td>@(cdc.Doi == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", cdc.Doi))</td>
+                                                <td>@(cdc.Doe == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", cdc.Doe))</td>
+                                                
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -359,24 +371,26 @@
                                 <table class="table table-hover table-bordered mb-0 crew-table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Country</th>
-                                            <th>Number</th>
-                                            <th>Place of Issue</th>
-                                            <th>Date of Issue</th>
-                                            <th>Issued by Doctor</th>
-                                            <th>Vaccine Batch</th>
+                                            <th>Reference</th>
+                                            <th>Place</th>
+                                            <th>Doctor</th>
+                                            <th>Vaccination Batch</th>
+                                            <th>Vaccination Date</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>----</td>
-                                            <td>J5256</td>
-                                            <td>Mumbai</td>
-                                            <td>28-Feb-2016</td>
-                                            <td>Airport Health Organisation, Mumbai</td>
-                                            <td>J5256</td>
-                                        </tr>
-                                    </tbody>
+                                        @foreach (TblYellowfever yf in ViewBag.yf)
+                                        {
+                                            <tr>
+                                                <td>@yf.Reference</td>       
+                                                <td>@yf.Place</td>
+                                                <td>@yf.VendorRegister.VendorName</td>
+                                                <td>@yf.VaccineBatch</td>
+                                                <td>@(yf.VaccineDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", yf.VaccineDate))</td>
+                                            </tr>
+                                        }
+                                        </tbody>
                                 </table>
                             </div>
                         </div>
