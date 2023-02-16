@@ -3,47 +3,50 @@
 }
 <div id="user-profile">
     <div class="row">
-        <div class="col-12">
-            <div class="card profile-with-cover m-b-0">
-                <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
-                <div class="media profil-cover-details w-100">
-                    <div class="media-body pt-5 px-2">
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
-                                <div>Master | BAKERLOO</div>
+            <div class="col-12">
+                <div class="card profile-with-cover m-b-0">
+                    <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
+                    <div class="media profil-cover-details w-100">
+                        <div class="media-body pt-5 px-2">
+                            <div class="row">
+                                <div class="col">
+                                    @foreach (TblCrewDetail item in ViewBag.rankName)
+                                    {
+                                        <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                        <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <nav class="navbar navbar-profile align-self-end m-r-30">
+                        <div id="navigation">
+                            <ul>
+                                <li class="has-sub active">
+                                    <a>Personal Details</a>
+                                    <ul>
+                                        <li><a class="details" href="javascript:;">Particulars</a></li>
+                                        <li><a class="addressdetails" href="javascript:;">Address</a></li>
+                                        <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a>Documents</a>
+                                    <ul>
+                                        <li><a class="license" href="javascript:;">License</a></li>
+                                        <li><a class="courses" href="javascript:;">Courses</a></li>
+                                        <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+
+                                @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
-                <nav class="navbar navbar-profile align-self-end m-r-30">
-                    <div id="navigation">
-                        <ul>
-                            <li class="has-sub active">
-                                <a>Personal Details</a>
-                                <ul>
-                                    <li><a class="details" href="javascript:;">Particulars</a></li>
-                                    <li><a class="addressdetails" href="javascript:;">Address</a></li>
-                                    <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
-
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a>Documents</a>
-                                <ul>
-                                    <li><a class="license" href="javascript:;">License</a></li>
-                                    <li><a class="courses" href="javascript:;">Courses</a></li>
-                                    <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
-
-                            @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
-                        </ul>
-                    </div>
-                </nav>
             </div>
-        </div>
     </div>
 </div>
 <div id="partialModal" class="modal" tabindex="-1" role="dialog">
@@ -242,7 +245,7 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-12">
                                     <div class="float-right">
-                                        @*<button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>*@
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -251,47 +254,51 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        <tr>
-                                            <th width="50%">Flat, House no., Building</th>
-                                            <td width="50%">14,UIT Scheme, Sakatpura, Kota</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Area, Colony, Street, Sector, Village</th>
-                                            <td>Keezha Konam, Nagercoil </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Country</th>
-                                            <td>India</td>
-                                        </tr>
-                                        <tr>
-                                            <th>State</th>
-                                            <td>Tamil Nadu</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Town / City</th>
-                                            <td>Nagercoil</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Postcode</th>
-                                            <td>629004</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Residential Phone</th>
-                                            <td>----</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Mobile Number</th>
-                                            <td>7598146721</td>
-                                        </tr>
-                                        <tr>
-                                            <th>E-mail</th>
-                                            <td>devasahagam2011@yahoo.com</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Nearest Airport</th>
-                                            <td>----</td>
-                                        </tr>
+                                        @foreach (TblCrewAddress item in ViewBag.address)
+                                        {
+                                            <tr>
+                                                <th width="50%">Flat, House no., Building</th>
+                                                <td width="50%">@item.Address1</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Area, Colony, Street, Sector, Village</th>
+                                                <td>@item.Address2 </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Country</th>
+                                                <td>@item.Country?.CountryName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>State</th>
+                                                <td>@item.State?.StateName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Town / City</th>
+                                                <td>@item.City?.CityName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Postcode</th>
+                                                <td>@item.Postcode</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Residential Phone</th>
+                                                <td>@item.PhoneNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Mobile Number</th>
+                                                <td>@item.MobileNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th>E-mail</th>
+                                                <td>@item.Email</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nearest Airport</th>
+                                                <td>@item.Airport?.CityName</td>
+                                            </tr>
+                                        }
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
@@ -305,10 +312,7 @@
                                     <h4 class="card-title p-t-5 proper-case">Correspondence</h4>
                                 </div>
                                 <div class="col-xl-6 col-lg-12">
-                                    <!--<div class="float-right">
-                                        <input type="checkbox"> Same as Permanent-->
-                                        @*<button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>*@
-                                    <!--</div>-->
+                                   
 
                                 </div>
                             </div>
@@ -317,38 +321,37 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        <tr>
-                                            <th width="50%">Flat, House no., Building</th>
-                                            <td width="50%">14,UIT Scheme, Sakatpura, Kota</td>
-                                        </tr>
+                                        @foreach (TblCrewCorrespondenceAddress item in ViewBag.corsAddress)
+                                        {
+                                    <tr>
+                                        <th width="50%">Flat, House no., Building</th>
+                                        <td width="50%">@item.Caddress1</td>
+                                    </tr>
                                         <tr>
                                             <th>Area, Colony, Street, Sector, Village</th>
-                                            <td>Keezha Konam, Nagercoil </td>
+                                            <td>@item.Caddress2</td>
                                         </tr>
                                         <tr>
                                             <th>Country</th>
-                                            <td>India</td>
+                                            <td>@item.Country?.CountryName</td>
                                         </tr>
                                         <tr>
                                             <th>State</th>
-                                            <td>Tamil Nadu</td>
+                                            <td>@item.State?.StateName</td>
                                         </tr>
                                         <tr>
                                             <th>Town / City</th>
-                                            <td>Nagercoil</td>
+                                            <td>@item.City?.CityName</td>
                                         </tr>
                                         <tr>
                                             <th>Postcode</th>
-                                            <td>629004</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Other Mobile Number</th>
-                                            <td>8760511873</td>
+                                            <td>@item.Postcode</td>
                                         </tr>
                                         <tr>
                                             <th>Nearest Airport</th>
-                                            <td>Ahmedabad</td>
+                                            <td>@item.Airport?.CityName</td>
                                         </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

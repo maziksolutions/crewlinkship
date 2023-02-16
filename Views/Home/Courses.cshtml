@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Courses";
+﻿@model IEnumerable<crewlinkship.Models.TblCrewCourse>
+@{
+    ViewBag.Title = "courses";
 }
 <div id="user-profile">
     <div class="row">
@@ -10,9 +11,12 @@
                     <div class="media-body pt-5 px-2">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
-                                <div>Master | BAKERLOO</div>
-                            </div>
+                                @foreach (TblCrewDetail item in ViewBag.rankName)
+                                {
+                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName<span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                }
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -253,46 +257,23 @@
                                             <th>Expiry Date</th>
                                             <th>Training Institue</th>
                                             <th>Authority</th>
-                                            <th>Lim. Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach(var item in Model)
+                                        {
                                         <tr>
-                                            <td>Value Added</td>
-                                            <td>Personal Safety and Social Responsibilities</td>
-                                            <td>BPMA/PSSR/5499/99</td>
-                                            <td>Navi Mumbai</td>
-                                            <td>27-Nov-99</td>
-                                            <td>Unlimited</td>
-                                            <td>BP Marine Academy</td>
-                                            <td>Directorate General of Shipping</td>
-                                            <td>Nil</td>
-                                            @*<td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>*@
+                                            <td>@item.CourseNavigation?.CourseType</td>
+                                            <td>@item.CourseNavigation?.CourseName</td>
+                                            <td>@item.CertificateNumber</td>
+                                            <td>@item.PlaceOfIssue</td>
+                                            <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.Institute?.InstituteName</td>
+                                            <td>@item.Authority?.Authorities</td>
+                                           
                                         </tr>
-                                        <tr>
-                                            <td>Value Added</td>
-                                            <td>PSCRB other than Fast Rescue Boats</td>
-                                            <td>BPMA/PSCRB-RF/17/2012</td>
-                                            <td>Navi Mumbai</td>
-                                            <td>31-Jul-12</td>
-                                            <td>30-Jul-17</td>
-                                            <td>BP Marine Academy</td>
-                                            <td>Directorate General of Shipping</td>
-                                            <td>Nil</td>
-                                            @*<td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>*@
-                                        </tr>
-                                        <tr>
-                                            <td>STCW-Basic</td>
-                                            <td>Ship Security Officers</td>
-                                            <td>BPMA/SSO-RF/473/2018</td>
-                                            <td>Navi Mumbai</td>
-                                            <td>31-May-18</td>
-                                            <td>Unlimited</td>
-                                            <td>BP Marine Academy</td>
-                                            <td>Directorate General of Shipping</td>
-                                            <td>Nil</td>
-                                            @*<td><i class="fas fa-edit m-r-10" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" aria-hidden="true"></i> <i class="fa fa-archive" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Archive" aria-hidden="true"></i></td>*@
-                                        </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

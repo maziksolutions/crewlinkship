@@ -1,0 +1,49 @@
+﻿@model IEnumerable<crewlinkship.Models.TblVesselCba>
+@{
+    ViewBag.Title = "CBA";
+}
+<!-- / main menu-->
+<div class="app-content content fixed-navbar-inner">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="col-xl-2 col-lg-12">
+                <h4 class="content-header-title m-b-10 m-t-5">Vessel CBA</h4>
+            </div>
+            <div class="col-xl-10 col-lg-12 nopl">
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row match-height" id="switch">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="card m-b-0">
+                        <div class="card-content">
+                            <div id="goal-list-scroll" class="table-responsive position-relative">
+                                <table class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Officer CBA</th>
+                                            <th>CBA Rating</th>
+                                            <th>Nationality</th>
+                                            <th>Appplied On</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var item in Model) {
+                                        <tr>
+                                            <td>@item.OfficerCba</td>
+                                            <td>@item.Cbarating</td>
+                                            <td>@item.Country?.Nationality</td>
+                                            <td>@item.AppliedOn?.ToString("dd/MMM/yyyy")</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidenav-overlay"></div>

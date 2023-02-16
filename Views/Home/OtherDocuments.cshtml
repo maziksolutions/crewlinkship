@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Courses";
+﻿@model IEnumerable<crewlinkship.Models.TblCrewOtherDocument>
+@{
+    ViewBag.Title = "CrewOtherDocuments";
 }
 <div id="user-profile">
     <div class="row">
@@ -10,9 +11,12 @@
                     <div class="media-body pt-5 px-2">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
-                                <div>Master | BAKERLOO</div>
-                            </div>
+                                @foreach (TblCrewDetail item in ViewBag.rankName)
+                                {
+                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                }
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -252,40 +256,21 @@
                                             <th>Extended Date</th>
                                             <th>Place of Issue</th>
                                             <th>Issue Authority</th>
-                                            <th>Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach(var item in Model) {
+
                                         <tr>
-                                            <td>S E A- Employment Contract</td>
-                                            <td>AP4/PKI/630/2019</td>
-                                            <td>17-Dec-2019</td>
-                                            <td>NA</td>
-                                            <td>NA</td>
-                                            <td>NAVI MUMBAI</td>
-                                            <td>Atlantas Crew Management</td>
-                                            <td>NIL</td>
+                                            <td>@item.Document.DocumentName</td>
+                                            <td>@item.DocumentNo</td>
+                                            <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.ExtendedDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.PlaceOfIssue</td>
+                                            <td>@item.Authority?.Authorities</td>
                                         </tr>
-                                        <tr>
-                                            <td>Pre-Joining Checklist</td>
-                                            <td>NA</td>
-                                            <td>17-Dec-2019</td>
-                                            <td>NA</td>
-                                            <td>NA</td>
-                                            <td>NAVI MUMBAI</td>
-                                            <td>Atlantas Crew Management</td>
-                                            <td>NIL</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Standard Terms of Employment</td>
-                                            <td>NA</td>
-                                            <td>16-Dec-2019</td>
-                                            <td>NA</td>
-                                            <td>NA</td>
-                                            <td>NAVI MUMBAI</td>
-                                            <td>Atlantas Crew Management</td>
-                                            <td>NIL</td>
-                                        </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

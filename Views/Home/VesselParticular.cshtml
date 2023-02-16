@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<crewlinkship.Models.TblVessel>
+@{
+    ViewBag.Title = "crewlinkship";
+}
 <div class="app-content content fixed-navbar-inner">
     <div class="content-wrapper">
         <div class="content-header row"> </div>
@@ -17,27 +20,27 @@
                                                     <th width="100%" valign="top" style="border: none !important;">
                                                         <h5 style="margin: 5px 0; background: none;">
                                                             VESSEL PARTICULARS<span style="float:right;">
-                                                                <button class="btn btn-success form-small p-t-3 p-b-3" type="button"
-                                                                        data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                                                        data-title="Export to Excel" data-original-title="" title=""
-                                                                        (click)="exportVesselParticulars()">
-                                                                    <i class="fas fa-file-excel"
-                                                                       aria-hidden="true"></i>
-                                                                </button>
+                                                                @*<button class="btn btn-success form-small p-t-3 p-b-3" type="button"
+                                            data-toggle="tooltip" data-trigger="hover" data-placement="top"
+                                            data-title="Export to Excel" data-original-title="" title=""
+                                            (click)="exportVesselParticulars()">
+                                        <i class="fas fa-file-excel"
+                                           aria-hidden="true"></i>
+                                    </button>
 
-                                                                <button class="btn btn-danger form-small p-t-3 p-b-3 m-l-5" type="button"
-                                                                        data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                                                        data-title="Export to PDF" data-original-title="" title=""
-                                                                        (click)="generatePDF(vessel.vesselName)">
-                                                                    <i class="fas fa-file-pdf"
-                                                                       aria-hidden="true"></i>
-                                                                </button>
+                                    <button class="btn btn-danger form-small p-t-3 p-b-3 m-l-5" type="button"
+                                            data-toggle="tooltip" data-trigger="hover" data-placement="top"
+                                            data-title="Export to PDF" data-original-title="" title=""
+                                            (click)="generatePDF(vessel.vesselName)">
+                                        <i class="fas fa-file-pdf"
+                                           aria-hidden="true"></i>
+                                    </button>
 
 
-                                                                <button class="btn btn-primary form-small p-t-3 p-b-3 m-l-5" type="button" data-toggle="popover"
-                                                                        title="Help" data-html="true" data-placement="left" [attr.data-content]="pageHelp">
-                                                                    <i class="fas fa-question" aria-hidden="true"></i>
-                                                                </button>
+                                    <button class="btn btn-primary form-small p-t-3 p-b-3 m-l-5" type="button" data-toggle="popover"
+                                            title="Help" data-html="true" data-placement="left" [attr.data-content]="pageHelp">
+                                        <i class="fas fa-question" aria-hidden="true"></i>
+                                    </button>*@
                                                             </span>
                                                         </h5>
                                                     </th>
@@ -49,76 +52,85 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="4"><h4>General Information</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="25%">Vessel Name</td>
-                                                        <td width="25%">&nbsp;</td>
-                                                        <td width="25%">Hull No.</td>
-                                                        <td width="25%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ex - Names</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Keel Laid Date</td>
-                                                        <td>
-                                                            &nbsp;
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>IMO No.</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Launch Date</td>
-                                                        <td>
-                                                            &nbsp;
+                                                @foreach (var item in Model)
+                                                {
 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Flag</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Delivery Date</td>
-                                                        <td> &nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Port of Registry</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Builder Name</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Call Sign</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Takeover Date </td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Official No.</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Takeover Port </td>
-                                                        <td> &nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>MMSI No.</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Handover Date </td>
-                                                        <td> &nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Vessel Short Code</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Handover Port </td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ship Type</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>Operating Area</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="4"><h4>General Information</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="25%">Vessel Name</td>
+                                                            <td width="25%">@item.VesselName</td>
+                                                            <td width="25%">Hull No.</td>
+                                                            <td width="25%">@item.HullNo</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Ex - Names</td>
+                                                            <td>@item.PreviousName</td>
+                                                            <td>Keel Laid Date</td>
+                                                            <td>
+
+                                                                @((item.KeelLaid == null || item.Delivery.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.KeelLaid)))
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>IMO No.</td>
+                                                            <td>@item.Imo</td>
+                                                            <td>Launch Date</td>
+                                                            <td>
+
+                                                                @((item.Launched == null || item.Delivery.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.Launched)))
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Flag</td>
+                                                            <td>@item.Flag.CountryName</td>
+                                                            <td>Delivery Date</td>
+                                                            <td>
+                                                                @((item.Delivery == null || item.Delivery.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.Delivery)))
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Port of Registry</td>
+                                                            <td>@item.PortOfRegistryNavigation.SeaportName</td>
+                                                            <td>Builder Name</td>
+                                                            <td>@item.Builder.Builder</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Call Sign</td>
+                                                            <td>@item.CallSign</td>
+                                                            <td>Takeover Date </td>
+                                                            <td>
+                                                                @(item.TakeoverDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.TakeoverDate))
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Official No.</td>
+                                                            <td>@item.Official</td>
+                                                            <td>Takeover Port </td>
+                                                            <td> @item.PortOfTakeovers?.SeaportName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>MMSI No.</td>
+                                                            <td>@item.Mmsi</td>
+                                                            <td>Handover Date </td>
+                                                            <td>@item.HandoverDate</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Vessel Short Code</td>
+                                                            <td>@item.VesselCode</td>
+                                                            <td>Handover Port </td>
+                                                            <td>@ViewBag.HandOverport</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Ship Type</td>
+                                                            <td>@item.Ship.Type</td>
+                                                            <td>Operating Area</td>
+                                                            <td>@item.OperatingArea</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -126,39 +138,42 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Principal Dimensions</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">LOA</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>LBP</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Breadth (Extreme)</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Depth (Molded)</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Height (Maximum)</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bridge Front - BOW</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bridge Front - Stern</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Principal Dimensions</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">LOA</td>
+                                                            <td width="50%">@item.Loa</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>LBP</td>
+                                                            <td>@item.Lbp</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Breadth (Extreme)</td>
+                                                            <td>@item.Breadth</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Depth (Molded)</td>
+                                                            <td>@item.Depth</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Height (Maximum)</td>
+                                                            <td>@item.Height</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Bridge Front - BOW</td>
+                                                            <td>@item.Bow</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Bridge Front - Stern</td>
+                                                            <td>@item.Stern</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -166,52 +181,34 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Communication</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Vessel E-mail</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Phone No. 1</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Phone No. 2</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Phone No. 3</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Mobile No.</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-
-
-                                    <tr>
-                                        <td>
-                                            <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Owners</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Registered Owner</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Disponent Owner</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Communication</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">Vessel E-mail</td>
+                                                            <td width="50%">@item.Email</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phone No. 1</td>
+                                                            <td>@item.SatBphone</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phone No. 2</td>
+                                                            <td>@item.Fleet77Phone</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phone No. 3</td>
+                                                            <td>@item.Vsatphone</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mobile No.</td>
+                                                            <td>@item.MobileNo</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -220,19 +217,22 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Managers</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Technical Manager</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Crewing Manager</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Owners</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">Registered Owner</td>
+                                                            <td width="50%">@item.Owner.OwnerName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Disponent Owner</td>
+                                                            <td>@item.DisponentOwner.DisponentOwners</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -241,27 +241,22 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Classification</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Classification Society</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Class No.</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Class Notation</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ice Class</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Managers</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">Technical Manager</td>
+                                                            <td width="50%">@item.Manager.Managers</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Crewing Manager</td>
+                                                            <td>@item.Crewmanager.Managers</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -270,23 +265,30 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Insurance</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">P &amp; I Club</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>H&amp;M</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Qualified Individual</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Classification</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">Classification Society</td>
+                                                            <td width="50%">@item.Classification.Classifications</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Class No.</td>
+                                                            <td>@item.ClassNo</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Class Notation</td>
+                                                            <td>@item.ClassNotation</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Ice Class</td>
+                                                            <td>@item.IceClass</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -295,23 +297,26 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Tonnage</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">NRT</td>
-                                                        <td width="50%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>GRT</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>DWT</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Insurance</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">P &amp; I Club</td>
+                                                            <td width="50%">@item.VendorRegisterPi.VendorName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>H&amp;M</td>
+                                                            <td>@item.VendorRegisterHm.VendorName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Qualified Individual</td>
+                                                            <td>@item.QualifiedIndividual</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -320,262 +325,303 @@
                                     <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="4"><h4>Machinery</h4></th>
-                                                    </tr>
-                                                    <tr style="color: #000000; background: #F0F0F0">
-                                                        <th colspan="4"><h4>Main Engine</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="50%">Make</td>
-                                                        <td colspan="3">&nbsp;  </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Model</td>
-                                                        <td colspan="3">&nbsp; </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Type</td>
-                                                        <td colspan="3">&nbsp;
-                                                    </tr>
-                                                    <tr>
-                                                        <td>M.C.R. KW</td>
-                                                        <td colspan="3">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Main Engines</td>
-                                                        <td colspan="3">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>CPP</td>
-                                                        <td colspan="3">
-                                                            &nbsp;
-                                                        </td>
-                                                    </tr>
-                                                    <tr><td colspan="4">&nbsp;</td></tr>
-                                                    <tr style="color: #000000; background: #F0F0F0">
-                                                        <th colspan="4"><h4>Auxiliary Engine</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th width="50%">&nbsp;</th>
-                                                        <th width="16.6%">No. 1</th>
-                                                        <th width="16.6%">No. 2</th>
-                                                        <th width="16.6%">No. 3</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Make</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Model</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr><td colspan="4">&nbsp;</td></tr>
-                                                    <tr style="color: #000000; background: #F0F0F0">
-                                                        <th colspan="4">Boilers</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Make</td>
-                                                        <td colspan="3">&nbsp;</td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Model</td>
-                                                        <td colspan="3">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No of Boilers</td>
-                                                        <td colspan="3">&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Tonnage</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">NRT</td>
+                                                            <td width="50%">@item.Net</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>GRT</td>
+                                                            <td>@item.Gross</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>DWT</td>
+                                                            <td>@item.SummerDeadWeight</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
 
-                                    <tr *ngIf="vessel.shipType.type.includes('Bulk') ==false">
+
+                                    <tr>
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Other Equipments</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="25%">&nbsp;</td>
-                                                        <td width="25%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Cargo Tanks</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Tanks</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Coating</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Cargo Pumps</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No of Pumps</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Type of Pumps</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Capacity of Pumps</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Ballast Pumps</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Pumps</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Type of Pumps</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ballast Eductor</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="4"><h4>Machinery</h4></th>
+                                                        </tr>
+                                                        <tr style="color: #000000; background: #F0F0F0">
+                                                            <th colspan="4"><h4>Main Engine</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="50%">Make</td>
+                                                            <td colspan="3">@item.EngineModel.Maker </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Model</td>
+                                                            <td colspan="3">@item.EngineModel.Model</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Type</td>
+                                                            <td colspan="3">@item.EngineType.Type</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>M.C.R. KW</td>
+                                                            <td colspan="3">@item.Kw</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Main Engines</td>
+                                                            <td colspan="3">@item.MainEngineCount</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>CPP</td>
+                                                            <td colspan="3">
+                                                                @item.Cpp
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td colspan="4">&nbsp;</td></tr>
+                                                        <tr style="color: #000000; background: #F0F0F0">
+                                                            <th colspan="4"><h4>Auxiliary Engine</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th width="50%">&nbsp;</th>
+                                                            <th width="16.6%">No. 1</th>
+                                                            <th width="16.6%">No. 2</th>
+                                                            <th width="16.6%">No. 3</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Make</td>
+                                                            <td>@item.AuxMake1</td>
+                                                            <td>@item.AuxMake2</td>
+                                                            <td>@item.AuxMake3</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Model</td>
+                                                            <td>@item.AuxModel1</td>
+                                                            <td>@item.AuxModel2</td>
+                                                            <td>@item.AuxModel3</td>
+                                                        </tr>
+                                                        <tr><td colspan="4">&nbsp;</td></tr>
+                                                        <tr style="color: #000000; background: #F0F0F0">
+                                                            <th colspan="4">Boilers</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Make</td>
+                                                            <td colspan="3">@item.AuxMake4</td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Model</td>
+                                                            <td colspan="3">@item.AuxModel4</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No of Boilers</td>
+                                                            <td colspan="3">@item.AuxBoiler</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr style="display: @(item.Ship.Type.ToString().Contains("Bulk")? "none" : "contents")">
+                                            <td>
+                                                <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
+
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Other Equipments</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="25%">&nbsp;</td>
+                                                            <td width="25%">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Cargo Tanks</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Tanks</td>
+                                                            <td>@item.CargoTanks</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Coating</td>
+                                                            <td>@item.CargoCoating</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Cargo Pumps</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No of Pumps</td>
+                                                            <td>@item.CargoPump</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Type of Pumps</td>
+                                                            <td>@item.CargoPumpType</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Capacity of Pumps</td>
+                                                            <td>@item.PumpCapacity</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Ballast Pumps</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Pumps</td>
+                                                            <td>@item.BallastPump</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Type of Pumps</td>
+                                                            <td>@item.BallastPumpType</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Ballast Eductor</td>
+                                                            <td>@item.BallastEductor</td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </td>
+                                        </tr>
 
 
                                     <tr>
                                         <td>&nbsp;</td>
                                     </tr>
+                                    }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr style="display: @(item.Ship.Type.ToString().Contains("Bulk")? "contents" :"none")">
+                                            <td>
+                                                <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
 
-                                    <tr *ngIf="vessel.shipType.type.includes('Bulk') == true">
-                                        <td>
-                                            <table width="100%" class="table table-bordered mb-0 crew-table table-striped">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="2"><h4>Other Equipments</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="25%">&nbsp;</td>
-                                                        <td width="25%">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Cargo Holds</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Holds</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="2"><h4>Other Equipments</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="25%">&nbsp;</td>
+                                                            <td width="25%">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Cargo Holds</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Holds</td>
+                                                            <td>@item.CargoHolds</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
 
-                                                    <tr>
-                                                        <td><strong>Cargo Cranes</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Make</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Model</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Capacity </td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Cranes</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Grabs</strong></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Make</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Capacity</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>No. of Grabs</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                                        <tr>
+                                                            <td><strong>Cargo Cranes</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Make</td>
+                                                            <td>@item.CargoCranesMaker</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Model</td>
+                                                            <td>@item.CranesModel</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Capacity </td>
+                                                            <td>@item.CranesCapacity</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Cranes</td>
+                                                            <td>@item.CranesNumber</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Grabs</strong></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Make</td>
+                                                            <td>@item.GrabMaker</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Capacity</td>
+                                                            <td>@item.CranesCapacity</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>No. of Grabs</td>
+                                                            <td>@item.GrabsNumber</td>
+                                                        </tr>
+                                                    </tbody>
+                                                   
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    }
 
-
-                                    <tr>
-                                        <td>
-                                            <table width="100%">
-                                                <tbody>
-                                                    <tr style="color: #000; background: #E3EBF3">
-                                                        <th colspan="4"><h4>ECDIS</h4></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th width="25%">&nbsp;</th>
-                                                        <th width="25%">ECDIS 1</th>
-                                                        <th width="25%">ECDIS 2</th>
-                                                        <th width="25%">ECDIS 3</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Maker</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Model</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Type</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                        <tr>
+                                            <td>
+                                                <table width="100%">
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <tbody>
+                                                            <tr style="color: #000; background: #E3EBF3">
+                                                                <th colspan="4"><h4>ECDIS</h4></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th width="25%">&nbsp;</th>
+                                                                <th width="25%">ECDIS 1</th>
+                                                                <th width="25%">ECDIS 2</th>
+                                                                <th width="25%">ECDIS 3</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Maker</td>
+                                                                <td>@item.Ecdis2maker1</td>
+                                                                <td>@item.Ecdis2maker1</td>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Model</td>
+                                                                <td>@item.Ecdis2model</td>
+                                                                <td>@item.Ecdis2model</td>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Type</td>
+                                                                <td>@item.Ecdistype1</td>
+                                                                <td>@item.Ecdistype2</td>
+                                                                <td>@item.Ecdistype3</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    }
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                             </table>
                             <br />
                         </td>
@@ -595,33 +641,36 @@
                         <h4 class="card-title" style="text-align: center;">Vessel Details</h4>
                         <div class="table-responsive">
                             <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <th>Delivery date</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Dwt</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Type</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Flag</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <th>IMO</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Class</th>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                @foreach (var item in Model)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <th>Delivery date</th>
+                                            <td> @((item.Delivery == null || item.Delivery.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.Delivery)))</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dwt</th>
+                                            <td>@item.SummerDeadWeight</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type</th>
+                                            <td>@item.Ship.Type</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Flag</th>
+                                            <td>@item.Flag.CountryName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>IMO</th>
+                                            <td>@item.Imo</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Class</th>
+                                            <td>@item.ClassNo</td>
+                                        </tr>
+                                    </tbody>
+                                }
+                                </table>
                         </div>
                     </div>
                 </div>

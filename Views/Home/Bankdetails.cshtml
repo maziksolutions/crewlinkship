@@ -1,4 +1,5 @@
-﻿@{
+﻿@model crewlinkship.Models.TblCrewBankDetail
+@{
     ViewBag.Title = "Bankdetails";
 }
 <div id="user-profile">
@@ -10,9 +11,12 @@
                     <div class="media-body pt-5 px-2">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">Amarjit Singh Banka <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">On Board</span></h3>
-                                <div>Master | BAKERLOO</div>
-                            </div>
+                                @foreach (TblCrewDetail item in ViewBag.rankName)
+                                {
+                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName  <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                }
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -20,7 +24,7 @@
                     <div id="navigation">
                         <ul>
                             <li class="has-sub active">
-                                <a >Personal Details</a>
+                                <a>Personal Details</a>
                                 <ul>
                                     <li><a class="details" href="javascript:;">Particulars</a></li>
                                     <li><a class="addressdetails" href="javascript:;">Address</a></li>
@@ -219,7 +223,7 @@
         });
     });
 </script>
-<!-- / main menu-->
+ @*/ main menu*@
 
 <div>
     <div class="content-wrapper">
@@ -239,61 +243,64 @@
                                 <div class="col-xl-6 col-lg-12">
                                     <h4 class="card-title p-t-5 proper-case">Primary Bank Details</h4>
                                 </div>
-                                <div class="col-xl-6 col-lg-12">
+                                @*<div class="col-xl-6 col-lg-12">
                                     <div class="float-right">
-                                        @*<button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>*@
+                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
                         <div class="card-body pt-0">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        <tr>
-                                            <th width="50%">Beneficiary</th>
-                                            <td width="50%">D.Irudhaya Seldan</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Acc Number</th>
-                                            <td>176201000014422</td>
-                                        </tr>
-                                        <tr>
-                                            <th>IFSC/IBAN Number(If applicable)</th>
-                                            <td>IOBA0001762</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Name of bank</th>
-                                            <td>Indian Overseas Bank</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Swift Code</th>
-                                            <td>IOBAINBB100</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Bank address</th>
-                                            <td>olytechnic College Campus, Konam, Nagercoil, Kanyakumari ,Tamil Nadu</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Country</th>
-                                            <td>India</td>
-                                        </tr>
-                                        <tr>
-                                            <th>State</th>
-                                            <td>Tamil Nadu</td>
-                                        </tr>
-                                        <tr>
-                                            <th>City</th>
-                                            <td>Kanyakumari</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Postcode</th>
-                                            <td>629004</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Sort Code(If applicable)</th>
-                                            <td>----</td>
-                                        </tr>
+                                        @foreach (TblCrewBankDetail item in ViewBag.primaryBank)
+                                        {
+                                            <tr>
+                                                <th width="50%">Beneficiary</th>
+                                                <td width="50%">@item.Beneficiary</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Acc Number</th>
+                                                <td>@item.AccountNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th>IFSC/IBAN Number(If applicable)</th>
+                                                <td>@item.Ifsccode</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Name of bank</th>
+                                                <td>@item.BankName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Swift Code</th>
+                                                <td>@item.SwiftCode</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Bank address</th>
+                                                <td>@item.BankAddress , @item.BankAddress2</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Country</th>
+                                                <td>@item.Country?.CountryName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>State</th>
+                                                <td>@item.State?.StateName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>City</th>
+                                                <td>@item.City?.CityName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Postcode</th>
+                                                <td>@item.Postcode</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Sort Code(If applicable)</th>
+                                                <td>@item.SortCode</td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -307,62 +314,66 @@
                                 <div class="col-xl-6 col-lg-12">
                                     <h4 class="card-title p-t-5 proper-case">Secondary Bank Details</h4>
                                 </div>
-                                <div class="col-xl-6 col-lg-12">
+                                @*<div class="col-xl-6 col-lg-12">
                                     <div class="float-right">
-                                        @*<input type="checkbox"> Same as Primary <span class="m-r-100"></span>
-                                        <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>*@
+                                        <input type="checkbox"> Same as Primary <span class="m-r-100"></span>
+                                            <button class="btn btn-primary form-small p-t-3 p-b-3" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
                         <div class="card-body pt-0">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        <tr>
-                                            <th width="50%">Beneficiary</th>
-                                            <td width="50%">D.Irudhaya Seldan</td>
-                                        </tr>
+                                        @foreach (TblCrewBankDetail item in ViewBag.secondaryBank)
+                                        {
+
+                                    <tr>
+                                        <th width="50%">Beneficiary</th>
+                                        <td width="50%">@item.Beneficiary</td>
+                                    </tr>
                                         <tr>
                                             <th>Acc Number</th>
-                                            <td>176201000014422</td>
+                                            <td>@item.AccountNumber</td>
                                         </tr>
                                         <tr>
                                             <th>IFSC/IBAN Number(If applicable)</th>
-                                            <td>IOBA0001762</td>
+                                            <td>@item.Ifsccode</td>
                                         </tr>
                                         <tr>
                                             <th>Name of bank</th>
-                                            <td>Indian Overseas Bank</td>
+                                            <td>@item.BankName</td>
                                         </tr>
                                         <tr>
                                             <th>Swift Code</th>
-                                            <td>IOBAINBB100</td>
+                                            <td>@item.SwiftCode</td>
                                         </tr>
                                         <tr>
                                             <th>Bank address</th>
-                                            <td>olytechnic College Campus, Konam, Nagercoil, Kanyakumari ,Tamil Nadu</td>
+                                            <td>@item.BankAddress , @item.BankAddress2</td>
                                         </tr>
                                         <tr>
                                             <th>Country</th>
-                                            <td>India</td>
+                                            <td>@item.Country?.CountryName</td>
                                         </tr>
                                         <tr>
                                             <th>State</th>
-                                            <td>Tamil Nadu</td>
+                                            <td>@item.State?.StateName</td>
                                         </tr>
                                         <tr>
                                             <th>City</th>
-                                            <td>Kanyakumari</td>
+                                            <td>@item.City?.CityName</td>
                                         </tr>
                                         <tr>
                                             <th>Postcode</th>
-                                            <td>629004</td>
+                                            <td>@item.Postcode</td>
                                         </tr>
                                         <tr>
                                             <th>Sort Code(If applicable)</th>
-                                            <td>----</td>
+                                            <td>@item.SortCode</td>
                                         </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

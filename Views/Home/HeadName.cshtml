@@ -1,0 +1,59 @@
+﻿@*@model IEnumerable<crewlinkship.Models.TblVessel>
+@{
+    ViewBag.Title = "HeadName";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card profile-with-cover m-b-0">
+            <div class="card-img-top img-fluid bg-cover height-50" style="background: #E3EBF3"></div>
+            <div class="media profil-cover-details w-100">
+                <div class="media-left profile-image pl-2 pt-2">
+                    <img src="~/Images/ship-pic.jpg" class="rounded-circle img-border height-75" alt="Card image">
+                </div>
+                @foreach (var item in Model)
+                {
+                    <div class="media-body pt-2-5 px-2">
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 10px">
+                                    @item.VesselName (@item.Ship.ShipCategory)
+                                </h3>
+                                <span style="font-size: 12px">@item.Imo | @item.Flag.CountryName</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <nav class="navbar navbar-profile align-self-end m-r-30">
+                    <div id="navigation">
+                        <ul>
+                            <li class="has-sub active">
+                                <a href="">Crewlist</a>
+                                <ul>
+                                    <li><a href="https://localhost:44336/">Current Crewlist</a></li>
+                                    <li><a href="crewlist-history.html">Crewlist History</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Particular</a></li>
+                            <li><a>Vessel Distribution</a></li>
+                            <li><a href="certificate.html">Certificate</a></li>
+                            <li><a href="safe-manning.html">Safe Manning</a></li>
+                            <li class="has-sub">
+                                <a href="">Matrix</a>
+                                <ul>
+                                    <li><a href="vessel-matrix.html">Vessel License Matrix</a></li>
+                                    <li><a href="vessel-course-matrix.html">Vessel Course Matrix</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="voyege-history.html">Voyege History</a></li>
+                            <li><a href="vessel-cba.html">CBA</a></li>
+                            <li><a href="correspondance.html">vessel Correspondance</a></li>
+                            <li class="icon" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Event Log"><a href=""><i class="fa fa-file"></i></a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>*@
