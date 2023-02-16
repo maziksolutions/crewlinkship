@@ -105,23 +105,7 @@ namespace crewlinkship.Controllers
         }
 
         public ActionResult VesselParticular()
-        {
-            ViewBag.HandOverport = "NA";
-            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 103).FirstOrDefault().PortOfHandover;
-            if (HandOverPortId != null)
-            {
-                ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
-
-            }
-
-            var vesselName = _context.TblVessels.Include(x=>x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
-                .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
-                .Include(x => x.Classification).Include(t=>t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
-                .Include(h => h.VendorRegisterHm).Include(e=>e.EngineModel).Include(T=>T.EngineType).Include(b=>b.Builder)
-                .Where(x => x.IsDeleted == false && x.VesselId == 103).ToList();
-
-        
-
+        {         
             var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
             ViewBag.imo = vesselDetails.Imo;
