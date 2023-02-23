@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Syncfusion.XlsIO;
 using System.IO;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
@@ -51,25 +50,16 @@ namespace crewlinkship.Controllers
               .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
             return PartialView();
         }
-        public ActionResult Details()
-        {
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == 355).ToList();
-            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().PassportNumber;
-            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+
 
         public IActionResult Address(int? crewId)
-
-            var CrewName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c=>c.Country)
-              .Include(c => c.Pool).Where(x => x.CrewId == 8584).ToList();
-            return PartialView(CrewName);
-        }
-        public IActionResult Address()
         {
             ViewBag.address = _context.TblCrewAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
-            ViewBag.corsAddress =_context.TblCrewCorrespondenceAddresses.Include(x=>x.Country).Include(x=>x.State).Include(x=>x.City).Include(x=>x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
+            ViewBag.corsAddress = _context.TblCrewCorrespondenceAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
             ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
             return PartialView();
         }
+
 
         public ActionResult Bankdetails(int? crewId)
         {
