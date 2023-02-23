@@ -167,6 +167,51 @@
                                     });
                                 });
                             </script>
+
+                            @*ExcelFile*@
+
+                            <script>
+
+                            function exported(e) {
+                                var value = $("#myselection option:selected");
+                                var name = value.val();
+                                if (name == "Atlantic") {
+
+                                        url = '@Url.Action("AtlanticExcelFile", "Home")';
+                                    }
+                                if (name == "OCIMF") {
+                                        url = '@Url.Action("GetOCIMFExcelFile", "Home")';
+                                }
+                                if (name == "OLP") {
+                                    url = '@Url.Action("OLPExcelFile", "Home")';
+                                }
+                                if (name == "IMO") {
+                                    url =('@Url.Action("GenerateIMOPDF", "Home")');
+
+                                     @*var url = '@Url.Action("GenerateIMOPDF", "Home", new {target="_blank"})';
+                                              window.location.href = url;*@
+                                    }
+                                if (name == "FPD01") {
+                                    url =('@Url.Action("generateFPD01", "Home")');
+
+
+                                    }
+
+                               $.ajax({
+                                   type: "POST",
+                                   url: url,
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+
+
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+                                /*window.open(url);*/
+                              }
+                            </script>
                         </div>
                     </form>
                 </div>
