@@ -1,7 +1,7 @@
-﻿<!DOCTYPE html>
-@model IEnumerable<crewlinkship.Models.TblVessel>
+﻿@model IEnumerable<crewlinkship.Models.TblVessel>
 @{
     ViewBag.Title = "crewlinkship";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 <div class="app-content content fixed-navbar-inner">
@@ -19,30 +19,9 @@
                                         <td>
                                             <table width="100%" class="table table-bordered mb-0 crew-table table-striped" style="border: none !important;">
                                                 <tr>
-                                                    <th width="100%" valign="top" style="border: none !important;">
+                                                    <th width="100%" valign="top" @*style="border: none !important;*@>
                                                         <h5 style="margin: 5px 0; background: none;">
                                                             VESSEL PARTICULARS<span style="float:right;">
-                                                                @*<button class="btn btn-success form-small p-t-3 p-b-3" type="button"
-                                            data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                            data-title="Export to Excel" data-original-title="" title=""
-                                            (click)="exportVesselParticulars()">
-                                        <i class="fas fa-file-excel"
-                                           aria-hidden="true"></i>
-                                    </button>
-
-                                    <button class="btn btn-danger form-small p-t-3 p-b-3 m-l-5" type="button"
-                                            data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                            data-title="Export to PDF" data-original-title="" title=""
-                                            (click)="generatePDF(vessel.vesselName)">
-                                        <i class="fas fa-file-pdf"
-                                           aria-hidden="true"></i>
-                                    </button>
-
-
-                                    <button class="btn btn-primary form-small p-t-3 p-b-3 m-l-5" type="button" data-toggle="popover"
-                                            title="Help" data-html="true" data-placement="left" [attr.data-content]="pageHelp">
-                                        <i class="fas fa-question" aria-hidden="true"></i>
-                                    </button>*@
                                                             </span>
                                                         </h5>
                                                     </th>
@@ -507,9 +486,9 @@
                                         </tr>
 
 
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                    </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
                                     }
                                     @foreach (var item in Model)
                                     {
@@ -579,51 +558,51 @@
                                                             <td>@item.GrabsNumber</td>
                                                         </tr>
                                                     </tbody>
-                                                   
+
                                                 </table>
                                             </td>
                                         </tr>
                                     }
 
-                                        <tr>
-                                            <td>
-                                                <table width="100%">
-                                                    @foreach (var item in Model)
-                                                    {
-                                                        <tbody>
-                                                            <tr style="color: #000; background: #E3EBF3">
-                                                                <th colspan="4"><h4>ECDIS</h4></th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th width="25%">&nbsp;</th>
-                                                                <th width="25%">ECDIS 1</th>
-                                                                <th width="25%">ECDIS 2</th>
-                                                                <th width="25%">ECDIS 3</th>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Maker</td>
-                                                                <td>@item.Ecdis2maker1</td>
-                                                                <td>@item.Ecdis2maker1</td>
-                                                                <td>&nbsp;</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Model</td>
-                                                                <td>@item.Ecdis2model</td>
-                                                                <td>@item.Ecdis2model</td>
-                                                                <td>&nbsp;</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Type</td>
-                                                                <td>@item.Ecdistype1</td>
-                                                                <td>@item.Ecdistype2</td>
-                                                                <td>@item.Ecdistype3</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    }
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                    <tr>
+                                        <td>
+                                            <table width="100%">
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr style="color: #000; background: #E3EBF3">
+                                                            <th colspan="4"><h4>ECDIS</h4></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th width="25%">&nbsp;</th>
+                                                            <th width="25%">ECDIS 1</th>
+                                                            <th width="25%">ECDIS 2</th>
+                                                            <th width="25%">ECDIS 3</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Maker</td>
+                                                            <td>@item.Ecdis2maker1</td>
+                                                            <td>@item.Ecdis2maker1</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Model</td>
+                                                            <td>@item.Ecdis2model</td>
+                                                            <td>@item.Ecdis2model</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Type</td>
+                                                            <td>@item.Ecdistype1</td>
+                                                            <td>@item.Ecdistype2</td>
+                                                            <td>@item.Ecdistype3</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <br />
                         </td>
@@ -639,12 +618,12 @@
                         <div class="text-center">
                             @*<img *ngIf="vessel.vesselImage!=null" class="card-img-top mb-1 img-fluid" [src]="~/Fleet-Bakerloo.jpg">*@
                             <img *ngIf="vessel.vesselImage==null" class="card-img-top mb-1 img-fluid" style="width: 120px;" src="~/Images/vessel-pic.jpg">
-                        </div>
-                        <h4 class="card-title" style="text-align: center;">Vessel Details</h4>
-                        <div class="table-responsive">
-                            <table class="table">
-                                @foreach (var item in Model)
-                                {
+                        </div> @foreach (var item in Model)
+                        {
+                    <h4 class="card-title" style="text-align: center;">@item.VesselName</h4>
+                            <div class="table-responsive">
+                                <table class="table">
+
                                     <tbody>
                                         <tr>
                                             <th>Delivery date</th>
@@ -671,15 +650,12 @@
                                             <td>@item.ClassNo</td>
                                         </tr>
                                     </tbody>
-                                }
                                 </table>
+                            </div>
+                        }
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-

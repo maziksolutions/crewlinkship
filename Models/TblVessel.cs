@@ -233,13 +233,6 @@ namespace crewlinkship.Models
         public virtual TblSeaport PortOfRegistryNavigation { get; set; }
         public virtual TblPrincipal Principal { get; set; }
         public virtual TblShipType Ship { get; set; }
-        public virtual TblSeaport PortOfTakeovers { get; set; }
-        public TblManager Manager { get; set; }
-        public TblManager Crewmanager { get; set; }
-
-        public virtual TblVendorRegister VendorRegisterPi { get; set; }
-
-        public virtual TblVendorRegister VendorRegisterHm { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetailPlanVessels { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetailVessels { get; set; }
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }

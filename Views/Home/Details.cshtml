@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<crewlinkship.Models.TblCrewDetail>
 @{
-    ViewBag.Title = "Details";
+    ViewData["Title"] = "Details";
 }
 <div id="user-profile">
     <div class="row">
@@ -8,20 +8,17 @@
             <div class="card profile-with-cover m-b-0">
                 <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
                 <div class="media profil-cover-details w-100">
-                   
                     <div class="media-body pt-5 px-2">
                         <div class="row">
                             <div class="col">
                                 @foreach (TblCrewDetail item in ViewBag.rankName)
-                                { 
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;"> @item.FirstName @item.MiddleName @item.LastName<span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3"> @item.Status</span></h3>
-                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                {
+                                    <h3 class="card-title m-b-0" style="font-size: 1.4rem;"> @item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                    <div>@item.Rank?.RankName | @item.Vessel?.VesselName <span hidden="hidden" id="CrewDetailId">@item.CrewId</span></div>
                                 }
                             </div>
-
                         </div>
                     </div>
-                          
                 </div>
                 <nav class="navbar navbar-profile align-self-end m-r-30">
                     <div id="navigation">
@@ -29,20 +26,20 @@
                             <li class="has-sub active">
                                 <a>Personal Details</a>
                                 <ul>
-                                    <li><a class="details" href="javascript:;">Particulars</a></li>
-                                    <li><a class="addressdetails" href="javascript:;">Address</a></li>
-                                    <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                    <li><a id="details" href="javascript:;">Particulars</a></li>
+                                    <li><a class="address" href="javascript:;">Address</a></li>
+                                    <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
                                 </ul>
                             </li>
                             <li class="has-sub">
                                 <a>Documents</a>
                                 <ul>
-                                    <li><a class="license" href="javascript:;">License</a></li>
-                                    <li><a class="courses" href="javascript:;">Courses</a></li>
-                                    <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                    <li><a id="license" href="javascript:;">License</a></li>
+                                    <li><a id="courses" href="javascript:;">Courses</a></li>
+                                    <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
                                 </ul>
                             </li>
-                            <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+                            <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
                             @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
                         </ul>
                     </div>
@@ -74,12 +71,12 @@
 @*Address*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .addressdetails").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#navigation .address").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Address",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -96,42 +93,15 @@
         });
     });
 </script>
-
-@*Particulars*@
-<script type="text/javascript">
-    $(function () {
-        $("#navigation .details").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
-            $.ajax({
-                type: "POST",
-                url: "/Home/Details",
-                data: '{customerId: "' + customerId + '" }',
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    $("#partialModal").find(".modal-body").html(response);
-                    $("#partialModal").modal('show');
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-        });
-    });
-</script>
-
 @*Bankdetails*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .Bankdetails").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#Bankdetails").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Bankdetails",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -152,12 +122,12 @@
 @*License*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .license").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#license").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/License",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -178,12 +148,12 @@
 @*Courses*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .courses").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#courses").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Courses",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -204,12 +174,12 @@
 @*OtherDocuments*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .otherDocuments").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#otherDocuments").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/OtherDocuments",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -230,12 +200,12 @@
 @*Crewtraveldoc*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .crewtraveldoc").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#crewtraveldoc").click(function () {
+            var crewId = $("#CrewDetailId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Crewtraveldoc",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -264,8 +234,6 @@
             </div>
         </div>
         <div class="content-body">
-            @foreach (var item in Model)
-            {
             <div class="row match-height" id="switch">
                 <div class="col-lg-12 col-md-12 col-12">
                     <section id="descriptioin" class="card">
@@ -287,32 +255,35 @@
                         <div class="card-content">
                             <div class="card-body pt-0">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" id="details">
                                         <tbody>
-                                            <tr>
-                                                <th width="13.3%">Nationality</th>
-                                                <td width="20%">@item.Country.Nationality</td>
-                                                <th width="13.3%">Date of Birth</th>
-                                                <td width="20%"> @(item.Dob == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.Dob))</td>
-                                                <th width="13.3%">Place Of Birth</th>
-                                                <td width="20%">@item.PlaceOfBirth</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Passport No</th>
-                                                <td>NA</td>
-                                                <th>Seaman Book No</th>
-                                                <td>MUM79821</td>
-                                                <th>INDOS No</th>
-                                                <td>----</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Civil Status</th>
-                                                <td>@item.CivilStatus</td>
-                                                <th>Gender</th>
-                                                <td>@item.Gender</td>
-                                                <th>English Fluency</th>
-                                                <td>@item.EnglishFluency</td>
-                                            </tr>
+                                            @foreach (TblCrewDetail item in ViewBag.crewDetails)
+                                            {
+                                                <tr>
+                                                    <th width="13.3%">Nationality</th>
+                                                    <td width="20%">@item.Country.Nationality</td>
+                                                    <th width="13.3%">Date of Birth</th>
+                                                    <td width="20%"> @(item.Dob == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.Dob))</td>
+                                                    <th width="13.3%">Place Of Birth</th>
+                                                    <td width="20%">@item.PlaceOfBirth</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Passport No</th>
+                                                    <td>NA</td>
+                                                    <th>Seaman Book No</th>
+                                                    <td>MUM79821</td>
+                                                    <th>INDOS No</th>
+                                                    <td>----</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Civil Status</th>
+                                                    <td>@item.CivilStatus</td>
+                                                    <th>Gender</th>
+                                                    <td>@item.Gender</td>
+                                                    <th>English Fluency</th>
+                                                    <td>@item.EnglishFluency</td>
+                                                </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -337,38 +308,41 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tbody>
-                                            <tr>
-                                                <th width="13.3%">Height (cms)</th>
-                                                <td width="20%">@item.Height</td>
-                                                <th width="13.3%">Weight(kg)</th>
-                                                <td width="20%">@item.Weight</td>
-                                                <th width="13.3%">BMI</th>
-                                                <td width="20%" class="text-white bg-amber bg-accent-4">27</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Hair Color</th>
-                                                <td>@item.HairColor</td>
-                                                <th>Eye Color</th>
-                                                <td>@item.EyeColor</td>
-                                                <th>Distinguish Mark</th>
-                                                <td>@item.DistinguishMark</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Shoes Size (UK)</th>
-                                                <td>@item.ShoesSize</td>
-                                                <th>Boiler Suit size</th>
-                                                <td>@item.BoilerSuitSize</td>
-                                                <th>Shirt Size (inch)</th>
-                                                <td>@item.ShirtSize</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Trouser Size (inch)</th>
-                                                <td>@item.TrouserSize</td>
-                                                <th>&nbsp;</th>
-                                                <td>&nbsp;</td>
-                                                <th>&nbsp;</th>
-                                                <td>&nbsp;</td>
-                                            </tr>
+                                            @foreach (TblCrewDetail item in ViewBag.crewDetails)
+                                            {
+                                                <tr>
+                                                    <th width="13.3%">Height (cms)</th>
+                                                    <td width="20%">@item.Height</td>
+                                                    <th width="13.3%">Weight(kg)</th>
+                                                    <td width="20%">@item.Weight</td>
+                                                    <th width="13.3%">BMI</th>
+                                                    <td width="20%" class="text-white bg-amber bg-accent-4">27</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Hair Color</th>
+                                                    <td>@item.HairColor</td>
+                                                    <th>Eye Color</th>
+                                                    <td>@item.EyeColor</td>
+                                                    <th>Distinguish Mark</th>
+                                                    <td>@item.DistinguishMark</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Shoes Size (UK)</th>
+                                                    <td>@item.ShoesSize</td>
+                                                    <th>Boiler Suit size</th>
+                                                    <td>@item.BoilerSuitSize</td>
+                                                    <th>Shirt Size (inch)</th>
+                                                    <td>@item.ShirtSize</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Trouser Size (inch)</th>
+                                                    <td>@item.TrouserSize</td>
+                                                    <th>&nbsp;</th>
+                                                    <td>&nbsp;</td>
+                                                    <th>&nbsp;</th>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -393,38 +367,43 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tbody>
-                                            <tr>
-                                                <th width="13.3%">Employee No</th>
-                                                <td width="20%">@item.EmpNumber</td>
-                                                <th width="13.3%">Rank Applied</th>
-                                                <td width="20%">@item.Rank.RankName</td>
-                                                <th width="13.3%">Applied on</th>
-                                                <td width="20%">
-                                               @(item.AppliedOn == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.AppliedOn))                                                                                            </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Rank Posted</th>
-                                                <td>@item.Rank.RankName</td>
-                                                <th>First Join Date</th>
-                                                <td>@(item.FirstJoinDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.FirstJoinDate))
-                                                </td>
-                                                <th>Last on Board Vessel</th>
-                                                <td>@item.LastVessel</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Manning Office</th>
-                                                <td>@item.ManningOffice</td>
-                                                <th>Zone</th>
-                                                <td>Delhi</td>
-                                                <th>Pool</th>
-                                                <td>@item.Pool.PoolName</td>
-                                            </tr>
-                                            @*<tr>
-                                                <th>Seafarer Union</th>
-                                                <td>----</td>
-                                                <th>&nbsp;</th>
-                                                <td>&nbsp;</td>
-                                            </tr>*@
+                                            @foreach (TblCrewDetail item in ViewBag.crewDetails)
+                                            {
+                                                <tr>
+                                                    <th width="13.3%">Employee No</th>
+                                                    <td width="20%">@item.EmpNumber</td>
+                                                    <th width="13.3%">Rank Applied</th>
+                                                    <td width="20%">@item.Rank.RankName</td>
+                                                    <th width="13.3%">Applied on</th>
+                                                    <td width="20%">
+                                                        @(item.AppliedOn == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.AppliedOn))
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Rank Posted</th>
+                                                    <td>@item.Rank.RankName</td>
+                                                    <th>First Join Date</th>
+                                                    <td>
+                                                        @(item.FirstJoinDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.FirstJoinDate))
+                                                    </td>
+                                                    <th>Last on Board Vessel</th>
+                                                    <td>@item.LastVessel</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Manning Office</th>
+                                                    <td>@item.ManningOffice</td>
+                                                    <th>Zone</th>
+                                                    <td>Delhi</td>
+                                                    <th>Pool</th>
+                                                    <td>@item.Pool.PoolName</td>
+                                                </tr>
+                                                @*<tr>
+                                                        <th>Seafarer Union</th>
+                                                        <td>----</td>
+                                                        <th>&nbsp;</th>
+                                                        <td>&nbsp;</td>
+                                                    </tr>*@
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -433,7 +412,7 @@
                     </section>
                 </div>
             </div>
-            }
+
         </div>
     </div>
 </div>

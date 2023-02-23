@@ -1,52 +1,51 @@
-﻿@{
+﻿@model IEnumerable<crewlinkship.Models.TblCrewAddress>
+@{
     ViewBag.Title = "Address";
 }
 <div id="user-profile">
     <div class="row">
-            <div class="col-12">
-                <div class="card profile-with-cover m-b-0">
-                    <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
-                    <div class="media profil-cover-details w-100">
-                        <div class="media-body pt-5 px-2">
-                            <div class="row">
-                                <div class="col">
-                                    @foreach (TblCrewDetail item in ViewBag.rankName)
-                                    {
-                                        <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
-                                        <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
-                                    }
-                                </div>
+        <div class="col-12">
+            <div class="card profile-with-cover m-b-0">
+                <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
+                <div class="media profil-cover-details w-100">
+                    <div class="media-body pt-5 px-2">
+                        <div class="row">
+                            <div class="col">
+                                 <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@ViewBag.rankName.FirstName @ViewBag.rankName.MiddleName @ViewBag.rankName.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@ViewBag.rankName.Status</span></h3>
+                                    <div>@ViewBag.rankName.Rank?.RankName | @ViewBag.rankName.Vessel?.VesselName <span hidden="hidden" id="crewIdAddress">@ViewBag.rankName.CrewId</span>
+                                                                                         </div>
+                               
                             </div>
                         </div>
                     </div>
-                    <nav class="navbar navbar-profile align-self-end m-r-30">
-                        <div id="navigation">
-                            <ul>
-                                <li class="has-sub active">
-                                    <a>Personal Details</a>
-                                    <ul>
-                                        <li><a class="details" href="javascript:;">Particulars</a></li>
-                                        <li><a class="addressdetails" href="javascript:;">Address</a></li>
-                                        <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
-
-                                    </ul>
-                                </li>
-                                <li class="has-sub">
-                                    <a>Documents</a>
-                                    <ul>
-                                        <li><a class="license" href="javascript:;">License</a></li>
-                                        <li><a class="courses" href="javascript:;">Courses</a></li>
-                                        <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
-                                    </ul>
-                                </li>
-                                <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
-
-                                @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
-                            </ul>
-                        </div>
-                    </nav>
                 </div>
+                <nav class="navbar navbar-profile align-self-end m-r-30">
+                    <div id="navigation">
+                        <ul>
+                            <li class="has-sub active">
+                                <a>Personal Details</a>
+                                <ul>
+                                    <li><a class="details" href="javascript:;">Particulars</a></li>
+                                    <li><a class="address" href="javascript:;">Address</a></li>
+                                    <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-sub">
+                                <a>Documents</a>
+                                <ul>
+                                    <li><a id="license" href="javascript:;">License</a></li>
+                                    <li><a id="courses" href="javascript:;">Courses</a></li>
+                                    <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                </ul>
+                            </li>
+                            <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+
+                            @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
+                        </ul>
+                    </div>
+                </nav>
             </div>
+        </div>
     </div>
 </div>
 <div id="partialModal" class="modal" tabindex="-1" role="dialog">
@@ -67,17 +66,16 @@
             </div>
         </div>
     </div>
-</div>
+</div>@*@Particulars*@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-@*Particulars*@
 <script type="text/javascript">
     $(function () {
         $("#navigation .details").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            var crewId = $("#crewIdAddress").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Details",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -94,42 +92,42 @@
         });
     });
 </script>
-
 @*Bankdetails*@
 <script type="text/javascript">
-    $(function () {
-        $("#navigation .Bankdetails").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
-            $.ajax({
-                type: "POST",
-                url: "/Home/Bankdetails",
-                data: '{customerId: "' + customerId + '" }',
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    $("#partialModal").find(".modal-body").html(response);
-                    $("#partialModal").modal('show');
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
+        $(function () {
+            $("#Bankdetails").click(function () {
+                var crewId = $("#crewIdAddress").html();
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/Bankdetails",
+                    data: { 'crewId': crewId },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#partialModal").find(".modal-body").html(response);
+                        $("#partialModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
+
 
 @*License*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .license").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#license").click(function () {
+            var crewId = $("#crewIdAddress").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/License",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -150,12 +148,12 @@
 @*Courses*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .courses").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#courses").click(function () {
+            var crewId = $("#crewIdAddress").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Courses",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -176,12 +174,12 @@
 @*OtherDocuments*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .otherDocuments").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#otherDocuments").click(function () {
+            var crewId = $("#crewIdAddress").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/OtherDocuments",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -202,12 +200,12 @@
 @*Crewtraveldoc*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .crewtraveldoc").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#crewtraveldoc").click(function () {
+            var crewId = $("#crewIdAddress").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Crewtraveldoc",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -245,7 +243,6 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-12">
                                     <div class="float-right">
-                                      
                                     </div>
                                 </div>
                             </div>
@@ -254,51 +251,50 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        @foreach (TblCrewAddress item in ViewBag.address)
-                                        {
+                                        
                                             <tr>
                                                 <th width="50%">Flat, House no., Building</th>
-                                                <td width="50%">@item.Address1</td>
+                                                <td width="50%">@ViewBag.address.Address1</td>
                                             </tr>
                                             <tr>
                                                 <th>Area, Colony, Street, Sector, Village</th>
-                                                <td>@item.Address2 </td>
+                                                <td>@ViewBag.address.Address2 </td>
                                             </tr>
                                             <tr>
                                                 <th>Country</th>
-                                                <td>@item.Country?.CountryName</td>
+                                                <td>@ViewBag.address.Country?.CountryName</td>
                                             </tr>
                                             <tr>
                                                 <th>State</th>
-                                                <td>@item.State?.StateName</td>
+                                                <td>@ViewBag.address.State?.StateName</td>
                                             </tr>
                                             <tr>
                                                 <th>Town / City</th>
-                                                <td>@item.City?.CityName</td>
+                                                <td>@ViewBag.address.City?.CityName</td>
                                             </tr>
                                             <tr>
                                                 <th>Postcode</th>
-                                                <td>@item.Postcode</td>
+                                                <td>@ViewBag.address.Postcode</td>
                                             </tr>
                                             <tr>
                                                 <th>Residential Phone</th>
-                                                <td>@item.PhoneNumber</td>
+                                                <td>@ViewBag.address.PhoneNumber</td>
                                             </tr>
                                             <tr>
                                                 <th>Mobile Number</th>
-                                                <td>@item.MobileNumber</td>
+                                                <td>@ViewBag.address.MobileNumber</td>
                                             </tr>
                                             <tr>
                                                 <th>E-mail</th>
-                                                <td>@item.Email</td>
+                                                <td>@ViewBag.address.Email</td>
                                             </tr>
                                             <tr>
                                                 <th>Nearest Airport</th>
-                                                <td>@item.Airport?.CityName</td>
+                                                <td>@ViewBag.address.Airport?.CityName</td>
                                             </tr>
-                                        }
+                                        
                                     </tbody>
-                                    
+
                                 </table>
                             </div>
                         </div>
@@ -312,48 +308,50 @@
                                     <h4 class="card-title p-t-5 proper-case">Correspondence</h4>
                                 </div>
                                 <div class="col-xl-6 col-lg-12">
-                                   
+
 
                                 </div>
                             </div>
                         </div>
                         <div class="card-body pt-0">
                             <div class="table-responsive">
+                                @if (ViewBag.corsAddress != null)
+                                {
                                 <table class="table">
                                     <tbody>
-                                        @foreach (TblCrewCorrespondenceAddress item in ViewBag.corsAddress)
-                                        {
-                                    <tr>
-                                        <th width="50%">Flat, House no., Building</th>
-                                        <td width="50%">@item.Caddress1</td>
-                                    </tr>
-                                        <tr>
-                                            <th>Area, Colony, Street, Sector, Village</th>
-                                            <td>@item.Caddress2</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Country</th>
-                                            <td>@item.Country?.CountryName</td>
-                                        </tr>
-                                        <tr>
-                                            <th>State</th>
-                                            <td>@item.State?.StateName</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Town / City</th>
-                                            <td>@item.City?.CityName</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Postcode</th>
-                                            <td>@item.Postcode</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Nearest Airport</th>
-                                            <td>@item.Airport?.CityName</td>
-                                        </tr>
-                                        }
+                                       
+                                            <tr>
+                                                <th width="50%">Flat, House no., Building</th>
+                                                <td width="50%">@ViewBag.corsAddress.Caddress1</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Area, Colony, Street, Sector, Village</th>
+                                                <td>@ViewBag.corsAddress.Caddress2</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Country</th>
+                                                <td>@ViewBag.corsAddress.Country?.CountryName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>State</th>
+                                                <td>@ViewBag.corsAddress.State?.StateName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Town / City</th>
+                                                <td>@ViewBag.corsAddress.City?.CityName</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Postcode</th>
+                                                <td>@ViewBag.corsAddress.Postcode</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nearest Airport</th>
+                                                <td>@ViewBag.corsAddress.Airport?.CityName</td>
+                                            </tr>
+                                        
                                     </tbody>
                                 </table>
+                                }
                             </div>
                         </div>
                     </section>

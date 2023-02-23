@@ -1,4 +1,4 @@
-﻿@model IEnumerable<crewlinkship.Models.TblCrewOtherDocument>
+﻿@model crewlinkship.Models.TblCrewOtherDocument
 @{
     ViewBag.Title = "CrewOtherDocuments";
 }
@@ -14,7 +14,7 @@
                                 @foreach (TblCrewDetail item in ViewBag.rankName)
                                 {
                                 <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
-                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName</div>
+                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName<span hidden="hidden" id="crewOtherDocId">@item.CrewId</span></div>
                                 }
                                 </div>
                         </div>
@@ -27,19 +27,19 @@
                                 <a>Personal Details</a>
                                 <ul>
                                     <li><a class="details" href="javascript:;">Particulars</a></li>
-                                    <li><a class="addressdetails" href="javascript:;">Address</a></li>
-                                    <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                    <li><a id="address" href="javascript:;">Address</a></li>
+                                    <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
                                 </ul>
                             </li>
                             <li class="has-sub">
                                 <a>Documents</a>
                                 <ul>
-                                    <li><a class="license" href="javascript:;">License</a></li>
-                                    <li><a class="courses" href="javascript:;">Courses</a></li>
+                                    <li><a id="license" href="javascript:;">License</a></li>
+                                    <li><a id="courses" href="javascript:;">Courses</a></li>
                                     <li><a class="otherDocuments" href="javascript:;">Other Documents</a></li>
                                 </ul>
                             </li>
-                            <li><a class="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+                            <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
                             @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
                         </ul>
                     </div>
@@ -73,11 +73,11 @@
 <script type="text/javascript">
     $(function () {
         $("#navigation .details").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Details",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -98,12 +98,12 @@
 @*Address*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .addressdetails").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#address").click(function () {
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Address",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -124,12 +124,12 @@
 @*Bankdetails*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .Bankdetails").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#Bankdetails").click(function () {
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Bankdetails",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -150,12 +150,12 @@
 @*License*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .license").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#license").click(function () {
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/License",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -176,12 +176,12 @@
 @*Courses*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .courses").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#courses").click(function () {
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Courses",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -202,12 +202,12 @@
 @*Crewtraveldoc*@
 <script type="text/javascript">
     $(function () {
-        $("#navigation .crewtraveldoc").click(function () {
-            var customerId = $(this).closest("tr").find("td").eq(0).html();
+        $("#crewtraveldoc").click(function () {
+            var crewId = $("#crewOtherDocId").html();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/Home/Crewtraveldoc",
-                data: '{customerId: "' + customerId + '" }',
+                data: { 'crewId': crewId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
@@ -259,17 +259,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(var item in Model) {
-
-                                        <tr>
-                                            <td>@item.Document.DocumentName</td>
-                                            <td>@item.DocumentNo</td>
-                                            <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
-                                            <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
-                                            <td>@item.ExtendedDate?.ToString("dd/MMM/yyyy")</td>
-                                            <td>@item.PlaceOfIssue</td>
-                                            <td>@item.Authority?.Authorities</td>
-                                        </tr>
+                                        @foreach (TblCrewOtherDocument item in ViewBag.otherDocuments)
+                                        { 
+                                            <tr>
+                                                <td>@item.Document.DocumentName</td>
+                                                <td>@item.DocumentNo</td>
+                                                <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.ExtendedDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.PlaceOfIssue</td>
+                                                <td>@item.Authority?.Authorities</td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>

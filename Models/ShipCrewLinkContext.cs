@@ -6,17 +6,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace crewlinkship.Models
 {
-    public partial class ShipCrewLinkContext : DbContext
+    public partial class shipCrewlinkContext : DbContext
     {
-        public ShipCrewLinkContext()
+        public shipCrewlinkContext()
         {
         }
 
-        public ShipCrewLinkContext(DbContextOptions<ShipCrewLinkContext> options)
+        public shipCrewlinkContext(DbContextOptions<shipCrewlinkContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<TblAddZonal> TblAddZonals { get; set; }
         public virtual DbSet<TblAuthority> TblAuthorities { get; set; }
         public virtual DbSet<TblBudgetCode> TblBudgetCodes { get; set; }
         public virtual DbSet<TblBudgetSubCode> TblBudgetSubCodes { get; set; }
@@ -30,10 +31,13 @@ namespace crewlinkship.Models
         public virtual DbSet<TblCourseRegister> TblCourseRegisters { get; set; }
         public virtual DbSet<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual DbSet<TblCrewBankDetail> TblCrewBankDetails { get; set; }
+        public virtual DbSet<TblCrewCorrespondence> TblCrewCorrespondences { get; set; }
+        public virtual DbSet<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
         public virtual DbSet<TblCrewCourse> TblCrewCourses { get; set; }
         public virtual DbSet<TblCrewDetail> TblCrewDetails { get; set; }
         public virtual DbSet<TblCrewLicense> TblCrewLicenses { get; set; }
         public virtual DbSet<TblCrewList> TblCrewLists { get; set; }
+        public virtual DbSet<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
         public virtual DbSet<TblDisponentOwner> TblDisponentOwners { get; set; }
         public virtual DbSet<TblEcdi> TblEcdis { get; set; }
         public virtual DbSet<TblEngineModel> TblEngineModels { get; set; }
@@ -56,6 +60,7 @@ namespace crewlinkship.Models
         public virtual DbSet<TblState> TblStates { get; set; }
         public virtual DbSet<TblVendorRegister> TblVendorRegisters { get; set; }
         public virtual DbSet<TblVessel> TblVessels { get; set; }
+        public virtual DbSet<TblVesselCba> TblVesselCbas { get; set; }
         public virtual DbSet<TblVisa> TblVisas { get; set; }
         public virtual DbSet<TblWageComponent> TblWageComponents { get; set; }
         public virtual DbSet<TblWageStructure> TblWageStructures { get; set; }
@@ -65,14 +70,27 @@ namespace crewlinkship.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
-                optionsBuilder.UseSqlServer("Server=DESKTOP-VTEH8LV;Database=shipCrewLink;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-HRR2RKV;Database=shipCrewlink;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+
+            modelBuilder.Entity<TblAddZonal>(entity =>
+            {
+                entity.HasKey(e => e.ZonalId);
+
+                entity.ToTable("tblAddZonal");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ZonalName).HasMaxLength(450);
+            });
 
             modelBuilder.Entity<TblAuthority>(entity =>
             {
@@ -347,6 +365,54 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.StateId);
             });
 
+            modelBuilder.Entity<TblCrewCorrespondence>(entity =>
+            {
+                entity.HasKey(e => e.CrewCorrespondenceId);
+
+                entity.ToTable("tblCrewCorrespondence");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewCorrespondences)
+                    .HasForeignKey(d => d.CrewId);
+            });
+
+            modelBuilder.Entity<TblCrewCorrespondenceAddress>(entity =>
+            {
+                entity.HasKey(e => e.CrewAddressId);
+
+                entity.ToTable("tblCrewCorrespondenceAddress");
+
+                entity.Property(e => e.Caddress1).HasColumnName("CAddress1");
+
+                entity.Property(e => e.Caddress2).HasColumnName("CAddress2");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.SameAddress).HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.City)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CityId);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.State)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.StateId);
+            });
+
             modelBuilder.Entity<TblCrewCourse>(entity =>
             {
                 entity.HasKey(e => e.CrewCoursesId);
@@ -483,6 +549,29 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Vessel)
                     .WithMany(p => p.TblCrewLists)
                     .HasForeignKey(d => d.VesselId);
+            });
+
+            modelBuilder.Entity<TblCrewOtherDocument>(entity =>
+            {
+                entity.HasKey(e => e.CrewOtherDocumentsId);
+
+                entity.ToTable("tblCrewOtherDocuments");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Authority)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.AuthorityId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.Document)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.DocumentId);
             });
 
             modelBuilder.Entity<TblDisponentOwner>(entity =>
@@ -1043,6 +1132,31 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Ship)
                     .WithMany(p => p.TblVessels)
                     .HasForeignKey(d => d.ShipId);
+            });
+
+            modelBuilder.Entity<TblVesselCba>(entity =>
+            {
+                entity.HasKey(e => e.VesselCbaid);
+
+                entity.ToTable("tblVesselCBA");
+
+                entity.Property(e => e.VesselCbaid).HasColumnName("VesselCBAId");
+
+                entity.Property(e => e.Cbarating).HasColumnName("CBARating");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.OfficerCba).HasColumnName("OfficerCBA");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblVesselCbas)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Vessel)
+                    .WithMany(p => p.TblVesselCbas)
+                    .HasForeignKey(d => d.VesselId);
             });
 
             modelBuilder.Entity<TblVisa>(entity =>

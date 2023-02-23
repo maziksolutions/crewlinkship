@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<crewlinkship.Models.TblCrewList>
 @{
-    ViewData["Title"] = "vwCrewlist";
+    ViewBag.Title = "vwCrewlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
 <div class="app-content content fixed-navbar-inner">
     <div class="content-wrapper">
         <div class="content-header row">
@@ -21,7 +19,6 @@
                         <option>OLP Crew list</option>
                     </select>
                     <span class="p-l-10 p-r-10">|</span>
-
                     <button class="btn btn-dark form-small p-t-3 p-b-3 m-r-5 " type="button" data-toggle="tooltip"
                             data-trigger="hover" data-placement="top" data-title="Print">
                         <i class="fas fa-print"></i>
@@ -36,26 +33,27 @@
                 <div class="card m-b-0">
                     <div class="card-content">
                         <div class="row">
-                            <div class="col-xl-8 col-lg-12">
+                            <div class="col-xl-9 col-lg-12">
                                 <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                    <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract (4)</a></span>
+                                    <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span><i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract(4)</a></span>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-12">
+                            <div class="col-xl-3 col-lg-12">
                                 <div class="float-right total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                    <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a> <span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i> <a class="black">Vessel Details</a>
+                                    <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a><span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i><a class="black" href="javascript:;">Vessel Details</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id='myModal' class='modal'>
+                    <div id='myVesselModal' class='modal'>
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div id='myModalContent'></div>
                             </div>
                         </div>
                     </div>
-                    <form>
+
+                    <form action="/HomeController/vwCrewlist">
                         <div id="goal-list-scroll" class="table-responsive position-relative">
                             <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
                                 <thead>
@@ -73,9 +71,9 @@
                                     @foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td scope="row"><span>@item.Rank.Code</span></td>
+                                            <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
                                             <td scope="row">
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                <a href="#"><i class="fas fa-ellipsis-v"></i><span hidden="hidden" id="crewReliverId">@item.Reliever1</span></a>
                                                 <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
                                             </td>
                                             <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
@@ -83,10 +81,10 @@
                                             <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
                                             <td class="red">@item.DueDate?.ToString("dd/MMM/yyyy")</td>
                                             <td scope="row">
-                                                @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a class="details" style="color: #0068F7" href="javascript:;">
+                                                @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                <a class="details" style="color: #0068F7" href="javascript:;">
                                                     @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
                                                 </a>
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i></a>
                                             </td>
                                         </tr>
                                     }
@@ -97,7 +95,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header  navbar-dark">
                                             <h5 class="modal-title">
-                                                <img class="brand-logo" alt="stack admin logo" src="app-assets/images/logo/Crewlink-logo-light.png">
+                                                &nbsp; &nbsp;<img class="brand-logo" alt="stack admin logo" src="~/Images/Crewlink-logo-light.png">
                                             </h5>
                                             <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -112,32 +110,61 @@
                                 </div>
                             </div>
                             <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                            @*@Particulars*@
                             <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .details").click(function () {
-                                            var customerId = $(this).closest("tr").find("td").eq(0).html();
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "/Home/Details",
-                                                data: '{customerId: "' + customerId + '" }',
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
+                                $(function () {
+                                    $("#CustomerGrid .details").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/Details",
+                                            data: { 'crewId': crewId },
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "html",
+                                            success: function (response) {
+                                                $("#partialModal").find(".modal-body").html(response);
+                                                $("#partialModal").modal('show');
+                                                $('#partialModal').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                            },
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
+                                            }
                                         });
                                     });
+                                });
+                            </script>
+                            @*@Reliever*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $("#CustomerGrid .details").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/Details",
+                                            data: { 'crewId': crewId },
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "html",
+                                            success: function (response) {
+                                                $("#partialModal").find(".modal-body").html(response);
+                                                $("#partialModal").modal('show');
+                                                $('#partialModal').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                            },
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
+                                            }
+                                        });
+                                    });
+                                });
                             </script>
                         </div>
                     </form>
