@@ -9,6 +9,8 @@ namespace crewlinkship.Models
     {
         public TblCountry()
         {
+            TblActivitySignOns = new HashSet<TblActivitySignOn>();
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
             TblAuthorities = new HashSet<TblAuthority>();
             TblBuilders = new HashSet<TblBuilder>();
             TblCdcs = new HashSet<TblCdc>();
@@ -51,6 +53,8 @@ namespace crewlinkship.Models
         public DateTime? ModifiedDate { get; set; }
         public int? CurrencyPriority { get; set; }
 
+        public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
         public virtual ICollection<TblAuthority> TblAuthorities { get; set; }
         public virtual ICollection<TblBuilder> TblBuilders { get; set; }
         public virtual ICollection<TblCdc> TblCdcs { get; set; }

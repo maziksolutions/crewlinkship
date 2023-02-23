@@ -6,17 +6,22 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace crewlinkship.Models
 {
-    public partial class ShipCrewLinkContext : DbContext
+    public partial class shipCrewlinkContext : DbContext
     {
-        public ShipCrewLinkContext()
+        public shipCrewlinkContext()
         {
         }
 
-        public ShipCrewLinkContext(DbContextOptions<ShipCrewLinkContext> options)
+        public shipCrewlinkContext(DbContextOptions<shipCrewlinkContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<TblActivitySignOff> TblActivitySignOffs { get; set; }
+        public virtual DbSet<TblActivitySignOn> TblActivitySignOns { get; set; }
+        public virtual DbSet<TblAddZonal> TblAddZonals { get; set; }
+        public virtual DbSet<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual DbSet<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual DbSet<TblAuthority> TblAuthorities { get; set; }
         public virtual DbSet<TblBudgetCode> TblBudgetCodes { get; set; }
         public virtual DbSet<TblBudgetSubCode> TblBudgetSubCodes { get; set; }
@@ -30,10 +35,13 @@ namespace crewlinkship.Models
         public virtual DbSet<TblCourseRegister> TblCourseRegisters { get; set; }
         public virtual DbSet<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual DbSet<TblCrewBankDetail> TblCrewBankDetails { get; set; }
+        public virtual DbSet<TblCrewCorrespondence> TblCrewCorrespondences { get; set; }
+        public virtual DbSet<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
         public virtual DbSet<TblCrewCourse> TblCrewCourses { get; set; }
         public virtual DbSet<TblCrewDetail> TblCrewDetails { get; set; }
         public virtual DbSet<TblCrewLicense> TblCrewLicenses { get; set; }
         public virtual DbSet<TblCrewList> TblCrewLists { get; set; }
+        public virtual DbSet<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
         public virtual DbSet<TblDisponentOwner> TblDisponentOwners { get; set; }
         public virtual DbSet<TblEcdi> TblEcdis { get; set; }
         public virtual DbSet<TblEngineModel> TblEngineModels { get; set; }
@@ -56,10 +64,16 @@ namespace crewlinkship.Models
         public virtual DbSet<TblState> TblStates { get; set; }
         public virtual DbSet<TblVendorRegister> TblVendorRegisters { get; set; }
         public virtual DbSet<TblVessel> TblVessels { get; set; }
+        public virtual DbSet<TblVesselCba> TblVesselCbas { get; set; }
         public virtual DbSet<TblVisa> TblVisas { get; set; }
         public virtual DbSet<TblWageComponent> TblWageComponents { get; set; }
         public virtual DbSet<TblWageStructure> TblWageStructures { get; set; }
         public virtual DbSet<TblYellowfever> TblYellowfevers { get; set; }
+        public virtual DbSet<VwActiveCrewList> VwActiveCrewLists { get; set; }
+        public virtual DbSet<VwOcimfexp> VwOcimfexps { get; set; }
+        public virtual DbSet<VwTankerExp> VwTankerExps { get; set; }
+
+        public virtual DbSet<OCIMFVM> OCIMFVMs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -73,6 +87,173 @@ namespace crewlinkship.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+
+            modelBuilder.Entity<TblActivitySignOff>(entity =>
+            {
+                entity.HasKey(e => e.ActivitySignOffId);
+
+                entity.ToTable("tblActivitySignOff");
+
+                entity.Property(e => e.AllowEndTravel).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.DoagivenDate).HasColumnName("DOAGivenDate");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblActivitySignOffs)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.CrewList)
+                    .WithMany(p => p.TblActivitySignOffs)
+                    .HasForeignKey(d => d.CrewListId);
+
+                entity.HasOne(d => d.Seaport)
+                    .WithMany(p => p.TblActivitySignOffs)
+                    .HasForeignKey(d => d.SeaportId);
+
+                entity.HasOne(d => d.SignOffReason)
+                    .WithMany(p => p.TblActivitySignOffs)
+                    .HasForeignKey(d => d.SignOffReasonId);
+            });
+
+            modelBuilder.Entity<TblActivitySignOn>(entity =>
+            {
+                entity.HasKey(e => e.ActivitySignOnId);
+
+                entity.ToTable("tblActivitySignOn");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsSignon).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblActivitySignOns)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblActivitySignOns)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblActivitySignOns)
+                    .HasForeignKey(d => d.RankId);
+
+                entity.HasOne(d => d.Seaport)
+                    .WithMany(p => p.TblActivitySignOns)
+                    .HasForeignKey(d => d.SeaportId);
+
+                entity.HasOne(d => d.SignOnReason)
+                    .WithMany(p => p.TblActivitySignOns)
+                    .HasForeignKey(d => d.SignOnReasonId);
+            });
+
+            modelBuilder.Entity<TblAddZonal>(entity =>
+            {
+                entity.HasKey(e => e.ZonalId);
+
+                entity.ToTable("tblAddZonal");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ZonalName).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<TblAssignmentsWithOther>(entity =>
+            {
+                entity.HasKey(e => e.OtherAssignmentsId);
+
+                entity.ToTable("tblAssignmentsWithOthers");
+
+                entity.Property(e => e.Dwt).HasColumnName("DWT");
+
+                entity.Property(e => e.Grt).HasColumnName("GRT");
+
+                entity.Property(e => e.Imo).HasColumnName("IMO");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Kw).HasColumnName("KW");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.EngineModel)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.EngineModelId);
+
+                entity.HasOne(d => d.Manager)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.ManagerId);
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.RankId);
+
+                entity.HasOne(d => d.Seaport)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.SeaportId);
+
+                entity.HasOne(d => d.Ship)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.ShipId);
+
+                entity.HasOne(d => d.SignOffReason)
+                    .WithMany(p => p.TblAssignmentsWithOthers)
+                    .HasForeignKey(d => d.SignOffReasonId);
+            });
+
+            modelBuilder.Entity<TblAssignmentsWithOur>(entity =>
+            {
+                entity.HasKey(e => e.OurAssignmentsId);
+
+                entity.ToTable("tblAssignmentsWithOur");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.CrewList)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.CrewListId);
+
+                entity.HasOne(d => d.EngineModel)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.EngineModelId);
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.RankId);
+
+                entity.HasOne(d => d.ShipTypeShip)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.ShipTypeShipId);
+
+                entity.HasOne(d => d.SignOffReason)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.SignOffReasonId);
+
+                entity.HasOne(d => d.VendorRegister)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.VendorRegisterId);
+
+                entity.HasOne(d => d.Vessel)
+                    .WithMany(p => p.TblAssignmentsWithOurs)
+                    .HasForeignKey(d => d.VesselId);
+            });
 
             modelBuilder.Entity<TblAuthority>(entity =>
             {
@@ -347,6 +528,54 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.StateId);
             });
 
+            modelBuilder.Entity<TblCrewCorrespondence>(entity =>
+            {
+                entity.HasKey(e => e.CrewCorrespondenceId);
+
+                entity.ToTable("tblCrewCorrespondence");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewCorrespondences)
+                    .HasForeignKey(d => d.CrewId);
+            });
+
+            modelBuilder.Entity<TblCrewCorrespondenceAddress>(entity =>
+            {
+                entity.HasKey(e => e.CrewAddressId);
+
+                entity.ToTable("tblCrewCorrespondenceAddress");
+
+                entity.Property(e => e.Caddress1).HasColumnName("CAddress1");
+
+                entity.Property(e => e.Caddress2).HasColumnName("CAddress2");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.SameAddress).HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.City)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CityId);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.State)
+                    .WithMany(p => p.TblCrewCorrespondenceAddresses)
+                    .HasForeignKey(d => d.StateId);
+            });
+
             modelBuilder.Entity<TblCrewCourse>(entity =>
             {
                 entity.HasKey(e => e.CrewCoursesId);
@@ -483,6 +712,29 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Vessel)
                     .WithMany(p => p.TblCrewLists)
                     .HasForeignKey(d => d.VesselId);
+            });
+
+            modelBuilder.Entity<TblCrewOtherDocument>(entity =>
+            {
+                entity.HasKey(e => e.CrewOtherDocumentsId);
+
+                entity.ToTable("tblCrewOtherDocuments");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Authority)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.AuthorityId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.Document)
+                    .WithMany(p => p.TblCrewOtherDocuments)
+                    .HasForeignKey(d => d.DocumentId);
             });
 
             modelBuilder.Entity<TblDisponentOwner>(entity =>
@@ -1045,6 +1297,31 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.ShipId);
             });
 
+            modelBuilder.Entity<TblVesselCba>(entity =>
+            {
+                entity.HasKey(e => e.VesselCbaid);
+
+                entity.ToTable("tblVesselCBA");
+
+                entity.Property(e => e.VesselCbaid).HasColumnName("VesselCBAId");
+
+                entity.Property(e => e.Cbarating).HasColumnName("CBARating");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.OfficerCba).HasColumnName("OfficerCBA");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.TblVesselCbas)
+                    .HasForeignKey(d => d.CountryId);
+
+                entity.HasOne(d => d.Vessel)
+                    .WithMany(p => p.TblVesselCbas)
+                    .HasForeignKey(d => d.VesselId);
+            });
+
             modelBuilder.Entity<TblVisa>(entity =>
             {
                 entity.HasKey(e => e.VisaId);
@@ -1129,6 +1406,65 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.VendorRegister)
                     .WithMany(p => p.TblYellowfevers)
                     .HasForeignKey(d => d.VendorRegisterId);
+            });
+
+            modelBuilder.Entity<VwActiveCrewList>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwActiveCrewList");
+
+                entity.Property(e => e.Er).HasColumnName("ER");
+
+                entity.Property(e => e.Ermonth).HasColumnName("ERMonth");
+
+                entity.Property(e => e.Firstname)
+                    .IsUnicode(false)
+                    .HasColumnName("firstname");
+
+                entity.Property(e => e.LastName)
+                    .IsUnicode(false)
+                    .HasColumnName("lastName");
+
+                entity.Property(e => e.MiddleName).IsUnicode(false);
+
+                entity.Property(e => e.VesselName).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<VwOcimfexp>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwOCIMFExp");
+
+                entity.Property(e => e.Crewid).HasColumnName("crewid");
+
+                entity.Property(e => e.RankExperience)
+                    .HasMaxLength(36)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalExperience)
+                    .HasMaxLength(36)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VwTankerExp>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwTankerExp");
+
+                entity.Property(e => e.Crewid).HasColumnName("crewid");
+
+                entity.Property(e => e.TankerExperience)
+                    .HasMaxLength(36)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalExperience)
+                    .HasMaxLength(36)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VesselTypeid).HasColumnName("vesselTypeid");
             });
 
             OnModelCreatingPartial(modelBuilder);

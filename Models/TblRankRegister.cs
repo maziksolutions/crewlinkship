@@ -9,6 +9,9 @@ namespace crewlinkship.Models
     {
         public TblRankRegister()
         {
+            TblActivitySignOns = new HashSet<TblActivitySignOn>();
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
+            TblAssignmentsWithOurs = new HashSet<TblAssignmentsWithOur>();
             TblCrewDetailPlanRanks = new HashSet<TblCrewDetail>();
             TblCrewDetailRanks = new HashSet<TblCrewDetail>();
             TblCrewListRanks = new HashSet<TblCrewList>();
@@ -31,6 +34,9 @@ namespace crewlinkship.Models
         public DateTime? ModifiedDate { get; set; }
         public int PortageSort { get; set; }
 
+        public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetailPlanRanks { get; set; }
         public virtual ICollection<TblCrewDetail> TblCrewDetailRanks { get; set; }
         public virtual ICollection<TblCrewList> TblCrewListRanks { get; set; }

@@ -1,0 +1,115 @@
+﻿@using ACMWebAPI
+@using ACMWebApi.ViewModel
+@using ACMWebApi.Models
+@using ACMWebAPI.Models
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    var currentDate = DateTime.Now.ToString("dd/MM/yyyy");
+}
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family: Arial; font-size: 14px;  padding:10px; margin-top:40px; line-height:24px;">
+    <tbody>
+        <tr>
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="color: #184877">
+                    <tbody>
+                        <tr>
+                            <th width="15%" rowspan="2"><img src="https://api.crewlinkasm.com/Images/atlantic.png" width="100" alt="" /></th>
+                            <th width="70%"><span style="font-size: 24px; font-weight: 400">ATLANTIC SAFETY MANAGEMENT SYSTEM</span></th>
+                            <th width="15%" rowspan="2" align="right" valign="top">
+                                <p>
+                                    FPD - 01<br>
+                                    Revision - 0
+                                </p>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th><span style="font-size: 22px; font-weight: 100">Crew List</span></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border:1px solid #000;  font-size: 15px;  border-collapse: collapse">
+                    <tbody>
+                        @foreach (Vessel item in ViewBag.vessel)
+                        {
+                            <tr style="line-height:20px;">
+
+                                <td width="75%" valign="top"><strong>M.V. &nbsp;&nbsp; @item.VesselName</strong></td>
+                                <td width="25%" valign="top" style="float:right"><strong>Date: &nbsp; @currentDate&nbsp;</strong></td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%" border="1" cellspacing="0" cellpadding="5" style="border:1px solid #000;  font-size: 14px;  border-collapse: collapse">
+                    <tbody>
+                        <tr style="color: #ffffff; background: #1B4877">
+                            <td width="5%"><strong>Sr No</strong></td>
+                            <td width="25%">
+                                <strong>Name</strong><br>
+                                (Surname First)
+                            </td>
+                            <td width="8%"><strong>Rank</strong></td>
+                            <td width="12%"><strong>Nationality</strong></td>
+                            <td width="12%"><strong>Date of Birth</strong></td>
+                            <td width="12%"><strong>Passport  No.</strong></td>
+                            <td width="12%"><strong>Discharge Book No.</strong></td>
+                            <td width="14%"><strong>Date of Joining Vessel</strong></td>
+                        </tr>
+                        @foreach (CrewListDownload item in ViewBag.fpd)
+                        {
+                            <tr>
+                                <td style="padding: 10px 7px;">@item.SNo</td>
+                                <td style="padding: 10px 7px;">@item.CrewName</td>
+                                <td style="padding: 10px 7px;">@item.Rank</td>
+                                <td style="padding: 10px 7px;">@item.Nationality</td>
+                                <td style="padding: 10px 7px;">@(item.DOB == null ? "" : DateTime.Parse(item.DOB.ToString()).ToString("dd-MMM-yyyy"))</td>
+                                <td style="padding: 10px 7px;">@item.Passport</td>
+                                <td style="padding: 10px 7px;">@item.CDC</td>
+                                <td style="padding: 10px 7px;">@(item.DateSignedOn == null ? "" : DateTime.Parse(item.DateSignedOn.ToString()).ToString("dd-MMM-yyyy"))
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        @if (ViewBag.count == false)
+        {
+            <tr>
+                <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border:1px solid #000;  font-size: 14px;  border-collapse: collapse">
+                        <tbody>
+                            <tr>
+                                <td valign="top" width="80%">
+                                    * Standard IMO Crew list format may also be used.
+                                </td>
+                                <td valign="top" width="20%"><br />
+                                    ________________________<br>
+                                    Master sign.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

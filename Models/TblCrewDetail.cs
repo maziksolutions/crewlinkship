@@ -9,6 +9,9 @@ namespace crewlinkship.Models
     {
         public TblCrewDetail()
         {
+            TblActivitySignOffs = new HashSet<TblActivitySignOff>();
+            TblActivitySignOns = new HashSet<TblActivitySignOn>();
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
             TblCdcs = new HashSet<TblCdc>();
             TblCrewAddresses = new HashSet<TblCrewAddress>();
             TblCrewBankDetails = new HashSet<TblCrewBankDetail>();
@@ -92,6 +95,9 @@ namespace crewlinkship.Models
         public virtual TblPool Pool { get; set; }
         public virtual TblRankRegister Rank { get; set; }
         public virtual TblVessel Vessel { get; set; }
+        public virtual ICollection<TblActivitySignOff> TblActivitySignOffs { get; set; }
+        public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
         public virtual ICollection<TblCdc> TblCdcs { get; set; }
         public virtual ICollection<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual ICollection<TblCrewBankDetail> TblCrewBankDetails { get; set; }

@@ -13,19 +13,20 @@
             </div>
             <div class="col-xl-6 col-lg-12">
                 <div class="form-inline float-right m-b-10">
-                    <select class="form-control form-small">
-                        <option>Atlantic Crewlist</option>
-                        <option>FPD01 Crewlist</option>
-                        <option>IMO</option>
-                        <option>OCIMF</option>
-                        <option>OLP Crew list</option>
+                    <select class="form-control form-small" id="myselection">
+                        <option value="Atlantic">Atlantic Crewlist</option>
+                        <option value="FPD01">FPD01 Crewlist</option>
+                        <option value="IMO">IMO</option>
+                        <option value="OCIMF">OCIMF</option>
+                        <option value="OLP">OLP Crew list</option>
                     </select>
                     <span class="p-l-10 p-r-10">|</span>
 
                     <button class="btn btn-dark form-small p-t-3 p-b-3 m-r-5 " type="button" data-toggle="tooltip"
-                            data-trigger="hover" data-placement="top" data-title="Print">
+                            data-trigger="hover" data-placement="top" data-title="Print" onclick="exported()">
                         <i class="fas fa-print"></i>
                     </button>
+                    @*<input type="button" value="Open" onclick="window.open('@Url.Action("getIMOdata", "Home")')" />*@
                 </div>
             </div>
         </div>
@@ -113,32 +114,79 @@
                             </div>
                             <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
                             <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .details").click(function () {
-                                            var customerId = $(this).closest("tr").find("td").eq(0).html();
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "/Home/Details",
-                                                data: '{customerId: "' + customerId + '" }',
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
+                                $(function () {
+                                    $("#CustomerGrid .details").click(function () {
+                                        var customerId = $(this).closest("tr").find("td").eq(0).html();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/Home/Details",
+                                            data: '{customerId: "' + customerId + '" }',
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "html",
+                                            success: function (response) {
+                                                $("#partialModal").find(".modal-body").html(response);
+                                                $("#partialModal").modal('show');
+                                                $('#partialModal').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                            },
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
+                                            }
                                         });
                                     });
+                                });
                             </script>
+
+
+                            @*ExcelFile*@
+
+                        <script>
+
+                            function exported(e) {
+                                var value = $("#myselection option:selected");
+                                var name = value.val();
+                                if (name == "Atlantic") {
+
+                                        url = '@Url.Action("AtlanticExcelFile", "Home")';
+                                    }
+                                if (name == "OCIMF") {
+                                        url = '@Url.Action("GetOCIMFExcelFile", "Home")';
+                                }
+                                if (name == "OLP") {
+                                    url = '@Url.Action("OLPExcelFile", "Home")';
+                                }
+                                if (name == "IMO") {
+                                    url =('@Url.Action("GenerateIMOPDF", "Home")');
+
+                                     @*var url = '@Url.Action("GenerateIMOPDF", "Home", new {target="_blank"})';
+                                              window.location.href = url;*@
+                                    }
+                                if (name == "FPD01") {
+                                    url =('@Url.Action("generateFPD01", "Home")');
+
+
+                                    }
+
+                               $.ajax({
+                                   type: "POST",
+                                   url: url,
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+
+
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+                                /*window.open(url);*/
+                              }
+                        </script>
+
                         </div>
                     </form>
                 </div>

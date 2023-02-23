@@ -8,6 +8,11 @@ namespace crewlinkship.Models
 {
     public partial class TblCrewList
     {
+        public TblCrewList()
+        {
+            TblActivitySignOffs = new HashSet<TblActivitySignOff>();
+            TblAssignmentsWithOurs = new HashSet<TblAssignmentsWithOur>();
+        }
         public int CrewListId { get; set; }
         public int? RankId { get; set; }
         public int? VesselId { get; set; }
@@ -39,5 +44,7 @@ namespace crewlinkship.Models
         public virtual TblRankRegister Rank { get; set; }
         public virtual TblRankRegister ReliverRank { get; set; }
         public virtual TblVessel Vessel { get; set; }
+        public virtual ICollection<TblActivitySignOff> TblActivitySignOffs { get; set; }
+        public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
     }
 }
