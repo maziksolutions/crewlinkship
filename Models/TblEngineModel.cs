@@ -9,6 +9,8 @@ namespace crewlinkship.Models
     {
         public TblEngineModel()
         {
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
+            TblAssignmentsWithOurs = new HashSet<TblAssignmentsWithOur>();
             TblVessels = new HashSet<TblVessel>();
         }
 
@@ -38,6 +40,8 @@ namespace crewlinkship.Models
         public virtual TblEngineSubType EngineSubType { get; set; }
         public virtual TblEnginetype EngineType { get; set; }
         public virtual TblState State { get; set; }
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblVessel> TblVessels { get; set; }
     }
 }

@@ -11,18 +11,19 @@
             </div>
             <div class="col-xl-6 col-lg-12">
                 <div class="form-inline float-right m-b-10">
-                    <select class="form-control form-small">
-                        <option>Atlantic Crewlist</option>
-                        <option>FPD01 Crewlist</option>
-                        <option>IMO</option>
-                        <option>OCIMF</option>
-                        <option>OLP Crew list</option>
+                    <select class="form-control form-small" id="myselection">
+                        <option value="Atlantic">Atlantic Crewlist</option>
+                        <option value="FPD01">FPD01 Crewlist</option>
+                        <option value="IMO">IMO</option>
+                        <option value="OCIMF">OCIMF</option>
+                        <option value="OLP">OLP Crew list</option>
                     </select>
                     <span class="p-l-10 p-r-10">|</span>
                     <button class="btn btn-dark form-small p-t-3 p-b-3 m-r-5 " type="button" data-toggle="tooltip"
-                            data-trigger="hover" data-placement="top" data-title="Print">
+                            data-trigger="hover" data-placement="top" data-title="Print" onclick="exported()">
                         <i class="fas fa-print"></i>
                     </button>
+                    @*<input type="button" value="Open" onclick="window.open('@Url.Action("getIMOdata", "Home")')" />*@
                 </div>
             </div>
         </div>

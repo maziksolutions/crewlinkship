@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+@model IEnumerable<crewlinkship.Models.TblCrewList>
+@using crewlinkship.Models
+
+@{
+    ViewBag.Title = "crewlinkship";
+
+}
+<div style="font-family:Calibri; color:#000; padding: 10px 20px; font-size:15px;">
+
+    <table width="100%" border="0" style="border-collapse: collapse; font-size:15px;">
+
+        @foreach (var item in ViewBag.imoData2)
+        {
+            <tr>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.RowNumber</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.LastName, &nbsp;@item.FirstName &nbsp;@item.MiddleName</td>
+                <td style="border: 1px solid black;  padding: 10px;   text-align: left;">@item.Rank</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.nationality</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">  @(item.DOB == DateTime.Parse("01-01-1900") ? "" : item.DOB.ToString("dd-MMM-yyyy")),<br />@item.BirthPlace</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">Passport: @item.PassportNo</td>
+            </tr>
+        }
+
+
+    </table>
+    <br /><br />
+    <p style="font-size:15px; font-weight:bold;">12. Date and signature by master, authorized agent or officer</p>
+
+
+</div>

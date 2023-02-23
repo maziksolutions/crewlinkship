@@ -9,6 +9,9 @@ namespace crewlinkship.Models
     {
         public TblSeaport()
         {
+            TblActivitySignOffs = new HashSet<TblActivitySignOff>();
+            TblActivitySignOns = new HashSet<TblActivitySignOn>();
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
             TblVendorRegisters = new HashSet<TblVendorRegister>();
             TblVessels = new HashSet<TblVessel>();
         }
@@ -22,6 +25,9 @@ namespace crewlinkship.Models
         public DateTime RecDate { get; set; }
 
         public virtual TblCountry Country { get; set; }
+        public virtual ICollection<TblActivitySignOff> TblActivitySignOffs { get; set; }
+        public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
         public virtual ICollection<TblVendorRegister> TblVendorRegisters { get; set; }
         public virtual ICollection<TblVessel> TblVessels { get; set; }
     }

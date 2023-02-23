@@ -9,6 +9,7 @@ namespace crewlinkship.Models
     {
         public TblVendorRegister()
         {
+            TblAssignmentsWithOurs = new HashSet<TblAssignmentsWithOur>();
             TblYellowfevers = new HashSet<TblYellowfever>();
         }
 
@@ -48,6 +49,8 @@ namespace crewlinkship.Models
         public virtual TblCountry Country { get; set; }
         public virtual TblSeaport Seaport { get; set; }
         public virtual TblState State { get; set; }
+
+        public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblYellowfever> TblYellowfevers { get; set; }
     }
 }

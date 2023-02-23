@@ -9,6 +9,8 @@ namespace crewlinkship.Models
     {
         public TblShipType()
         {
+            TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
+            TblAssignmentsWithOurs = new HashSet<TblAssignmentsWithOur>();
             TblVessels = new HashSet<TblVessel>();
         }
 
@@ -22,6 +24,8 @@ namespace crewlinkship.Models
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
+        public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblVessel> TblVessels { get; set; }
     }
 }

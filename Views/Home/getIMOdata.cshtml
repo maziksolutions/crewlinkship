@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+@model IEnumerable<crewlinkship.Models.TblCrewList>
+@using crewlinkship.Models
+
+@{
+    ViewBag.Title = "crewlinkship";
+
+}
+<div style="font-family:Calibri; color:#000; padding: 10px 20px; font-size: 15px;">
+
+    <table width="100%" border="0" style="border-collapse: collapse; font-size: 15px;">
+
+        <tr style="border-collapse: collapse; font-size: 15px;">
+            <td style="border: 1px solid black;  padding: 5px;  text-align: left;" colspan="3">&nbsp;</td>
+            <td style="border: 1px solid black;  padding: 5px;  text-align: left; line-height:30px;" colspan="2">
+                <input id="chkArrived" type="checkbox" value="<%=Arrival %>" />&nbsp;Arrival
+            </td>
+            <td style="border: 1px solid black;  padding: 5px;  text-align: left; line-height:30px;">
+                <input id="chkDeparted" type="checkbox" value="<%=Departure %>" />&nbsp;Departure
+            </td>
+        </tr>
+        @foreach (TblVessel item in ViewBag.vesselDetails)
+        {
+            <tr style="border-collapse: collapse; font-size: 15px;">
+
+                <td style="border: 1px solid black;  padding: 5px;   text-align: left; line-height:30px;" colspan="3">
+                    1.1 Name and type of ship:<b> @item.VesselName | @item.Ship.ShipCategory</b> <br>
+                    1.2 IMO number:<b> @item.Imo</b><br>
+                    1.3 Call sign:<b> @item.CallSign</b>
+                </td>
+
+                @*@foreach (VesselVoyageHistory item in ViewBag.vesselVoyage)
+                {*@
+                <td style="border: 1px solid black;  padding: 5px; vertical-align:top; text-align: left;" colspan="2">
+                    2. Port of
+                    arrival/departure<br />
+                    @*<b>@item.Seaport.SeaportName</b>*@
+                </td>
+                <td style="border: 1px solid black;  padding: 5px; vertical-align:top; text-align: left;">
+                    3. Date of arrival/departure<br />
+                    @*<b>@item.ETA</b>*@
+                </td>
+                @* }*@
+            </tr>
+            <tr>
+
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;line-height:25px;" colspan="3">4. Flag State of ship: <b> @item.Flag.CountryName</b></td>
+
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;" colspan="2">5. Last port of call:<b> </b> </td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left; width:140px; vertical-align:top; line-height:18px; " rowspan="2">
+                    6. Nature and No. of<br>
+                    identity document<br>
+                    (seaman’s
+                    passport)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td style="border: 1px solid black;  padding: 5px;line-height:30px; text-align: left; width:40px">7. No.</td>
+            <td style="border: 1px solid black;  padding: 5px; line-height:30px; text-align: left;"> 8. Family name, given names</td>
+            <td style="border: 1px solid black;  padding: 5px; line-height:30px; text-align: left;">9. Rank or rating</td>
+            <td style="border: 1px solid black;  padding: 5px; line-height:30px; text-align: left;">10. Nationality</td>
+            <td style="border: 1px solid black;  padding: 5px; line-height:30px; text-align: left;">11. Date and place of birth</td>
+        </tr>
+        @*@{
+            int sno = 0;
+        }*@
+        @foreach (var item in ViewBag.imoData)
+        {
+            <tr>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.RowNumber</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.LastName, &nbsp;@item.FirstName &nbsp;@item.MiddleName</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.Rank</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">@item.nationality</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">  @(item.DOB == DateTime.Parse("01-01-1900") ? "" : item.DOB.ToString("dd-MMM-yyyy")),<br />@item.BirthPlace</td>
+                <td style="border: 1px solid black;  padding: 5px;  text-align: left;">Passport: @item.PassportNo</td>
+            </tr>
+        }
+
+
+    </table>
+    <br /><br />
+    @if (ViewBag.count == false)
+    {
+        <p style="font-size: 15px; font-weight:bold;">12. Date and signature by master, authorized agent or officer</p>
+    }
+
+
+</div>

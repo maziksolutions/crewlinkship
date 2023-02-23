@@ -7,6 +7,10 @@ namespace crewlinkship.Models
 {
     public partial class TblSignOnReason
     {
+        public TblSignOnReason()
+        {
+            TblActivitySignOns = new HashSet<TblActivitySignOn>();
+        }
         public int SignOnReasonId { get; set; }
         public string Code { get; set; }
         public string Reason { get; set; }
@@ -15,5 +19,6 @@ namespace crewlinkship.Models
         public DateTime? ModifiedDate { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? RecDate { get; set; }
+        public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
     }
 }
