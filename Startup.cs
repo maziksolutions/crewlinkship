@@ -53,7 +53,7 @@ namespace crewlinkship
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                   pattern: "{controller=Home}/{action=VesselParticular}/{id?}");
+                   pattern: "{controller=Home}/{action=UserLogin}/{id?}");
             });
         }
     }

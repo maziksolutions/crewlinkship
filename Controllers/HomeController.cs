@@ -888,7 +888,7 @@ namespace crewlinkship.Controllers
                 return RedirectToAction("vwCrewList");
             }
 
-            return PartialView();
+            return RedirectToAction("UserLogin");
         }
 
         public IActionResult LogOut()
@@ -916,8 +916,9 @@ namespace crewlinkship.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("vwCrewList");
             }
-
-            return BadRequest();
+    
+                return RedirectToAction("vwCrewList");
+          
         }
 
 
