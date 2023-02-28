@@ -10,6 +10,7 @@ namespace crewlinkship.Models
     {
         public shipCrewlinkContext()
         {
+
         }
 
         public shipCrewlinkContext(DbContextOptions<shipCrewlinkContext> options)
