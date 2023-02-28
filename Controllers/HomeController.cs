@@ -646,7 +646,7 @@ namespace crewlinkship.Controllers
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
-            string url = "https://localhost:44336/Home/getIMOdata";
+            string url = " http://ship.crewlinkasm.com/Home/getIMOdata";
            
             var webRoot = _appEnvironment.WebRootPath;
             string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDF_HeaderIMO.htm");
@@ -690,7 +690,7 @@ namespace crewlinkship.Controllers
 
             //page2 
 
-            string url2 = "https://localhost:44336/Home/getIMOdata2";
+            string url2 = " http://ship.crewlinkasm.com/Home/getIMOdata2";
             //string url2 = localpath+"api/crewlist/getIMOdata2?vesselId=" + vesselId;
             string pdf_page_size2 = PdfPageSize.A4.ToString();
             PdfPageSize pageSize2 = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size2, true);
@@ -793,7 +793,7 @@ namespace crewlinkship.Controllers
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
-            string url = "https://localhost:44336/Home/FPD012";
+            string url = " http://ship.crewlinkasm.com/Home/FPD012";
             //string url = serverUrl + "api/crewlist/fpd01?vesselId=" + vesselId;
             // string url = localpath+"api/crewlist/getIMOdata?vesselId=" + vesselId;
             var webRoot = _appEnvironment.WebRootPath;
