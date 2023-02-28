@@ -56,6 +56,7 @@
 
                     <form action="/HomeController/vwCrewlist">
                         <div id="goal-list-scroll" class="table-responsive position-relative">
+
                             <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
                                 <thead>
                                     <tr>
@@ -73,8 +74,7 @@
                                     {
                                         <tr>
                                             <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
-                                            <td scope="row">
-                                                <a href="#"><i class="fas fa-ellipsis-v"></i><span hidden="hidden" id="crewReliverId">@item.Reliever1</span></a>
+                                            <td scope="row">                                               
                                                 <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
                                             </td>
                                             <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
@@ -82,15 +82,38 @@
                                             <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
                                             <td class="red">@item.DueDate?.ToString("dd/MMM/yyyy")</td>
                                             <td scope="row">
-                                                @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                                <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
+                                                @(item.ReliverRank!=null? item.ReliverRank.Code :""):
+
                                                 <a class="details" style="color: #0068F7" href="javascript:;">
+
                                                     @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
+                                                    @*<a id="myInput" onkeyup="filterFunction()" onclick="myFunction() ">
+                <i class="fas fa-ellipsis-v" href="javascript:;"></i>
+            </a>
+            <div class="dropdown">
+                <div id="myDropdown" class="dropdown-content">
+                    <ul>
+                        <li class="dropdown dropdown-notification nav-item">
+                            <span id="ReliverId">@item.Reliever1</span>
+                            <a class="travelToVesselPopup" href="javascript:;">On Board Activity</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>*@
                                                 </a>
+                                                @if (@item.Reliever1 > 0)
+                                                {
+                                                    <i class="fas fa-edit travelToVesselPopup" href="javascript:;"></i>
+                                                    @*<i class="fa-solid fa-circle-check"></i>*@
+                                                    @*<i class="fas fa-ellipsis-v travelToVesselPopup" href="javascript:;"></i>*@
+                                                }
                                             </td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
+                            @*@Particulars Modal*@
                             <div id="partialModal" class="modal" tabindex="-1" role="dialog">
                                 <div class="modal-dialog modal-xl" role="document">
                                     <div class="modal-content">
@@ -110,7 +133,76 @@
                                     </div>
                                 </div>
                             </div>
-                            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                            @*@Travel to vessel Modal*@
+                        <div id="travelToVesselModal" class="modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-xl" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    </div>
+                                    <div class="modal-body">
+                                    </div>
+                                        @*<div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
+                                            <button type="submit" class="btn btn-info">Submit</button>
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                            @*@travel to vessel*@
+                            <script>
+                                /* When the user clicks on the button,
+                                toggle between hiding and showing the dropdown content */
+                                function myFunction() {
+                                    document.getElementById("myDropdown").classList.toggle("show");
+                                }
+                                function filterFunction() {
+                                    var input, filter, a, i;
+                                    input = document.getElementById("myInput");
+                                    filter = input.value.toUpperCase();
+                                    div = document.getElementById("myDropdown");
+                                    a = div.getElementsByTagName("a");
+                                    for (i = 0; i < a.length; i++) {
+                                        txtValue = a[i].textContent || a[i].innerText;
+                                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                            a[i].style.display = "";
+                                        } else {
+                                            a[i].style.display = "none";
+                                        }
+                                    }
+                                }
+                            </script>
+
+                            @*@travel to vessel Popup*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $("#CustomerGrid .travelToVesselPopup").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/TravelToVessel",
+                                            data: { 'crewId': crewId },
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "html",
+                                            success: function (response) {
+                                                $("#travelToVesselModal").find(".modal-body").html(response);
+                                                $("#travelToVesselModal").find(".modal-footer").html(response);
+                                                $("#travelToVesselModal").modal('show');
+                                                $('#travelToVesselModal').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                            },
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
                             @*@Particulars*@
                             <script type="text/javascript">
                                 $(function () {
@@ -219,5 +311,38 @@
         </div>
     </div>
 </div>
+<style>
 
+  /*  .dropdown {
+        position: relative;
+        display: inline-block;
+    }*/
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #FFFFFF;
+        min-width: 185px;
+        border: 1px solid #babfc7;
+        z-index: 1;
+        top: 41px;
+        border-radius: 0.25rem;
+    }
+
+   /* .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px dotted #babfc7;
+    }*/
+
+    /*.dropdown a:hover {
+        background-color: #ddd;
+    }*/
+
+    .show {
+        display: block;
+    }
+</style>
 
