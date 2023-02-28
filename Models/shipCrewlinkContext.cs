@@ -69,6 +69,7 @@ namespace crewlinkship.Models
         public virtual DbSet<TblWageComponent> TblWageComponents { get; set; }
         public virtual DbSet<TblWageStructure> TblWageStructures { get; set; }
         public virtual DbSet<TblYellowfever> TblYellowfevers { get; set; }
+        public virtual DbSet<Userlogin> Userlogins { get; set; }
         public virtual DbSet<VwActiveCrewList> VwActiveCrewLists { get; set; }
         public virtual DbSet<VwOcimfexp> VwOcimfexps { get; set; }
         public virtual DbSet<VwTankerExp> VwTankerExps { get; set; }
@@ -80,7 +81,7 @@ namespace crewlinkship.Models
             if (!optionsBuilder.IsConfigured)
             {
 
-                optionsBuilder.UseSqlServer("Server=DESKTOP-VTEH8LV;Database=shipCrewLink;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-HRR2RKV;Database=shipCrewlink;Trusted_Connection=True;");
             }
         }
 
@@ -1406,6 +1407,32 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.VendorRegister)
                     .WithMany(p => p.TblYellowfevers)
                     .HasForeignKey(d => d.VendorRegisterId);
+            });
+            modelBuilder.Entity<Userlogin>(entity =>
+            {
+                
+                entity.HasKey(e => e.UerId);
+
+                entity.ToTable("Userlogin");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("password");
+
+                entity.Property(e => e.UerId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("UerID");
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserType)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VwActiveCrewList>(entity =>

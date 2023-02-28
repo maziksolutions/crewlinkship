@@ -710,7 +710,7 @@ button, html [type='button'], [type='reset'], [type='submit'] {
       top: 0;
     width: 100px;
     position: absolute;
-    left: 10%;
+    left: 6%;
     padding: 0;
     margin: 0;
     transform: translate(-50%, 0);
@@ -2051,4 +2051,30 @@ padding: 0.75rem 0.5rem 0.75rem 0.25rem;
     .header-navbar.navbar-brand-center .navbar-header {
         left: 15%;
     }
+}
+
+.modal-dialog .card {
+    margin-bottom: 1.875rem;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 10px 40px 0 rgba(62, 57, 107, 0.07), 0 2px 9px 0 rgba(62, 57, 107, 0.06) !important;
+}
+
+.modal-dialog .header-navbar {
+    width: 99.3% !important;
+}
+
+
+.modal-dialog-scrollable {
+    display: -ms-flexbox;
+    display: flex;
+    max-height: calc(100% - 3.5rem);
+}
+
+    .modal-dialog-scrollable .modal-body {
+        overflow-y: auto;
+    }
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(255,255,255,1);
 }

@@ -46,6 +46,10 @@ namespace crewlinkship.Controllers
         public IActionResult Details(int? crewId)
         {
             ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+
+            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().PassportNumber;
+            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+
             ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c=>c.Country)
               .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
             return PartialView();
@@ -120,6 +124,7 @@ namespace crewlinkship.Controllers
                 .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
                 .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
                 .Where(x => x.IsDeleted == false && x.VesselId == 103).ToList();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false).ToList();
             return View(vesselName);
         }
 
@@ -131,6 +136,8 @@ namespace crewlinkship.Controllers
             ViewBag.shipType = vesselDetails.Ship.ShipCategory;
             ViewBag.flag = vesselDetails.Flag.CountryName;
             var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 156 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false).ToList();
 
             return View(crewlist);
 
@@ -145,6 +152,7 @@ namespace crewlinkship.Controllers
             ViewBag.shipType = vesselDetails.Ship.ShipCategory;
             ViewBag.flag = vesselDetails.Flag.CountryName;
             var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false).ToList();
             return View(vcm);
         }
         public string ConvrtToTitlecase(string value)
@@ -863,6 +871,56 @@ namespace crewlinkship.Controllers
 
             return Json(new { fileName = fileName });
         }
+
+        public IActionResult UserLogin()
+        {
+  
+            return PartialView();
+        }
+
+        public IActionResult Login(string Username ,string Userpwd)
+       {
+            var User = _context.Userlogins.SingleOrDefault(x => x.UserName == Username && x.Password == Userpwd && x.IsDeleted == false);
+
+            if (User != null)
+            {
+                //var actions = vwCrewList();     
+                return RedirectToAction("vwCrewList");
+            }
+
+            return PartialView();
+        }
+
+        public IActionResult LogOut()
+        {
+           
+            return PartialView();
+        }
+
+        public IActionResult passwordView()
+        {
+            return PartialView();
+        }
+
+        public IActionResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
+        {
+            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);
+          
+            if(User!= null && newpwd == crfmpwd)
+            {
+                User.Password = newpwd;
+                User.ModifiedDate = DateTime.Now;
+
+
+                _context.Userlogins.Update(User);
+                _context.SaveChanges();
+                return RedirectToAction("vwCrewList");
+            }
+
+            return BadRequest();
+        }
+
+
 
     }
 }
