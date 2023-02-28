@@ -146,7 +146,7 @@ namespace crewlinkship.Controllers
         {
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
-            var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
+            var vcm = _context.TblVesselCbas.Include(c=>c.OffCBA).Include(x=>x.RatingCBA).Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
             return View(vcm);
         }
@@ -162,7 +162,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult AtlanticExcelFile(int vesselId = 75)
         {
-         IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c=>c.Crew).Include(r => r.Rank).Include(ct=>ct.Crew.Country).Include(po=>po.Vessel.PortOfTakeovers).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+         IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c=>c.Crew).Include(r => r.Rank).Include(ct=>ct.Crew.Country).Include(po=>po.Vessel.PortOfTakeovers).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId!=null).OrderBy(r=>r.Rank.CrewSort).ToList();
             
             string fileName =  "Atlantic Crewlist" + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
@@ -469,7 +469,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult OLPExcelFile(int vesselId = 75)
         {
-            IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p=>p.Vessel.Pool).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p=>p.Vessel.Pool).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             string fileName = "Seafarers list v1.0" + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
@@ -565,7 +565,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult getIMOdata(int vesselId = 75)
         {
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
            
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
@@ -609,7 +609,7 @@ namespace crewlinkship.Controllers
         public IActionResult getIMOdata2(int vesselId =75)
         {
 
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
           
             var iMOCrewLists2 = CrewList.AsEnumerable() // Client-side from here on
@@ -643,7 +643,7 @@ namespace crewlinkship.Controllers
         public JsonResult GenerateIMOPDF(int vesselId = 75)
         {
             
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
             string url = "https://localhost:44336/Home/getIMOdata";
@@ -745,7 +745,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult FPD012(int vesselId = 75)
         {
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
 
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
@@ -791,7 +791,7 @@ namespace crewlinkship.Controllers
 
         public JsonResult generateFPD01(int vesselId =75)
         {
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             string url = "https://localhost:44336/Home/FPD012";
             //string url = serverUrl + "api/crewlist/fpd01?vesselId=" + vesselId;
