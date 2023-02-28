@@ -219,9 +219,9 @@
                                     <div class="row">
                                         <div class="col">
                                             <h3 class="card-title" style="font-size: 1.4rem; margin-bottom: 10px">
-                                                @ViewBag.VesselName (@ViewBag.shipType)
+                                                @ViewBag.vesselDetails.VesselName (@ViewBag.vesselDetails.Ship.ShipCategory)
                                             </h3>
-                                            <span style="font-size: 12px">@ViewBag.imo | @ViewBag.flag</span>
+                                            <span style="font-size: 12px">@ViewBag.vesselDetails.Imo | @ViewBag.vesselDetails.Flag.CountryName</span>
                                         </div>
                                     </div>
                                 </div>

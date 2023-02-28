@@ -33,7 +33,7 @@
             <div class="row match-height" id="switch">
                 <div class="col-lg-12 col-md-12 col-12">
                     <div class="card m-b-0">
-                        <div class="card-content">
+                        @*<div class="card-content">
                             <div class="row">
                                 <div class="col-xl-9 col-lg-12">
                                     <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                         <div id='myVesselModal' class='modal'>
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -81,7 +81,7 @@
                                                 <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
                                                 <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
                                                 <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
-                                                <td class="red">@item.DueDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td >@item.DueDate?.ToString("dd/MMM/yyyy")</td>
                                                 <td scope="row">
                                                     @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a href="#"><i class="fas fa-ellipsis-v"></i></a>
                                                     <a class="details" style="color: #0068F7" href="javascript:;">
