@@ -897,23 +897,19 @@ namespace crewlinkship.Controllers
             return PartialView();
         }
 
-        public IActionResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
+      
+        public JsonResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
         {
-            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);
-          
+            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);          
             if(User!= null && newpwd == crfmpwd)
             {
                 User.Password = newpwd;
                 User.ModifiedDate = DateTime.Now;
-
-
                 _context.Userlogins.Update(User);
                 _context.SaveChanges();
-                return RedirectToAction("vwCrewList");
+                return Json("success");
             }
-    
-                return RedirectToAction("vwCrewList");
-          
+            return Json("fail");
         }
 
 
