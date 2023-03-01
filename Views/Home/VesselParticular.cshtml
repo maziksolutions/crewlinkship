@@ -290,7 +290,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>H&amp;M</td>
-                                                            <td>@item.VendorRegisterHm.VendorName</td>
+                                                            <td>@item.VendorRegisterHm?.VendorName</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Qualified Individual</td>
@@ -345,7 +345,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td width="50%">Make</td>
-                                                            <td colspan="3">@item.EngineModel.Maker </td>
+                                                            <td colspan="3">@item.EngineModel.Maker</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Model</td>
@@ -353,7 +353,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Type</td>
-                                                            <td colspan="3">@item.EngineType.Type</td>
+                                                            <td colspan="3">@item.EngineType?.Type</td>
                                                         </tr>
                                                         <tr>
                                                             <td>M.C.R. KW</td>
