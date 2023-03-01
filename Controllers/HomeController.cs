@@ -13,6 +13,7 @@ using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
 using SelectPdf;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crewlinkship.Controllers
 {
@@ -878,18 +879,51 @@ namespace crewlinkship.Controllers
             return PartialView();
         }
 
-        public IActionResult Login(string Username ,string Userpwd)
-       {
-            var User = _context.Userlogins.SingleOrDefault(x => x.UserName == Username && x.Password == Userpwd && x.IsDeleted == false);
+        // public IActionResult Login(string Username ,string Userpwd)
+        //{
+        //     var User = _context.Userlogins.SingleOrDefault(x => x.UserName == Username && x.Password == Userpwd && x.IsDeleted == false);
 
+        //     if (User != null)
+        //     {
+        //         //var actions = vwCrewList();     
+        //         return RedirectToAction("vwCrewList");
+        //     }
+
+        //     return RedirectToAction("UserLogin");
+        // }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Login(Userlogin userlogin)
+        {
+            var User = _context.Userlogins.SingleOrDefault(x => x.UserName == userlogin.UserName && x.Password == userlogin.Password && x.IsDeleted == false);
+
+            string message = string.Empty;
             if (User != null)
             {
-                //var actions = vwCrewList();     
+                    
                 return RedirectToAction("vwCrewList");
             }
 
-            return RedirectToAction("UserLogin");
+            //switch (userId.Value)
+            //{
+            //    case -1:
+            //        message = "Username and/or password is incorrect.";
+            //        break;
+            //    case -2:
+            //        message = "Account has not been activated.";
+            //        break;
+            //    default:
+            //        _context.Userlogins.Where(x => x.UserName == userlogin.UserName && x.Password == userlogin.Password);
+            //        return RedirectToAction("vwCrewList");
+            //}
+            ViewBag.Message = message;
+            return PartialView("UserLogin");
         }
+
+
+
+
 
         public IActionResult LogOut()
         {
@@ -899,28 +933,52 @@ namespace crewlinkship.Controllers
 
         public IActionResult passwordView()
         {
-            return PartialView();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false).ToList();
+            return View();
         }
 
-        public IActionResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
+        //[ActionName("pwd")]
+        //public IActionResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
+        //{
+        //    var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);
+
+        //    if(User!= null && newpwd == crfmpwd)
+        //    {
+        //        User.Password = newpwd;
+        //        User.ModifiedDate = DateTime.Now;
+
+
+        //        _context.Userlogins.Update(User);
+        //        _context.SaveChanges();
+
+        //        return RedirectToAction("vwCrewList");
+
+        //    }
+
+        //    return RedirectToAction("vwCrewList");
+        //}
+
+       
+       
+        public IActionResult Changepassword(string password,Changepassword changepwd)
         {
-            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);
-          
-            if(User!= null && newpwd == crfmpwd)
+            var User = _context.Userlogins.SingleOrDefault(x => x.Password == password && x.IsDeleted == false);
+
+            if (User != null && changepwd.Newpassword == changepwd.Confirmpassword)
             {
-                User.Password = newpwd;
+                User.Password = changepwd.Newpassword;
                 User.ModifiedDate = DateTime.Now;
 
 
                 _context.Userlogins.Update(User);
                 _context.SaveChanges();
-                return RedirectToAction("vwCrewList");
-            }
-    
-                return RedirectToAction("vwCrewList");
-          
-        }
 
+                return RedirectToAction("vwCrewList");
+
+            }
+
+            return RedirectToAction("vwCrewList");
+        }
 
 
     }
