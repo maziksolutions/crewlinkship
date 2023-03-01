@@ -48,8 +48,8 @@ namespace crewlinkship.Controllers
         {
             ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
 
-            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().PassportNumber;
-            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().PassportNumber;
+            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
 
             ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c=>c.Country)
               .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
@@ -111,7 +111,7 @@ namespace crewlinkship.Controllers
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
             ViewBag.HandOverport = "NA";
-            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 103).FirstOrDefault().PortOfHandover;
+            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault().PortOfHandover;
             if (HandOverPortId != null)
             {
                 ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
@@ -120,7 +120,7 @@ namespace crewlinkship.Controllers
                 .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
                 .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
                 .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
-                .Where(x => x.IsDeleted == false && x.VesselId == 103).ToList();
+                .Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
             return View(vesselName);
         }
