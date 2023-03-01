@@ -13,6 +13,7 @@ using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
 using SelectPdf;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace crewlinkship.Controllers
 {
@@ -47,8 +48,8 @@ namespace crewlinkship.Controllers
         {
             ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
 
-            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().PassportNumber;
-            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == 355 && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().PassportNumber;
+            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
 
             ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c=>c.Country)
               .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
@@ -110,17 +111,16 @@ namespace crewlinkship.Controllers
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
             ViewBag.HandOverport = "NA";
-            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 103).FirstOrDefault().PortOfHandover;
+            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault().PortOfHandover;
             if (HandOverPortId != null)
             {
                 ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
-
             }
             var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
                 .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
                 .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
                 .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
-                .Where(x => x.IsDeleted == false && x.VesselId == 103).ToList();
+                .Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
             return View(vesselName);
         }
@@ -144,11 +144,88 @@ namespace crewlinkship.Controllers
 
         public IActionResult CBA()
         {
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
+            ViewBag.vesselName = vesselDetails.VesselName;
+            ViewBag.imo = vesselDetails.Imo;
+            ViewBag.shipType = vesselDetails.Ship.ShipCategory;
+            ViewBag.flag = vesselDetails.Flag.CountryName;
+            var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+            return PartialView(vcm);
+        }
+        public  IActionResult TravelToVessel(int? crewId)
+        {
+            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x=>x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+            //List<TblCountry> countryList = _context.TblCountries.Where(x => x.IsDeleted == false).ToList();
+            ViewBag.countryList = new SelectList(_context.TblCountries, "CountryId", "CountryName");
+            //ViewBag.seaPort = new SelectList(_context.TblSeaports, "SeaportId", "SeaportName");
+            return PartialView();
+        }
+        public JsonResult GetSeaPort(int? CountryId)
+        {
+            ViewBag.seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
+            //_context.ProxyCreationEnabled = false;
+            //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
+            return Json(new SelectList(ViewBag.seaPort, "SeaportId","SeaportName"));
+        }
 
-            var vcm = _context.TblVesselCbas.Include(c=>c.OffCBA).Include(x=>x.RatingCBA).Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-            return View(vcm);
+
+        //public List<TblSeaport> GetSeaPort(int? CountryId)
+        //{
+        //    List<TblSeaport> seaPort = new List<TblSeaport>();
+        //    seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
+        //    //_context.ProxyCreationEnabled = false;
+        //    //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
+        //    return seaPort;
+        //}
+
+        [HttpPost]
+        public virtual IActionResult TravelToVessel(TblActivitySignOn tblActivitySignOn)
+        {
+
+            if (!ModelState.IsValid)
+                return View(tblActivitySignOn);
+            _context.TblActivitySignOns.Update(tblActivitySignOn);
+            _context.SaveChanges();
+
+            //// update activity signon data and make it status True 
+            ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+            //var crew = _context.ActivitySignOn.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+
+            //if (crew != null && crew.IsSignon != true)
+            //{                
+            //    crew.CountryId = item.CountryId;
+            //    crew.SeaportId = item.SeaportId;
+               
+            //    crew.ExpectedSignOnDate = item.ExpectedSignOnDate;                
+            //    crew.ReliefDate = item.ReliefDate;                
+            //    crew.Remarks = item.Remarks;               
+            //    _context.ActivitySignOn.Update(crew);
+            //    _context.SaveChanges();
+            //    //update status in crewdetails 
+            //    var vesselPooId = _context.Vessel.FirstOrDefault(c => c.VesselId == item.VesselId);
+            //    var updateCrewDetails = _context.CrewDetails.FirstOrDefault(c => c.CrewId == reliever1Id);
+            //    if (updateCrewDetails != null)
+            //    {                   
+            //        updateCrewDetails.PreviousStatus = "Travel to vessel";
+            //        updateCrewDetails.PlanStatus = "Sign In transit";                    
+            //        updateCrewDetails.Status = "Sign In transit";
+            //        updateCrewDetails.PoolId = vesselPooId.PoolId;
+            //        updateCrewDetails.ModifiedBy = "Master";
+            //        updateCrewDetails.ModifiedDate = DateTime.Now;
+            //        _context.CrewDetails.Update(updateCrewDetails);
+            //        _context.SaveChanges();
+            //    }              
+            //    //Need to check & Refine
+
+            //    var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
+            //    if (contract != null)
+            //    {                   
+            //        contract.SignonDate = item.ExpectedSignOnDate;
+            //        _context.Contract.Update(contract);
+            //        _context.SaveChanges();
+            //    }
+            return RedirectToAction(nameof(vwCrewList));
+           
         }
         public string ConvrtToTitlecase(string value)
         {
@@ -296,7 +373,6 @@ namespace crewlinkship.Controllers
 
             string fileName = "OCIMF" + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
-           
 
             using (var workbook = new XLWorkbook())
             {
@@ -646,7 +722,7 @@ namespace crewlinkship.Controllers
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
-            string url = "https://localhost:44336/Home/getIMOdata";
+            string url = " http://ship.crewlinkasm.com/Home/getIMOdata";
            
             var webRoot = _appEnvironment.WebRootPath;
             string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDF_HeaderIMO.htm");
@@ -690,7 +766,7 @@ namespace crewlinkship.Controllers
 
             //page2 
 
-            string url2 = "https://localhost:44336/Home/getIMOdata2";
+            string url2 = " http://ship.crewlinkasm.com/Home/getIMOdata2";
             //string url2 = localpath+"api/crewlist/getIMOdata2?vesselId=" + vesselId;
             string pdf_page_size2 = PdfPageSize.A4.ToString();
             PdfPageSize pageSize2 = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size2, true);
@@ -793,7 +869,7 @@ namespace crewlinkship.Controllers
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
-            string url = "https://localhost:44336/Home/FPD012";
+            string url = " http://ship.crewlinkasm.com/Home/FPD012";
             //string url = serverUrl + "api/crewlist/fpd01?vesselId=" + vesselId;
             // string url = localpath+"api/crewlist/getIMOdata?vesselId=" + vesselId;
             var webRoot = _appEnvironment.WebRootPath;

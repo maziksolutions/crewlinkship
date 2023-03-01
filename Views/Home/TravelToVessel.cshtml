@@ -1,0 +1,174 @@
+﻿@model IEnumerable<crewlinkship.Models.TblActivitySignOn>
+@{
+    ViewBag.Title = "TravelToVessel";
+}
+<div id="travelToVesselModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
+                <button type="submit" class="btn btn-info">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+@*<form method="post" enctype="multipart/form-data">*@
+
+<form asp-action="TravelToVessel">
+    @foreach (TblActivitySignOn item in ViewBag.crewDetails)
+    {
+        <h4>
+            OnBoard Activity :@item.Rank?.Code-@item.Crew?.FirstName&nbsp;@item.Crew?.MiddleName&nbsp;@item.Crew?.LastName
+        </h4>
+        <br />
+        <div class="row">
+            <div class="col-4">
+                <label>Sign On Reason</label>
+                <input type="text" value="@item.SignOnReason?.Reason" disabled />
+            </div>
+            <div class="col-4">
+                <label>Travel Date</label>
+                <input type="text" value="@item.ExpectedTravelDate?.ToString("dd-MM-yyyy")" disabled />
+            </div>
+            <div class="col-4">
+                <label>Extra Crew On Board</label>
+                <input type="text" value="@item.ExtraCrewOnBoard" disabled />
+            </div>
+        </div>
+        <br />       
+            <div class="row">
+                <div class="col-4">
+                    <label>Country</label>
+                    <select id="CountryList" asp-items="@ViewBag.countryList">
+                        <option value="@item.CountryId">@item.Country?.CountryName</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label>Sign-On-Port</label>
+                    <select>
+                        <option id="ddlSeaport"></option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label>Expect Sign-On-Date</label>
+                    <input type="date" id="exportSignOn" value="@item.ExpectedSignOnDate?.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>        
+        <br />
+        <div class="row">
+            <div class="col-4">
+                <label>Duration(Months)</label>
+                <input type="text" id="durationDays" value="@item.Duration " disabled />
+            </div>
+            <div class="col-4">
+                <label>Relief Date</label>
+                <input type="text" id="reliefDate" value="@item.ReliefDate?.ToString("dd-MM-yyyy")" disabled />
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+
+            <div class="col-5">
+                <label>Remarks</label>
+                <textarea style="width:inherit">@item.Remarks</textarea>
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+
+            <input type="checkbox" id="allowBeginTravelSignOnSameDate" name="allowBeginTravelSignOnSameDate" value="@item.IsSignon">
+            <label for="allowBeginTravelSignOnSameDate">Allow Begin Travel & Sign-On on same date</label>
+            <input type="checkbox" id="ownerWage" name="ownerWage" value="@item.OwnerWage">
+
+            <label for="ownerWage">Owner Wage?</label>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
+            <button type="submit" value="Save" class="btn btn-info align-right">Submit</button>
+        </div>
+        <br />
+    }
+</form>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">    
+    ; (function ($, window, document, undefined) {
+        $("#exportSignOn").on("change", function () {
+            var date = new Date($("#exportSignOn").val());           
+            var duration = $("#durationDays").val().split('.');
+            var month = duration[0];
+            var days = 0;
+            if (duration[1] > 0)
+                days = 15;
+            if (!isNaN(date.getTime())) {
+                if (days>0)
+                    date.setDate(date.getDate() + days);
+                date.setMonth(date.getMonth() + month);
+                console.log(date.toInputFormat().toString())
+                $("#reliefDate").val(date.toInputFormat().toString());
+            } else {
+                alert("Invalid Date");
+            }
+        }); 
+    Date.prototype.toInputFormat = function () {
+        var yyyy = this.getFullYear().toString();
+        var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+        var dd = this.getDate().toString();
+        return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]); // padding
+    };
+}) (jQuery, this, document);
+
+</script>
+
+<script type="text/javascript">
+    $("#CountryList").change(function () {       
+        var CountryId = $(this).find("option:selected").val();
+
+
+        $.ajax({
+            type: 'GET',
+            url: "/Home/GetSeaPort",
+            /*    data: { id: $("#CountryList").val() },*/
+            data: { 'CountryId': CountryId },
+            dataType:'json',
+            success: function (response) { 
+                console.log(response) 
+                //$("#ddlSeaport").empty(); // Clear the please wait
+                //$("#ddlSeaport").append($("<option></option>").val('').html('Select Seaport'));
+                //$.each(response, function (i, seaPort) {                  
+                //    $("#ddlSeaport").append($("<option></option>").val(seaPort.seaportId).html(seaPort.seaportName));
+                //});
+                /*var output = [];*/
+                $.each(response, function (value, text) {
+                    alert(text)
+                    /*$('#ddlSeaport').append($('<option>').val(value).text(text));*/
+                    $('#ddlSeaport').append($('<option value="' + 'value' + '">' + 'text' + '</option>'));
+                    /*output.push('<option value="' + value + '">' + text + '</option>');*/
+                });
+               /* console.log(output)*/
+                /*$('#ddlSeaport').html(output.join(''));*/
+            },
+            error: function (ex) { alert('Error!');   }
+        });       
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("input[type=checkbox]").change(function () {
+            if ($(this).prop("checked")) {
+                $(this).val(true);
+            } else {
+                $(this).val(false);
+            }
+        });
+</script>
+
+

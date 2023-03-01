@@ -75,7 +75,6 @@
                                             <tr>
                                                 <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
                                                 <td scope="row">
-                                                    <a href="#"><span hidden="hidden" id="crewReliverId">@item.Reliever1</span></a>
                                                     <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
                                                 </td>
                                                 <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
@@ -83,8 +82,9 @@
                                                 <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
                                                 <td >@item.DueDate?.ToString("dd/MMM/yyyy")</td>
                                                 <td scope="row">
-                                                    @(item.ReliverRank!=null? item.ReliverRank.Code :""):<a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                                                    <a class="details" style="color: #0068F7" href="javascript:;">
+                                                    @(item.ReliverRank!=null? item.ReliverRank.Code :""):
+                                                    @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
+                                                    <a class="reliverDetails" style="color: #0068F7" href="javascript:;"><span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
                                                         @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
                                                     </a>
                                                 </td>
@@ -140,7 +140,7 @@
                                 @*@Reliever*@
                                 <script type="text/javascript">
                                     $(function () {
-                                        $("#CustomerGrid .details").click(function () {
+                                        $("#CustomerGrid .reliverDetails").click(function () {
                                             var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
                                             $.ajax({
                                                 type: "GET",
@@ -219,4 +219,8 @@
     </div>
 </div>
 
+    .show {
+        display: block;
+    }
+</style>
 
