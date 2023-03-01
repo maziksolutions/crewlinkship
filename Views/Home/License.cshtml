@@ -2,53 +2,57 @@
 @{
     ViewBag.Title = "License";
 }
-<div id="user-profile">
-    <div class="row">
-        <div class="col-12">
-            <div class="card profile-with-cover m-b-0">
-                <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
-                <div class="media profil-cover-details w-100">
-                    <div class="media-body pt-5 px-2">
-                        <div class="row">
-                            <div class="col">
-                                @foreach (TblCrewDetail item in ViewBag.rankName)
-                                {
-                                <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
-                                <div>@item.Rank?.RankName | @item.Vessel?.VesselName<span hidden="hidden" id="crewIdLicence">@item.CrewId</span></div>
-                                }
+<nav class="header-navbar navbar-expand-md navbar navbar-with-menu popup-fixed-top fixed-top navbar-dark navbar-shadow navbar-brand-center">
+    <div class="navbar-wrapper">
+        <div id="user-profile">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card profile-with-cover m-b-0">
+                        <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
+                        <div class="media profil-cover-details w-100">
+                            <div class="media-body pt-5 px-2">
+                                <div class="row">
+                                    <div class="col">
+                                        @foreach (TblCrewDetail item in ViewBag.rankName)
+                                        {
+                                            <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@item.FirstName @item.MiddleName @item.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@item.Status</span></h3>
+                                            <div>@item.Rank?.RankName | @item.Vessel?.VesselName<span hidden="hidden" id="crewIdLicence">@item.CrewId</span></div>
+                                        }
+                                    </div>
                                 </div>
+                            </div>
                         </div>
+                        <nav class="navbar navbar-profile align-self-end m-r-30">
+                            <div id="navigation">
+                                <ul>
+                                    <li class="has-sub active">
+                                        <a>Personal Details</a>
+                                        <ul>
+                                            <li><a class="details" href="javascript:;">Particulars</a></li>
+                                            <li><a id="address" href="javascript:;">Address</a></li>
+                                            <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
+
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub">
+                                        <a>Documents</a>
+                                        <ul>
+                                            <li><a id="license" href="javascript:;">License</a></li>
+                                            <li><a id="courses" href="javascript:;">Courses</a></li>
+                                            <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+                                    @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
+                                </ul>
+                            </div>
+                        </nav>
                     </div>
                 </div>
-                <nav class="navbar navbar-profile align-self-end m-r-30">
-                    <div id="navigation">
-                        <ul>
-                            <li class="has-sub active">
-                                <a>Personal Details</a>
-                                <ul>
-                                    <li><a class="details" href="javascript:;">Particulars</a></li>
-                                    <li><a id="address" href="javascript:;">Address</a></li>
-                                    <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
-
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a>Documents</a>
-                                <ul>
-                                    <li><a id="license" href="javascript:;">License</a></li>
-                                    <li><a id="courses" href="javascript:;">Courses</a></li>
-                                    <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
-                                </ul>
-                            </li>
-                            <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
-                            @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
-                        </ul>
-                    </div>
-                </nav>
             </div>
         </div>
     </div>
-</div>
+</nav>
 <div id="partialModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -226,7 +230,7 @@
     });
 </script>
 <!-- / main menu-->
-<div>
+<div class="app-content content fixed-navbar-inner-crew">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="col-xl-6 col-lg-12">
@@ -275,17 +279,17 @@
                                     <tbody>
                                         @foreach (TblCrewLicense item in ViewBag.nationalLicence)
                                         {
-                                    <tr>
-                                        <td>@item.License?.LicenceName</td>
-                                        <td>@item.LicenseNumber</td>
-                                        <td>@item.PlaceOfIssue</td>
-                                        <td>@item.Country?.CountryName</td>
-                                        <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
-                                        <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
-                                        <td>@item.Authority?.Authorities</td>
-                                    </tr>
+                                            <tr>
+                                                <td>@item.License?.LicenceName</td>
+                                                <td>@item.LicenseNumber</td>
+                                                <td>@item.PlaceOfIssue</td>
+                                                <td>@item.Country?.CountryName</td>
+                                                <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.Authority?.Authorities</td>
+                                            </tr>
                                         }
-                                       
+
                                     </tbody>
                                 </table>
                             </div>
@@ -324,15 +328,15 @@
                                     <tbody>
                                         @foreach (TblCrewLicense item in ViewBag.flagLicence)
                                         {
-                                    <tr>
-                                        <td>@item.License?.LicenceName</td>
-                                        <td>@item.LicenseNumber</td>
-                                        <td>@item.PlaceOfIssue</td>
-                                        <td>@item.Country?.CountryName</td>
-                                        <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
-                                        <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
-                                        <td>@item.Authority?.Authorities</td>
-                                    </tr>
+                                            <tr>
+                                                <td>@item.License?.LicenceName</td>
+                                                <td>@item.LicenseNumber</td>
+                                                <td>@item.PlaceOfIssue</td>
+                                                <td>@item.Country?.CountryName</td>
+                                                <td>@item.IssueDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.ExpiryDate?.ToString("dd/MMM/yyyy")</td>
+                                                <td>@item.Authority?.Authorities</td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>

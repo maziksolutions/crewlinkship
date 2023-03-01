@@ -2,52 +2,57 @@
 @{
     ViewBag.Title = "Address";
 }
-<div id="user-profile">
-    <div class="row">
-        <div class="col-12">
-            <div class="card profile-with-cover m-b-0">
-                <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
-                <div class="media profil-cover-details w-100">
-                    <div class="media-body pt-5 px-2">
-                        <div class="row">
-                            <div class="col">
-                                 <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@ViewBag.rankName.FirstName @ViewBag.rankName.MiddleName @ViewBag.rankName.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@ViewBag.rankName.Status</span></h3>
-                                    <div>@ViewBag.rankName.Rank?.RankName | @ViewBag.rankName.Vessel?.VesselName <span hidden="hidden" id="crewIdAddress">@ViewBag.rankName.CrewId</span>
-                                                                                         </div>
-                               
+<nav class="header-navbar navbar-expand-md navbar navbar-with-menu popup-fixed-top fixed-top navbar-dark navbar-shadow navbar-brand-center">
+    <div class="navbar-wrapper">
+        <div id="user-profile">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card profile-with-cover m-b-0">
+                        <div class="card-img-top img-fluid bg-cover height-100" style="background: #E3EBF3"></div>
+                        <div class="media profil-cover-details w-100">
+                            <div class="media-body pt-5 px-2">
+                                <div class="row">
+                                    <div class="col">
+                                        <h3 class="card-title m-b-0" style="font-size: 1.4rem;">@ViewBag.rankName.FirstName @ViewBag.rankName.MiddleName @ViewBag.rankName.LastName <span class="alert bg-success p-t-3 p-b-3 font-small-3 position-relative position-tm-3">@ViewBag.rankName.Status</span></h3>
+                                        <div>
+                                            @ViewBag.rankName.Rank?.RankName | @ViewBag.rankName.Vessel?.VesselName <span hidden="hidden" id="crewIdAddress">@ViewBag.rankName.CrewId</span>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <nav class="navbar navbar-profile align-self-end m-r-30">
+                            <div id="navigation">
+                                <ul>
+                                    <li class="has-sub active">
+                                        <a>Personal Details</a>
+                                        <ul>
+                                            <li><a class="details" href="javascript:;">Particulars</a></li>
+                                            <li><a class="address" href="javascript:;">Address</a></li>
+                                            <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub">
+                                        <a>Documents</a>
+                                        <ul>
+                                            <li><a id="license" href="javascript:;">License</a></li>
+                                            <li><a id="courses" href="javascript:;">Courses</a></li>
+                                            <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
+
+                                    @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
+                                </ul>
+                            </div>
+                        </nav>
                     </div>
                 </div>
-                <nav class="navbar navbar-profile align-self-end m-r-30">
-                    <div id="navigation">
-                        <ul>
-                            <li class="has-sub active">
-                                <a>Personal Details</a>
-                                <ul>
-                                    <li><a class="details" href="javascript:;">Particulars</a></li>
-                                    <li><a class="address" href="javascript:;">Address</a></li>
-                                    <li><a id="Bankdetails" href="javascript:;">Bank Details</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a>Documents</a>
-                                <ul>
-                                    <li><a id="license" href="javascript:;">License</a></li>
-                                    <li><a id="courses" href="javascript:;">Courses</a></li>
-                                    <li><a id="otherDocuments" href="javascript:;">Other Documents</a></li>
-                                </ul>
-                            </li>
-                            <li><a id="crewtraveldoc" href="javascript:;">Travel Documents</a></li>
-
-                            @*<li class="icon" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Activity Log" data-original-title="" title=""><a href=""><i class="fa fa-file" aria-hidden="true"></i></a></li>*@
-                        </ul>
-                    </div>
-                </nav>
             </div>
         </div>
     </div>
-</div>
+</nav>
 <div id="partialModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -94,29 +99,29 @@
 </script>
 @*Bankdetails*@
 <script type="text/javascript">
-        $(function () {
-            $("#Bankdetails").click(function () {
-                var crewId = $("#crewIdAddress").html();
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/Bankdetails",
-                    data: { 'crewId': crewId },
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "html",
-                    success: function (response) {
-                        $("#partialModal").find(".modal-body").html(response);
-                        $("#partialModal").modal('show');
-                    },
-                    failure: function (response) {
-                        alert(response.responseText);
-                    },
-                    error: function (response) {
-                        alert(response.responseText);
-                    }
-                });
+    $(function () {
+        $("#Bankdetails").click(function () {
+            var crewId = $("#crewIdAddress").html();
+            $.ajax({
+                type: "GET",
+                url: "/Home/Bankdetails",
+                data: { 'crewId': crewId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
             });
         });
-    </script>
+    });
+</script>
 
 
 @*License*@
@@ -223,7 +228,7 @@
     });
 </script>
 <!-- / main menu-->
-<div>
+<div class="app-content content fixed-navbar-inner-crew">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="col-xl-6 col-lg-12">
@@ -251,48 +256,48 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        
-                                            <tr>
-                                                <th width="50%">Flat, House no., Building</th>
-                                                <td width="50%">@ViewBag.address.Address1</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Area, Colony, Street, Sector, Village</th>
-                                                <td>@ViewBag.address.Address2 </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Country</th>
-                                                <td>@ViewBag.address.Country?.CountryName</td>
-                                            </tr>
-                                            <tr>
-                                                <th>State</th>
-                                                <td>@ViewBag.address.State?.StateName</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Town / City</th>
-                                                <td>@ViewBag.address.City?.CityName</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Postcode</th>
-                                                <td>@ViewBag.address.Postcode</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Residential Phone</th>
-                                                <td>@ViewBag.address.PhoneNumber</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Mobile Number</th>
-                                                <td>@ViewBag.address.MobileNumber</td>
-                                            </tr>
-                                            <tr>
-                                                <th>E-mail</th>
-                                                <td>@ViewBag.address.Email</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nearest Airport</th>
-                                                <td>@ViewBag.address.Airport?.CityName</td>
-                                            </tr>
-                                        
+
+                                        <tr>
+                                            <th width="50%">Flat, House no., Building</th>
+                                            <td width="50%">@ViewBag.address.Address1</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Area, Colony, Street, Sector, Village</th>
+                                            <td>@ViewBag.address.Address2 </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Country</th>
+                                            <td>@ViewBag.address.Country?.CountryName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>State</th>
+                                            <td>@ViewBag.address.State?.StateName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Town / City</th>
+                                            <td>@ViewBag.address.City?.CityName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Postcode</th>
+                                            <td>@ViewBag.address.Postcode</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Residential Phone</th>
+                                            <td>@ViewBag.address.PhoneNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Mobile Number</th>
+                                            <td>@ViewBag.address.MobileNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <th>E-mail</th>
+                                            <td>@ViewBag.address.Email</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Nearest Airport</th>
+                                            <td>@ViewBag.address.Airport?.CityName</td>
+                                        </tr>
+
                                     </tbody>
 
                                 </table>
@@ -317,9 +322,9 @@
                             <div class="table-responsive">
                                 @if (ViewBag.corsAddress != null)
                                 {
-                                <table class="table">
-                                    <tbody>
-                                       
+                                    <table class="table">
+                                        <tbody>
+
                                             <tr>
                                                 <th width="50%">Flat, House no., Building</th>
                                                 <td width="50%">@ViewBag.corsAddress.Caddress1</td>
@@ -348,9 +353,9 @@
                                                 <th>Nearest Airport</th>
                                                 <td>@ViewBag.corsAddress.Airport?.CityName</td>
                                             </tr>
-                                        
-                                    </tbody>
-                                </table>
+
+                                        </tbody>
+                                    </table>
                                 }
                             </div>
                         </div>
