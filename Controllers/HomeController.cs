@@ -202,14 +202,15 @@ namespace crewlinkship.Controllers
             return RedirectToAction("UserLogin", "Login");
         }
 
-        public IActionResult vwCrewList()
+        public IActionResult vwCrewList(int? crewId)
         {
 
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            if (accessToken != null) {
+            if (accessToken != null)
+            {
 
                 //ViewBag.name = TempData["name"] as string;
                 ViewBag.name = HttpContext.Session.GetString("name");
@@ -217,16 +218,14 @@ namespace crewlinkship.Controllers
                 ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
                 var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
-        public IActionResult vwCrewList(int? crewId)
-         {
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+
             ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId==crewId).ToList();
 
             //ViewBag.imo = vesselDetails.Imo;
             //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
             //ViewBag.flag = vesselDetails.Flag.CountryName;
 
-            ViewBag.crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+         
 
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
@@ -260,20 +259,6 @@ namespace crewlinkship.Controllers
         }
         public IActionResult TravelToVessel(int? crewId)
         {
-            var accessToken = HttpContext.Session.GetString("token");
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            if (accessToken != null)
-            {
-                ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-                //List<TblCountry> countryList = _context.TblCountries.Where(x => x.IsDeleted == false).ToList();
-                ViewBag.countryList = new SelectList(_context.TblCountries, "CountryId", "CountryName");
-                //ViewBag.seaPort = new SelectList(_context.TblSeaports, "SeaportId", "SeaportName");
-                return PartialView();
-            }
-            return RedirectToAction("UserLogin", "Login");
-        }
             var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
             ViewBag.imo = vesselDetails.Imo;
@@ -282,6 +267,7 @@ namespace crewlinkship.Controllers
             var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
             return PartialView(vcm);
         }
+           
        
         public JsonResult TravelToVessels(int? crewId)
         {
@@ -305,16 +291,16 @@ namespace crewlinkship.Controllers
         [HttpPost]
         public JsonResult TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
         {
-            var accessToken = HttpContext.Session.GetString("token");
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            //var accessToken = HttpContext.Session.GetString("token");
+            //HttpClient client = new HttpClient();
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            if (accessToken != null)
-            {
-                if (!ModelState.IsValid)
-                    return View(tblActivitySignOn);
-                _context.TblActivitySignOns.Update(tblActivitySignOn);
-                _context.SaveChanges();
+            //if (accessToken != null)
+            //{
+            //    if (!ModelState.IsValid)
+            //        return View(tblActivitySignOn);
+            //    _context.TblActivitySignOns.Update(tblActivitySignOn);
+            //    _context.SaveChanges();
 
                 //// update activity signon data and make it status True 
                 ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);

@@ -30,6 +30,8 @@ namespace crewlinkship
         {
             services.AddDbContext<shipCrewlinkContext>(opts => opts.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson(options =>
+         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSession(options =>
             {
