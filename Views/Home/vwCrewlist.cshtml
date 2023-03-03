@@ -1,4 +1,4 @@
-﻿@model IEnumerable<crewlinkship.Models.TblCrewList>
+﻿@model IEnumerable<crewlinkship.Models.TblActivitySignOn>
 @{
     ViewBag.Title = "vwCrewlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -34,19 +34,19 @@
                 <div class="col-lg-12 col-md-12 col-12">
                     <div class="card m-b-0">
                         @*<div class="card-content">
-                            <div class="row">
-                                <div class="col-xl-9 col-lg-12">
-                                    <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                        <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span><i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract(4)</a></span>
+                                <div class="row">
+                                    <div class="col-xl-9 col-lg-12">
+                                        <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
+                                            <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span><i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract(4)</a></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="float-right total-crew p-l-10 p-b-10 p-t-10 p-r-10">
+                                            <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a><span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i><a class="black" href="javascript:;">Vessel Details</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-12">
-                                    <div class="float-right total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                        <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a><span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i><a class="black" href="javascript:;">Vessel Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*@
+                            </div>*@
                         <div id='myVesselModal' class='modal'>
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -55,195 +55,249 @@
                             </div>
                         </div>
 
-                        <form action="/HomeController/vwCrewlist">
-                            <div id="goal-list-scroll" class="table-responsive position-relative">
-                                <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
-                                    <thead>
+                        <div id="goal-list-scroll" class="table-responsive position-relative">
+                            <table class="table table-hover table-bordered mb-0 crew-table table-striped grid" id="CustomerGrid">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Name</th>
+                                        <th>Employee No</th>
+                                        <th>Nationality</th>
+                                        <th>Sign On Date</th>
+                                        <th>Due Date</th>
+                                        <th>Reliever - Rank : Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (TblCrewList item in ViewBag.crewlist)
+                                    {
                                         <tr>
-                                            <th>Rank</th>
-                                            <th>Name</th>
-                                            <th>Employee No</th>
-                                            <th>Nationality</th>
-                                            <th>Sign On Date</th>
-                                            <th>Due Date</th>
-                                            <th>Reliever - Rank : Name</th>
+                                            <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
+                                            <td scope="row">
+                                                <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
+                                            </td>
+                                            <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
+                                            <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
+                                            <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.DueDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td scope="row">
+                                                @(item.ReliverRank!=null? item.ReliverRank.Code+":" :"")
+                                                @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
+                                                <a class="reliverDetails" style="color: #0068F7" href="javascript:;">
+                                                    <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
+                                                    @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
+                                                </a>
+                                                @if (@item.Reliever1 > 0)
+                                                {
+                                                    <a class="dropdown-item travelToVessel"><i class="fas fa-edit"></i></a>
+                                                    @*<i class="fa-solid fa-circle-check"></i>*@
+                                                    @*<i class="fas fa-ellipsis-v travelToVesselPopup" href="javascript:;"></i>*@
+                                                }
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model)
-                                        {
-                                            <tr>
-                                                <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
-                                                <td scope="row">
-                                                    <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
-                                                </td>
-                                                <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
-                                                <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
-                                                <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
-                                                <td>@item.DueDate?.ToString("dd/MMM/yyyy")</td>
-                                                <td scope="row">
-                                                    @(item.ReliverRank!=null? item.ReliverRank.Code :""):
-                                                    @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
-                                                    <a class="reliverDetails" style="color: #0068F7" href="javascript:;">
-                                                        <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
-                                                        @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
-                                                    </a>
-                                                    @if (@item.Reliever1 > 0)
-                                                    {
-                                                        <i class="fas fa-edit travelToVesselPopup" href="javascript:;"></i>
-                                                        @*<i class="fa-solid fa-circle-check"></i>*@
-                                                        @*<i class="fas fa-ellipsis-v travelToVesselPopup" href="javascript:;"></i>*@
-                                                    }
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                                <div id="partialModals" class="modal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-body" style="padding:0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="partialModal" class="modal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-                                        <div class="modal-content" style="background: #F1F1F1">
-                                            <div class="modal-body" style="padding:0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-                                @*@travel to vessel*@
-                                <script>
-                                    /* When the user clicks on the button,
-                                    toggle between hiding and showing the dropdown content */
-                                    function myFunction() {
-                                        document.getElementById("myDropdown").classList.toggle("show");
                                     }
-                                    function filterFunction() {
-                                        var input, filter, a, i;
-                                        input = document.getElementById("myInput");
-                                        filter = input.value.toUpperCase();
-                                        div = document.getElementById("myDropdown");
-                                        a = div.getElementsByTagName("a");
-                                        for (i = 0; i < a.length; i++) {
-                                            txtValue = a[i].textContent || a[i].innerText;
-                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                                a[i].style.display = "";
-                                            } else {
-                                                a[i].style.display = "none";
+                                </tbody>
+                            </table>
+                            <div id="partialModals" class="modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body" style="padding:0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="partialModal" class="modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+                                    <div class="modal-content" style="background: #F1F1F1">
+                                        <div class="modal-body" style="padding:0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                            @*@travel to vessel*@
+                            <script>
+                                /* When the user clicks on the button,
+                                toggle between hiding and showing the dropdown content */
+                                function myFunction() {
+                                    document.getElementById("myDropdown").classList.toggle("show");
+                                }
+                                function filterFunction() {
+                                    var input, filter, a, i;
+                                    input = document.getElementById("myInput");
+                                    filter = input.value.toUpperCase();
+                                    div = document.getElementById("myDropdown");
+                                    a = div.getElementsByTagName("a");
+                                    for (i = 0; i < a.length; i++) {
+                                        txtValue = a[i].textContent || a[i].innerText;
+                                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                            a[i].style.display = "";
+                                        } else {
+                                            a[i].style.display = "none";
+                                        }
+                                    }
+                                }
+                            </script>
+                            @*@Change Country To SeaPort*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $("#CountryList").change(function () {
+                                        var CountryId = $(this).find("option:selected").val();
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: "/Home/GetSeaPortByCountry",
+                                            data: { 'CountryId': CountryId },
+                                            dataType: 'json',
+                                            success: function (response) {
+                                                $('#ddlSeaport').empty();
+                                                $.each(response, function (value, text) {
+                                                    $('#ddlSeaport').append($("<option value='" + text.seaportId + "'>" + text.seaportName + "</option>"));
+                                                });
+                                            },
+                                            error: function (ex) { alert('Error!'); }
+                                        });
+                                    });
+                                })
+                            </script>
+
+
+                            @*@travel to vessel Popup*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $(".travelToVessel").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/TravelToVessels",
+                                            data: { 'crewId': crewId },
+                                            dataType: "json",
+                                            contentType: "application/json; charset=utf-8",
+                                            success: function (response) {
+                                                $("#travelToVesselPopup").find(".modal-body").val(response);
+                                                $("#activitySignOnId").val(response.result?.activitySignOnId);
+                                                $("#rankCode").html(response.result?.crew?.firstName + ' ' + (response.result?.crew?.middelName ?? '') + ' ' + response.result?.crew?.lastName + '(' + response.result?.rank?.code + ')');
+                                                $("#signOnReason").val(response.result?.signOnReason?.reason);
+
+                                                //var day = response.result?.expectedTravelDate?.getDate();
+                                                //var month = response.result?.expectedTravelDate?.getMonth();
+                                                //var year = response.result?.expectedTravelDate?.getFullYear();
+                                                //var format = day + "-" + month + "-" + year;
+                                                $("#signOnDate").val(response.result?.expectedTravelDate);
+
+
+                                                $("#extraCrewOnBoard").val(response.result?.extraCrewOnBoard);
+                                                /*$("#CountryList").html(response.countryList?.CountryId);*/
+                                                /*$("#ddlSeaport").val(response.result?.seaport?.seaportName);*/
+                                                $("#exportSignOn").val(response.result?.expectedSignOnDate)?.toString();
+                                               
+                                                $("#durationDays").val(response.result?.duration);
+                                                
+                                                $("#reliefDate").val(response.result?.reliefDate)?.toString("dd-mm-yyyy");
+                                                $("#remarks").val(response.result?.remarks);
+                                                $("#travelToVesselPopup").modal('show');
+                                                $('#travelToVesselPopup').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                                /*seaportId Dropdown*/
+
+                                                var seaportId = "<option value=" + response.result?.seaport?.seaportId + ">" + response.result?.seaport?.seaportName + "</option>";
+                                                $('#ddlSeaport').append(seaportId);
+
+                                                /*selectedCountry*/
+
+                                                var selectedCountry = "<option value=" + response.result?.country?.countryId + ">" + response.result?.country?.countryName + "</option>";
+                                                $('#CountryList').append(selectedCountry);
+
+                                                /*CountryList*/
+
+                                                $.each(response.countryList, function (index, value) {
+                                                    var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
+                                                    $('#CountryList').append(targetstring);
+                                                })
+
+                                            },
+
+                                           
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
                                             }
+                                        });
+                                    });
+                                });
+                            </script>
+                            @*@Particulars*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $("#CustomerGrid .details").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/Details",
+                                            data: { 'crewId': crewId },
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "html",
+                                            success: function (response) {
+                                                $("#partialModal").find(".modal-body").html(response);
+                                                $("#partialModal").modal('show');
+                                                $('#partialModal').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
+                                            },
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+                            @*@Reliever*@
+                            <script type="text/javascript">
+                                $(function () {
+                                    $("#CustomerGrid .reliverDetails").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+                                        if (crewId > 0) {
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "/Home/Details",
+                                                data: { 'crewId': crewId },
+                                                contentType: "application/json; charset=utf-8",
+                                                dataType: "html",
+                                                success: function (response) {
+                                                    $("#partialModal").find(".modal-body").html(response);
+                                                    $("#partialModal").modal('show');
+                                                    $('#partialModal').on('hidden.bs.modal', function () {
+                                                        location.reload();
+                                                    })
+                                                },
+                                                failure: function (response) {
+                                                    alert(response.responseText);
+                                                },
+                                                error: function (response) {
+                                                    alert(response.responseText);
+                                                }
+                                            });
                                         }
-                                    }
-                                </script>
-
-                                @*@travel to vessel Popup*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .travelToVesselPopup").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/TravelToVessel",
-                                                data: { 'crewId': crewId },
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#travelToVesselModal").find(".modal-body").html(response);
-                                                    $("#travelToVesselModal").find(".modal-footer").html(response);
-                                                    $("#travelToVesselModal").modal('show');
-                                                    $('#travelToVesselModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
-                                        });
                                     });
-                                </script>
-                                @*@Particulars*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .details").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/Details",
-                                                data: { 'crewId': crewId },
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
-                                        });
-                                    });
-                                </script>
-                                @*@Travel to vessel Modal*@
-                                <div id="travelToVesselModal" class="modal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-xl" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                            </div>
-                                            <div class="modal-body">
-                                            </div>
-                                            @*<div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
-                        <button type="submit" class="btn btn-info">Submit</button>
-                    </div>*@
-                                        </div>
-                                    </div>
-                                </div>
-                                @*@Reliever*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .reliverDetails").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/Details",
-                                                data: { 'crewId': crewId },
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
-                                        });
-                                    });
-                                </script>
+                                });
+                            </script>
 
-                                @*ExcelFile*@
+                            @*ExcelFile*@
 
-                                <script>
+                            <script>
 
                             function exported(e) {
                                 var value = $("#myselection option:selected");
@@ -266,8 +320,6 @@
                                     }
                                 if (name == "FPD01") {
                                     url =('@Url.Action("generateFPD01", "Home")');
-
-
                                     }
 
                                $.ajax({
@@ -284,9 +336,45 @@
                                  });
                                 /*window.open(url);*/
                               }
-                                </script>
-                            </div>
-                        </form>
+                            </script>
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                            <script type="text/javascript">
+                                $(function () {
+                                    ; (function ($, window, document, undefined) {
+                                        $("#exportSignOn").on("change", function () {
+                                            var date = new Date($("#exportSignOn").val());
+                                            var duration = $("#durationDays").val().split('.');
+                                            var month = duration[0];
+                                            var days = 0;
+                                            var time = date.getTime();
+                                            if (duration[1] > 0)
+                                                days = 15;
+                                            if (!isNaN(date.getTime())) {
+                                                if (days > 0)
+                                                    date.setDate(date.getDate() + Number(days));
+                                                date.setMonth(date.getMonth() + Number(month));
+                                                console.log(date.toInputFormat().toString())
+                                                var day = date.getDate();
+                                                var month = date.getMonth()+1;        
+                                                var year = date.getFullYear();
+
+                                                    var format = day + "-" + month + "-" + year;
+
+                                                $("#reliefDate").val(format);
+                                            } else {
+                                                alert("Invalid Date");
+                                            }
+                                        });
+                                        Date.prototype.toInputFormat = function () {
+                                            var yyyy = this.getFullYear().toString();
+                                            var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+                                            var dd = this.getDate().toString();
+                                            return yyyy + "-" - (mm[1] ? mm : "0" + mm[0]) + "-" - (dd[1] ? dd : "0" + dd[0]); // padding
+                                        };
+                                    })(jQuery, this, document);
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -294,8 +382,153 @@
     </div>
 </div>
 
-    .show {
-        display: block;
-    }
-</style>
+@*TravelToVessle PopUp*@
+<div class="modal fade" id="travelToVesselPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span id="signOnId"></span>
+                        OnBoard Activity :<b id="rankCode"></b>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <br />
+                    <div class="row">
+                        <input type="hidden" id="activitySignOnId" />
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Sign On Reason</label>
+                                <br />
+                                <input type="text" id="signOnReason" class="form-control input-sm" readonly />
+                                </div>
+                            </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Travel Date</label>
+                                <br />
+                                <input formnovalidate="formnovalidate" id="signOnDate" class="form-control input-sm" readonly />
+                                </div>
+                            </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Extra Crew On Board</label>
+                                <input type="text" id="extraCrewOnBoard" class="form-control input-sm" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select id="CountryList" class="form-control input-sm">
+                                </select>
+                                </div>
+                            </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Sign-On-Port</label>
+                                <br />
+                                <select id="ddlSeaport" class="form-control input-sm">
+                                </select>
+                                </div>
+                            </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Expect Sign-On-Date</label>
+                                <input type="date" id="exportSignOn" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Duration(Months)</label>
+                                <input type="text" id="durationDays" class="form-control input-sm" readonly/>
+                                </div>
+                            </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Relief Date</label>
+                                <br />
+                                <input type="text" id="reliefDate" class="form-control input-sm" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea class="form-control" id="remarks"></textarea>
+                                </div>
+                            </div>
+                    </div>
+                    <br />
+
+                    @*<div class="row">
+                        <div class="col-5">
+                            <input type="checkbox" id="allowBeginTravelSignOnSameDate" name="allowBeginTravelSignOnSameDate" value="item.IsSignon">
+                            <label for="allowBeginTravelSignOnSameDate">Allow Begin Travel & Sign-On on same date</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="ownerWage" name="ownerWage" value="item.OwnerWage">
+                            <label for="ownerWage">Owner Wage?</label>
+                        </div>
+                    </div>*@
+                </div>
+                <div class="modal-footer">
+                    <Button type="submit" id="updateSignOn" class="btn btn-dark">Submit</Button>
+                    <Button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#travelToVesselPopup').modal('hide');">Close</Button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#updateSignOn").click(function () {
+
+            var SeaportId = $("#ddlSeaport").val();
+
+            var tblActivitySignOn = {
+                ActivitySignOnId: $("#activitySignOnId").val(),
+                CountryId: $("#CountryList").val(),
+                SeaportId: $("#ddlSeaport").val(),
+                ExpectedSignOnDate: $("#exportSignOn").val(),
+                Duration: $("#durationDays").val(),
+                ReliefDate: $("#reliefDate").val(),
+                Remarks: $("#remarks").val(),
+
+                crewId: $("#crewReliverId").val(),
+                ExpectedSignOnDate: $("#exportSignOn").val(),
+                
+            }
+            $.ajax({
+                url: "/Home/TravelToVesselUpdate/",
+                type: "POST",
+                data: tblActivitySignOn,
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8;',
+                dataType: 'json',
+                success: function (response) {
+                    if (response) {
+                        alert(" record updated.");
+                    } else {
+                        alert(" not found.");
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
 

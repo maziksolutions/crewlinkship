@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
 using SelectPdf;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Web.Helpers;
 
 namespace crewlinkship.Controllers
 {
@@ -125,20 +126,20 @@ namespace crewlinkship.Controllers
             return View(vesselName);
         }
 
-        public IActionResult vwCrewList()
-        {
+        public IActionResult vwCrewList(int? crewId)
+         {
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-           
+            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId==crewId).ToList();
+
             //ViewBag.imo = vesselDetails.Imo;
             //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
             //ViewBag.flag = vesselDetails.Flag.CountryName;
 
-            var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+            ViewBag.crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
 
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
-            return View(crewlist);
-
+            return View();
 
         }
 
@@ -152,80 +153,71 @@ namespace crewlinkship.Controllers
             var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
             return PartialView(vcm);
         }
-        public  IActionResult TravelToVessel(int? crewId)
+       
+        public JsonResult TravelToVessels(int? crewId)
         {
-            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x=>x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            //List<TblCountry> countryList = _context.TblCountries.Where(x => x.IsDeleted == false).ToList();
+           var travelToVesse = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();  
             ViewBag.countryList = new SelectList(_context.TblCountries, "CountryId", "CountryName");
-            //ViewBag.seaPort = new SelectList(_context.TblSeaports, "SeaportId", "SeaportName");
-            return PartialView();
+            var result = new { Result = travelToVesse, countryList = ViewBag.countryList };
+            return Json(result);
         }
         public JsonResult GetSeaPort(int? CountryId)
         {
             ViewBag.seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-            //_context.ProxyCreationEnabled = false;
-            //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
             return Json(new SelectList(ViewBag.seaPort, "SeaportId","SeaportName"));
         }
 
-
-        //public List<TblSeaport> GetSeaPort(int? CountryId)
-        //{
-        //    List<TblSeaport> seaPort = new List<TblSeaport>();
-        //    seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-        //    //_context.ProxyCreationEnabled = false;
-        //    //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-        //    return seaPort;
-        //}
-
-        [HttpPost]
-        public virtual IActionResult TravelToVessel(TblActivitySignOn tblActivitySignOn)
+        public JsonResult GetSeaPortByCountry(int? CountryId)
         {
+            var seaport = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
 
-            if (!ModelState.IsValid)
-                return View(tblActivitySignOn);
-            _context.TblActivitySignOns.Update(tblActivitySignOn);
-            _context.SaveChanges();
+            return Json(seaport);
+        }
+        [HttpPost]
+        public JsonResult TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
+        {
+            // update activity signon data and make it status True
+            //var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+            var crew = _context.TblActivitySignOns.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == tblActivitySignOn.ActivitySignOnId);
+            if (crew != null && crew.IsSignon != true)
+            {
+                crew.CountryId = tblActivitySignOn.CountryId;
+                crew.SeaportId = tblActivitySignOn.SeaportId;
+                crew.ExpectedSignOnDate = tblActivitySignOn.ExpectedSignOnDate;
+                crew.ReliefDate = tblActivitySignOn.ReliefDate;
+                crew.Remarks = tblActivitySignOn.Remarks;
+                _context.TblActivitySignOns.Update(crew);
+                _context.SaveChanges();
+                //update status in crewdetails 
+                var vesselPooId = _context.TblVessels.FirstOrDefault(c => c.VesselId == crew.VesselId);
+                var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
+                if (updateCrewDetails != null)
+                {
+                    updateCrewDetails.PreviousStatus = "Travel to vessel";
+                    updateCrewDetails.PlanStatus = "Sign In transit";
+                    updateCrewDetails.Status = "Sign In transit";
+                    updateCrewDetails.PoolId = vesselPooId.PoolId;
+                    updateCrewDetails.ModifiedBy = "Master";
+                    updateCrewDetails.ModifiedDate = DateTime.Now;
+                    _context.TblCrewDetails.Update(updateCrewDetails);
+                    _context.SaveChanges();
+                }
+                //Need to check & Refine
 
-            //// update activity signon data and make it status True 
-            ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-            //var crew = _context.ActivitySignOn.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+                //var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
+                //if (contract != null)
+                //{
+                //    contract.SignonDate = item.ExpectedSignOnDate;
+                //    _context.Contract.Update(contract);
+                //    _context.SaveChanges();
+                //}
+                //    _context.Update(tblActivitySignOn);
+                //_context.SaveChanges();
 
-            //if (crew != null && crew.IsSignon != true)
-            //{                
-            //    crew.CountryId = item.CountryId;
-            //    crew.SeaportId = item.SeaportId;
-               
-            //    crew.ExpectedSignOnDate = item.ExpectedSignOnDate;                
-            //    crew.ReliefDate = item.ReliefDate;                
-            //    crew.Remarks = item.Remarks;               
-            //    _context.ActivitySignOn.Update(crew);
-            //    _context.SaveChanges();
-            //    //update status in crewdetails 
-            //    var vesselPooId = _context.Vessel.FirstOrDefault(c => c.VesselId == item.VesselId);
-            //    var updateCrewDetails = _context.CrewDetails.FirstOrDefault(c => c.CrewId == reliever1Id);
-            //    if (updateCrewDetails != null)
-            //    {                   
-            //        updateCrewDetails.PreviousStatus = "Travel to vessel";
-            //        updateCrewDetails.PlanStatus = "Sign In transit";                    
-            //        updateCrewDetails.Status = "Sign In transit";
-            //        updateCrewDetails.PoolId = vesselPooId.PoolId;
-            //        updateCrewDetails.ModifiedBy = "Master";
-            //        updateCrewDetails.ModifiedDate = DateTime.Now;
-            //        _context.CrewDetails.Update(updateCrewDetails);
-            //        _context.SaveChanges();
-            //    }              
-            //    //Need to check & Refine
-
-            //    var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
-            //    if (contract != null)
-            //    {                   
-            //        contract.SignonDate = item.ExpectedSignOnDate;
-            //        _context.Contract.Update(contract);
-            //        _context.SaveChanges();
-            //    }
-            return RedirectToAction(nameof(vwCrewList));
+            }            
            
+            return Json(tblActivitySignOn);
+
         }
         public string ConvrtToTitlecase(string value)
         {
@@ -958,7 +950,6 @@ namespace crewlinkship.Controllers
                 //var actions = vwCrewList();     
                 return RedirectToAction("vwCrewList");
             }
-
             return RedirectToAction("UserLogin");
         }
 
