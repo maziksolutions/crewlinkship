@@ -13,23 +13,36 @@ using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
 using SelectPdf;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web.Helpers;
 
 namespace crewlinkship.Controllers
 {
+    //[Authorize]
     public class HomeController : Controller
     {
         //private readonly ILogger<HomeController> _logger;
         private readonly shipCrewlinkContext _context;
         private readonly IHostingEnvironment _appEnvironment;
+        private readonly AppSettings _appSettings;
 
         public bool IMOFull { get; private set; }
 
-        public HomeController(shipCrewlinkContext context ,IHostingEnvironment appEnvironment)
+        public HomeController(shipCrewlinkContext context ,IHostingEnvironment appEnvironment, IOptions<AppSettings> appSettings)
         {
             // _logger = logger;
             _context = context;
             _appEnvironment = appEnvironment;
+            _appSettings = appSettings.Value;
         }
         public IActionResult Index()
         {
@@ -46,103 +59,205 @@ namespace crewlinkship.Controllers
         //}
         public IActionResult Details(int? crewId)
         {
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().PassportNumber;
-            ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+            if (accessToken != null)
+            {
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
 
-            ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c=>c.Country)
-              .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
-            return PartialView();
+                ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().PassportNumber;
+                ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+
+                ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c => c.Country)
+                  .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
 
         public IActionResult Address(int? crewId)
         {
-            ViewBag.address = _context.TblCrewAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
-            ViewBag.corsAddress = _context.TblCrewCorrespondenceAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
-            return PartialView();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.address = _context.TblCrewAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
+                ViewBag.corsAddress = _context.TblCrewCorrespondenceAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
 
         public ActionResult Bankdetails(int? crewId)
         {
-            ViewBag.primaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Primary").ToList();
-            ViewBag.secondaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Secondary").ToList();
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            return PartialView();
-        }
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+            if (accessToken != null)
+            {
+                ViewBag.primaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Primary").ToList();
+                ViewBag.secondaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Secondary").ToList();
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
+        }
         public ActionResult License(int? crewId)
         {
-            ViewBag.nationalLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == false).ToList();
-            ViewBag.flagLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == true).ToList();
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            return PartialView();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.nationalLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == false).ToList();
+                ViewBag.flagLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == true).ToList();
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
         public ActionResult Courses(int? crewId)
         {
-            ViewBag.courses = _context.TblCrewCourses.Include(x => x.CourseNavigation).Include(x => x.Institute).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            return PartialView();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.courses = _context.TblCrewCourses.Include(x => x.CourseNavigation).Include(x => x.Institute).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
         public ActionResult OtherDocuments(int? crewId)
         {
-            ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x=>x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            return PartialView();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
         public ActionResult Crewtraveldoc(int? crewId)
         {
-            ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            ViewBag.passport= _context.TblPassports.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
-            ViewBag.cdc = _context.TblCdcs.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
-            ViewBag.visa = _context.TblVisas.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
-            ViewBag.yf = _context.TblYellowfevers.Include(x => x.VendorRegister).Where(x => x.CrewId == crewId).ToList();
-            return PartialView();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.passport = _context.TblPassports.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
+                ViewBag.cdc = _context.TblCdcs.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
+                ViewBag.visa = _context.TblVisas.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
+                ViewBag.yf = _context.TblYellowfevers.Include(x => x.VendorRegister).Where(x => x.CrewId == crewId).ToList();
+                return PartialView();
+            }
+            return RedirectToAction("UserLogin", "Login");
         }
 
         public ActionResult VesselParticular()
         {
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            ViewBag.HandOverport = "NA";
-            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault().PortOfHandover;
-            if (HandOverPortId != null)
+            if (accessToken != null)
             {
-                ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
+                ViewBag.name = HttpContext.Session.GetString("name");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+
+                ViewBag.HandOverport = "NA";
+                var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault().PortOfHandover;
+                if (HandOverPortId != null)
+                {
+                    ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
+                }
+                var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
+                    .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
+                    .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
+                    .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
+                    .Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+                return View(vesselName);
             }
-            var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
-                .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
-                .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
-                .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
-                .Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-            return View(vesselName);
+            return RedirectToAction("UserLogin", "Login");
         }
 
-        public IActionResult vwCrewList()
+        public IActionResult vwCrewList(int? crewId)
         {
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-           
+
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+
+                //ViewBag.name = TempData["name"] as string;
+                ViewBag.name = HttpContext.Session.GetString("name");
+
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+
+                var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+
+            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId==crewId).ToList();
+
             //ViewBag.imo = vesselDetails.Imo;
             //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
             //ViewBag.flag = vesselDetails.Flag.CountryName;
 
-            var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+         
 
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
-            return View(crewlist);
+                return View(crewlist);
+            }
 
+            return RedirectToAction("UserLogin","Login");
 
         }
 
         public IActionResult CBA()
+        {
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
+            {
+                ViewBag.name = HttpContext.Session.GetString("name");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+                //var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
+                //ViewBag.vesselName = vesselDetails.VesselName;
+                //ViewBag.imo = vesselDetails.Imo;
+                //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
+                //ViewBag.flag = vesselDetails.Flag.CountryName;
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+                return PartialView(vcm);
+            }
+            return RedirectToAction("UserLogin", "Login");
+        }
+        public IActionResult TravelToVessel(int? crewId)
         {
             var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
@@ -152,80 +267,86 @@ namespace crewlinkship.Controllers
             var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
             return PartialView(vcm);
         }
-        public  IActionResult TravelToVessel(int? crewId)
+           
+       
+        public JsonResult TravelToVessels(int? crewId)
         {
-            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x=>x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-            //List<TblCountry> countryList = _context.TblCountries.Where(x => x.IsDeleted == false).ToList();
+           var travelToVesse = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();  
             ViewBag.countryList = new SelectList(_context.TblCountries, "CountryId", "CountryName");
-            //ViewBag.seaPort = new SelectList(_context.TblSeaports, "SeaportId", "SeaportName");
-            return PartialView();
+            var result = new { Result = travelToVesse, countryList = ViewBag.countryList };
+            return Json(result);
         }
         public JsonResult GetSeaPort(int? CountryId)
         {
             ViewBag.seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-            //_context.ProxyCreationEnabled = false;
-            //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
             return Json(new SelectList(ViewBag.seaPort, "SeaportId","SeaportName"));
         }
 
-
-        //public List<TblSeaport> GetSeaPort(int? CountryId)
-        //{
-        //    List<TblSeaport> seaPort = new List<TblSeaport>();
-        //    seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-        //    //_context.ProxyCreationEnabled = false;
-        //    //List<TblSeaport> seaportList = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-        //    return seaPort;
-        //}
-
-        [HttpPost]
-        public virtual IActionResult TravelToVessel(TblActivitySignOn tblActivitySignOn)
+        public JsonResult GetSeaPortByCountry(int? CountryId)
         {
+            var seaport = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
 
-            if (!ModelState.IsValid)
-                return View(tblActivitySignOn);
-            _context.TblActivitySignOns.Update(tblActivitySignOn);
-            _context.SaveChanges();
+            return Json(seaport);
+        }
+        [HttpPost]
+        public JsonResult TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
+        {
+            //var accessToken = HttpContext.Session.GetString("token");
+            //HttpClient client = new HttpClient();
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            //// update activity signon data and make it status True 
-            ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-            //var crew = _context.ActivitySignOn.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-
-            //if (crew != null && crew.IsSignon != true)
-            //{                
-            //    crew.CountryId = item.CountryId;
-            //    crew.SeaportId = item.SeaportId;
-               
-            //    crew.ExpectedSignOnDate = item.ExpectedSignOnDate;                
-            //    crew.ReliefDate = item.ReliefDate;                
-            //    crew.Remarks = item.Remarks;               
-            //    _context.ActivitySignOn.Update(crew);
+            //if (accessToken != null)
+            //{
+            //    if (!ModelState.IsValid)
+            //        return View(tblActivitySignOn);
+            //    _context.TblActivitySignOns.Update(tblActivitySignOn);
             //    _context.SaveChanges();
-            //    //update status in crewdetails 
-            //    var vesselPooId = _context.Vessel.FirstOrDefault(c => c.VesselId == item.VesselId);
-            //    var updateCrewDetails = _context.CrewDetails.FirstOrDefault(c => c.CrewId == reliever1Id);
-            //    if (updateCrewDetails != null)
-            //    {                   
-            //        updateCrewDetails.PreviousStatus = "Travel to vessel";
-            //        updateCrewDetails.PlanStatus = "Sign In transit";                    
-            //        updateCrewDetails.Status = "Sign In transit";
-            //        updateCrewDetails.PoolId = vesselPooId.PoolId;
-            //        updateCrewDetails.ModifiedBy = "Master";
-            //        updateCrewDetails.ModifiedDate = DateTime.Now;
-            //        _context.CrewDetails.Update(updateCrewDetails);
-            //        _context.SaveChanges();
-            //    }              
-            //    //Need to check & Refine
 
-            //    var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
-            //    if (contract != null)
-            //    {                   
-            //        contract.SignonDate = item.ExpectedSignOnDate;
-            //        _context.Contract.Update(contract);
-            //        _context.SaveChanges();
-            //    }
-            return RedirectToAction(nameof(vwCrewList));
+                //// update activity signon data and make it status True 
+                ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+                //var crew = _context.ActivitySignOn.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+            // update activity signon data and make it status True
+            //var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
+            var crew = _context.TblActivitySignOns.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == tblActivitySignOn.ActivitySignOnId);
+            if (crew != null && crew.IsSignon != true)
+            {
+                crew.CountryId = tblActivitySignOn.CountryId;
+                crew.SeaportId = tblActivitySignOn.SeaportId;
+                crew.ExpectedSignOnDate = tblActivitySignOn.ExpectedSignOnDate;
+                crew.ReliefDate = tblActivitySignOn.ReliefDate;
+                crew.Remarks = tblActivitySignOn.Remarks;
+                _context.TblActivitySignOns.Update(crew);
+                _context.SaveChanges();
+                //update status in crewdetails 
+                var vesselPooId = _context.TblVessels.FirstOrDefault(c => c.VesselId == crew.VesselId);
+                var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
+                if (updateCrewDetails != null)
+                {
+                    updateCrewDetails.PreviousStatus = "Travel to vessel";
+                    updateCrewDetails.PlanStatus = "Sign In transit";
+                    updateCrewDetails.Status = "Sign In transit";
+                    updateCrewDetails.PoolId = vesselPooId.PoolId;
+                    updateCrewDetails.ModifiedBy = "Master";
+                    updateCrewDetails.ModifiedDate = DateTime.Now;
+                    _context.TblCrewDetails.Update(updateCrewDetails);
+                    _context.SaveChanges();
+                }
+                //Need to check & Refine
+
+                //var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
+                //if (contract != null)
+                //{
+                //    contract.SignonDate = item.ExpectedSignOnDate;
+                //    _context.Contract.Update(contract);
+                //    _context.SaveChanges();
+                //}
+                //    _context.Update(tblActivitySignOn);
+                //_context.SaveChanges();
+
+            }            
            
+            return Json(tblActivitySignOn);
+
         }
         public string ConvrtToTitlecase(string value)
         {
@@ -943,29 +1064,11 @@ namespace crewlinkship.Controllers
             return Json(new { fileName = fileName });
         }
 
-        public IActionResult UserLogin()
-        {
-  
-            return PartialView();
-        }
-
-        public IActionResult Login(string Username ,string Userpwd)
-       {
-            var User = _context.Userlogins.SingleOrDefault(x => x.UserName == Username && x.Password == Userpwd && x.IsDeleted == false);
-
-            if (User != null)
-            {
-                //var actions = vwCrewList();     
-                return RedirectToAction("vwCrewList");
-            }
-
-            return RedirectToAction("UserLogin");
-        }
-
+       
         public IActionResult LogOut()
         {
-           
-            return PartialView();
+            HttpContext.Session.Clear();
+            return RedirectToAction("UserLogin", "Login");
         }
 
         public IActionResult passwordView()
@@ -973,22 +1076,21 @@ namespace crewlinkship.Controllers
             return PartialView();
         }
 
-      
+
         public JsonResult Changepassword(string oldpwd, string newpwd, string crfmpwd)
         {
-            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.IsDeleted == false);          
-            if(User!= null && newpwd == crfmpwd)
-            {
-                User.Password = newpwd;
-                User.ModifiedDate = DateTime.Now;
-                _context.Userlogins.Update(User);
-                _context.SaveChanges();
-                return Json("success");
-            }
-            return Json("fail");
+            var name = HttpContext.Session.GetString("name");
+
+            var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.UserName == name && x.IsDeleted == false);
+                if (User != null && newpwd == crfmpwd)
+                {
+                    User.Password = newpwd;
+                    User.ModifiedDate = DateTime.Now;
+                    _context.Userlogins.Update(User);
+                    _context.SaveChanges();
+                    return Json("success");
+                }
+                return Json("fail");
         }
-
-
-
     }
 }
