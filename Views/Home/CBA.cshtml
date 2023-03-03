@@ -32,8 +32,8 @@
                                             @foreach (var item in Model)
                                             {
                                                 <tr>
-                                                    <td>@item.OffCBA.Cbaname</td>
-                                                    <td>@item.RatingCBA.Cbaname</td>
+                                                    <td>@item.OffCBA?.Cbaname</td>
+                                                    <td>@item.RatingCBA?.Cbaname</td>
                                                     <td>@item.Country?.Nationality</td>
                                                     <td>@item.AppliedOn?.ToString("dd/MMM/yyyy")</td>
                                                 </tr>
