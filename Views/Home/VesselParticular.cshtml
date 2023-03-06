@@ -21,12 +21,23 @@
                                                 <tr>
                                                     <th width="100%" valign="top" style="border: none !important;">
                                                         <h5 style="margin: 5px 0; background: none;">
-                                                            VESSEL PARTICULARS<span style="float:right;">
+                                                            VESSEL PARTICULARS
+                                                            <span style="float:right;">
+                                                                <button class="btn btn-success form-small p-t-3 p-b-3" type="button" data-toggle="tooltip"
+                                                                        data-trigger="hover" data-placement="top" data-title="Export to Excel" onclick="exported()">
+                                                                    <i class="fas fa-file-excel"></i>
+                                                                </button>
+
+                                                                <button class="btn btn-danger form-small p-t-3 p-b-3 m-l-5 " type="button" data-toggle="tooltip"
+                                                                        data-trigger="hover" data-placement="top" data-title="Export to PDF" onclick="Pdfexported()">
+                                                                    <i class="fas fa-file-pdf"></i>
+                                                                </button>
                                                             </span>
                                                         </h5>
                                                     </th>
                                                 </tr>
                                             </table>
+                                            
                                         </td>
                                     </tr>
 
@@ -581,14 +592,16 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Maker</td>
-                                                            <td>@item.Ecdis2maker1</td>
-                                                            <td>@item.Ecdis2maker1</td>
+                                                            <td>@item.Ecdisid1Navigation?.Maker</td>
+                                                            <td>@item.Ecdisid2Navigation?.Maker</td>
+                                                            <td>@item.Ecdisid3Navigation?.Maker</td>
                                                             <td>&nbsp;</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Model</td>
-                                                            <td>@item.Ecdis2model</td>
-                                                            <td>@item.Ecdis2model</td>
+                                                            <td>@item.Ecdisid1Navigation?.Model</td>
+                                                            <td>@item.Ecdisid2Navigation?.Model</td>
+                                                            <td>@item.Ecdisid3Navigation?.Model</td>
                                                             <td>&nbsp;</td>
                                                         </tr>
                                                         <tr>
@@ -620,7 +633,7 @@
                             <img *ngIf="vessel.vesselImage==null" class="card-img-top mb-1 img-fluid" style="width: 120px;" src="~/Images/vessel-pic.jpg">
                         </div> @foreach (var item in Model)
                         {
-                    <h4 class="card-title" style="text-align: center;">@item.VesselName</h4>
+                            <h4 class="card-title" style="text-align: center;">@item.VesselName</h4>
                             <div class="table-responsive">
                                 <table class="table">
 
@@ -653,7 +666,46 @@
                                 </table>
                             </div>
                         }
-                        </div>
+                    </div>
+
+                    <script>
+                        //Excel
+                            function exported(e) {
+
+                               $.ajax({
+                                   type: "POST",
+                                   url: '@Url.Action("ExportVesselParticulars", "Home")',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+
+
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+
+                        }
+
+                        //PDF
+
+                         function Pdfexported(e) {
+
+                               $.ajax({
+                                   type: "POST",
+                                   url: '@Url.Action("GeneratevesselPDF", "Home")',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+
+
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+                                /*window.open(url);*/
+                              }
+                    </script>
                 </div>
             </div>
         </div>
