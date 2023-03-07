@@ -32,21 +32,7 @@
         <div class="content-body">
             <div class="row match-height" id="switch">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <div class="card m-b-0">
-                        @*<div class="card-content">
-                                <div class="row">
-                                    <div class="col-xl-9 col-lg-12">
-                                        <div class="total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                            <span>Total crew on board (2)</span> <i class="fa fa-square red m-l-10"></i> <span><a class="red">Relief over due crew (2)</a></span> <i class="fa fa-square green m-l-10"></i> <span><a class="green">Extra crew onboard (2)</a></span> <i class="fa fa-square m-l-10"></i> <span><a class="black">Extended Contract (4)</a></span><i class="fa fa-square m-l-10"></i> <span><a class="black">Reduced Contract(4)</a></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-12">
-                                        <div class="float-right total-crew p-l-10 p-b-10 p-t-10 p-r-10">
-                                            <i class="fas fa-history p-r-5"></i> <a href="#" class="black">Voyage History</a><span class="p-l-10 p-r-10"> | </span> <i class="fas fa-ship p-r-5"></i><a class="black" href="javascript:;">Vessel Details</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
+                    <div class="card m-b-0">                       
                         <div id='myVesselModal' class='modal'>
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -74,26 +60,30 @@
                                         <tr>
                                             <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
                                             <td scope="row">
-                                                <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"") &nbsp;@(item.Crew!=null? item.Crew.MiddleName : "")&nbsp;@(item.Crew!=null? item.Crew.LastName : "")</a>
+                                                <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"")  @(item.Crew!=null? item.Crew.MiddleName : "") @(item.Crew!=null? item.Crew.LastName : "")</a>
                                             </td>
                                             <td>@(item.Crew!=null? item.Crew.EmpNumber : "")</td>
                                             <td>@(item.Crew!=null? item.Crew.Country.Nationality : "")</td>
-                                            <td>@item.SignOnDate?.ToString("dd/MMM/yyyy")</td>
-                                            <td>@item.DueDate?.ToString("dd/MMM/yyyy")</td>
+                                            <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                            <td>@item.DueDate?.ToString("dd-MMM-yyyy")</td>
                                             <td scope="row">
                                                 @(item.ReliverRank!=null? item.ReliverRank.Code+":" :"")
                                                 @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
                                                 <a class="reliverDetails" style="color: #0068F7" href="javascript:;">
                                                     <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
-                                                    @(item.Reliever != null? item.Reliever.FirstName:"") &nbsp;@(item.Reliever != null? item.Reliever.MiddleName : "")&nbsp;@(item.Reliever != null? item.Reliever.LastName : "")
+                                                    @(item.Reliever != null? item.Reliever.FirstName:"") @(item.Reliever != null? item.Reliever.MiddleName : "") @(item.Reliever != null? item.Reliever.LastName : "")
                                                 </a>
-                                                @if (@item.Reliever1 > 0 && item.Reliever?.Status == "Travel to vessel")
+                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Travel to vessel")
                                                 {
                                                     <a class="dropdown-item travelToVessel" style="width:15%; float:right;"><i class="fas fa-edit"></i></a>
-                                                    @*<i class="fa-solid fa-circle-check"></i>*@
-                                                    @*<i class="fas fa-ellipsis-v travelToVesselPopup" href="javascript:;"></i>*@
                                                 }
-                                            </td>
+                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Sign In transit")
+                                                {
+                                            <a class="dropdown-item" style="width:15%; float:right;">
+                                                <i class="fa fa-check-circle green"></i>
+                                            </a>
+                                                }
+</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -114,112 +104,6 @@
                                     </div>
                                 </div>
                             </div>
-                        
-                            @*@Change Country To SeaPort*@
-                            <script type="text/javascript">
-                                $(function () {
-                                    $("#CountryList").change(function () {
-                                        var CountryId = $(this).find("option:selected").val();
-                                        $.ajax({
-                                            type: 'GET',
-                                            url: "/Home/GetSeaPortByCountry",
-                                            data: { 'CountryId': CountryId },
-                                            dataType: 'json',
-                                            success: function (response) {
-                                                $('#ddlSeaport').empty();
-                                                $.each(response, function (value, text) {
-                                                    $('#ddlSeaport').append($("<option value='" + text.seaportId + "'>" + text.seaportName + "</option>"));
-                                                });
-                                            },
-                                            error: function (ex) { alert('Error!'); }
-                                        });
-                                    });
-                                })
-                            </script>
-                            
-                            @*@travel to vessel Popup*@
-                            <script type="text/javascript">
-                                var getconf = $.noConflict();
-                                getconf(function () {
-                                    getconf(".travelToVessel").click(function () {
-                                        var crewId = getconf(this).closest("tr").find("td").find("#crewReliverId").html();
-                                        $.ajax({
-                                            type: "GET",
-                                            url: "/Home/TravelToVessels",
-                                            data: { 'crewId': crewId },
-                                            dataType: "json",
-                                            contentType: "application/json; charset=utf-8",
-                                            success: function (response) {
-                                                $("#travelToVesselPopup").find(".modal-body").val(response);
-                                                getconf("#activitySignOnId").val(response.result?.activitySignOnId);
-                                                getconf("#rankCode").html(response.result?.crew?.firstName + ' ' + (response.result?.crew?.middelName ?? '') + ' ' + response.result?.crew?.lastName + '(' + response.result?.rank?.code + ')');
-                                                getconf("#signOnReason").val(response.result?.signOnReason?.reason);
-                                                var tdate = new Date(response.result?.expectedTravelDate);
-                                                /*var abc = response.result?.expectedTravelDate;*/
-                                                var tday = tdate.getDate();
-                                                var tmonth = tdate.getMonth() + 1;
-                                                var tyear = tdate.getFullYear();
-                                                var tformat = tmonth + "/" + tday + "/" + tyear;
-                                                getconf("#signOnDate").val(tformat);
-
-
-                                                getconf("#extraCrewOnBoard").val(response.result?.extraCrewOnBoard);
-                                                /*$("#CountryList").html(response.countryList?.CountryId);*/
-                                                /*$("#ddlSeaport").val(response.result?.seaport?.seaportName);*/
-
-                                                var expdate = new Date(response.result?.expectedSignOnDate);
-                                                var expday = expdate.getDate();
-                                                var expmonth = expdate.getMonth() + 1;
-                                                var expyear = expdate.getFullYear();
-                                                var expformat = expmonth + "/" + expday + "/" + expyear;
-                                                getconf("#exportSignOn").val(expformat);
-
-                                                getconf("#durationDays").val(response.result?.duration);
-
-                                                var rdate = new Date(response.result?.reliefDate);
-                                                /*var abc = response.result?.expectedTravelDate;*/
-                                                var rday = rdate.getDate();
-                                                var rmonth = rdate.getMonth() + 1;
-                                                var ryear = rdate.getFullYear();
-                                                var rformat = rmonth + "/" + rday + "/" + ryear;
-                                                getconf("#reliefDate").val(rformat);
-
-                                                getconf("#remarks").val(response.result?.remarks);
-                                                $("#travelToVesselPopup").modal('show');
-                                                $('#travelToVesselPopup').on('hide', function () {
-                                                    window.location.reload();
-                                                });
-                                                /*seaportId Dropdown*/
-
-                                                var seaportId = "<option value=" + response.result?.seaport?.seaportId + ">" + response.result?.seaport?.seaportName + "</option>";
-                                                getconf('#ddlSeaport').append(seaportId);
-
-                                                /*selectedCountry*/
-
-                                                var selectedCountry = "<option value=" + response.result?.country?.countryId + ">" + response.result?.country?.countryName + "</option>";
-                                                getconf('#CountryList').append(selectedCountry);
-
-                                                /*CountryList*/
-
-                                                $.each(response.countryList, function (index, value) {
-                                                    var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
-                                                    getconf('#CountryList').append(targetstring);
-                                                })
-
-                                            },
-
-
-                                            failure: function (response) {
-                                                alert(response.responseText);
-                                            },
-                                            error: function (response) {
-                                                alert(response.responseText);
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
-                            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
                             @*@Particulars*@
                             <script type="text/javascript">
@@ -301,8 +185,7 @@
                                 if (name == "IMO") {
                                     url =('@Url.Action("GenerateIMOPDF", "Home")');
 
-                                     @*var url = '@Url.Action("GenerateIMOPDF", "Home", new {target="_blank"})';
-                                              window.location.href = url;*@
+                                   
                                     }
                                 if (name == "FPD01") {
                                     url =('@Url.Action("generateFPD01", "Home")');
@@ -324,44 +207,87 @@
                               }
                             </script>
 
-                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+                            @*@travel to vessel Popup*@
                             <script type="text/javascript">
                                 $(function () {
-                                    ; (function ($, window, document, undefined) {
-                                        $("#exportSignOn").on("change", function () {
-                                            alert(datecal);
-                                            var datecal = new Date($("#exportSignOn").val());
-                                            var duration = $("#durationDays").val().split('.');
-                                            var monthre = duration[0];
-                                            var days = 0;
-                                            var time = datecal.getTime();
-                                            if (duration[1] > 0)
-                                                days = 15;
-                                            if (!isNaN(datecal.getTime())) {
-                                                if (days > 0)
-                                                    datecal.setDate(datecal.getDate() + Number(days));
-                                                datecal.setMonth(datecal.getMonth() + Number(month));
-                                                console.log(datecal.toInputFormat().toString())
-                                                var dayre = datecal.getDate();
-                                                var monthre = (datecal.getMonth())+1;
-                                                var yearre = datecal.getFullYear();
-                                                var formatre = monthre + "/" + dayre + "/" + yearre;
+                                    $(".travelToVessel").click(function () {
+                                        var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Home/TravelToVessels",
+                                            data: { 'crewId': crewId },
+                                            dataType: "json",
+                                            contentType: "application/json; charset=utf-8",
+                                            success: function (response) {
+                                                $("#travelToVesselPopup").find(".modal-body").val(response);
+                                                $("#activitySignOnId").val(response.result?.activitySignOnId);
+                                                $("#rankCode").html(response.result?.crew?.firstName + ' ' + (response.result?.crew?.middelName ?? '') + ' ' + response.result?.crew?.lastName + '(' + response.result?.rank?.code + ')');
+                                                $("#signOnReason").val(response.result?.signOnReason?.reason);
+                                                var tdate = new Date(response.result?.expectedTravelDate);                                              
+                                                var tday = tdate.getDate();
+                                                var tmonth = tdate.getMonth() + 1;
+                                                var tyear = tdate.getFullYear();
+                                                var tformat = tmonth + "/" + tday + "/" + tyear;
+                                                $("#signOnDate").val(tformat);
 
-                                                $("#reliefDate").val(formatre);
-                                            } else {
-                                                alert("Invalid Date");
+
+                                                $("#extraCrewOnBoard").val(response.result?.extraCrewOnBoard);
+                                                
+
+                                                var expdate = new Date(response.result?.expectedSignOnDate);
+                                                var expday = expdate.getDate();
+                                                var expmonth = expdate.getMonth() + 1;
+                                                var expyear = expdate.getFullYear();
+                                                var expformat = expmonth + "/" + expday + "/" + expyear;
+                                                $("#exportSignOn").val(expformat);
+
+                                                $("#durationDays").val(response.result?.duration);
+
+                                                var rdate = new Date(response.result?.reliefDate);
+                                               
+                                                var rday = rdate.getDate();
+                                                var rmonth = rdate.getMonth() + 1;
+                                                var ryear = rdate.getFullYear();
+                                                var rformat = rmonth + "/" + rday + "/" + ryear;
+                                                $("#reliefDate").val(rformat);
+
+                                                $("#remarks").val(response.result?.remarks);
+                                                $("#travelToVesselPopup").modal('show');
+                                                
+                                                /*seaportId Dropdown*/
+
+                                                var seaportId = "<option value=" + response.result?.seaport?.seaportId + ">" + response.result?.seaport?.seaportName + "</option>";
+                                                $('#ddlSeaport').append(seaportId);
+
+                                                /*selectedCountry*/
+
+                                                var selectedCountry = "<option value=" + response.result?.country?.countryId + ">" + response.result?.country?.countryName + "</option>";
+                                                $('#CountryList').append(selectedCountry);
+
+                                                /*CountryList*/
+
+                                                $.each(response.countryList, function (index, value) {
+                                                    var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
+                                                    $('#CountryList').append(targetstring);
+                                                })
+
+                                            },
+
+
+                                            failure: function (response) {
+                                                alert(response.responseText);
+                                            },
+                                            error: function (response) {
+                                                alert(response.responseText);
                                             }
                                         });
-                                        Date.prototype.toInputFormat = function () {
-                                            var yyyy = this.getFullYear().toString();
-                                            var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-                                            var dd = this.getDate().toString();
-                                            return yyyy + "-" - (mm[1] ? mm : "0" + mm[0]) + "-" - (dd[1] ? dd : "0" + dd[0]); // padding
-                                        };
-                                    })(jQuery, this, document);
+                                    });
                                 });
-                                ;
                             </script>
+
+
                         </div>
                     </div>
                 </div>
@@ -374,171 +300,199 @@
 <div class="modal fade" id="travelToVesselPopup" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        <span id="signOnId"></span>
-                        OnBoard Activity :<b id="rankCode"></b>
-                    </h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span id="signOnId"></span>
+                    OnBoard Activity :<b id="rankCode"></b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <br />
+                <div class="row">
+                    <input type="hidden" id="activitySignOnId" />
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Sign On Reason</label>
+                            <br />
+                            <input type="text" id="signOnReason" class="form-control input-sm" readonly />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Travel Date</label>
+                            <br />
+                            <input formnovalidate="formnovalidate" id="signOnDate" class="form-control input-sm" readonly />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Extra Crew On Board</label>
+                            <input type="text" id="extraCrewOnBoard" class="form-control input-sm" readonly />
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <br />
-                    <div class="row">
-                        <input type="hidden" id="activitySignOnId" />
-
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Sign On Reason</label>
-                                <br />
-                                <input type="text" id="signOnReason" class="form-control input-sm" readonly />
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Travel Date</label>
-                                <br />
-                                <input formnovalidate="formnovalidate" id="signOnDate" class="form-control input-sm" readonly />
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Extra Crew On Board</label>
-                                <input type="text" id="extraCrewOnBoard" class="form-control input-sm" readonly />
-                            </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="CountryList" class="form-control input-sm">
+                            </select>
                         </div>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Country</label>
-                                <select id="CountryList" class="form-control input-sm">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Sign-On-Port</label>
-                                <br />
-                                <select id="ddlSeaport" class="form-control input-sm">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Expect Sign-On-Date</label>
-                                <input type="text" id="exportSignOn" class="form-control input-sm" />
-                            </div>
-                        </div>
-
-                        @*<div class="control-group">
-                                <label class="control-label" for="to">To</label>
-                                <div class="input-group date" data-date="" data-date-format="yyyy-mm-dd">
-                                    <input id="enddate" type="text" class="form-control" name="enddate"></input>
-                                    <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span>
-                                </div>
-                            </div>*@
-
-
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>Duration(Months)</label>
-                                <input type="text" id="durationDays" class="form-control input-sm" readonly />
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>Relief Date</label>
-                                <br />
-                                <input type="text" id="reliefDate" class="form-control input-sm" readonly />
-                            </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Sign-On-Port</label>
+                            <br />
+                            <select id="ddlSeaport" class="form-control input-sm">
+                            </select>
                         </div>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea class="form-control" id="remarks"></textarea>
-                            </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Expect Sign-On-Date</label>
+                            <input type="text" id="exportSignOn" class="form-control input-sm" />
                         </div>
-                    </div>
-                    <br />
+                    </div>                
 
-                    @*<div class="row">
-                            <div class="col-5">
-                                <input type="checkbox" id="allowBeginTravelSignOnSameDate" name="allowBeginTravelSignOnSameDate" value="item.IsSignon">
-                                <label for="allowBeginTravelSignOnSameDate">Allow Begin Travel & Sign-On on same date</label>
-                            </div>
-                            <div class="col-6">
-                                <input type="checkbox" id="ownerWage" name="ownerWage" value="item.OwnerWage">
-                                <label for="ownerWage">Owner Wage?</label>
-                            </div>
-                        </div>*@
+
                 </div>
-                <div class="modal-footer">
-                    <Button type="submit" id="updateSignOn" class="btn btn-dark">Submit</Button>
-                    <Button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#travelToVesselPopup').modal('hide');">Close</Button>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Duration(Months)</label>
+                            <input type="text" id="durationDays" class="form-control input-sm" readonly />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Relief Date</label>
+                            <br />
+                            <input type="text" id="reliefDate" class="form-control input-sm" readonly />
+                        </div>
+                    </div>
                 </div>
-            </form>
+                <br />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            <textarea class="form-control" id="remarks"></textarea>
+                        </div>
+                    </div>
+                </div>              
+             
+            </div>
+            <div class="modal-footer">
+                <Button type="submit" id="updateSignOn" class="btn btn-dark">Submit</Button>
+                <Button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#travelToVesselPopup').modal('hide');">Close</Button>
+            </div>
 
         </div>
     </div>
 </div>
 
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-
 <script type="text/javascript">
-    var jqUeryUp = $.noConflict();
-    jqUeryUp(function () {
-        jqUeryUp("#updateSignOn").click(function () {
-            var SeaportId = jqUeryUp("#ddlSeaport").val();
+@*@Change Country To SeaPort*@
+    $(function () {
+        $("#CountryList").change(function () {
+            var CountryId = $(this).find("option:selected").val();
+            $.ajax({
+                type: 'GET',
+                url: "/Home/GetSeaPortByCountry",
+                data: { 'CountryId': CountryId },
+                dataType: 'json',
+                success: function (response) {
+                    $('#ddlSeaport').empty();
+                    $.each(response, function (value, text) {
+                        $('#ddlSeaport').append($("<option value='" + text.seaportId + "'>" + text.seaportName + "</option>"));
+                    });
+                },
+                error: function (ex) { alert('Error!'); }
+            });
+        });
+    })
+
+    $(function () {
+        $("#updateSignOn").click(function () {
+            var SeaportId = $("#ddlSeaport").val();
             var tblActivitySignOn = {
-                ActivitySignOnId: jqUeryUp("#activitySignOnId").val(),
-                CountryId: jqUeryUp("#CountryList").val(),
-                SeaportId: jqUeryUp("#ddlSeaport").val(),
-                ExpectedSignOnDate: jqUeryUp("#exportSignOn").val(),
-                Duration: jqUeryUp("#durationDays").val(),
-                ReliefDate: jqUeryUp("#reliefDate").val(),
-                Remarks: jqUeryUp("#remarks").val(),
-                crewId: jqUeryUp("#crewReliverId").val(),
+                ActivitySignOnId: $("#activitySignOnId").val(),
+                CountryId: $("#CountryList").val(),
+                SeaportId: $("#ddlSeaport").val(),
+                ExpectedSignOnDate: $("#exportSignOn").val(),
+                Duration: $("#durationDays").val(),
+                ReliefDate: $("#reliefDate").val(),
+                Remarks: $("#remarks").val(),
+                crewId: $("#crewReliverId").val(),
             }
-            jqUeryUp.ajax({
+            $.ajax({
                 url: "/Home/TravelToVesselUpdate/",
                 type: "POST",
                 data: tblActivitySignOn,
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8;',
                 dataType: 'json',
                 success: function (response) {
-                    if (response) {
-                        jqUeryUp('#updateSignOn').on('hide', function () {
-                            window.location.reload();
-                        });
-                    } else {
-                        alert(" not found.");
-                    }
+                    alert('Activity performed successfully');                   
+                    $('#travelToVesselPopup').modal('hide');
+                   $('#travelToVesselPopup').on('hide', function () {
+                                                    window.location.reload();
+                                                });
+                },
+                error: function (textStatus, errorThrown) {
+                    alert('error')
+                    Success = false;
                 }
             });
         });
     });
-</script>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-<script type="text/javascript">
-    var jqUery = $.noConflict();
-    jqUery(function () {
-        jqUery("#exportSignOn").datepicker({
+    $(function () {
+        ; (function ($, window, document, undefined) {
+            jQDate("#exportSignOn").on("change", function () {
+                var datecal = new Date($("#exportSignOn").val());
+                var duration = $("#durationDays").val().split('.');
+                var month = duration[0];
+                var days = 0;
+                var time = datecal.getTime();
+                if (duration[1] > 0)
+                    days = 15;
+                if (!isNaN(datecal.getTime())) {
+                    if (days > 0)
+                        datecal.setDate(datecal.getDate() + Number(days));
+                    datecal.setMonth(datecal.getMonth() + Number(month));
+                    console.log(datecal.toInputFormat().toString())
+                    var dayre = datecal.getDate();
+                    var monthre = (datecal.getMonth()) + 1;
+                    var yearre = datecal.getFullYear();
+                    var formatre = monthre + "/" + dayre + "/" + yearre;
+
+                    $("#reliefDate").val(formatre);
+                } else {
+                    alert("Invalid Date");
+                }
+            });
+            Date.prototype.toInputFormat = function () {
+                var yyyy = this.getFullYear().toString();
+                var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+                var dd = this.getDate().toString();
+                return yyyy + "-" - (mm[1] ? mm : "0" + mm[0]) + "-" - (dd[1] ? dd : "0" + dd[0]); // padding
+            };
+        })(jQuery, this, document);
+    });
+    ;
+    var jQDate = $.noConflict();
+    jQDate(function () {
+        jQDate("#exportSignOn").datepicker({
             changeMonth: true,
             changeYear: true,
         });
