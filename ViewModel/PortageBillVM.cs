@@ -161,4 +161,5 @@ namespace crewlinkship.ViewModel
         public bool IsAddPrevBal { get; set; }
         public decimal? MidMonthAllotment { get; set; }
     }
+
 }
