@@ -1,4 +1,5 @@
 ﻿using System;
+using crewlinkship.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -10,7 +11,6 @@ namespace crewlinkship.Models
     {
         public shipCrewlinkContext()
         {
-
         }
 
         public shipCrewlinkContext(DbContextOptions<shipCrewlinkContext> options)
@@ -24,6 +24,7 @@ namespace crewlinkship.Models
         public virtual DbSet<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
         public virtual DbSet<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual DbSet<TblAuthority> TblAuthorities { get; set; }
+        public virtual DbSet<TblBowRequest> TblBowRequests { get; set; }
         public virtual DbSet<TblBudgetCode> TblBudgetCodes { get; set; }
         public virtual DbSet<TblBudgetSubCode> TblBudgetSubCodes { get; set; }
         public virtual DbSet<TblBuilder> TblBuilders { get; set; }
@@ -32,6 +33,7 @@ namespace crewlinkship.Models
         public virtual DbSet<TblCdc> TblCdcs { get; set; }
         public virtual DbSet<TblCity> TblCities { get; set; }
         public virtual DbSet<TblClassification> TblClassifications { get; set; }
+        public virtual DbSet<TblContract> TblContracts { get; set; }
         public virtual DbSet<TblCountry> TblCountries { get; set; }
         public virtual DbSet<TblCourseRegister> TblCourseRegisters { get; set; }
         public virtual DbSet<TblCrewAddress> TblCrewAddresses { get; set; }
@@ -52,20 +54,28 @@ namespace crewlinkship.Models
         public virtual DbSet<TblIssuingAuthority> TblIssuingAuthorities { get; set; }
         public virtual DbSet<TblLicenceRegister> TblLicenceRegisters { get; set; }
         public virtual DbSet<TblManager> TblManagers { get; set; }
+        public virtual DbSet<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
+        public virtual DbSet<TblNigerianDeduction> TblNigerianDeductions { get; set; }
         public virtual DbSet<TblOtherDocument> TblOtherDocuments { get; set; }
+        public virtual DbSet<TblOverTime> TblOverTimes { get; set; }
         public virtual DbSet<TblOwner> TblOwners { get; set; }
         public virtual DbSet<TblPassport> TblPassports { get; set; }
+        public virtual DbSet<TblPfrate> TblPfrates { get; set; }
         public virtual DbSet<TblPool> TblPools { get; set; }
+        public virtual DbSet<TblPortageBill> TblPortageBills { get; set; }
         public virtual DbSet<TblPrincipal> TblPrincipals { get; set; }
         public virtual DbSet<TblRankRegister> TblRankRegisters { get; set; }
+        public virtual DbSet<TblReimbursementOrDeduction> TblReimbursementOrDeductions { get; set; }
         public virtual DbSet<TblSeaport> TblSeaports { get; set; }
         public virtual DbSet<TblShipType> TblShipTypes { get; set; }
         public virtual DbSet<TblSignOffReason> TblSignOffReasons { get; set; }
         public virtual DbSet<TblSignOnReason> TblSignOnReasons { get; set; }
         public virtual DbSet<TblState> TblStates { get; set; }
+        public virtual DbSet<TblTransferCrew> TblTransferCrews { get; set; }
         public virtual DbSet<TblVendorRegister> TblVendorRegisters { get; set; }
         public virtual DbSet<TblVessel> TblVessels { get; set; }
         public virtual DbSet<TblVesselCba> TblVesselCbas { get; set; }
+        public virtual DbSet<TblVesselChange> TblVesselChanges { get; set; }
         public virtual DbSet<TblVisa> TblVisas { get; set; }
         public virtual DbSet<TblWageComponent> TblWageComponents { get; set; }
         public virtual DbSet<TblWageStructure> TblWageStructures { get; set; }
@@ -74,15 +84,14 @@ namespace crewlinkship.Models
         public virtual DbSet<VwActiveCrewList> VwActiveCrewLists { get; set; }
         public virtual DbSet<VwOcimfexp> VwOcimfexps { get; set; }
         public virtual DbSet<VwTankerExp> VwTankerExps { get; set; }
-
         public virtual DbSet<OCIMFVM> OCIMFVMs { get; set; }
-
+        public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 
-                optionsBuilder.UseSqlServer("Server=DESKTOP-HRR2RKV;Database=shipCrewlink;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-VTEH8LV;Database=shipCrewlink;Trusted_Connection=True;");
             }
         }
 
@@ -282,6 +291,21 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.StateId);
             });
 
+            modelBuilder.Entity<TblBowRequest>(entity =>
+            {
+                entity.HasKey(e => e.BowRequestId);
+
+                entity.ToTable("tblBowRequest");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.VesselId).HasColumnName("vesselId");
+            });
+
             modelBuilder.Entity<TblBudgetCode>(entity =>
             {
                 entity.HasKey(e => e.BudgetCodeId);
@@ -442,6 +466,47 @@ namespace crewlinkship.Models
                 entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<TblContract>(entity =>
+            {
+                entity.HasKey(e => e.ContractId);
+
+                entity.ToTable("tblContract");
+
+                entity.Property(e => e.Acmapproval).HasColumnName("ACMApproval");
+
+                entity.Property(e => e.AcmapprovedBy).HasColumnName("ACMApprovedBy");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+
+                entity.Property(e => e.Gwapproval).HasColumnName("GWapproval");
+
+                entity.Property(e => e.GwapprovedBy).HasColumnName("GWApprovedBy");
+
+                entity.Property(e => e.Gwpath).HasColumnName("GWPath");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Osa).HasColumnName("OSA");
+
+                entity.Property(e => e.Pf).HasColumnName("PF");
+
+                entity.Property(e => e.Pfamount).HasColumnName("PFAmount");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Sca).HasColumnName("SCA");
+
+                entity.Property(e => e.Ud).HasColumnName("UD");
+
+                entity.Property(e => e.Udamount).HasColumnName("UDAmount");
+
+                entity.Property(e => e.Waf).HasColumnName("WAF");
+
+                entity.Property(e => e.Wf).HasColumnName("WF");
+
+                entity.Property(e => e.Wfamount).HasColumnName("WFAmount");
             });
 
             modelBuilder.Entity<TblCountry>(entity =>
@@ -936,6 +1001,52 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.StateId);
             });
 
+            modelBuilder.Entity<TblMidMonthAllotment>(entity =>
+            {
+                entity.HasKey(e => e.MidMonthAllotmentId);
+
+                entity.ToTable("tblMidMonthAllotment");
+
+                entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.AppliedCbaNavigation)
+                    .WithMany(p => p.TblMidMonthAllotments)
+                    .HasForeignKey(d => d.AppliedCba);
+
+                entity.HasOne(d => d.Contract)
+                    .WithMany(p => p.TblMidMonthAllotments)
+                    .HasForeignKey(d => d.ContractId);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblMidMonthAllotments)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.CrewList)
+                    .WithMany(p => p.TblMidMonthAllotments)
+                    .HasForeignKey(d => d.CrewListId);
+            });
+
+            modelBuilder.Entity<TblNigerianDeduction>(entity =>
+            {
+                entity.HasKey(e => e.NigDeductionId);
+
+                entity.ToTable("tblNigerianDeduction");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblNigerianDeductions)
+                    .HasForeignKey(d => d.RankId);
+            });
+
             modelBuilder.Entity<TblOtherDocument>(entity =>
             {
                 entity.HasKey(e => e.DocumentId);
@@ -951,6 +1062,27 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.TblOtherDocuments)
                     .HasForeignKey(d => d.CountryId);
+            });
+
+            modelBuilder.Entity<TblOverTime>(entity =>
+            {
+                entity.HasKey(e => e.Otid);
+
+                entity.ToTable("tblOverTime");
+
+                entity.Property(e => e.Otid).HasColumnName("OTId");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Otrate).HasColumnName("OTRate");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblOverTimes)
+                    .HasForeignKey(d => d.RankId);
             });
 
             modelBuilder.Entity<TblOwner>(entity =>
@@ -1003,6 +1135,37 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.CountryId);
             });
 
+            modelBuilder.Entity<TblPfrate>(entity =>
+            {
+                entity.HasKey(e => e.PfrateId);
+
+                entity.ToTable("tblPFRate");
+
+                entity.Property(e => e.PfrateId).HasColumnName("PFRateId");
+
+                entity.Property(e => e.Avcamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("AVCAmount");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+
+                entity.Property(e => e.GratuityAmount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsLocked).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Pfamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("PFAmount");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblPfrates)
+                    .HasForeignKey(d => d.RankId);
+            });
+
             modelBuilder.Entity<TblPool>(entity =>
             {
                 entity.HasKey(e => e.PoolId);
@@ -1014,6 +1177,63 @@ namespace crewlinkship.Models
                 entity.Property(e => e.PoolName).HasMaxLength(450);
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<TblPortageBill>(entity =>
+            {
+                entity.HasKey(e => e.PortageBillId);
+
+                entity.ToTable("tblPortageBill");
+
+                entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
+
+                entity.Property(e => e.Avc)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("AVC");
+
+                entity.Property(e => e.BillStatus).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ExtraOt).HasColumnName("ExtraOT");
+
+                entity.Property(e => e.Gratuity).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.IndPfamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("indPFAmount");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsHoldWageAllotment)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.IsLeaveWagesCf).HasColumnName("IsLeaveWagesCF");
+
+                entity.Property(e => e.IsTransitApply)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.LeaveWagesBf).HasColumnName("LeaveWagesBF");
+
+                entity.Property(e => e.LeaveWagesCf).HasColumnName("LeaveWagesCF");
+
+                entity.Property(e => e.Othours).HasColumnName("OTHours");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Tax).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Udamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("UDAmount");
+
+                entity.Property(e => e.Wfamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("WFAmount");
+
+                entity.HasOne(d => d.Contract)
+                    .WithMany(p => p.TblPortageBills)
+                    .HasForeignKey(d => d.ContractId);
             });
 
             modelBuilder.Entity<TblPrincipal>(entity =>
@@ -1054,6 +1274,21 @@ namespace crewlinkship.Models
                 entity.Property(e => e.RankName).HasMaxLength(450);
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<TblReimbursementOrDeduction>(entity =>
+            {
+                entity.HasKey(e => e.ReimbursementOrDeductionId);
+
+                entity.ToTable("tblReimbursementOrDeduction");
+
+                entity.Property(e => e.Component).HasMaxLength(450);
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Type).HasMaxLength(450);
             });
 
             modelBuilder.Entity<TblSeaport>(entity =>
@@ -1127,6 +1362,21 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.TblStates)
                     .HasForeignKey(d => d.CountryId);
+            });
+
+            modelBuilder.Entity<TblTransferCrew>(entity =>
+            {
+                entity.HasKey(e => e.TransferId);
+
+                entity.ToTable("tblTransferCrew");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Rank)
+                    .WithMany(p => p.TblTransferCrews)
+                    .HasForeignKey(d => d.RankId);
             });
 
             modelBuilder.Entity<TblVendorRegister>(entity =>
@@ -1324,6 +1574,26 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.VesselId);
             });
 
+            modelBuilder.Entity<TblVesselChange>(entity =>
+            {
+                entity.HasKey(e => e.VesselChangeId);
+
+                entity.ToTable("tblVesselChange");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsSameCba).HasColumnName("IsSameCBA");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.VesselId).HasColumnName("vesselId");
+
+                entity.HasOne(d => d.Vessel)
+                    .WithMany(p => p.TblVesselChanges)
+                    .HasForeignKey(d => d.VesselId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
             modelBuilder.Entity<TblVisa>(entity =>
             {
                 entity.HasKey(e => e.VisaId);
@@ -1409,10 +1679,10 @@ namespace crewlinkship.Models
                     .WithMany(p => p.TblYellowfevers)
                     .HasForeignKey(d => d.VendorRegisterId);
             });
+
             modelBuilder.Entity<Userlogin>(entity =>
             {
-                
-                entity.HasKey(e => e.UerId);
+                entity.HasNoKey();
 
                 entity.ToTable("Userlogin");
 
