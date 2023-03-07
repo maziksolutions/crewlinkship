@@ -1,9 +1,215 @@
-﻿@*@model IEnumerable<crewlinkship.Models.TblCrewList>*@
+﻿@model crewlinkship.ViewModel.PortageViewModel
 @{
     ViewBag.Title = "sdf";
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .tbl-container {
+        max-width: fit-content;
+        max-height: fit-content;
+    }
 
+    .tbl-fixed {
+        overflow-x: scroll;
+        overflow-y: scroll;
+        height: fit-content;
+        max-height: 70vh;
+    }
+
+    table {
+        max-width: max-content;
+    }
+
+        table th {
+            position: sticky;
+            top: 0px;
+            background: #ffffff;
+            z-index: 2;
+        }
+
+        table td {
+            background: #fff;
+        }
+
+    td:first-child,
+    th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 4;
+    }
+
+    td:nth-child(2),
+    th:nth-child(2) {
+        position: sticky;
+        left: 51px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(2) {
+        z-index: 3;
+    }
+
+    td:nth-child(3),
+    th:nth-child(3) {
+        position: sticky;
+        left: 148px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(3) {
+        z-index: 3;
+    }
+
+
+    td:nth-child(4),
+    th:nth-child(4) {
+        position: sticky;
+        left: 235px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(4) {
+        z-index: 3;
+    }
+
+
+    td:nth-child(5),
+    th:nth-child(5) {
+        position: sticky;
+        left: 280px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(5) {
+        z-index: 3;
+    }
+
+    td:nth-child(6),
+    th:nth-child(6) {
+        position: sticky;
+        left: 367px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(6) {
+        z-index: 3;
+    }
+
+    td:nth-child(7),
+    th:nth-child(7) {
+        position: sticky;
+        left: 470px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(7) {
+        z-index: 3;
+    }
+
+    td:nth-child(8),
+    th:nth-child(8) {
+        position: sticky;
+        left: 516px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(8) {
+        z-index: 3;
+    }
+
+    td:nth-child(9),
+    th:nth-child(9) {
+        position: sticky;
+        left: 559px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(9) {
+        z-index: 3;
+    }
+
+    td:nth-child(10),
+    th:nth-child(10) {
+        position: sticky;
+        left: 638px;
+        z-index: 1;
+    }
+
+    td:first-child,
+    th:nth-child(10) {
+        z-index: 3;
+    }
+
+ .tabs{
+    width:100%;
+    height:auto;
+    margin:0 auto;
+}
+/* tab list item */
+.tabs .tabs-list{
+    list-style:none;
+    margin:0px;
+    padding:0px;
+}
+.tabs .tabs-list li{
+    width:18%;
+    float:left;
+    margin:0px;
+    margin-right:2px;
+    padding:10px 5px;
+    text-align: center;
+    background-color:cornflowerblue;
+    border-radius:3px;
+}
+.tabs .tabs-list li:hover{
+    cursor:pointer;
+}
+.tabs .tabs-list li a{
+    text-decoration: none;
+    color:white;
+}
+/* Tab content section */
+.tabs .tab{
+    display:none;
+    width:100%;
+    min-height:250px;
+    height:auto;
+    border-radius:3px;
+    padding:20px 15px;
+    color:darkslategray;
+    clear:both;
+}
+.tabs .tab h3{
+    border-bottom:3px solid cornflowerblue;
+    letter-spacing:1px;
+    font-weight:normal;
+    padding:5px;
+}
+.tabs .tab p{
+    line-height:20px;
+    letter-spacing: 1px;
+}
+
+/* When active state */
+.active{
+    display:block !important;
+}
+.tabs .tabs-list li.active{
+    background-color:lavender !important;
+    color:black !important;
+}
+.active a{
+    color:black !important;
+}
+</style>
 <div class="app-content content fixed-navbar-inner">
     <div class="content-wrapper">
         <div class="content-header row">
@@ -11,7 +217,7 @@
                 <h4 class="content-header-title m-b-5 m-t-5">Portage Bill</h4>
             </div>
             <div class="col-xl-6 col-lg-12">
-               
+
             </div>
         </div>
         <div class="card card-content">
@@ -19,16 +225,16 @@
                 <form [formGroup]="form">
                     <div class="row">
                         @*<div class="col">
-                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "value", "text"), "select", new { @class = "form-control" })
-                        </div>*@
+                                @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "value", "text"), "select", new { @class = "form-control" })
+                            </div>*@
                         <div class="col">
                             @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
-  </div>
+                        </div>
                         <div class="col">
                             @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
-  </div>
+                        </div>
                         <div class="col">
-                           
+
                         </div>
                         <mat-checkbox formControlName="Isoneexcel" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check this for compile sheet">Compile sheet</mat-checkbox>
                         <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
@@ -62,135 +268,433 @@
         <div class="content-body">
             <div class="row match-height" id="switch">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <div class="card m-b-0">                       
+                    <div class="card m-b-0">
                         <div id='myVesselModal' class='modal'>
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div id='myModalContent'></div>
                                 </div>
                             </div>
-                        </div>                       
-                        <div id="goal-list-scroll" class="table-responsive position-relative inner">
-                            <table mat-table id="table1" [dataSource]="dataSource" *ngIf="dataSource.filteredData.length > 0" class="table table-hover table-bordered mb-0 crew-table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="hard_left">Sr.No.</th>
-                                        <th class="hard_left">Crew Name</th>
-                                        <th class="hard_left">CDC</th>
-                                        <th>Rank</th>
-                                        <th>Signon Date</th>
-                                        <th>PayCommence</th>
-                                        <th>From</th>
-                                        <th>To</th>
+                        </div>
+                        <div id="goal-list-scroll" class="table-responsive position-relative">
+                            <div class="tbl-container">
+                                <div class="tbl-fixed">
+                                    <div class="tabs">
+                                        <ul class="tabs-list">
+                                            <li class="active"><a href="#tab1"> Onboard</a></li>
+                                            <li><a href="#tab2">Promotion & Change in Contract</a></li>
+                                            <li><a href="#tab3">Offsigners</a></li>
+                                        </ul>
+                                        <div id="tab1" class="tab active">                                           
+                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr.No.</th>
+                                                        <th>Crew Name</th>
+                                                        <th>CDC</th>
+                                                        <th>Rank</th>
+                                                        <th>Signon Date</th>
+                                                        <th>PayCommence</th>
+                                                        <th>From</th>
+                                                        <th>To</th>
 
-                                        <th>No of Days </th>
-                                        <th>Currency</th>
-                                        <th>Nationality</th>
-                                        <th>Basic Wages</th>
-                                        <th>Fixed/Guaranteed Overtime</th>
-                                        <th>Security Allowance </th>
-                                        <th>Leave+Subs.</th>
-                                        <th>U.ALLOW</th>
-                                        <th> Pension Fund </th>
-                                        <th> Other Allowance</th>
-                                        <th>Total Wages per month</th>
-                                        <th> Overtime HR</th>
-                                        <th>Basic Wage</th>
-                                        <th>Fixed/Guaranteed OT</th>
-                                        <th>Security Allowance</th>
-                                        <th>Leave Pay & Subsitence Allow. </th>
-                                        <th>Uniform Allow.</th>
-                                        <th>Pension Fund</th>
-                                        <th>Other Allow.</th>
-                                        <th>Extra OT</th>
-                                        <th>Other Earning</th>
-                                        <th>Transit Wages</th>
-                                        <th>Total Earnings (Current Month)</th>
-                                        <th> Bal from Prev Month</th>
-                                        <th>Reimbursement</th>
-                                        <th>Total Payable</th>
-                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
-                                        <th>Cash Advance</th>
-                                        <th>Bonded Stores</th>
-                                        <th>Other Deduction</th>
-                                        <th>PF Deduction (Indian)</th>
-                                        <th>8.0% PF Employee Contribution (On Basic)</th>
-                                        <th>2.0% Union Dues (On Gross)</th>
-                                        <th>1.0% Welfare fund (On Gross)</th>
-                                        <th>WHT 5%</th>
-                                        <th>Allotment</th>
-                                        <th>Total Deductions</th>
-                                        <th>Leave wages B/F</th>
-                                        <th> Leave wages C/F</th>
-                                        <th>Final Balance(n-t)</th>
-                                        <th>Signature</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
+                                                        <th>No of Days </th>
+                                                        <th>Currency</th>
+                                                        <th>Nationality</th>
+                                                        <th>Basic Wages</th>
+                                                        <th>Fixed/Guaranteed Overtime</th>
+                                                        <th>Security Allowance </th>
+                                                        <th>Leave+Subs.</th>
+                                                        <th>U.ALLOW</th>
+                                                        <th> Pension Fund </th>
+                                                        <th> Other Allowance</th>
+                                                        <th>Total Wages per month</th>
+                                                        <th> Overtime HR</th>
+                                                        <th>Basic Wage</th>
+                                                        <th>Fixed/Guaranteed OT</th>
+                                                        <th>Security Allowance</th>
+                                                        <th>Leave Pay & Subsitence Allow. </th>
+                                                        <th>Uniform Allow.</th>
+                                                        <th>Pension Fund</th>
+                                                        <th>Other Allow.</th>
+                                                        <th>Extra OT</th>
+                                                        <th>Other Earning</th>
+                                                        <th>Transit Wages</th>
+                                                        <th>Total Earnings (Current Month)</th>
+                                                        <th> Bal from Prev Month</th>
+                                                        <th>Reimbursement</th>
+                                                        <th>Total Payable</th>
+                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                        <th>Cash Advance</th>
+                                                        <th>Bonded Stores</th>
+                                                        <th>Other Deduction</th>
+                                                        <th>PF Deduction (Indian)</th>
+                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                        <th>2.0% Union Dues (On Gross)</th>
+                                                        <th>1.0% Welfare fund (On Gross)</th>
+                                                        <th>WHT 5%</th>
+                                                        <th>Allotment</th>
+                                                        <th>Total Deductions</th>
+                                                        <th>Leave wages B/F</th>
+                                                        <th> Leave wages C/F</th>
+                                                        <th>Final Balance(n-t)</th>
+                                                        <th>Signature</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.onsignersportage)
                                     {
-                                    <tr>
-                                        <td class="hard_left"></td>
-                                        <td class="hard_left">@item.CrewName</td>
-                                        <td class="hard_left">@item.cdcno</td>
-                                        <td>@item.RankName</td>
-                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
-                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
-                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
-                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
-                                        <td>@item.TotalDays</td>
-                                        <td>@item.Currency</td>
-                                        <td>@item.Nationality</td>
-                                        <td>@item.BasicWages</td>
-                                        <td>@item.FixedGtOT</td>
-                                        <td>@item.SecurityAllow</td>
-                                        <td>@item.LeavePay</td>
-                                        <td>@item.UniformAllow</td>
-                                        <td>@item.PensionFund</td>
-                                        <td>@item.OtherAllow</td>
-                                        <td>@item.TotalWages</td>
-                                        <td>@item.OTHours</td>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>@item.CrewName</td>
+                                                        <td>@item.cdcno</td>
+                                                        <td>@item.RankName</td>
+                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.TotalDays</td>
+                                                        <td>@item.Currency</td>
+                                                        <td>@item.Nationality</td>
+                                                        <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.UniformAllow</td>
+                                                        <td>@item.PensionFund</td>
+                                                        <td>@item.OtherAllow</td>
+                                                        <td>@item.TotalWages</td>
+                                                        <td>@item.OTHours</td>
 
-                                        <td>
-                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
-                                        </td>
-                                        <td>@item.FixedGtOT* @item.TotalDays / @item.numberofday</td>
-                                        <td>@item.SecurityAllow* @item.TotalDays / @item.numberofday</td>
-                                        <td>@item.LeavePay* @item.TotalDays / @item.numberofday</td>
-                                        <td>@item.UniformAllow *@item.TotalDays / @item.numberofday</td>
-                                        <td>@item.PensionFund* @item.TotalDays / @item.numberofday</td>
-                                        <td>@item.OtherAllow *@item.TotalDays / @item.numberofday</td>
-                                        <td>@item.extraot</td>
-                                        <td>@item.OtherEarnings</td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                           
+                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                        @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))</td>
+                                                        <td>                                                            
+                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>                                                           
+                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            
+                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>                                                           
+                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>@item.extraot</td>
+                                                        <td>@item.OtherEarnings</td>
 
-                                        <td>@item.TransitWages</td>
+                                                        <td>@item.TransitWages</td>
 
-                                        <td>@item.PrevMonthBal</td>
-                                        <td>@item.Reimbursement</td>
-                                        <td>@item.TotalPayable</td>
-                                        <td>@item.LeavePay</td>
-                                        <td>@item.CashAdvance</td>
-                                        <td>@item.BondedStores</td>
-                                        <td>@item.OtherDeductions</td>
-                                        <td>@item.authorityDeduction</td>
-                                        <td>@item.PFAmount</td>
-                                        <td>@item.UDAmount</td>
-                                        <td>@item.WFAmount</td>
-                                        <td>@item.Tax</td>
-
-                                        <td>@item.Allotments</td>
-                                        <td>@item.TotalDeductions</td>
-                                        <td>@item.LeaveWagesBF</td>
-                                        <td>@item.LeaveWagesBF+ (@item.LeavePay * @item.TotalDays / @item.numberofday)</td>
-                                        <td>@item.FinalBalance</td>
-                                        <td></td>
-                                    </tr>
+                                                        <td>@item.PrevMonthBal</td>
+                                                        <td>@item.Reimbursement</td>
+                                                        <td>@item.TotalPayable</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.CashAdvance</td>
+                                                        <td>@item.BondedStores</td>
+                                                        <td>@item.OtherDeductions</td>
+                                                        <td>@item.authorityDeduction</td>
+                                                        <td>@item.PFAmount</td>
+                                                        <td>@item.UDAmount</td>
+                                                        <td>@item.WFAmount</td>
+                                                        <td>@item.Tax</td>
+                                                        <td>@item.Allotments</td>
+                                                        <td>@item.TotalDeductions</td>
+                                                        <td>@item.LeaveWagesBF</td>
+                                                        <td>                                                            
+                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                        </td>
+                                                        <td>@item.FinalBalance</td>
+                                                        <td></td>
+                                                    </tr>
                                     }
-                                    </tbody>
-                                </table>
-                        </div>                      
-                    </div>
-                </div>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="tab2" class="tab">
+                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr.No.</th>
+                                                        <th>Crew Name</th>
+                                                        <th>CDC</th>
+                                                        <th>Rank</th>
+                                                        <th>Signon Date</th>
+                                                        <th>PayCommence</th>
+                                                        <th>From</th>
+                                                        <th>To</th>
+
+                                                        <th>No of Days </th>
+                                                        <th>Currency</th>
+                                                        <th>Nationality</th>
+                                                        <th>Basic Wages</th>
+                                                        <th>Fixed/Guaranteed Overtime</th>
+                                                        <th>Security Allowance </th>
+                                                        <th>Leave+Subs.</th>
+                                                        <th>U.ALLOW</th>
+                                                        <th> Pension Fund </th>
+                                                        <th> Other Allowance</th>
+                                                        <th>Total Wages per month</th>
+                                                        <th> Overtime HR</th>
+                                                        <th>Basic Wage</th>
+                                                        <th>Fixed/Guaranteed OT</th>
+                                                        <th>Security Allowance</th>
+                                                        <th>Leave Pay & Subsitence Allow. </th>
+                                                        <th>Uniform Allow.</th>
+                                                        <th>Pension Fund</th>
+                                                        <th>Other Allow.</th>
+                                                        <th>Extra OT</th>
+                                                        <th>Other Earning</th>
+                                                        <th>Transit Wages</th>
+                                                        <th>Total Earnings (Current Month)</th>
+                                                        <th> Bal from Prev Month</th>
+                                                        <th>Reimbursement</th>
+                                                        <th>Total Payable</th>
+                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                        <th>Cash Advance</th>
+                                                        <th>Bonded Stores</th>
+                                                        <th>Other Deduction</th>
+                                                        <th>PF Deduction (Indian)</th>
+                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                        <th>2.0% Union Dues (On Gross)</th>
+                                                        <th>1.0% Welfare fund (On Gross)</th>
+                                                        <th>WHT 5%</th>
+                                                        <th>Allotment</th>
+                                                        <th>Total Deductions</th>
+                                                        <th>Leave wages B/F</th>
+                                                        <th> Leave wages C/F</th>
+                                                        <th>Final Balance(n-t)</th>
+                                                        <th>Signature</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.promotionsportagebill)
+                                    {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>@item.CrewName</td>
+                                                        <td>@item.cdcno</td>
+                                                        <td>@item.RankName</td>
+                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.TotalDays</td>
+                                                        <td>@item.Currency</td>
+                                                        <td>@item.Nationality</td>
+                                                        <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.UniformAllow</td>
+                                                        <td>@item.PensionFund</td>
+                                                        <td>@item.OtherAllow</td>
+                                                        <td>@item.TotalWages</td>
+                                                        <td>@item.OTHours</td>
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+
+                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+
+                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>@item.extraot</td>
+                                                        <td>@item.OtherEarnings</td>
+
+                                                        <td>@item.TransitWages</td>
+
+                                                        <td>@item.PrevMonthBal</td>
+                                                        <td>@item.Reimbursement</td>
+                                                        <td>@item.TotalPayable</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.CashAdvance</td>
+                                                        <td>@item.BondedStores</td>
+                                                        <td>@item.OtherDeductions</td>
+                                                        <td>@item.authorityDeduction</td>
+                                                        <td>@item.PFAmount</td>
+                                                        <td>@item.UDAmount</td>
+                                                        <td>@item.WFAmount</td>
+                                                        <td>@item.Tax</td>
+                                                        <td>@item.Allotments</td>
+                                                        <td>@item.TotalDeductions</td>
+                                                        <td>@item.LeaveWagesBF</td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                        </td>
+                                                        <td>@item.FinalBalance</td>
+                                                        <td></td>
+                                                    </tr>
+                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="tab3" class="tab">
+                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr.No.</th>
+                                                        <th>Crew Name</th>
+                                                        <th>CDC</th>
+                                                        <th>Rank</th>
+                                                        <th>Signon Date</th>
+                                                        <th>PayCommence</th>
+                                                        <th>From</th>
+                                                        <th>To</th>
+
+                                                        <th>No of Days </th>
+                                                        <th>Currency</th>
+                                                        <th>Nationality</th>
+                                                        <th>Basic Wages</th>
+                                                        <th>Fixed/Guaranteed Overtime</th>
+                                                        <th>Security Allowance </th>
+                                                        <th>Leave+Subs.</th>
+                                                        <th>U.ALLOW</th>
+                                                        <th> Pension Fund </th>
+                                                        <th> Other Allowance</th>
+                                                        <th>Total Wages per month</th>
+                                                        <th> Overtime HR</th>
+                                                        <th>Basic Wage</th>
+                                                        <th>Fixed/Guaranteed OT</th>
+                                                        <th>Security Allowance</th>
+                                                        <th>Leave Pay & Subsitence Allow. </th>
+                                                        <th>Uniform Allow.</th>
+                                                        <th>Pension Fund</th>
+                                                        <th>Other Allow.</th>
+                                                        <th>Extra OT</th>
+                                                        <th>Other Earning</th>
+                                                        <th>Transit Wages</th>
+                                                        <th>Total Earnings (Current Month)</th>
+                                                        <th> Bal from Prev Month</th>
+                                                        <th>Reimbursement</th>
+                                                        <th>Total Payable</th>
+                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                        <th>Cash Advance</th>
+                                                        <th>Bonded Stores</th>
+                                                        <th>Other Deduction</th>
+                                                        <th>PF Deduction (Indian)</th>
+                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                        <th>2.0% Union Dues (On Gross)</th>
+                                                        <th>1.0% Welfare fund (On Gross)</th>
+                                                        <th>WHT 5%</th>
+                                                        <th>Allotment</th>
+                                                        <th>Total Deductions</th>
+                                                        <th>Leave wages B/F</th>
+                                                        <th> Leave wages C/F</th>
+                                                        <th>Final Balance(n-t)</th>
+                                                        <th>Signature</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.offsignersporatge)
+                                    {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>@item.CrewName</td>
+                                                        <td>@item.cdcno</td>
+                                                        <td>@item.RankName</td>
+                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.TotalDays</td>
+                                                        <td>@item.Currency</td>
+                                                        <td>@item.Nationality</td>
+                                                        <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.UniformAllow</td>
+                                                        <td>@item.PensionFund</td>
+                                                        <td>@item.OtherAllow</td>
+                                                        <td>@item.TotalWages</td>
+                                                        <td>@item.OTHours</td>
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+
+                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+
+                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>@item.extraot</td>
+                                                        <td>@item.OtherEarnings</td>
+
+                                                        <td>@item.TransitWages</td>
+
+                                                        <td>@item.PrevMonthBal</td>
+                                                        <td>@item.Reimbursement</td>
+                                                        <td>@item.TotalPayable</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.CashAdvance</td>
+                                                        <td>@item.BondedStores</td>
+                                                        <td>@item.OtherDeductions</td>
+                                                        <td>@item.authorityDeduction</td>
+                                                        <td>@item.PFAmount</td>
+                                                        <td>@item.UDAmount</td>
+                                                        <td>@item.WFAmount</td>
+                                                        <td>@item.Tax</td>
+                                                        <td>@item.Allotments</td>
+                                                        <td>@item.TotalDeductions</td>
+                                                        <td>@item.LeaveWagesBF</td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                        </td>
+                                                        <td>@item.FinalBalance</td>
+                                                        <td></td>
+                                                    </tr>
+                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
             </div>
         </div>
     </div>
@@ -301,146 +805,164 @@
         </div>
     </div>
 </div>
-                                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-                                @*@travel to vessel*@
-                                <script>
-                                    /* When the user clicks on the button,
-                                    toggle between hiding and showing the dropdown content */
-                                    function myFunction() {
-                                        document.getElementById("myDropdown").classList.toggle("show");
-                                    }
-                                    function filterFunction() {
-                                        var input, filter, a, i;
-                                        input = document.getElementById("myInput");
-                                        filter = input.value.toUpperCase();
-                                        div = document.getElementById("myDropdown");
-                                        a = div.getElementsByTagName("a");
-                                        for (i = 0; i < a.length; i++) {
-                                            txtValue = a[i].textContent || a[i].innerText;
-                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                                a[i].style.display = "";
-                                            } else {
-                                                a[i].style.display = "none";
-                                            }
-                                        }
-                                    }
-                                </script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+@*@travel to vessel*@
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+    function filterFunction() {
+        var input, filter, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
 
-                                @*@travel to vessel Popup*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $(".travelToVesselPopup").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/TravelToVessels",
-                                                data: { 'crewId': crewId },
-                                                success: function (response) {
-                                                    console.log(response)
-                                                    console.log(response.countryList);
-                                                    $.each(response.countryList, function (index, value) {
+        $(".tabs-list li a").click(function (e) {
+            e.preventDefault();
+        });
 
-                                                        var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
-                                                        console.log(targetstring);
-                                                        $('#CountryList').append(targetstring);
-                                                    })
-                                                    $('#changepasswordmodel').modal('show');
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
+        $(".tabs-list li").click(function () {
+            var tabid = $(this).find("a").attr("href");
+            $(".tabs-list li,.tabs div.tab").removeClass("active");   // removing active class from tab
 
-                                        });
-                                        //$("#CustomerGrid .travelToVesselPopup").click(function () {
-                                        //    var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-                                        //    $.ajax({
-                                        //        type: "GET",
-                                        //        url: "/Home/TravelToVessel",
-                                        //        data: { 'crewId': crewId },
-                                        //        contentType: "application/json; charset=utf-8",
-                                        //        dataType: "html",
-                                        //        success: function (response) {
-                                        //            $("#travelToVesselModal").find(".modal-body").html(response);
-                                        //            $("#travelToVesselModal").find(".modal-footer").html(response);
-                                        //            $("#travelToVesselModal").modal('show');
-                                        //            $('#travelToVesselModal').on('hidden.bs.modal', function () {
-                                        //                location.reload();
-                                        //            })
-                                        //        },
-                                        //        failure: function (response) {
-                                        //            alert(response.responseText);
-                                        //        },
-                                        //        error: function (response) {
-                                        //            alert(response.responseText);
-                                        //        }
-                                        //    });
-                                        //});
-                                    });
-                                </script>
-                                @*@Particulars*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .details").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/Details",
-                                                data: { 'crewId': crewId },
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
-                                        });
-                                    });
-                                </script>
-                                @*@Reliever*@
-                                <script type="text/javascript">
-                                    $(function () {
-                                        $("#CustomerGrid .reliverDetails").click(function () {
-                                            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-                                            $.ajax({
-                                                type: "GET",
-                                                url: "/Home/Details",
-                                                data: { 'crewId': crewId },
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "html",
-                                                success: function (response) {
-                                                    $("#partialModal").find(".modal-body").html(response);
-                                                    $("#partialModal").modal('show');
-                                                    $('#partialModal').on('hidden.bs.modal', function () {
-                                                        location.reload();
-                                                    })
-                                                },
-                                                failure: function (response) {
-                                                    alert(response.responseText);
-                                                },
-                                                error: function (response) {
-                                                    alert(response.responseText);
-                                                }
-                                            });
-                                        });
-                                    });
-                                </script>
+            $(".tab").hide();   // hiding open tab
+            $(tabid).show();    // show tab
+            $(this).addClass("active"); //  adding active class to clicked tab
 
-                                @*ExcelFile*@
+        });
 
-                                <script>
+    });
+</script>
+@*@travel to vessel Popup*@
+<script type="text/javascript">
+    $(function () {
+        $(".travelToVesselPopup").click(function () {
+            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+            $.ajax({
+                type: "GET",
+                url: "/Home/TravelToVessels",
+                data: { 'crewId': crewId },
+                success: function (response) {
+                    console.log(response)
+                    console.log(response.countryList);
+                    $.each(response.countryList, function (index, value) {
+
+                        var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
+                        console.log(targetstring);
+                        $('#CountryList').append(targetstring);
+                    })
+                    $('#changepasswordmodel').modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+
+        });
+        //$("#CustomerGrid .travelToVesselPopup").click(function () {
+        //    var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/Home/TravelToVessel",
+        //        data: { 'crewId': crewId },
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "html",
+        //        success: function (response) {
+        //            $("#travelToVesselModal").find(".modal-body").html(response);
+        //            $("#travelToVesselModal").find(".modal-footer").html(response);
+        //            $("#travelToVesselModal").modal('show');
+        //            $('#travelToVesselModal').on('hidden.bs.modal', function () {
+        //                location.reload();
+        //            })
+        //        },
+        //        failure: function (response) {
+        //            alert(response.responseText);
+        //        },
+        //        error: function (response) {
+        //            alert(response.responseText);
+        //        }
+        //    });
+        //});
+    });
+</script>
+@*@Particulars*@
+<script type="text/javascript">
+    $(function () {
+        $("#CustomerGrid .details").click(function () {
+            var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
+            $.ajax({
+                type: "GET",
+                url: "/Home/Details",
+                data: { 'crewId': crewId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                    $('#partialModal').on('hidden.bs.modal', function () {
+                        location.reload();
+                    })
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+@*@Reliever*@
+<script type="text/javascript">
+    $(function () {
+        $("#CustomerGrid .reliverDetails").click(function () {
+            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+            $.ajax({
+                type: "GET",
+                url: "/Home/Details",
+                data: { 'crewId': crewId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                    $('#partialModal').on('hidden.bs.modal', function () {
+                        location.reload();
+                    })
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@*ExcelFile*@
+
+<script>
 
                             function exported(e) {
                                 var value = $("#myselection option:selected");
@@ -481,56 +1003,8 @@
                                  });
                                 /*window.open(url);*/
                               }
-                                </script>
-                            
+</script>
 
-<style>
-    .show {
-        display: block;
-    }
-    table {
-        table-layout: fixed;
-        width: 100%;
-        *margin-left: -100px; /*ie7*/
-    }
 
-    td, th {
-        vertical-align: top;
-        border-top: 1px solid #ccc;
-        padding: 10px;
-        width: 100px;
-    }
 
-    th {
-        /*  position:absolute;
-  *position: relative; /*ie7*/
-        /*  left:0; */
-        width: 100px;
-    }
-
-    .hard_left {
-        position: absolute;
-        *position: relative; /*ie7*/
-        left: 0;
-        width: 100px;
-    }
-
-    .next_left {
-        position: absolute;
-        *position: relative; /*ie7*/
-        left: 100px;
-        width: 100px;
-    }
-
-    .outer {
-        position: relative
-    }
-
-    .inner {
-        overflow-x: scroll;
-        overflow-y: visible;
-        width: 400px;
-        margin-left: 200px;
-    }
-</style>
 
