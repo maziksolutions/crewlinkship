@@ -1,7 +1,7 @@
 ﻿@model crewlinkship.ViewModel.PortageViewModel
 @{
     ViewBag.Title = "sdf";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
     .tbl-container {
@@ -224,6 +224,46 @@
             <div class="card-body">
                 <form [formGroup]="form">
                     <div class="row">
+                        <div class="col">
+            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select", new { @class = "form-control" })
+        </div>
+                        
+                            <div class="col">
+                                @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                            </div>
+                            <div class="col">
+                                @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
+                            </div>
+                            <div class="col">
+
+                            </div>
+                            <mat-checkbox formControlName="Isoneexcel" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check this for compile sheet">Compile sheet</mat-checkbox>
+                            <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
+                            <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="ExportToExcel" name="action" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="GetPreviousPortageBill()" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Search Previous Portage Bill's">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button (click)="exportToExcel()" *ngIf="printRights" class="btn btn-success form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Export to Excel" data-original-title="" title="Generate Portage Bill Excel"><i class="fas fa-file-excel" aria-hidden="true"></i></button>
+                            <button (click)="exportToPDF()" *ngIf="printRights" class="btn btn-red form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Export to PDF" data-original-title="" title="Generate Portage Bill PDF"><i class="fas fa-file-pdf" aria-hidden="true"></i></button>
+                            <button (click)="GoodworkExcel()" *ngIf="printRights" class="btn btn-red form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Goodwork Calculations" data-original-title="" title="Generate Goodwork Calculations PDF"><i class="fas fa-file-excel" aria-hidden="true"></i></button>
+                            <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="Lockpb()" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Lock Portage Bill">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                            <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="DownloadSalarySlip()" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Download salary slip">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="GetTotal()" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Show Total">
+                                <i class="fas fa-money"></i>
+                            </button>
+                        </div>
+</form>
                         @*<div class="col">
                                 @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "value", "text"), "select", new { @class = "form-control" })
                             </div>*@

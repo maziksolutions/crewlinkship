@@ -17,6 +17,11 @@ namespace crewlinkship.Models
             TblCrewListRanks = new HashSet<TblCrewList>();
             TblCrewListReliverRanks = new HashSet<TblCrewList>();
             TblWageStructures = new HashSet<TblWageStructure>();
+            TblNigerianDeductions = new HashSet<TblNigerianDeduction>();
+            TblOverTimes = new HashSet<TblOverTime>();
+            TblPfrates = new HashSet<TblPfrate>();
+            TblTransferCrews = new HashSet<TblTransferCrew>();
+          
         }
 
         public int RankId { get; set; }
@@ -42,5 +47,10 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCrewList> TblCrewListRanks { get; set; }
         public virtual ICollection<TblCrewList> TblCrewListReliverRanks { get; set; }
         public virtual ICollection<TblWageStructure> TblWageStructures { get; set; }
+        public virtual ICollection<TblNigerianDeduction> TblNigerianDeductions { get; set; }
+        public virtual ICollection<TblOverTime> TblOverTimes { get; set; }
+        public virtual ICollection<TblPfrate> TblPfrates { get; set; }
+        public virtual ICollection<TblTransferCrew> TblTransferCrews { get; set; }
+      
     }
 }
