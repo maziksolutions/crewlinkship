@@ -1092,5 +1092,747 @@ namespace crewlinkship.Controllers
                 }
                 return Json("fail");
         }
+
+
+        public IActionResult ExportVesselParticulars(int vesselId = 75)
+        {
+           
+            var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
+                .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
+                .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
+                .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
+                .Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
+
+            string fileName = "VesselParticulars" + ".xlsx";
+            string path_Root = _appEnvironment.WebRootPath;
+
+
+            using (var workbook = new XLWorkbook())
+            {
+
+                var worksheet = workbook.Worksheets.Add("Vessel Particulars");
+
+                //Common settings                             
+                worksheet.Style.Font.FontSize = 11;
+                //worksheet.Row(3).Height = 30;
+                //worksheet.RowHeight = 20;
+
+                worksheet.Style.Font.FontName = "Calibri Light";
+                worksheet.Column("A").Width = 2;
+                worksheet.Column("B").Width = 2;
+                worksheet.Column("G").Width = 2;
+
+                worksheet.Column("C").Width = 35;
+                worksheet.Column("D").Width = 22;
+                worksheet.Column("E").Width = 25;
+                worksheet.Column("F").Width = 30;
+                worksheet.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+                worksheet.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
+                worksheet.Style.Alignment.Indent = 1;
+                //worksheet.Range("A1:B3").Merge();
+
+                //Outer Border Of Excel
+                worksheet.Range("B2:G2").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("B2:G2").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("B2:B98").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("B2:B98").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("G2:G98").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("G2:G98").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("B98:G98").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("B98:G98").Style.Border.BottomBorderColor = XLColor.Black;
+
+                //InnerBorder of Excel general Information
+                worksheet.Range("C5:F5").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C5:F5").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C6:F6").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C6:F6").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C5:C16").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C5:C16").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F5:F16").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F5:F16").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C16:F16").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C16:F16").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C6:C16").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C6:C16").Style.Border.RightBorderColor = XLColor.Black;
+
+                worksheet.Range("D6:D16").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("D6:D16").Style.Border.RightBorderColor = XLColor.Black;
+
+                worksheet.Range("E6:E16").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("E6:E16").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //InnerBorder of Excel Principal Dimensions
+                worksheet.Range("C18:F18").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C18:F18").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C19:F19").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C19:F19").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C18:C25").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C18:C25").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F18:F25").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F18:F25").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C25:F25").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C25:F25").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C19:C25").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C19:C25").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //InnerBorder of Excel  Coomunication
+                worksheet.Range("C27:F27").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C27:F27").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C28:F28").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C28:F28").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C27:C32").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C27:C32").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F27:F32").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F27:F32").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C32:F32").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C32:F32").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C28:C32").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C28:C32").Style.Border.RightBorderColor = XLColor.Black;
+
+
+                //InnerBorder of Excel  Owners
+                worksheet.Range("C34:F34").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C34:F34").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C35:F35").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C35:F35").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C34:C36").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C34:C36").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F34:F36").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F34:F36").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C36:F36").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C36:F36").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C35:C36").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C35:C36").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //InnerBorder of Excel  Manager
+                worksheet.Range("C38:F38").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C38:F38").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C39:F39").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C39:F39").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C38:C40").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C38:C40").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F38:F40").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F38:F40").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C40:F40").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C40:F40").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C39:C40").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C39:C40").Style.Border.RightBorderColor = XLColor.Black;
+
+
+                //InnerBorder of Excel  Classification
+                worksheet.Range("C42:F42").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C42:F42").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C43:F43").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C43:F43").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C42:C46").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C42:C46").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F42:F46").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F42:F46").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C46:F46").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C46:F46").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C43:C46").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C43:C46").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //InnerBorder of Excel  Insurance
+                worksheet.Range("C48:F48").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C48:F48").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C49:F49").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C49:F49").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C48:C51").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C48:C51").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F48:F51").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F48:F51").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C51:F51").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C51:F51").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C49:C51").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C49:C51").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //InnerBorder of Excel  Tonnage
+                worksheet.Range("C53:F53").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C53:F53").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Range("C53:C56").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C53:C56").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F53:F56").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F53:F56").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C56:F56").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C56:F56").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C54:C56").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C54:C56").Style.Border.RightBorderColor = XLColor.Black;
+
+
+                //InnerBorder of Excel  Machinery			
+
+                worksheet.Range("C58:F58").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C58:F58").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C59:F59").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C59:F59").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C59:F59").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C66:F66").Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C66:F66").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C70:F70").Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C70:F70").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+
+                worksheet.Range("C58:C74").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C58:C74").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F58:F74").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("F58:F74").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C74:F74").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C74:F74").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C60:C65").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C60:C65").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C67:C69").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C67:C69").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("D67:D69").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("D67:D69").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("E67:E69").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("E67:E69").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("F67:F69").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("F67:F69").Style.Border.RightBorderColor = XLColor.Black;
+
+                worksheet.Range("C71:C73").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C71:C73").Style.Border.RightBorderColor = XLColor.Black;
+
+
+                //InnerBorder of Excel  Cargo Other Equipments
+
+                worksheet.Range("C76:F76").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C76:F76").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C77:F77").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C77:F77").Style.Border.TopBorderColor = XLColor.Black;
+
+                worksheet.Range("C76:C91").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C76:C91").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F76:F91").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F76:F91").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C91:F91").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C91:F91").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C77:C91").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C77:C91").Style.Border.RightBorderColor = XLColor.Black;
+
+                worksheet.Cell("C81").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                worksheet.Cell("C81").Style.Border.RightBorderColor = XLColor.Black;
+
+                //InnerBorder of Excel  ECDIS
+
+                worksheet.Range("C93:F93").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C93:F93").Style.Border.TopBorderColor = XLColor.Black;
+                worksheet.Range("C94:F94").Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C94:F94").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C93:C97").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C93:C97").Style.Border.LeftBorderColor = XLColor.Black;
+                worksheet.Range("F93:F97").Style.Border.RightBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F93:F97").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("C97:F97").Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C97:F97").Style.Border.BottomBorderColor = XLColor.Black;
+
+                worksheet.Range("C94:C97").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("C94:C97").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("D94:D97").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("D94:D97").Style.Border.RightBorderColor = XLColor.Black;
+                worksheet.Range("E94:E97").Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("E94:E97").Style.Border.RightBorderColor = XLColor.Black;
+
+
+
+                //Headers & Titles Merge & text
+
+
+                //Main Title
+                worksheet.Range("C3:F3").Merge();
+                worksheet.Cell("C3").Value = "VESSEL PARTICULARS";
+                worksheet.Cell("C3").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C3").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C3").Style.Font.Bold = true;
+                worksheet.Cell("C3").Style.Font.FontSize = 13;
+                worksheet.Cell("C3").Style.Font.FontColor = XLColor.White;
+
+
+
+                //General Information	
+
+                worksheet.Range("C5:F5").Merge();
+                worksheet.Cell("C5").Value = "General Information";
+                worksheet.Cell("C5").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C5").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C5").Style.Font.Bold = false;
+                worksheet.Cell("C5").Style.Font.FontSize = 12;
+                worksheet.Cell("C5").Style.Font.FontColor = XLColor.White;
+
+                //Principal Dimensions
+                worksheet.Range("C18:F18").Merge();
+                worksheet.Cell("C18").Value = "Principal Dimensions";
+                worksheet.Cell("C18").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C18").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C18").Style.Font.Bold = false;
+                worksheet.Cell("C18").Style.Font.FontSize = 12;
+                worksheet.Cell("C18").Style.Font.FontColor = XLColor.White;
+
+                //Communicatin
+                worksheet.Range("C27:F27").Merge();
+                worksheet.Cell("C27").Value = "Communication";
+                worksheet.Cell("C27").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C27").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C27").Style.Font.Bold = false;
+                worksheet.Cell("C27").Style.Font.FontSize = 12;
+                worksheet.Cell("C27").Style.Font.FontColor = XLColor.White;
+
+                //Owners
+                worksheet.Range("C34:F34").Merge();
+                worksheet.Cell("C34").Value = "Owners";
+                worksheet.Cell("C34").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C34").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C34").Style.Font.Bold = false;
+                worksheet.Cell("C34").Style.Font.FontSize = 12;
+                worksheet.Cell("C34").Style.Font.FontColor = XLColor.White;
+
+                //Managers
+                worksheet.Range("C38:F38").Merge();
+                worksheet.Cell("C38").Value = "Managers";
+                worksheet.Cell("C38").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C38").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C38").Style.Font.Bold = false;
+                worksheet.Cell("C38").Style.Font.FontSize = 12;
+                worksheet.Cell("C38").Style.Font.FontColor = XLColor.White;
+
+                //Classification
+                worksheet.Range("C42:F42").Merge();
+                worksheet.Cell("C42").Value = "Classification";
+                worksheet.Cell("C42").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C42").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C42").Style.Font.Bold = false;
+                worksheet.Cell("C42").Style.Font.FontSize = 12;
+                worksheet.Cell("C42").Style.Font.FontColor = XLColor.White;
+
+
+                //Insurance
+                worksheet.Range("C48:F48").Merge();
+                worksheet.Cell("C48").Value = "Insurance";
+                worksheet.Cell("C48").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C48").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C48").Style.Font.Bold = false;
+                worksheet.Cell("C48").Style.Font.FontSize = 12;
+                worksheet.Cell("C48").Style.Font.FontColor = XLColor.White;
+
+
+                //Tonnage
+                worksheet.Range("C53:F53").Merge();
+                worksheet.Cell("C53").Value = "Tonnage";
+                worksheet.Cell("C53").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C53").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C53").Style.Font.Bold = false;
+                worksheet.Cell("C53").Style.Font.FontSize = 12;
+                worksheet.Cell("C53").Style.Font.FontColor = XLColor.White;
+
+                //Machinery
+                worksheet.Range("C58:F58").Merge();
+                worksheet.Cell("C58").Value = "Machinery";
+                worksheet.Cell("C58").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C58").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C58").Style.Font.Bold = false;
+                worksheet.Cell("C58").Style.Font.FontSize = 12;
+                worksheet.Cell("C58").Style.Font.FontColor = XLColor.White;
+
+                worksheet.Range("C59:F59").Merge();
+                worksheet.Cell("C59").Value = "Main Engine";
+                worksheet.Cell("C59").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C59").Style.Fill.SetBackgroundColor(XLColor.FromHtml("D2D2D2"));
+                worksheet.Cell("C59").Style.Font.Bold = true;
+                worksheet.Cell("C59").Style.Font.FontSize = 12;
+
+                worksheet.Range("C66:F66").Merge();
+                worksheet.Cell("C66").Value = "Auxiliary Engine";
+                worksheet.Cell("C66").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C66").Style.Fill.SetBackgroundColor(XLColor.FromHtml("D2D2D2"));
+                worksheet.Cell("C66").Style.Font.Bold = true;
+                worksheet.Cell("C66").Style.Font.FontSize = 12;
+                worksheet.Range("C67:F67").Style.Fill.SetBackgroundColor(XLColor.FromHtml("D2D2D2"));
+
+                worksheet.Range("C70:F70").Merge();
+                worksheet.Cell("C70").Value = "Boilers";
+                worksheet.Cell("C70").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C70").Style.Fill.SetBackgroundColor(XLColor.FromHtml("D2D2D2"));
+                worksheet.Cell("C70").Style.Font.Bold = true;
+                worksheet.Cell("C70").Style.Font.FontSize = 12;
+
+
+                //Other Equipments
+                worksheet.Range("C76:F76").Merge();
+                worksheet.Cell("C76").Value = "Other Equipments";
+                worksheet.Cell("C76").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C76").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C76").Style.Font.Bold = false;
+                worksheet.Cell("C76").Style.Font.FontSize = 12;
+                worksheet.Cell("C76").Style.Font.FontColor = XLColor.White;
+
+                worksheet.Range("C76:F76").Merge();
+                worksheet.Cell("C76").Value = "Other Equipments";
+                worksheet.Cell("C76").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C76").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C76").Style.Font.Bold = false;
+                worksheet.Cell("C76").Style.Font.FontSize = 12;
+
+
+
+                //ECDIS
+                worksheet.Range("C93:F93").Merge();
+                worksheet.Cell("C93").Value = "ECDIS";
+                worksheet.Cell("C93").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("C93").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Cell("C93").Style.Font.Bold = false;
+                worksheet.Cell("C93").Style.Font.FontSize = 12;
+                worksheet.Cell("C93").Style.Font.FontColor = XLColor.White;
+
+
+
+                //Put Data now.= in each Cell
+                foreach (var applicant in vesselName)
+                {
+
+                    ViewBag.HandOverport = "NA";
+                    var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == applicant.VesselId).FirstOrDefault().PortOfHandover;
+                    if (HandOverPortId != null)
+                    {
+                        ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
+                    }
+
+
+                    worksheet.Cell("C6").Value = "Vessel Name";
+                    worksheet.Cell("D6").Value = applicant.VesselName;
+                    worksheet.Cell("C7").Value = "Ex - Names";
+                    worksheet.Cell("D7").Value = applicant.PreviousName;
+                    worksheet.Cell("C8").Value = "IMO No.";
+                    worksheet.Cell("D8").Value = applicant.Imo;
+                    worksheet.Cell("C9").Value = "Flag";
+                    worksheet.Cell("D9").Value = applicant.Flag != null ? applicant.Flag.CountryName : "";
+                    worksheet.Cell("C10").Value = "Port of Registery";
+                    worksheet.Cell("D10").Value = applicant.PortOfRegistryNavigation != null ? applicant.PortOfRegistryNavigation.SeaportName : "";
+                    worksheet.Cell("C11").Value = "Call Sign";
+                    worksheet.Cell("D11").Value = applicant.CallSign;
+                    worksheet.Cell("C12").Value = "Official No.";
+                    worksheet.Cell("D12").Value = applicant.Official;
+                    worksheet.Cell("C13").Value = "MMSI No.";
+                    worksheet.Cell("D13").Value = applicant.Mmsi;
+                    worksheet.Cell("C14").Value = "Vessel Short Code";
+                    worksheet.Cell("D14").Value = applicant.VesselCode;
+                    worksheet.Cell("C15").Value = "Ship Type";
+                    worksheet.Cell("D15").Value = applicant.Ship != null ? applicant.Ship.Type : "";
+
+                    worksheet.Cell("E6").Value = "Hull No.";
+                    worksheet.Cell("F6").Value = applicant.HullNo;
+                    worksheet.Cell("E7").Value = "Keel Laid Date";
+                    worksheet.Cell("F7").Value = string.IsNullOrEmpty(applicant.KeelLaid) ? "" : DateTime.Parse(applicant.KeelLaid).ToShortDateString();
+                    worksheet.Cell("E8").Value = "Launch Date";
+                    worksheet.Cell("F8").Value = string.IsNullOrEmpty(applicant.Launched) ? "" : DateTime.Parse(applicant.Launched).ToShortDateString();
+                    worksheet.Cell("E9").Value = "Delivery Date";
+                    worksheet.Cell("F9").Value = string.IsNullOrEmpty(applicant.Delivery) ? "" : DateTime.Parse(applicant.Delivery).ToShortDateString();
+                    worksheet.Cell("E10").Value = "Builder Name";
+                    worksheet.Cell("F10").Value = applicant.Builder.Builder != null ? applicant.Builder.Builder : "";
+                    worksheet.Cell("F10").Style.Alignment.SetWrapText(true);
+
+
+                    if (applicant.Builder != null)
+                    {
+                        if (applicant.Builder.Builder.Length > 20)
+                        {
+                            worksheet.Row(10).Height = 38;
+                        }
+                    }
+
+
+                    worksheet.Cell("E11").Value = "Takeover Date";
+                    worksheet.Cell("F11").Value = applicant.TakeoverDate == null ? "" : DateTime.Parse(applicant.TakeoverDate.ToString()).ToShortDateString();
+                    worksheet.Cell("E12").Value = "Takeover Port";
+                    worksheet.Cell("F12").Value = applicant.PortOfTakeovers?.SeaportName;
+                    worksheet.Cell("E13").Value = "Handover Date";
+                    worksheet.Cell("F13").Value = applicant.HandoverDate == null ? "" : DateTime.Parse(applicant.HandoverDate.ToString()).ToShortDateString();
+                    worksheet.Cell("E14").Value = "Handover Port";
+                    worksheet.Cell("F14").Value = ViewBag.HandOverport;
+                    worksheet.Cell("E15").Value = "Operating Area";
+                    worksheet.Cell("F15").Value = applicant.OperatingArea;
+
+
+                    worksheet.Cell("C19").Value = "LOA";
+                    worksheet.Cell("D19").Value = applicant.Loa;
+                    worksheet.Cell("C20").Value = "LBP";
+                    worksheet.Cell("D20").Value = applicant.Lbp;
+                    worksheet.Cell("C21").Value = "Breadth(Extreme)";
+                    worksheet.Cell("D21").Value = applicant.Breadth;
+                    worksheet.Cell("C22").Value = "Depth(Molded)";
+                    worksheet.Cell("D22").Value = applicant.Depth;
+                    worksheet.Cell("C23").Value = "Height(Maximum)";
+                    worksheet.Cell("D23").Value = applicant.Height;
+                    worksheet.Cell("C24").Value = "Bridge Front -BOW";
+                    worksheet.Cell("D24").Value = applicant.Bow;
+                    worksheet.Cell("C25").Value = "Bridge Front -Stern";
+                    worksheet.Cell("D25").Value = applicant.Stern;
+
+                    worksheet.Cell("C28").Value = "Vessel E-mail";
+                    worksheet.Cell("D28").Value = applicant.Email;
+                    worksheet.Cell("C29").Value = "Phone No. 1";
+                    worksheet.Cell("D29").Value = applicant.SatBphone;
+                    worksheet.Cell("C30").Value = "Phone No. 2";
+                    worksheet.Cell("D30").Value = applicant.Fleet77Phone;
+                    worksheet.Cell("C31").Value = "Phone No. 3";
+                    worksheet.Cell("D31").Value = applicant.Vsatphone;
+                    worksheet.Cell("C32").Value = "Mobile No.";
+                    worksheet.Cell("D32").Value = applicant.MobileNo;
+
+                    //Style Cell Value Datatype
+                    worksheet.Cell("D29").Style.NumberFormat.Format = "0";
+                    worksheet.Cell("D30").Style.NumberFormat.Format = "0";
+                    worksheet.Cell("D31").Style.NumberFormat.Format = "0";
+
+                    //worksheet.Cell("D29").DataType = XLDataType.Number;
+                    //worksheet.Cell("D30").DataType = XLDataType.Number;
+                    //worksheet.Cell("D31").DataType = XLDataType.Number;
+
+
+
+                    worksheet.Cell("C35").Value = "Registered Owner";
+                    worksheet.Cell("D35").Value = applicant.Owner != null ? applicant.Owner.OwnerName : "";
+                    worksheet.Cell("C36").Value = "Disponent Owner";
+                    worksheet.Cell("D36").Value = applicant.DisponentOwner != null ? applicant.DisponentOwner.DisponentOwners : "";
+
+                    worksheet.Cell("C39").Value = "Technical Manager";
+                    worksheet.Cell("D39").Value = applicant.Manager.Managers;
+                    worksheet.Cell("C40").Value = "Crewing Manager";
+                    worksheet.Cell("D40").Value = applicant.Crewmanager.Managers;
+
+                    worksheet.Cell("C43").Value = "Classification Society";
+                    worksheet.Cell("D43").Value = applicant.Classification != null ? applicant.Classification.Classifications : "";
+
+                    worksheet.Cell("C44").Value = "Class No.";
+                    worksheet.Cell("D44").Value = applicant.ClassNo;
+                    worksheet.Cell("C45").Value = "Class Notation";
+                    worksheet.Cell("D45").Value = applicant.ClassNotation;
+                    worksheet.Cell("C46").Value = "Ice Class";
+                    worksheet.Cell("D46").Value = applicant.IceClass;
+
+
+                    worksheet.Cell("C49").Value = "P & I Club";
+                    worksheet.Cell("D49").Value = applicant.VendorRegisterPi.VendorName;
+                    worksheet.Cell("C50").Value = "H & M";
+                    worksheet.Cell("D50").Value = applicant.VendorRegisterHm?.VendorName;
+                    worksheet.Cell("C51").Value = "Qualified Individual";
+                    worksheet.Cell("D51").Value = applicant.QualifiedIndividual;
+
+                    worksheet.Cell("C54").Value = "NRT";
+                    worksheet.Cell("D54").Value = applicant.Net;
+                    worksheet.Cell("C55").Value = "GRT";
+                    worksheet.Cell("D55").Value = applicant.Gross;
+                    worksheet.Cell("C56").Value = "DWT";
+                    worksheet.Cell("D56").Value = applicant.SummerDeadWeight;
+
+                    worksheet.Cell("C60").Value = "Make";
+                    worksheet.Cell("D60").Value = applicant.EngineModel != null ? applicant.EngineModel.Maker : "";
+                    worksheet.Cell("C61").Value = "Model";
+                    worksheet.Cell("D61").Value = applicant.EngineModel != null ? applicant.EngineModel.Model : "";
+                    worksheet.Cell("C62").Value = "Type";
+                    worksheet.Cell("D62").Value = applicant.EngineType != null ? applicant.EngineType.Type : "";
+                    worksheet.Cell("C63").Value = "M.C.R.KW";
+                    worksheet.Cell("D63").Value = applicant.Kw;
+                    worksheet.Cell("C64").Value = "No.of Main Engines";
+                    worksheet.Cell("D64").Value = applicant.MainEngineCount;
+                    worksheet.Cell("C65").Value = "CPP";
+                    worksheet.Cell("D65").Value = applicant.Cpp;
+
+                    worksheet.Cell("C68").Value = "Make";
+                    worksheet.Cell("C69").Value = "Model";
+                    worksheet.Cell("D67").Value = "No. 1";
+                    worksheet.Cell("D68").Value = applicant.AuxMake1;
+                    worksheet.Cell("D69").Value = applicant.AuxModel1;
+                    worksheet.Cell("E67").Value = "No. 2";
+                    worksheet.Cell("E68").Value = applicant.AuxMake2;
+                    worksheet.Cell("E69").Value = applicant.AuxModel2;
+                    worksheet.Cell("F67").Value = "No. 3";
+                    worksheet.Cell("F68").Value = applicant.AuxMake3;
+                    worksheet.Cell("F69").Value = applicant.AuxModel3;
+
+
+
+                    worksheet.Cell("C71").Value = "Make";
+                    worksheet.Cell("D71").Value = applicant.AuxMake4;
+                    worksheet.Cell("C72").Value = "Model";
+                    worksheet.Cell("D72").Value = applicant.AuxModel4;
+                    worksheet.Cell("C73").Value = "No of Boilers";
+                    worksheet.Cell("D73").Value = applicant.AuxBoiler;
+
+                    if (applicant.Ship != null)
+                    {
+                        if (applicant.Ship.Type.Contains("Bulk") == false)
+                        {
+
+                            worksheet.Cell("C78").Value = "Cargo Tanks";
+                            worksheet.Cell("C78").Style.Font.Bold = true;
+                            worksheet.Cell("C79").Value = "No.of Tanks";
+                            worksheet.Cell("D79").Value = applicant.CargoTanks;
+                            worksheet.Cell("C80").Value = "Coating";
+                            worksheet.Cell("D80").Value = applicant.CargoCoating;
+
+                            worksheet.Cell("C82").Value = "Cargo Pumps";
+                            worksheet.Cell("C82").Style.Font.Bold = true;
+                            worksheet.Cell("C83").Value = "No of Pumps";
+                            worksheet.Cell("D83").Value = applicant.CargoPump;
+                            worksheet.Cell("C84").Value = "Type of Pumps";
+                            worksheet.Cell("D84").Value = applicant.CargoPumpType;
+                            worksheet.Cell("C85").Value = "Capacity of Pumps";
+                            worksheet.Cell("D85").Value = applicant.PumpCapacity;
+
+
+                            worksheet.Cell("C88").Value = "Ballast Pumps";
+                            worksheet.Cell("C88").Style.Font.Bold = true;
+                            worksheet.Cell("C89").Value = "No.of Pumps";
+                            worksheet.Cell("D89").Value = applicant.BallastPump;
+                            worksheet.Cell("C90").Value = "Type of Pumps";
+                            worksheet.Cell("D90").Value = applicant.BallastPumpType;
+                            worksheet.Cell("C91").Value = "Ballast Eductor";
+                            worksheet.Cell("D91").Value = applicant.BallastEductor;
+                        }
+                        else
+                        {
+                            worksheet.Cell("C78").Value = "Cargo Holds";
+                            worksheet.Cell("C78").Style.Font.Bold = true;
+                            worksheet.Cell("C79").Value = "No.of Holds";
+                            worksheet.Cell("D79").Value = applicant.CargoHolds;
+
+
+                            worksheet.Cell("C82").Value = "Cargo Cranes";
+                            worksheet.Cell("C82").Style.Font.Bold = true;
+                            worksheet.Cell("C83").Value = "Make";
+                            worksheet.Cell("D83").Value = applicant.CargoCranesMaker;
+                            worksheet.Cell("C84").Value = "Model";
+                            worksheet.Cell("D84").Value = applicant.CranesModel;
+                            worksheet.Cell("C85").Value = "Capacity";
+                            worksheet.Cell("D85").Value = applicant.CranesCapacity;
+                            worksheet.Cell("C86").Value = "No.of Cranes";
+                            worksheet.Cell("D86").Value = applicant.CranesNumber;
+
+                            worksheet.Cell("C88").Value = "Grabs";
+                            worksheet.Cell("C88").Style.Font.Bold = true;
+                            worksheet.Cell("C89").Value = "Make";
+                            worksheet.Cell("D89").Value = applicant.GrabMaker;
+                            worksheet.Cell("C90").Value = "Capacity";
+                            worksheet.Cell("D90").Value = applicant.GrabCapacity;
+                            worksheet.Cell("C91").Value = "No.of Grabs";
+                            worksheet.Cell("D91").Value = applicant.GrabsNumber;
+                        }
+                    }
+
+                    worksheet.Cell("D94").Value = "ECDIS 1";
+                    worksheet.Cell("E94").Value = "ECDIS 2";
+                    worksheet.Cell("F94").Value = "ECDIS 3";
+                    worksheet.Cell("C95").Value = "Maker";
+                    worksheet.Cell("C96").Value = "Model";
+
+                    worksheet.Cell("D95").Value = applicant.Ecdisid1Navigation != null ? applicant.Ecdisid1Navigation.Maker : "";
+                    worksheet.Cell("D96").Value = applicant.Ecdisid1Navigation != null ? applicant.Ecdisid1Navigation.Model : "";
+
+                    worksheet.Cell("E95").Value = applicant.Ecdisid2Navigation != null ? applicant.Ecdisid2Navigation.Maker : "";
+                    worksheet.Cell("E96").Value = applicant.Ecdisid2Navigation != null ? applicant.Ecdisid2Navigation.Model : "";
+
+                    worksheet.Cell("F95").Value = applicant.Ecdisid3Navigation != null ? applicant.Ecdisid3Navigation.Maker : "";
+                    worksheet.Cell("F96").Value = applicant.Ecdisid3Navigation != null ? applicant.Ecdisid3Navigation.Model : "";
+
+
+                    worksheet.Cell("C97").Value = "Type";
+
+                    worksheet.Cell("D97").Value = applicant.Ecdistype1;
+                    worksheet.Cell("E97").Value = applicant.Ecdistype2;
+                    worksheet.Cell("F97").Value = applicant.Ecdistype3;
+
+                    workbook.SaveAs(fileName);
+                }
+               
+                var errorMessage = "you can return the errors here!";
+
+                return Json(new { fileName = fileName, errorMessage });
+            }
+        }
+
+
+        public IActionResult PdfVesselPaticular( int vesselId  = 75)
+        {
+            ViewBag.vesseldata = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
+               .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
+               .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
+               .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
+               .Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
+
+            ViewBag.HandOverport = "NA";
+            var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == vesselId).FirstOrDefault().PortOfHandover;
+            if (HandOverPortId != null)
+            {
+                ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
+            }
+
+            return PartialView();
+
+        }
+
+        public JsonResult GeneratevesselPDF()
+        {
+
+            //string url = serverUrl + "api/vessel/vesselData?vesselId=" + vesselId;
+
+            string url = "  https://localhost:44336/Home/PdfVesselPaticular";
+      
+
+            string pdf_page_size = PdfPageSize.A4.ToString();
+            PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
+            string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+            PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                pdf_orientation, true);
+            int webPageWidth = 1000;
+            int webPageHeight = 0;
+            // instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+            // set converter options
+            converter.Options.PdfPageSize = pageSize;
+            converter.Options.PdfPageOrientation = pdfOrientation;
+            converter.Options.WebPageWidth = webPageWidth;
+            converter.Options.WebPageHeight = webPageHeight;
+            converter.Options.MarginLeft = 10;
+            converter.Options.MarginRight = 10;
+            // create a new pdf document converting an url
+            PdfDocument doc = converter.ConvertUrl(url);
+
+            string fileName = "VesselParticularPDF"+".pdf";
+            
+            doc.Save(fileName);
+
+            return Json(new { fileName = fileName });
+        }
+
+
     }
 }
