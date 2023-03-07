@@ -9,6 +9,8 @@ namespace crewlinkship.Models
     {
         public TblCba()
         {
+            TblMidMonthAllotments = new HashSet<TblMidMonthAllotment>();
+
             TblWageStructures = new HashSet<TblWageStructure>();
         }
 
@@ -32,6 +34,7 @@ namespace crewlinkship.Models
         public bool? IsPf { get; set; }
 
         public virtual TblCbaUnion Cbaunion { get; set; }
+        public virtual ICollection<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
         public virtual ICollection<TblWageStructure> TblWageStructures { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace crewlinkship.Models
             TblCrewLicenses = new HashSet<TblCrewLicense>();
             TblCrewLists = new HashSet<TblCrewList>();
             TblCrewOtherDocuments = new HashSet<TblCrewOtherDocument>();
+            TblMidMonthAllotments = new HashSet<TblMidMonthAllotment>();
         }
 
         public int CrewId { get; set; }
@@ -107,5 +108,6 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCrewLicense> TblCrewLicenses { get; set; }
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }
         public virtual ICollection<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
+        public virtual ICollection<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
     }
 }
