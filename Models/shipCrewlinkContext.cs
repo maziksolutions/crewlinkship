@@ -85,7 +85,8 @@ namespace crewlinkship.Models
         public virtual DbSet<VwOcimfexp> VwOcimfexps { get; set; }
         public virtual DbSet<VwTankerExp> VwTankerExps { get; set; }
         public virtual DbSet<OCIMFVM> OCIMFVMs { get; set; }
-        public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
+        public virtual DbSet<PortageBillVM> PortageBillVMs { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
