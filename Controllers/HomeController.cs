@@ -146,10 +146,10 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
+            var excludedDoc = ",1,4,9,11,14,15,16,45,47,48,";
             if (accessToken != null)
             {
-                ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && excludedDoc.Contains(","+ x.DocumentId+",")==false).ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
                 return PartialView();
             }
@@ -252,7 +252,7 @@ namespace crewlinkship.Controllers
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-                var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
                 return PartialView(vcm);
             }
             return RedirectToAction("UserLogin", "Login");
@@ -289,63 +289,54 @@ namespace crewlinkship.Controllers
             return Json(seaport);
         }
         [HttpPost]
-        public JsonResult TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
+        public int TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
         {
-            //var accessToken = HttpContext.Session.GetString("token");
-            //HttpClient client = new HttpClient();
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            //if (accessToken != null)
-            //{
-            //    if (!ModelState.IsValid)
-            //        return View(tblActivitySignOn);
-            //    _context.TblActivitySignOns.Update(tblActivitySignOn);
-            //    _context.SaveChanges();
-
-                //// update activity signon data and make it status True 
-                ////var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-                //var crew = _context.ActivitySignOn.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-            // update activity signon data and make it status True
-            //var crew = _context.ActivitySignOn.LastOrDefault(c => c.ActivitySignOnId == item.ActivitySignOnId);
-            var crew = _context.TblActivitySignOns.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == tblActivitySignOn.ActivitySignOnId);
-            if (crew != null && crew.IsSignon != true)
+            try
             {
-                crew.CountryId = tblActivitySignOn.CountryId;
-                crew.SeaportId = tblActivitySignOn.SeaportId;
-                crew.ExpectedSignOnDate = tblActivitySignOn.ExpectedSignOnDate;
-                crew.ReliefDate = tblActivitySignOn.ReliefDate;
-                crew.Remarks = tblActivitySignOn.Remarks;
-                _context.TblActivitySignOns.Update(crew);
-                _context.SaveChanges();
-                //update status in crewdetails 
-                var vesselPooId = _context.TblVessels.FirstOrDefault(c => c.VesselId == crew.VesselId);
-                var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
-                if (updateCrewDetails != null)
+                var crew = _context.TblActivitySignOns.OrderByDescending(x => x.ActivitySignOnId).FirstOrDefault(c => c.ActivitySignOnId == tblActivitySignOn.ActivitySignOnId);
+                if (crew != null && crew.IsSignon != true)
                 {
-                    updateCrewDetails.PreviousStatus = "Travel to vessel";
-                    updateCrewDetails.PlanStatus = "Sign In transit";
-                    updateCrewDetails.Status = "Sign In transit";
-                    updateCrewDetails.PoolId = vesselPooId.PoolId;
-                    updateCrewDetails.ModifiedBy = "Master";
-                    updateCrewDetails.ModifiedDate = DateTime.Now;
-                    _context.TblCrewDetails.Update(updateCrewDetails);
+                    crew.CountryId = tblActivitySignOn.CountryId;
+                    crew.SeaportId = tblActivitySignOn.SeaportId;
+                    crew.ExpectedSignOnDate = tblActivitySignOn.ExpectedSignOnDate;
+                    crew.ReliefDate = tblActivitySignOn.ReliefDate;
+                    crew.Remarks = tblActivitySignOn.Remarks;
+                    _context.TblActivitySignOns.Update(crew);
                     _context.SaveChanges();
+                    //update status in crewdetails 
+                    var vesselPooId = _context.TblVessels.FirstOrDefault(c => c.VesselId == crew.VesselId);
+                    var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
+                    if (updateCrewDetails != null)
+                    {
+                        updateCrewDetails.PreviousStatus = "Travel to vessel";
+                        updateCrewDetails.PlanStatus = "Sign In transit";
+                        updateCrewDetails.Status = "Sign In transit";
+                        updateCrewDetails.PoolId = vesselPooId.PoolId;
+                        updateCrewDetails.ModifiedBy = "Master";
+                        updateCrewDetails.ModifiedDate = DateTime.Now;
+                        _context.TblCrewDetails.Update(updateCrewDetails);
+                        _context.SaveChanges();
+                    }
+                    //Need to check & Refine
+
+                    //var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
+                    //if (contract != null)
+                    //{
+                    //    contract.SignonDate = item.ExpectedSignOnDate;
+                    //    _context.Contract.Update(contract);
+                    //    _context.SaveChanges();
+                    //}
+                    //    _context.Update(tblActivitySignOn);
+                    //_context.SaveChanges();
+
                 }
-                //Need to check & Refine
-
-                //var contract = _context.Contract.OrderByDescending(a => a.ContractId).FirstOrDefault(c => c.CrewId == item.CrewId && c.VesselId == item.VesselId);
-                //if (contract != null)
-                //{
-                //    contract.SignonDate = item.ExpectedSignOnDate;
-                //    _context.Contract.Update(contract);
-                //    _context.SaveChanges();
-                //}
-                //    _context.Update(tblActivitySignOn);
-                //_context.SaveChanges();
-
-            }            
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
            
-            return Json(tblActivitySignOn);
+            return 1;
 
         }
         public string ConvrtToTitlecase(string value)
@@ -436,7 +427,7 @@ namespace crewlinkship.Controllers
 
                     worksheet.Cell("I2").Value = applicant.Vessel.Capacity;
                     worksheet.Cell("I3").Value = applicant.Vessel.AccommodationBerth;
-                    worksheet.Cell("I4").Value = DateTime.Now.ToString("dd/MMM/yyyy");
+                    worksheet.Cell("I4").Value = DateTime.Now.ToString("dd-MMM-yyyy");
 
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = currentRow - 6;
@@ -459,10 +450,10 @@ namespace crewlinkship.Controllers
                     worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
 
-                    worksheet.Cell(currentRow, 7).Value = applicant.SignOnDate?.ToString("dd/MMM/yyyy");
+                    worksheet.Cell(currentRow, 7).Value = applicant.SignOnDate?.ToString("dd-MMM-yyyy");
                     worksheet.Cell(currentRow, 7).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
-                    worksheet.Cell(currentRow, 8).Value = applicant.Crew?.ReliefDate?.ToString("dd/MMM/yyyy");
+                    worksheet.Cell(currentRow, 8).Value = applicant.Crew?.ReliefDate?.ToString("dd-MMM-yyyy");
                     worksheet.Cell(currentRow, 8).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
                     worksheet.Cell(currentRow, 9).Value = applicant.Vessel.PortOfTakeovers.SeaportName;
@@ -584,7 +575,7 @@ namespace crewlinkship.Controllers
 
                     worksheet.Cell("G2").Value = "Report Date:";  
                     worksheet.Range("G2:G3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    worksheet.Cell("G3").Value = DateTime.Now.ToString("dd/MMM/yyyy");
+                    worksheet.Cell("G3").Value = DateTime.Now.ToString("dd-MMM-yyyy");
                     worksheet.Cell("G2").Style.Font.Bold = true;
 
                     currentRow++;
@@ -721,7 +712,7 @@ namespace crewlinkship.Controllers
                     worksheet.Cell(currentRow, 3).Value = ConvrtToTitlecase(applicant.Crew?.LastName);
                     worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
-                    worksheet.Cell(currentRow, 4).Value = applicant.Crew?.Dob?.ToString("dd/MMM/yyyy");
+                    worksheet.Cell(currentRow, 4).Value = applicant.Crew?.Dob?.ToString("dd-MMM-yyyy");
                     worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
                     worksheet.Cell(currentRow, 5).Value = applicant.Rank.RankName;
@@ -1804,7 +1795,7 @@ namespace crewlinkship.Controllers
 
             //string url = serverUrl + "api/vessel/vesselData?vesselId=" + vesselId;
 
-            string url = "  https://localhost:44336/Home/PdfVesselPaticular";
+            string url = "  http://ship.crewlinkasm.com/Home/PdfVesselPaticular";
       
 
             string pdf_page_size = PdfPageSize.A4.ToString();

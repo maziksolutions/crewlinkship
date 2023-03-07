@@ -32,13 +32,17 @@ namespace crewlinkship.Controllers
         }
         public IActionResult Index()
         {
-           int vesselId = 138; int month = 2; int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, ispromoted, checkpbtilldate);
-            ViewBag.vessel = new SelectList(_context.TblVessels, "VesselId", "VesselName");
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-
-            return View(data);
+            int vesselId = 75; int month = 2; int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
+            var data = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, ispromoted, checkpbtilldate);
+            ViewBag.vessel = new SelectList(_context.TblVessels, "Vesselid", "vesselName");
+            var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselId, month, year);
+            var tables = new PortageViewModel
+            {
+                onsignersportage = data,
+                promotionsportagebill = data,
+                offsignersporatge = signoffcrewdata
+            };
+            return View(tables);
         }
 
     
