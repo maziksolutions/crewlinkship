@@ -89,7 +89,7 @@
                                                 </a>
                                                 @if (@item.Reliever1 > 0)
                                                 {
-                                                    <a class="dropdown-item travelToVessel"><i class="fas fa-edit"></i></a>
+                                                    <a class="dropdown-item travelToVessel" style="width:15%; float:right;"><i class="fas fa-edit"></i></a>
                                                     @*<i class="fa-solid fa-circle-check"></i>*@
                                                     @*<i class="fas fa-ellipsis-v travelToVesselPopup" href="javascript:;"></i>*@
                                                 }
@@ -199,7 +199,7 @@
                                                
                                                 $("#durationDays").val(response.result?.duration);
                                                 
-                                                $("#reliefDate").val(response.result?.reliefDate)?.toString("dd-mm-yyyy");
+                                                $("#reliefDate").val(response.result?.reliefDate?.toString("dd/mm/yyyy"));
                                                 $("#remarks").val(response.result?.remarks);
                                                 $("#travelToVesselPopup").modal('show');
                                                 $('#travelToVesselPopup').on('hidden.bs.modal', function () {
@@ -358,7 +358,7 @@
                                                 var month = date.getMonth()+1;        
                                                 var year = date.getFullYear();
 
-                                                    var format = day + "-" + month + "-" + year;
+                                                    var format = day + "/" + month + "/" + year;
 
                                                 $("#reliefDate").val(format);
                                             } else {
