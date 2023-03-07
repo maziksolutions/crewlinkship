@@ -443,9 +443,10 @@
                 success: function (response) {
                     alert('Activity performed successfully');                   
                     $('#travelToVesselPopup').modal('hide');
-                   $('#travelToVesselPopup').on('hide', function () {
-                                                    window.location.reload();
-                                                });
+                    window.location.reload();
+                   //$('#travelToVesselPopup').on('hide', function () {
+                   //                                 window.location.reload();
+                   //                             });
                 },
                 error: function (textStatus, errorThrown) {
                     alert('error')

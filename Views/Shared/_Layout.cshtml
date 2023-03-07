@@ -122,7 +122,6 @@
                                 <div id="myDropdown" class="dropdown-content scrollbar">
                                     @foreach (TblVessel item in @ViewBag.vessels)
                                     {
-
                                         <a asp-controller="Home" asp-action="vwCrewList">@item.VesselName</a>
                                     }
 
@@ -239,6 +238,7 @@
                                         <li> <a asp-controller="Home" asp-action="vwCrewList">Crewlist</a>  </li>
                                         <li><a asp-controller="Home" asp-action="VesselParticular">Particular</a></li>
                                         <li><a asp-controller="Home" asp-action="CBA">CBA</a></li>
+                                        <li><a asp-controller="Portagebill" asp-action="Index">Portage Bill</a></li>
                                     </ul>
                                 </div>
                             </nav>
@@ -266,8 +266,8 @@
         <div class="modal-dialog" style="width:1200px; vertical-align: top;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Change Password</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <fieldset class="form-group">
