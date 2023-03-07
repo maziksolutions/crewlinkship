@@ -1,0 +1,646 @@
+﻿@using crewlinkship.Models
+
+
+@{
+    ViewBag.Title = "crewlinkship";
+
+}
+<style>
+    td {
+        padding: 5px 10px;
+    }
+</style>
+
+@foreach (TblVessel item in ViewBag.vesselData)
+{
+    <div>
+        <table width="100%" border="1" align="center" cellpadding="20" cellspacing="0" style="font-family: Calibri; font-size: 12px; border:2px solid #000; border-collapse: collapse">
+            <tr>
+                <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #000; border-collapse: collapse">
+                                        <tr>
+                                            <th width="100%" valign="top" style="color: #ffffff; background: #1B4877"><h3 style="margin: 5px 0">VESSEL PARTICULARS</h3></th>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="4"><h3 style="margin: 5px 0">General Information</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="25%" style="border-bottom:1px solid #ccc;">Vessel Name</td>
+                                                <td width="25%" style="border-bottom:1px solid #ccc;">@item.VesselName</td>
+                                                <td width="25%" style="border-bottom:1px solid #ccc;">Hull No.</td>
+                                                <td width="25%" style="border-bottom:1px solid #ccc;">@item.HullNo</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Ex - Names</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.PreviousName</td>
+                                                <td style="border-bottom:1px solid #ccc;">Keel Laid Date</td>
+                                                <td style="border-bottom:1px solid #ccc;">
+                                                    @((item.KeelLaid == null || item.KeelLaid.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.KeelLaid)))
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">IMO No.</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Imo</td>
+                                                <td style="border-bottom:1px solid #ccc;">Launch Date</td>
+                                                <td style="border-bottom:1px solid #ccc;"> @((item.Launched == null || item.Launched.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.Launched)))</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Flag</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Flag.CountryName</td>
+                                                <td style="border-bottom:1px solid #ccc;">Delivery Date</td>
+                                                <td style="border-bottom:1px solid #ccc;"> @((item.Delivery == null || item.Delivery.Trim() == "") ? "NA" : String.Format("{0:dd-MMM-yyyy}", DateTime.Parse(item.Delivery)))</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Port of Registry</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.PortOfRegistryNavigation.SeaportName</td>
+                                                <td style="border-bottom:1px solid #ccc;">Builder Name</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Builder == null ? "" : item.Builder.Builder)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Call Sign</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.CallSign</td>
+                                                <td style="border-bottom:1px solid #ccc;">Takeover Date </td>
+                                                <td style="border-bottom:1px solid #ccc;"> @(item.TakeoverDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.TakeoverDate))</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Official No.</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Official</td>
+                                                <td style="border-bottom:1px solid #ccc;">Takeover Port </td>
+                                                <td style="border-bottom:1px solid #ccc;"> @ViewBag.TakeoverPort</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">MMSI No.</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Mmsi</td>
+                                                <td style="border-bottom:1px solid #ccc;">Handover Date </td>
+                                                <td style="border-bottom:1px solid #ccc;"> @(item.HandoverDate == null ? "NA" : String.Format("{0:dd-MMM-yyyy}", item.HandoverDate))</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Vessel Short Code</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.VesselCode</td>
+                                                <td style="border-bottom:1px solid #ccc;">Handover Port </td>
+                                                <td style="border-bottom:1px solid #ccc;">@ViewBag.HandOverport</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Ship Type</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Ship.Type</td>
+                                                <td style="border-bottom:1px solid #ccc;">Operating Area</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.OperatingArea</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Principal Dimensions</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">LOA</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@item.Loa</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">LBP</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Lbp</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Breadth (Extreme)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Breadth</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Depth (Molded)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Depth</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Height (Maximum)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Height</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Bridge Front - BOW</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Bow</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bridge Front - Stern</td>
+                                                <td>@item.Stern</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Communication</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">Vessel E-mail</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@item.Email</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Phone No. 1</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.SatBphone</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Phone No. 2</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Fleet77Phone</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Phone No. 3</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Vsatphone</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Mobile No.</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.MobileNo</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Owners</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">Registered Owner</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@(item.Owner == null ? "" : item.Owner.OwnerName)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Disponent Owner</td>
+                                                <td>@(item.DisponentOwner == null ? "" : item.DisponentOwner.DisponentOwners)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Managers</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">Technical Manager</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;"> @item.Manager.Managers</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Crewing Manager</td>
+                                                <td>@item.Crewmanager.Managers</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Classification</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">Classification Society</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@(item.Classification == null ? "" : item.Classification.Classifications)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Class No.</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.ClassNo</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Class Notation</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.ClassNotation</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Ice Class</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.IceClass</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Insurance</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">P &amp; I Club</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@item.VendorRegisterPi.VendorName</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">H&amp;M</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.VendorRegisterHm?.VendorName</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Qualified Individual</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.QualifiedIndividual</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="2"><h3 style="margin: 5px 0">Tonnage</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">NRT</td>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">@item.Net</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">GRT</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.Gross</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">DWT</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.SummerDeadWeight</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            @*<tr>
+                                    <td>
+                                        <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr style="color: #ffffff; background: #1B4877">
+                                                    <th colspan="2"><h3 style="margin: 5px 0">Documentation</h3></th>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%" style="border-bottom:1px solid #ccc;">ITF Special Agreement (if applicable)</td>
+                                                    <td width="50%" style="border-bottom:1px solid #ccc;">
+                                                        <span style="color: #ff0000">
+                                                            <strong>
+                                                                From Certificate?
+                                                            </strong>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ITF Blue/ Green Card expiry date (if applicable)</td>
+                                                    <td>
+                                                        <span style="color: #ff0000">
+                                                            <strong>
+                                                                From Certificate?
+                                                            </strong>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>*@
+                            @*<tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>*@
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="4"><h3 style="margin: 5px 0">Machinery</h3></th>
+                                            </tr>
+                                            <tr style="color: #000000; background: #D9D9D9">
+                                                <th colspan="4"><h4 style="margin: 5px 0">Main Engine</h4></th>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%" style="border-bottom:1px solid #ccc;">Make</td>
+                                                <td colspan="3" style="border-bottom:1px solid #ccc;">@(item.EngineModel == null ? "" : item.EngineModel.Maker)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Model</td>
+                                                <td colspan="3" style="border-bottom:1px solid #ccc;">@(item.EngineModel == null ? "" : item.EngineModel.Model)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Type</td>
+                                                <td colspan="3" style="border-bottom:1px solid #ccc;">@(item.EngineType == null ? "" : item.EngineType.Type)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">M.C.R. KW</td>
+                                                <td colspan="3" style="border-bottom:1px solid #ccc;">@item.Kw</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Main Engines</td>
+                                                <td colspan="3">@item.MainEngineCount</td>
+                                            </tr>
+                                            <tr>
+                                                <td>CPP</td>
+                                                <td colspan="3">
+                                                    @item.Cpp
+                                                </td>
+                                            </tr>
+                                            <tr><td colspan="4">&nbsp;</td></tr>
+                                            <tr style="color: #000000; background: #D9D9D9">
+                                                <th colspan="4"><h4 style="margin: 5px 0">Auxiliary Engine</h4></th>
+                                            </tr>
+                                            <tr>
+                                                <th width="50%">&nbsp;</th>
+                                                <th width="16.6%">No. 1</th>
+                                                <th width="16.6%">No. 2</th>
+                                                <th width="16.6%">No. 3</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Make</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.AuxMake1</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.AuxMake2</td>
+                                                <td style="border-bottom:1px solid #ccc;">@item.AuxMake3</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Model</td>
+                                                <td>@item.AuxModel1</td>
+                                                <td>@item.AuxModel2</td>
+                                                <td>@item.AuxModel3</td>
+                                            </tr>
+                                            <tr><td colspan="4">&nbsp;</td></tr>
+                                            <tr style="color: #000000; background: #D9D9D9">
+                                                <th colspan="4">Boilers</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Make</td>
+                                                <td style="border-bottom:1px solid #ccc;" colspan="3">@item.AuxMake4</td>
+
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Model</td>
+                                                <td style="border-bottom:1px solid #ccc;" colspan="3">@item.AuxModel4</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No of Boilers</td>
+                                                <td colspan="3">@item.AuxBoiler</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            @if (item.Ship.Type.Contains("Bulk") == false)
+                            {
+                                <tr>
+                                    <td>
+                                        <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr style="color: #ffffff; background: #1B4877">
+                                                    <th colspan="2"><h3 style="margin: 5px 0">Other Equipments</h3></th>
+                                                </tr>
+                                                <tr>
+                                                    <td width="25%">&nbsp;</td>
+                                                    <td width="25%">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Cargo Tanks</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">No. of Tanks</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoTanks</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Coating</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoCoating</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Cargo Pumps</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">No of Pumps</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoPump</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Type of Pumps</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoPumpType</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Capacity of Pumps</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.PumpCapacity</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">&nbsp;</td>
+                                                    <td style="border-bottom:1px solid #ccc;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Ballast Pumps</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">No. of Pumps</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.BallastPump</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Type of Pumps</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.BallastPumpType</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ballast Eductor</td>
+                                                    <td>@item.BallastEductor</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            }
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            @if (item.Ship.Type.Contains("Bulk") == true)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr style="color: #ffffff; background: #1B4877">
+                                                    <th colspan="2"><h3 style="margin: 5px 0">Other Equipments</h3></th>
+                                                </tr>
+                                                <tr>
+                                                    <td width="25%">&nbsp;</td>
+                                                    <td width="25%">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Cargo Holds</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">No. of Holds</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoHolds</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">&nbsp;</td>
+                                                    <td style="border-bottom:1px solid #ccc;">&nbsp;</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Cargo Cranes</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Make</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CargoCranesMaker</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Model</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CranesModel</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Capacity </td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CranesCapacity</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">No. of Cranes</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.CranesNumber</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;"><strong>Grabs</strong></td>
+                                                    <td style="border-bottom:1px solid #ccc;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Make</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.GrabMaker</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #ccc;">Capacity</td>
+                                                    <td style="border-bottom:1px solid #ccc;">@item.GrabCapacity</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>No. of Grabs</td>
+                                                    <td>@item.GrabsNumber</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="2" style="border:2px solid #000; border-collapse: collapse" id="tableExport">
+                                        <tbody>
+                                            <tr style="color: #ffffff; background: #1B4877">
+                                                <th colspan="4"><h3 style="margin: 5px 0">ECDIS</h3></th>
+                                            </tr>
+                                            <tr>
+                                                <th width="25%">&nbsp;</th>
+                                                <th width="25%">ECDIS 1</th>
+                                                <th width="25%">ECDIS 2</th>
+                                                <th width="25%">ECDIS 3</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Maker</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid1 == null ? "" : item.Ecdisid1Navigation?.Maker)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid2 == null ? "" : item.Ecdisid2Navigation?.Maker)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid3 == null ? "" : item.Ecdisid3Navigation?.Maker)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:1px solid #ccc;">Model</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid1 == null ? "" : item.Ecdisid1Navigation?.Model)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid2 == null ? "" : item.Ecdisid2Navigation?.Model)</td>
+                                                <td style="border-bottom:1px solid #ccc;">@(item.Ecdisid3 == null ? "" : item.Ecdisid3Navigation?.Model)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Type</td>
+                                                <td>@item.Ecdistype1</td>
+                                                <td>@item.Ecdistype2</td>
+                                                <td>@item.Ecdistype3</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                </td>
+            </tr>
+        </table>
+    </div>
+    @*<button type="button" id="btnVerify" class="btn btn-danger">  Verify  </button>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript">
+            $(document).ready(function () {
+                $("#btnVerify").click(function () {
+                    $.ajax({
+                        type: "Post",
+                        url: '/api/vessel/Export',
+                        data: { GridHtml: $("#tableExport").html() },
+                        success: function (data) {
+                        }
+                    })
+                });
+            });
+        </script>*@
+}

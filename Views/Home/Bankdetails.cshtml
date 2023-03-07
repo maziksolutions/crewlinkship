@@ -28,9 +28,12 @@
                                     <li class="has-sub active">
                                         <a>Personal Details</a>
                                         <ul>
-                                            <li><a class="details" href="javascript:;">Particulars</a></li>
-                                            <li><a class="address" href="javascript:;">Address</a></li>
-                                            <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                            @foreach (TblCrewDetail item in ViewBag.rankName)
+                                            {
+                                                <li><a class="details" href="javascript:;">Particulars</a></li>
+                                                <li style="display: @(item.Status.ToString().Contains("Onboard") ? "contents" : "none")"><a class="address" href="javascript:;">Address</a></li>
+                                                <li><a class="Bankdetails" href="javascript:;">Bank Details</a></li>
+                                            }
                                         </ul>
                                     </li>
                                     <li class="has-sub">
