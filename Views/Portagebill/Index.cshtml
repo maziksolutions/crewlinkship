@@ -231,6 +231,17 @@
                                 @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
                             </div>
                             <div class="col">
+                        <div class="col">
+                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select", new { @class = "form-control" })
+                        </div>
+
+                        <div class="col">
+                            @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                        </div>
+                        <div class="col">
+                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
+                        </div>
+                        <div class="col">
 
                             </div>
                          <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
@@ -253,7 +264,45 @@
                             </button>
                         </div>
 </form>
-                      
+                        @*<div class="col">
+                                @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "value", "text"), "select", new { @class = "form-control" })
+                            </div>*@
+                        <div class="col">
+                            @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                        </div>
+                        <div class="col">
+                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
+                        </div>
+                        <div class="col">
+
+                        </div>
+                        <mat-checkbox formControlName="Isoneexcel" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check this for compile sheet">Compile sheet</mat-checkbox>
+                        <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
+                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="ExportToExcel" name="action" type="button" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
+                            <i class="far fa-eye"></i>
+                        </button>
+                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="GetPreviousPortageBill()" type="button" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Search Previous Portage Bill's">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <button (click)="exportToExcel()" *ngIf="printRights" class="btn btn-success form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Export to Excel" data-original-title="" title="Generate Portage Bill Excel"><i class="fas fa-file-excel" aria-hidden="true"></i></button>
+                        <button (click)="exportToPDF()" *ngIf="printRights" class="btn btn-red form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Export to PDF" data-original-title="" title="Generate Portage Bill PDF"><i class="fas fa-file-pdf" aria-hidden="true"></i></button>
+                        <button (click)="GoodworkExcel()" *ngIf="printRights" class="btn btn-red form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Goodwork Calculations" data-original-title="" title="Generate Goodwork Calculations PDF"><i class="fas fa-file-excel" aria-hidden="true"></i></button>
+                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="Lockpb()" type="button" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Lock Portage Bill">
+                            <i class="fas fa-lock"></i>
+                        </button>
+                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="DownloadSalarySlip()" type="button" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Download salary slip">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" (click)="GetTotal()" type="button" data-toggle="tooltip"
+                                data-trigger="hover" data-placement="top" data-title="Show Total">
+                            <i class="fas fa-money"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="content-body">
@@ -490,33 +539,19 @@
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
 
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
-                                                        </td>
-                                                        <td>
+                                        <td>
+                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                        </td>
+                                        <td>@item.FixedGtOT* @item.TotalDays / @item.numberofday</td>
+                                        <td>@item.SecurityAllow* @item.TotalDays / @item.numberofday</td>
+                                        <td>@item.LeavePay* @item.TotalDays / @item.numberofday</td>
+                                        <td>@item.UniformAllow *@item.TotalDays / @item.numberofday</td>
+                                        <td>@item.PensionFund* @item.TotalDays / @item.numberofday</td>
+                                        <td>@item.OtherAllow *@item.TotalDays / @item.numberofday</td>
+                                        <td>@item.extraot</td>
+                                        <td>@item.OtherEarnings</td>
 
-                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-
-                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>@item.extraot</td>
-                                                        <td>@item.OtherEarnings</td>
-
-                                                        <td>@item.TransitWages</td>
+                                        <td>@item.TransitWages</td>
 
                                                         <td>@item.PrevMonthBal</td>
                                                         <td>@item.Reimbursement</td>
@@ -674,18 +709,11 @@
                                                         <td></td>
                                                     </tr>
                                     }
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                            </div>
-                        </div>
+                                    </tbody>
+                                </table>
+                        </div>                      
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -996,6 +1024,68 @@
                               }
 </script>
 
+
+                          <script>
+
+                            function exportToExcel(e) {
+
+
+                               $.ajax({
+                                   type: "POST",
+                                   url: '@Url.Action("Genneratexcel", "Portagebill")',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+
+
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+                           
+                              }
+                             </script>
+
+
+
+<style>
+    .show {
+        display: block;
+    }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+        *margin-left: -100px; /*ie7*/
+    }
+
+    td, th {
+        vertical-align: top;
+        border-top: 1px solid #ccc;
+        padding: 10px;
+        width: 100px;
+    }
+
+    th {
+        /*  position:absolute;
+    *position: relative; /*ie7*/
+        /*  left:0; */
+        width: 100px;
+    }
+
+    .hard_left {
+        position: absolute;
+        *position: relative; /*ie7*/
+        left: 0;
+        width: 100px;
+    }
+
+    .next_left {
+        position: absolute;
+        *position: relative; /*ie7*/
+        left: 100px;
+        width: 100px;
+    }
 
 
 
