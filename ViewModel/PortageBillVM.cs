@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace crewlinkship.ViewModel
 {
+    public class PortageViewModel
+    {
+        public IEnumerable<PortageBillVM> onsignersportage { get; set; }
+        public IEnumerable<PortageBillVM> promotionsportagebill { get; set; }
+        public IEnumerable<PortageBillSignoffVM> offsignersporatge { get; set; }
+    }
     public class PortageBillVM
     {
         [Key]
@@ -161,4 +167,5 @@ namespace crewlinkship.ViewModel
         public bool IsAddPrevBal { get; set; }
         public decimal? MidMonthAllotment { get; set; }
     }
+
 }

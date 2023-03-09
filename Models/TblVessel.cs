@@ -15,6 +15,7 @@ namespace crewlinkship.Models
             TblCrewDetailVessels = new HashSet<TblCrewDetail>();
             TblCrewLists = new HashSet<TblCrewList>();
             TblVesselCbas = new HashSet<TblVesselCba>();
+            TblVesselChanges = new HashSet<TblVesselChange>();
         }
 
         public int VesselId { get; set; }
@@ -239,5 +240,6 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCrewDetail> TblCrewDetailVessels { get; set; }
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }
         public virtual ICollection<TblVesselCba> TblVesselCbas { get; set; }
+        public virtual ICollection<TblVesselChange> TblVesselChanges { get; set; }
     }
 }
