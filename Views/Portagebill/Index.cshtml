@@ -288,7 +288,7 @@
                 <h4 class="content-header-title m-b-5 m-t-5">Portage Bill</h4>
             </div>
             <div class="col-xl-6 col-lg-12">
-
+               
             </div>
         </div>
         <div class="card card-content">
@@ -302,9 +302,8 @@
                             @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
                         </div>
                         <div class="col">
-                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control" })
+                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control", id = "yearDrop" })
                         </div>
-                        <div class="col">
 
                         </div>
                         <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
