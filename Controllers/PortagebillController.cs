@@ -44,29 +44,10 @@ namespace crewlinkship.Controllers
 
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
-            return View(data);
+            return View(data);        
         }
 
-        [HttpGet]
-        public IActionResult Index(int? vesselId, int? month, int? year)
-        {
-            string ispromoted = "no"; string checkpbtilldate = "";
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, ispromoted, checkpbtilldate);
-            ViewBag.vessel = new SelectList(_context.TblVessels, "VesselId", "VesselName");
-
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-            
-            var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselId, month, year);
-            var tables = new PortageViewModel
-            {
-                onsignersportage = data,
-                promotionsportagebill = promotiondata,
-                offsignersporatge = signoffcrewdata
-            };
-            return View(tables);
-        }
+        
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
         {
@@ -84,6 +65,11 @@ namespace crewlinkship.Controllers
                 offsignersporatge = signoffcrewdata
             };
             return View(tables);
+        }
+        public JsonResult GetDataByPoratgeId(int portageid,int crewid)
+        {
+            var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == portageid && c.CrewId== crewid);
+            return Json(data);
         }
         public JsonResult getBOWData(int crewId, int crewListId, DateTime signOffDate)
         {
