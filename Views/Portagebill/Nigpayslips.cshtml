@@ -1,0 +1,318 @@
+﻿@using crewlinkship.ViewModel
+@{
+    //ViewData["Title"] = "Index";
+    int leavepay = 0;
+}
+
+<div style="margin:20px">
+    <div style="text-align:right; position:absolute; top:35px; right:45px">
+
+    </div>
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-family: Calibri; font-size: 10px; border: 2px solid #000;">
+        <tbody>
+            @foreach (PortageBillVM item in ViewBag.crewdeatil)
+            {
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                            <tbody>
+                                <tr>
+                                    <th width="100%">
+                                        <h3>
+                                            @*PAYMENT SLIP
+                                                <br>For the payroll month : @String.Format("{0:MMM-yyyy}", @item.From)*@
+                                            Final Wage Account
+                                        </h3>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                            <tbody>
+                                <tr>
+                                    <td width="50%">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="30%" align="right">
+                                                        Vessel Name<br>
+                                                        Rank <br>
+                                                        Name of Contractor<br>
+                                                        Date of Joining <br>
+                                                        Currency <br>
+                                                        Nationality
+                                                    </td>
+                                                    <td width="5%" align="center">
+                                                        :<br>
+                                                        :<br>
+                                                        :<br>
+                                                        :<br>
+                                                        :<br>
+                                                        :
+                                                    </td>
+                                                    <td width="65%">
+                                                        <strong>
+                                                            @item.Vessel<br>
+                                                            @item.RankName<br>@item.CrewName<br>
+                                                            @string.Format("{0:dd-MMM-yyyy}", item.SignOnDate) <br>
+                                                            @item.Currency<br>
+                                                            @item.Nationality
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td width="50%" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" align="center" style="border: 1px solid #000000; background: #D9D9D9"><strong>Period</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center">From <br></td>
+                                                    <td align="center">To </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center"><strong> @string.Format("{0:dd-MMM-yyyy}", item.From)</strong></td>
+                                                    <td align="center"><strong>  @string.Format("{0:dd-MMM-yyyy}", item.To)</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                            <tbody>
+                                <tr>
+                                    <td width="50%" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" align="center" style="border: 1px solid #000000; background: #D9D9D9"><strong>Current Month Earnings </strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="75%">Net contract payment<br></td>
+                                                    <td width="25%" style="text-align:right"> @string.Format("{0:n0}", (item.TotalWages))<br></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Extra OT<br></td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.extraot)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Other Earning<br></td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.OtherEarnings)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Transit Allowance</td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.TransitDays)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr style="border: 1px solid #000000; background: #D9D9D9">
+                                                    <td><strong>a. Total Contract Amount</strong></td>
+                                                    <td style="text-align:right"><strong>@string.Format("{0:n0}", (item.TotalWages + item.extraot + item.OtherEarnings + item.TransitDays))</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" align="center" style="border: 1px solid #000000; background: #D9D9D9">
+                                                        <strong>
+                                                            Other Payable
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="75%"><strong>b. Refund of Security Deposit</strong></td>
+                                                    <td width="25%" style="text-align:right">
+                                                        @if (item.SignOffDate != null)
+                                                        {
+                                                            <label> @string.Format("{0:n0}", @item.LeaveWagesBF)</label>
+                                                        }
+                                                        else
+                                                        { <label> 0 </label>}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr style="border: 1px solid #000000; background: #D9D9D9">
+                                                    <td align="center"><strong>    Total Earning (a+b)</strong></td>
+                                                    <td style="text-align:right"><strong>@string.Format("{0:n0}", item.TotalPayable)</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br />
+                                        <table>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        &nbsp;
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>-------------------------------------------------</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Master
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        &nbsp;
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Vessel Stamp and Sign
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td width="50%" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" align="center" style="border: 1px solid #000000; background: #D9D9D9"><strong>Total Deductions</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="75%">
+                                                        On-board deductions
+                                                        <br>
+                                                    </td>
+                                                    <td width="25%" style="text-align:right"> @string.Format("{0:n0}", (item.PFAmount + item.CashAdvance + item.BondedStores + item.OtherDeductions))<br></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        WHT@5%
+                                                    </td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.Tax)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2.0% Union Dues</td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.UDAmount)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1.0% Welfare fund </td>
+                                                    <td style="text-align:right">@string.Format("{0:n0}", item.WFAmount)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Security deposit<br></td>
+                                                    <td style="text-align:right">
+
+                                                        @if (item.SignOffDate != null)
+                                                        {
+                                                            <label> 0 </label>
+                                                            leavepay = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            <label> @string.Format("{0:n0}", item.WFdeduction) </label>
+                                                            leavepay = item.WFdeduction ?? 0;
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: 1px solid #000000; background: #D9D9D9">
+                                                    <td><strong>Total Deductions onboard (c)</strong></td>
+                                                    <td style="text-align:right"><strong> @string.Format("{0:n0}", (item.PFAmount + item.CashAdvance + item.BondedStores + item.OtherDeductions + item.Tax + item.UDAmount + item.WFAmount + leavepay))</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" align="center" style="border: 1px solid #000000; background: #D9D9D9">
+                                                        <strong>                                                            Net Payable                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="75%"><strong>d. Net Payable Amount</strong></td>
+                                                    <td width="25%" style="text-align:right">@string.Format("{0:n0}", item.Allotments)<br></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr style="border: 1px solid #000000; background: #D9D9D9">
+                                                    <td align="center"><strong>Total Earning (c+d)</strong></td>
+                                                    <td style="text-align:right"><strong>@string.Format("{0:n0}", (item.PFAmount + item.CashAdvance + item.BondedStores + item.OtherDeductions + item.Tax + item.UDAmount + item.WFAmount + leavepay + item.Allotments))</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br />
+                                        <table width="100%" border="0" cellspacing="10" cellpadding="0" style="border: 1px solid #000000; border-collapse: collapse">
+                                            <tr style="border: 1px solid #000000; background: #D9D9D9">
+                                                <td align="center">
+                                                    <strong>
+                                                        Balance carried forward
+
+                                                    </strong>
+                                                </td>
+                                                <td align="center" style="text-align:right"><strong>@string.Format("{0:n0}", item.FinalBalance)</strong></td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="5" style="border-collapse: collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        &nbsp;
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>-------------------------------------------------</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Seafarer Sign
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong> @item.CrewName</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Concur and accepted
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
