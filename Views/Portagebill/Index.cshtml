@@ -1046,11 +1046,13 @@
                                     <input placeholder="Allotments" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="pallotment2" id="pallotment2" required>
                                 </div>
                                 <div class="col form-group s4">
+                                    <label for="pIsLeaveWagesCF">Is leave wage carry forward?</label>
                                     <input class="form-control" onchange="calculateearning()" type="checkbox" id="pIsLeaveWagesCF" name="pIsLeaveWagesCF" title="Is leave wage carry forward?">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col form-group s4">
+                                    <label for="premarks">Remarks</label>
                                     <input placeholder="Remarks" id="premarks" class="form-control" name="premarks">
                                     <span class="mandatory-fields">*Note: If total earning and deduction doesn't match, then remarks field will be mandatory.</span>
                                 </div>
@@ -1797,7 +1799,6 @@
                     reimbursement = (response[0].reimbursement || 0);
                     portageBillId = (response[0].portageBillId || 0);
                     appliedCBA = (response[0].appliedCBA || 0);
-
                     ca = (response[0].cashAdvance || 0);
                     bs = (response[0].bondedStores || 0);
                     od = (response[0].otherDeductions || 0);
@@ -1806,7 +1807,6 @@
                     othour = (response[0].otHours || 0);
                     extraot = (response[0].extraot || 0);
                     transitDays = (response[0].transitDays || 0);
-
                     avc = (response[0].avc || 0);
                     gratuity = (response[0].gratuity || 0);
                     indPFAmount = (response[0].gratuity || 0);
@@ -1814,9 +1814,6 @@
                     $("#Avc").val(avc);
                     $("#Gratuity").val(gratuity);
                     $("#IndPfamount").val(indPFAmount);
-                    //UDdeduction = (response[0].uDdeduction || 0);
-                    //WFdeduction = (response[0].wFdeduction || 0);
-                    //WHTdeduction = (response[0].whTdeduction || 0);
                     WHTdeduction = (response[0].whTdeduction || 0);
                     tax = (response[0].tax || 0);
                     UDdeduction = (response[0].uDdeduction || 0);
@@ -2024,6 +2021,7 @@
                     totalearning = (response.totalPayable || 0);
                     totaldeduction = (response.totalDeductions || 0);
                     finalbal = (response.finalBalance || 0);
+                    $("#premarks").text(response.remarks);
                     $("#ptotalpay").text(totalearning);
                     $("#ptotaldeduc").text(totaldeduction);
                     $("#pfinalbal").text(finalbal);
@@ -2039,6 +2037,8 @@
                         dataType: "json",
                         success: function (bankallormentdetail) {
                             if (bankallormentdetail.length == 1) {
+
+                                selectbankids = []
                                 $("#pallotments").val(bankallormentdetail[0].allotments);
                                 $('input[name=pbankid][value="' + bankallormentdetail[0].bankId + '"]').prop('checked', true);
                             }
@@ -2253,10 +2253,13 @@
                 data: portageBillVM,
                 dataType: 'json',
                 success: function (response) {
-                    savebaksada();
-                    resetportageform();
+                    savebaksada();                    
                     alert('Portage Bill Updated');
-                    $('#portageBillPopup').modal('hide');
+                    $('#portageBillPopup').modal('hide'); resetportageform();
+                    var url = window.location.href;
+                    console.log(url);
+                    location.reload(true);
+                   
                 }
             })
         }
@@ -2270,7 +2273,8 @@
             var selectedbankid = v;
             console.log(selectedbankid)
             var model = "";
-            if (k == 1) {
+            if (k == 0) {
+                console.log(k, v)
                 model = {
                     "Crew": $('#pCrewId').val(),
                     "VesselId": $('#pVesselid').val(),
@@ -2282,6 +2286,7 @@
                 }
             }
             else {
+                console.log(k, v)
                 model = {
                     "Crew": $('#pCrewId').val(),
                     "VesselId": $('#pVesselid').val(),
