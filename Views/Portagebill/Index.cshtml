@@ -1998,8 +1998,7 @@
                     //else {
                         $("#pcashAdvance").val(ca);
                         $("#pbondedStores").val(bs);
-                        $("#potherDeductions").val(od);
-                        $("#pallotments").val(allotment);
+                        $("#potherDeductions").val(od);                       
                         $("#potHours").val(othour);
                         $("#pextraot").val(extraot);
                         $("#pearningother").val(otherEarnings);
@@ -2032,15 +2031,19 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                           
-                          //  $('input.type_checkbox[value="6"]').prop('checked', true);
-                            
-
                             $(response).each(function (index, item) {
-
                                 var i = parseInt(index) + 1;
+                                console.log(response.length);
+                                if (response.length == 1) {
+                                    $("#pallotments").val(allotment);
+                                    $('input[name=pbankid][value="' + item.bankId + '"]').prop('checked', true);
+                                }
+                                else {
+                                    $("#pallotment2").val(allotment);
+                                    $('input[name=pbankid][value="' + item.bankId + '"]').prop('checked', true);
+                                }
                                 console.log(i, item, item.bankId)
-                                $('input[name=pbankid][value="'+item.bankId+'"]').prop('checked', true);
+                              
                             });
                             console.log(response)
                         },
