@@ -1194,6 +1194,7 @@ namespace crewlinkship.Models
                 entity.HasKey(e => e.BankAllotmentId);
                 entity.ToTable("tblPBBankAllotment");  
                 entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+                entity.Property(e => e.IsPromoted).HasDefaultValueSql("((0))");
             });
 
 

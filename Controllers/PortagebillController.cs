@@ -346,7 +346,7 @@ namespace crewlinkship.Controllers
                 promoted = false;
             else
                 promoted = true;
-            var data = _context.PBBankAllotment.Where(x => x.VesselId == vesselId && x.From.Month == month && x.From.Year == year && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false);
+            var data = _context.PBBankAllotment.Where(x => x.VesselId == vesselId && x.From.Month == month && x.From.Year == year && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false).ToList();
             return Json(data);
         }
         public JsonResult deletebow(int id)
