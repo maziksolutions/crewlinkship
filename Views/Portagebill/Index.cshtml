@@ -148,67 +148,138 @@
         z-index: 3;
     }
 
- .tabs{
-    width:100%;
-    height:auto;
-    margin:0 auto;
-}
-/* tab list item */
-.tabs .tabs-list{
-    list-style:none;
-    margin:0px;
-    padding:0px;
-}
-.tabs .tabs-list li{
-    width:18%;
-    float:left;
-    margin:0px;
-    margin-right:2px;
-    padding:10px 5px;
-    text-align: center;
-    background-color:cornflowerblue;
-    border-radius:3px;
-}
-.tabs .tabs-list li:hover{
-    cursor:pointer;
-}
-.tabs .tabs-list li a{
-    text-decoration: none;
-    color:white;
-}
-/* Tab content section */
-.tabs .tab{
-    display:none;
-    width:100%;
-    min-height:250px;
-    height:auto;
-    border-radius:3px;
-    padding:20px 15px;
-    color:darkslategray;
-    clear:both;
-}
-.tabs .tab h3{
-    border-bottom:3px solid cornflowerblue;
-    letter-spacing:1px;
-    font-weight:normal;
-    padding:5px;
-}
-.tabs .tab p{
-    line-height:20px;
-    letter-spacing: 1px;
-}
+    .tabs {
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+        /* tab list item */
+        .tabs .tabs-list {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
 
-/* When active state */
-.active{
-    display:block !important;
-}
-.tabs .tabs-list li.active{
-    background-color:lavender !important;
-    color:black !important;
-}
-.active a{
-    color:black !important;
-}
+            .tabs .tabs-list li {
+                width: 18%;
+                float: left;
+                margin: 0px;
+                margin-right: 2px;
+                padding: 10px 5px;
+                text-align: center;
+                background-color: cornflowerblue;
+                border-radius: 3px;
+            }
+
+                .tabs .tabs-list li:hover {
+                    cursor: pointer;
+                }
+
+                .tabs .tabs-list li a {
+                    text-decoration: none;
+                    color: white;
+                }
+        /* Tab content section */
+        .tabs .tab {
+            display: none;
+            width: 100%;
+            min-height: 250px;
+            height: auto;
+            border-radius: 3px;
+            padding: 20px 15px;
+            color: darkslategray;
+            clear: both;
+        }
+
+            .tabs .tab h3 {
+                border-bottom: 3px solid cornflowerblue;
+                letter-spacing: 1px;
+                font-weight: normal;
+                padding: 5px;
+            }
+
+            .tabs .tab p {
+                line-height: 20px;
+                letter-spacing: 1px;
+            }
+
+    /* When active state */
+    .active {
+        display: block !important;
+    }
+
+    .tabs .tabs-list li.active {
+        background-color: lavender !important;
+        color: black !important;
+    }
+
+    .active a {
+        color: black !important;
+    }
+
+    label {
+        color: transparent;
+        display: block;
+    }
+
+    input[type=text] {
+        display: block;
+        border-width: 0 0 1px !important;
+        border-radius: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .input-focused:not(.input-invalid) label {
+        color: rgb(16, 108, 200);
+    }
+
+    .input-focused:not(.input-invalid) input[type=text] {
+        border-color: rgb(16, 108, 200);
+    }
+
+    .input-has-value:not(.input-invalid):not(.input-focused) label {
+        color: #595959;
+    }
+
+    .input-invalid.input-focused label,
+    .input-invalid.input-has-value label {
+        color: #ff0000;
+    }
+
+    .input-invalid input[type=text] {
+        border-color: #ff0000;
+    }
+
+        .input-invalid input[type=text]::-webkit-input-placeholder {
+            color: #ff0000;
+        }
+
+            .input-invalid input[type=text]::-webkit-input-placeholder::after {
+                content: "\2716";
+                /* "X" */
+                font-size: 18px;
+                color: #ff0000;
+                padding-right: 0;
+                float: right;
+            }
+
+    .input-valid input[type=text]::-webkit-input-placeholder::after {
+        content: "\2714";
+        /* checkmark */
+        font-size: 18px;
+        color: #438D5B;
+        padding-right: 0;
+        float: right;
+    }
+
+    .input-invalid input[type=text]::-webkit-input-placeholder::after {
+        visibility: visible;
+    }
+
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100%;
+    }
 </style>
 <div class="app-content content fixed-navbar-inner">
     <div class="content-wrapper">
@@ -225,20 +296,18 @@
                 <form [formGroup]="form">
                     <div class="row">
                         <div class="col">
-                            @*<%using (Html.BeginForm("Index", "Portagebill", FormMethod.Post)) {%>*@
-                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control", id = "vesselDrop" })
-                        </div>
-
-                        <div class="col">
-                            @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control", id = "monthDrop" })
+                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control", id = "vesselid" })
                         </div>
                         <div class="col">
-                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control", id = "yearDrop" })
+                            @Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })
+                        </div>
+                        <div class="col">
+                            @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control", id = "year" })
                         </div>
 
                     </div>
-                    <mat-checkbox formControlName="pbtilldate" class="m-r-5" data-toggle="tooltip" data-trigger="hover" data-title="Check Portage bill till date">PB till date</mat-checkbox>
-                    <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="search" name="action" type="submit" data-toggle="tooltip" 
+                  
+                    <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="search" name="action" type="submit" data-toggle="tooltip"
                             data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
                         <i class="far fa-eye"></i>
                     </button>
@@ -255,93 +324,361 @@
                             data-trigger="hover" data-placement="top" data-title="Show Total">
                         <i class="fas fa-money"></i>
                     </button>
-                </form>
-                        </div>
-
-                       
+                </form>           
+                <div class="col">
+                </div>              
             </div>
         </div>
-        <div class="content-body">
-            <div class="row match-height" id="switch">
-                <div class="col-lg-12 col-md-12 col-12">
-                    <div class="card m-b-0">
-                        <div id='myVesselModal' class='modal'>
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div id='myModalContent'></div>
-                                </div>
+    </div>
+    <div class="content-body">
+        <div class="row match-height" id="switch">
+            <div class="col-lg-12 col-md-12 col-12">
+                <div class="card m-b-0">
+                    <div id='myVesselModal' class='modal'>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div id='myModalContent'></div>
                             </div>
                         </div>
-                        <div id="goal-list-scroll" class="table-responsive position-relative">
-                            <div class="tbl-container">
-                                <div class="tbl-fixed">
-                                    <div class="tabs">
-                                        <ul class="tabs-list">
-                                            <li class="active"><a href="#tab1"> Onboard</a></li>
-                                            <li><a href="#tab2">Promotion & Change in Contract</a></li>
-                                            <li><a href="#tab3">Offsigners</a></li>
-                                        </ul>
-                                        <div id="tab1" class="tab active">                                           
-                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Sr.No.</th>
-                                                        <th>Crew Name</th>
-                                                        <th>CDC</th>
-                                                        <th>Rank</th>
-                                                        <th>Signon Date</th>
-                                                        <th>PayCommence</th>
-                                                        <th>From</th>
-                                                        <th>To</th>
+                    </div>
+                    <div id="goal-list-scroll" class="table-responsive position-relative">
+                        <div class="tbl-container">
+                            <div class="tbl-fixed">
+                                <div class="tabs">
+                                    <ul class="tabs-list">
+                                        <li class="active"><a href="#tab1"> Onboard</a></li>
+                                        <li><a href="#tab2">Promotion & Change in Contract</a></li>
+                                        <li><a href="#tab3">Offsigners</a></li>
+                                    </ul>
+                                    <div id="tab1" class="tab active">
+                                        <table mat-table id="tblonbaord" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Sr.No.</th>
+                                                    <th>Crew Name</th>
+                                                    <th>CDC</th>
+                                                    <th>Rank</th>
+                                                    <th>Signon Date</th>
+                                                    <th>PayCommence</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>No of Days </th>
+                                                    <th>Currency</th>
+                                                    <th>Nationality</th>
+                                                    <th>Basic Wages</th>
+                                                    <th>Fixed/Guaranteed Overtime</th>
+                                                    <th>Security Allowance </th>
+                                                    <th>Leave+Subs.</th>
+                                                    <th>U.ALLOW</th>
+                                                    <th> Pension Fund </th>
+                                                    <th> Other Allowance</th>
+                                                    <th>Total Wages per month</th>
+                                                    <th> Overtime HR</th>
+                                                    <th>Basic Wage</th>
+                                                    <th>Fixed/Guaranteed OT</th>
+                                                    <th>Security Allowance</th>
+                                                    <th>Leave Pay & Subsitence Allow. </th>
+                                                    <th>Uniform Allow.</th>
+                                                    <th>Pension Fund</th>
+                                                    <th>Other Allow.</th>
+                                                    <th>Extra OT</th>
+                                                    <th>Other Earning</th>
+                                                    <th>Transit Wages</th>
+                                                    <th>Total Earnings (Current Month)</th>
+                                                    <th> Bal from Prev Month</th>
+                                                    <th>Reimbursement</th>
+                                                    <th>Total Payable</th>
+                                                    <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                    <th>Cash Advance</th>
+                                                    <th>Bonded Stores</th>
+                                                    <th>Other Deduction</th>
+                                                    <th>PF Deduction (Indian)</th>
+                                                    <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                    <th>2.0% Union Dues (On Gross)</th>
+                                                    <th>1.0% Welfare fund (On Gross)</th>
+                                                    <th>WHT 5%</th>
+                                                    <th>Allotment</th>
+                                                    <th>Total Deductions</th>
+                                                    <th>Leave wages B/F</th>
+                                                    <th> Leave wages C/F</th>
+                                                    <th>Final Balance(n-t)</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{int sno = 1; }
+                                                @foreach (var item in Model.onsignersportage)
+                                                {
+                                                <tr>
+                                                    <td>
+                                                        <a onclick="getdataforbow('@item.From','@item.To',@item.CrewId,@item.CrewListId,@item.ContractId,'@item.CrewName','@item.Currency','@item.RankName','@item.SignOffDate')" class="openbow">
+                                                            <i class="fa fa-info-circle" style="font-size: 14px;" aria-hidden="true"></i>
+                                                        </a>
+                                                        <a onclick="onsignersdata('@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,
+    @item.SecurityAllow,@item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.OtherAllow,@item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,@item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'onboard')">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td> @sno</td>
+                                                    <td>@item.CrewName</td>
+                                                    <td>@item.cdcno</td>
+                                                    <td>@item.RankName</td>
+                                                    <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                                    <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
+                                                    <td>@item.From?.ToString("dd-MMM-yyyy")</td>
+                                                    <td>@item.To?.ToString("dd-MMM-yyyy")</td>
+                                                    <td>@item.TotalDays</td>
+                                                    <td>@item.Currency</td>
+                                                    <td>@item.Nationality</td>
+                                                    <td>@item.BasicWages</td>
+                                                    <td>@item.FixedGtOT</td>
+                                                    <td>@item.SecurityAllow</td>
+                                                    <td>@item.LeavePay</td>
+                                                    <td>@item.UniformAllow</td>
+                                                    <td>@item.PensionFund</td>
+                                                    <td>@item.OtherAllow</td>
+                                                    <td>@item.TotalWages</td>
+                                                    <td>@item.OTHours</td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                    </td>
+                                                    <td>
 
-                                                        <th>No of Days </th>
-                                                        <th>Currency</th>
-                                                        <th>Nationality</th>
-                                                        <th>Basic Wages</th>
-                                                        <th>Fixed/Guaranteed Overtime</th>
-                                                        <th>Security Allowance </th>
-                                                        <th>Leave+Subs.</th>
-                                                        <th>U.ALLOW</th>
-                                                        <th> Pension Fund </th>
-                                                        <th> Other Allowance</th>
-                                                        <th>Total Wages per month</th>
-                                                        <th> Overtime HR</th>
-                                                        <th>Basic Wage</th>
-                                                        <th>Fixed/Guaranteed OT</th>
-                                                        <th>Security Allowance</th>
-                                                        <th>Leave Pay & Subsitence Allow. </th>
-                                                        <th>Uniform Allow.</th>
-                                                        <th>Pension Fund</th>
-                                                        <th>Other Allow.</th>
-                                                        <th>Extra OT</th>
-                                                        <th>Other Earning</th>
-                                                        <th>Transit Wages</th>
-                                                        <th>Total Earnings (Current Month)</th>
-                                                        <th> Bal from Prev Month</th>
-                                                        <th>Reimbursement</th>
-                                                        <th>Total Payable</th>
-                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
-                                                        <th>Cash Advance</th>
-                                                        <th>Bonded Stores</th>
-                                                        <th>Other Deduction</th>
-                                                        <th>PF Deduction (Indian)</th>
-                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
-                                                        <th>2.0% Union Dues (On Gross)</th>
-                                                        <th>1.0% Welfare fund (On Gross)</th>
-                                                        <th>WHT 5%</th>
-                                                        <th>Allotment</th>
-                                                        <th>Total Deductions</th>
-                                                        <th>Leave wages B/F</th>
-                                                        <th> Leave wages C/F</th>
-                                                        <th>Final Balance(n-t)</th>
-                                                        <th>Signature</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var item in Model.onsignersportage)
-                                    {
+                                                        @string.Format("{0:n2}", (item.FixedGtOT * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.LeavePay * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.UniformAllow * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>
+
+                                                        @string.Format("{0:n2}", (item.PensionFund * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
+                                                    </td>
+                                                    <td>@item.extraot</td>
+                                                    <td>@item.OtherEarnings</td>
+
+                                                    <td>@item.TransitWages</td>
+
+                                                    <td>@string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays)+ (item.FixedGtOT * item.TotalDays / item.numberofday)+ (item.SecurityAllow * item.TotalDays / item.numberofday)+ (item.LeavePay * item.TotalDays / item.numberofday)+ (item.UniformAllow * item.TotalDays / item.numberofday)+ (item.PensionFund * item.TotalDays / item.numberofday)+ (item.OtherAllow * item.TotalDays / item.numberofday))</td>
+                                                    <td>@item.PrevMonthBal</td>
+                                                    <td>@item.Reimbursement</td>
+                                                    <td>@item.TotalPayable</td>
+                                                    <td>@item.LeavePay</td>
+                                                    <td>@item.CashAdvance</td>
+                                                    <td>@item.BondedStores</td>
+                                                    <td>@item.OtherDeductions</td>
+                                                    <td>@item.authorityDeduction</td>
+                                                    <td>@item.PFAmount</td>
+                                                    <td>@item.UDAmount</td>
+                                                    <td>@item.WFAmount</td>
+                                                    <td>@item.Tax</td>
+                                                    <td>@item.Allotments</td>
+                                                    <td>@item.TotalDeductions</td>
+                                                    <td>@item.LeaveWagesBF</td>
+                                                    <td>
+                                                        @string.Format("{0:n2}", (item.LeaveWagesBF + (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                    </td>
+                                                    <td>@item.FinalBalance</td>
+                                                    <td></td>
+                                                </tr>
+                                                    sno++;
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="tab2" class="tab">
+                                        <table mat-table id="tblpromotion" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr.No.</th>
+                                                    <th>Crew Name</th>
+                                                    <th>CDC</th>
+                                                    <th>Rank</th>
+                                                    <th>Signon Date</th>
+                                                    <th>PayCommence</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+
+                                                    <th>No of Days </th>
+                                                    <th>Currency</th>
+                                                    <th>Nationality</th>
+                                                    <th>Basic Wages</th>
+                                                    <th>Fixed/Guaranteed Overtime</th>
+                                                    <th>Security Allowance </th>
+                                                    <th>Leave+Subs.</th>
+                                                    <th>U.ALLOW</th>
+                                                    <th> Pension Fund </th>
+                                                    <th> Other Allowance</th>
+                                                    <th>Total Wages per month</th>
+                                                    <th> Overtime HR</th>
+                                                    <th>Basic Wage</th>
+                                                    <th>Fixed/Guaranteed OT</th>
+                                                    <th>Security Allowance</th>
+                                                    <th>Leave Pay & Subsitence Allow. </th>
+                                                    <th>Uniform Allow.</th>
+                                                    <th>Pension Fund</th>
+                                                    <th>Other Allow.</th>
+                                                    <th>Extra OT</th>
+                                                    <th>Other Earning</th>
+                                                    <th>Transit Wages</th>
+                                                    <th>Total Earnings (Current Month)</th>
+                                                    <th> Bal from Prev Month</th>
+                                                    <th>Reimbursement</th>
+                                                    <th>Total Payable</th>
+                                                    <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                    <th>Cash Advance</th>
+                                                    <th>Bonded Stores</th>
+                                                    <th>Other Deduction</th>
+                                                    <th>PF Deduction (Indian)</th>
+                                                    <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                    <th>2.0% Union Dues (On Gross)</th>
+                                                    <th>1.0% Welfare fund (On Gross)</th>
+                                                    <th>WHT 5%</th>
+                                                    <th>Allotment</th>
+                                                    <th>Total Deductions</th>
+                                                    <th>Leave wages B/F</th>
+                                                    <th> Leave wages C/F</th>
+                                                    <th>Final Balance(n-t)</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{int index = 1;}
+                                                @foreach (var item in Model.promotionsportagebill)
+                                                {
                                                     <tr>
+                                                        <td>@index</td>
+                                                        <td>@item.CrewName</td>
+                                                        <td>@item.cdcno</td>
+                                                        <td>@item.RankName</td>
+                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
+                                                        <td>@item.TotalDays</td>
+                                                        <td>@item.Currency</td>
+                                                        <td>@item.Nationality</td>
+                                                        <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.UniformAllow</td>
+                                                        <td>@item.PensionFund</td>
+                                                        <td>@item.OtherAllow</td>
+                                                        <td>@item.TotalWages</td>
+                                                        <td>@item.OTHours</td>
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>@item.FixedGtOT* @item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.SecurityAllow* @item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.LeavePay* @item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.UniformAllow *@item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.PensionFund* @item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.OtherAllow *@item.TotalDays / @item.numberofday</td>
+                                                        <td>@item.extraot</td>
+                                                        <td>@item.OtherEarnings</td>
+
+                                                        <td>@item.TransitWages</td>
+
+                                                        <td>@item.PrevMonthBal</td>
+                                                        <td>@item.Reimbursement</td>
+                                                        <td>@item.TotalPayable</td>
+                                                        <td>@item.LeavePay</td>
+                                                        <td>@item.CashAdvance</td>
+                                                        <td>@item.BondedStores</td>
+                                                        <td>@item.OtherDeductions</td>
+                                                        <td>@item.authorityDeduction</td>
+                                                        <td>@item.PFAmount</td>
+                                                        <td>@item.UDAmount</td>
+                                                        <td>@item.WFAmount</td>
+                                                        <td>@item.Tax</td>
+                                                        <td>@item.Allotments</td>
+                                                        <td>@item.TotalDeductions</td>
+                                                        <td>@item.LeaveWagesBF</td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeaveWagesBF + (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                        </td>
+                                                        <td>@item.FinalBalance</td>
                                                         <td></td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="tab3" class="tab">
+                                        <table mat-table id="tbloffsigners" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr.No.</th>
+                                                    <th>Crew Name</th>
+                                                    <th>CDC</th>
+                                                    <th>Rank</th>
+                                                    <th>Signon Date</th>
+                                                    <th>PayCommence</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+
+                                                    <th>No of Days </th>
+                                                    <th>Currency</th>
+                                                    <th>Nationality</th>
+                                                    <th>Basic Wages</th>
+                                                    <th>Fixed/Guaranteed Overtime</th>
+                                                    <th>Security Allowance </th>
+                                                    <th>Leave+Subs.</th>
+                                                    <th>U.ALLOW</th>
+                                                    <th> Pension Fund </th>
+                                                    <th> Other Allowance</th>
+                                                    <th>Total Wages per month</th>
+                                                    <th> Overtime HR</th>
+                                                    <th>Basic Wage</th>
+                                                    <th>Fixed/Guaranteed OT</th>
+                                                    <th>Security Allowance</th>
+                                                    <th>Leave Pay & Subsitence Allow. </th>
+                                                    <th>Uniform Allow.</th>
+                                                    <th>Pension Fund</th>
+                                                    <th>Other Allow.</th>
+                                                    <th>Extra OT</th>
+                                                    <th>Other Earning</th>
+                                                    <th>Transit Wages</th>
+                                                    <th>Total Earnings (Current Month)</th>
+                                                    <th> Bal from Prev Month</th>
+                                                    <th>Reimbursement</th>
+                                                    <th>Total Payable</th>
+                                                    <th>Leave Pay + Subsitence C/F (This Month)</th>
+                                                    <th>Cash Advance</th>
+                                                    <th>Bonded Stores</th>
+                                                    <th>Other Deduction</th>
+                                                    <th>PF Deduction (Indian)</th>
+                                                    <th>8.0% PF Employee Contribution (On Basic)</th>
+                                                    <th>2.0% Union Dues (On Gross)</th>
+                                                    <th>1.0% Welfare fund (On Gross)</th>
+                                                    <th>WHT 5%</th>
+                                                    <th>Allotment</th>
+                                                    <th>Total Deductions</th>
+                                                    <th>Leave wages B/F</th>
+                                                    <th> Leave wages C/F</th>
+                                                    <th>Final Balance(n-t)</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{int offsignersindex = 1;}
+                                                @foreach (var item in Model.offsignersporatge)
+                                                {
+                                                    <tr>
+                                                        <td>@offsignersindex</td>
                                                         <td>@item.CrewName</td>
                                                         <td>@item.cdcno</td>
                                                         <td>@item.RankName</td>
@@ -366,277 +703,24 @@
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td>
-                                                           
-                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
+
+                                                            @string.Format("{0:n2}", (item.FixedGtOT * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-                                                        @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))</td>
-                                                        <td>                                                            
-                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>                                                           
-                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
+                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-                                                            
-                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
+                                                            @string.Format("{0:n2}", (item.LeavePay * item.TotalDays / item.numberofday))
                                                         </td>
-                                                        <td>                                                           
-                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>@item.extraot</td>
-                                                        <td>@item.OtherEarnings</td>
-
-                                                        <td>@item.TransitWages</td>
-
-                                                        <td>@item.PrevMonthBal</td>
-                                                        <td>@item.Reimbursement</td>
-                                                        <td>@item.TotalPayable</td>
-                                                        <td>@item.LeavePay</td>
-                                                        <td>@item.CashAdvance</td>
-                                                        <td>@item.BondedStores</td>
-                                                        <td>@item.OtherDeductions</td>
-                                                        <td>@item.authorityDeduction</td>
-                                                        <td>@item.PFAmount</td>
-                                                        <td>@item.UDAmount</td>
-                                                        <td>@item.WFAmount</td>
-                                                        <td>@item.Tax</td>
-                                                        <td>@item.Allotments</td>
-                                                        <td>@item.TotalDeductions</td>
-                                                        <td>@item.LeaveWagesBF</td>
-                                                        <td>                                                            
-                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
-                                                        </td>
-                                                        <td>@item.FinalBalance</td>
-                                                        <td></td>
-                                                    </tr>
-                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="tab2" class="tab">
-                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Sr.No.</th>
-                                                        <th>Crew Name</th>
-                                                        <th>CDC</th>
-                                                        <th>Rank</th>
-                                                        <th>Signon Date</th>
-                                                        <th>PayCommence</th>
-                                                        <th>From</th>
-                                                        <th>To</th>
-
-                                                        <th>No of Days </th>
-                                                        <th>Currency</th>
-                                                        <th>Nationality</th>
-                                                        <th>Basic Wages</th>
-                                                        <th>Fixed/Guaranteed Overtime</th>
-                                                        <th>Security Allowance </th>
-                                                        <th>Leave+Subs.</th>
-                                                        <th>U.ALLOW</th>
-                                                        <th> Pension Fund </th>
-                                                        <th> Other Allowance</th>
-                                                        <th>Total Wages per month</th>
-                                                        <th> Overtime HR</th>
-                                                        <th>Basic Wage</th>
-                                                        <th>Fixed/Guaranteed OT</th>
-                                                        <th>Security Allowance</th>
-                                                        <th>Leave Pay & Subsitence Allow. </th>
-                                                        <th>Uniform Allow.</th>
-                                                        <th>Pension Fund</th>
-                                                        <th>Other Allow.</th>
-                                                        <th>Extra OT</th>
-                                                        <th>Other Earning</th>
-                                                        <th>Transit Wages</th>
-                                                        <th>Total Earnings (Current Month)</th>
-                                                        <th> Bal from Prev Month</th>
-                                                        <th>Reimbursement</th>
-                                                        <th>Total Payable</th>
-                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
-                                                        <th>Cash Advance</th>
-                                                        <th>Bonded Stores</th>
-                                                        <th>Other Deduction</th>
-                                                        <th>PF Deduction (Indian)</th>
-                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
-                                                        <th>2.0% Union Dues (On Gross)</th>
-                                                        <th>1.0% Welfare fund (On Gross)</th>
-                                                        <th>WHT 5%</th>
-                                                        <th>Allotment</th>
-                                                        <th>Total Deductions</th>
-                                                        <th>Leave wages B/F</th>
-                                                        <th> Leave wages C/F</th>
-                                                        <th>Final Balance(n-t)</th>
-                                                        <th>Signature</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var item in Model.promotionsportagebill)
-                                    {
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>@item.CrewName</td>
-                                                        <td>@item.cdcno</td>
-                                                        <td>@item.RankName</td>
-                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.TotalDays</td>
-                                                        <td>@item.Currency</td>
-                                                        <td>@item.Nationality</td>
-                                                        <td>@item.BasicWages</td>
-                                                        <td>@item.FixedGtOT</td>
-                                                        <td>@item.SecurityAllow</td>
-                                                        <td>@item.LeavePay</td>
-                                                        <td>@item.UniformAllow</td>
-                                                        <td>@item.PensionFund</td>
-                                                        <td>@item.OtherAllow</td>
-                                                        <td>@item.TotalWages</td>
-                                                        <td>@item.OTHours</td>
-
-                                            <td>
-                                                @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
-                                            </td>
-                                            <td>@item.FixedGtOT* @item.TotalDays / @item.numberofday</td>
-                                            <td>@item.SecurityAllow* @item.TotalDays / @item.numberofday</td>
-                                            <td>@item.LeavePay* @item.TotalDays / @item.numberofday</td>
-                                            <td>@item.UniformAllow *@item.TotalDays / @item.numberofday</td>
-                                            <td>@item.PensionFund* @item.TotalDays / @item.numberofday</td>
-                                            <td>@item.OtherAllow *@item.TotalDays / @item.numberofday</td>
-                                            <td>@item.extraot</td>
-                                            <td>@item.OtherEarnings</td>
-
-                                            <td>@item.TransitWages</td>
-
-                                                        <td>@item.PrevMonthBal</td>
-                                                        <td>@item.Reimbursement</td>
-                                                        <td>@item.TotalPayable</td>
-                                                        <td>@item.LeavePay</td>
-                                                        <td>@item.CashAdvance</td>
-                                                        <td>@item.BondedStores</td>
-                                                        <td>@item.OtherDeductions</td>
-                                                        <td>@item.authorityDeduction</td>
-                                                        <td>@item.PFAmount</td>
-                                                        <td>@item.UDAmount</td>
-                                                        <td>@item.WFAmount</td>
-                                                        <td>@item.Tax</td>
-                                                        <td>@item.Allotments</td>
-                                                        <td>@item.TotalDeductions</td>
-                                                        <td>@item.LeaveWagesBF</td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
-                                                        </td>
-                                                        <td>@item.FinalBalance</td>
-                                                        <td></td>
-                                                    </tr>
-                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="tab3" class="tab">
-                                            <table mat-table id="table1" class="table table-hover table-bordered mb-0 crew-table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Sr.No.</th>
-                                                        <th>Crew Name</th>
-                                                        <th>CDC</th>
-                                                        <th>Rank</th>
-                                                        <th>Signon Date</th>
-                                                        <th>PayCommence</th>
-                                                        <th>From</th>
-                                                        <th>To</th>
-
-                                                        <th>No of Days </th>
-                                                        <th>Currency</th>
-                                                        <th>Nationality</th>
-                                                        <th>Basic Wages</th>
-                                                        <th>Fixed/Guaranteed Overtime</th>
-                                                        <th>Security Allowance </th>
-                                                        <th>Leave+Subs.</th>
-                                                        <th>U.ALLOW</th>
-                                                        <th> Pension Fund </th>
-                                                        <th> Other Allowance</th>
-                                                        <th>Total Wages per month</th>
-                                                        <th> Overtime HR</th>
-                                                        <th>Basic Wage</th>
-                                                        <th>Fixed/Guaranteed OT</th>
-                                                        <th>Security Allowance</th>
-                                                        <th>Leave Pay & Subsitence Allow. </th>
-                                                        <th>Uniform Allow.</th>
-                                                        <th>Pension Fund</th>
-                                                        <th>Other Allow.</th>
-                                                        <th>Extra OT</th>
-                                                        <th>Other Earning</th>
-                                                        <th>Transit Wages</th>
-                                                        <th>Total Earnings (Current Month)</th>
-                                                        <th> Bal from Prev Month</th>
-                                                        <th>Reimbursement</th>
-                                                        <th>Total Payable</th>
-                                                        <th>Leave Pay + Subsitence C/F (This Month)</th>
-                                                        <th>Cash Advance</th>
-                                                        <th>Bonded Stores</th>
-                                                        <th>Other Deduction</th>
-                                                        <th>PF Deduction (Indian)</th>
-                                                        <th>8.0% PF Employee Contribution (On Basic)</th>
-                                                        <th>2.0% Union Dues (On Gross)</th>
-                                                        <th>1.0% Welfare fund (On Gross)</th>
-                                                        <th>WHT 5%</th>
-                                                        <th>Allotment</th>
-                                                        <th>Total Deductions</th>
-                                                        <th>Leave wages B/F</th>
-                                                        <th> Leave wages C/F</th>
-                                                        <th>Final Balance(n-t)</th>
-                                                        <th>Signature</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var item in Model.offsignersporatge)
-                                    {
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>@item.CrewName</td>
-                                                        <td>@item.cdcno</td>
-                                                        <td>@item.RankName</td>
-                                                        <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.Paydate?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.From?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.To?.ToString("dd-MMM-yyyy")</td>
-                                                        <td>@item.TotalDays</td>
-                                                        <td>@item.Currency</td>
-                                                        <td>@item.Nationality</td>
-                                                        <td>@item.BasicWages</td>
-                                                        <td>@item.FixedGtOT</td>
-                                                        <td>@item.SecurityAllow</td>
-                                                        <td>@item.LeavePay</td>
-                                                        <td>@item.UniformAllow</td>
-                                                        <td>@item.PensionFund</td>
-                                                        <td>@item.OtherAllow</td>
-                                                        <td>@item.TotalWages</td>
-                                                        <td>@item.OTHours</td>
-
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
+                                                            @string.Format("{0:n2}", (item.UniformAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
 
-                                                            @string.Format("{0:n2}", (item.FixedGtOT* item.TotalDays / item.numberofday))
+                                                            @string.Format("{0:n2}", (item.PensionFund * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.SecurityAllow* item.TotalDays / item.numberofday ))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.LeavePay* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.UniformAllow *item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-
-                                                            @string.Format("{0:n2}", (item.PensionFund* item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.OtherAllow *item.TotalDays / item.numberofday))
+                                                            @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>@item.extraot</td>
                                                         <td>@item.OtherEarnings</td>
@@ -659,14 +743,18 @@
                                                         <td>@item.TotalDeductions</td>
                                                         <td>@item.LeaveWagesBF</td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.LeaveWagesBF+ (item.LeavePay * item.TotalDays / item.numberofday)))
+                                                            @string.Format("{0:n2}", (item.LeaveWagesBF + (item.LeavePay * item.TotalDays / item.numberofday)))
                                                         </td>
                                                         <td>@item.FinalBalance</td>
                                                         <td></td>
                                                     </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                                    offsignersindex++;
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -674,117 +762,325 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="changepasswordmodel" role="dialog" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog" style="width:1200px; vertical-align: top;">
+<!-- Bow model start -->
+<div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Change Password</h4>
+                <h4 class="modal-title">Generate Bow</h4>
             </div>
             <div class="modal-body">
-                <div id="travelToVesselModal" class="modal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-xl" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            </div>
-                            <div class="modal-body">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
-                                <button type="submit" class="btn btn-info">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <form asp-action="TravelToVessel">
-                    @*<h4>
-                            OnBoard Activity :@item.Rank?.Code-@item.Crew?.FirstName&nbsp;@item.Crew?.MiddleName&nbsp;@item.Crew?.LastName
-                        </h4>*@
-                    <<h4>
-                        OnBoard Activity :<span id="crewinfo"></span>
+                <form id="bowform">
+                    <div style="Color:red; padding-bottom:10px; font-size: 12px !important;"> </div>
+                    <h4 style="font-weight: bold; color: #233855; " class="m-b-15">
+                        <span style="color: #c73f16; float: right; font-size: 14px;">
+                            <span id="crewname"></span><span class="p-l-5 p-r-5">|</span>  <span id="crewrank"></span>
+                            <span class="p-l-5 p-r-5">|</span> Currency: <span id="currency"></span>
+                        </span><br>
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
                     </h4>
-                    <br />
-                    <div class="row">
-                        <div class="col-4">
-                            <label>Sign On Reason</label>
-                            <input type="text" v disabled />
+                    <div class="row" style="margin: 20px 0px;">
+                        <div class="col-lg-5"
+                             style="padding: 5px 20px; background: #F2F4F8; border:1px solid #e0e0e0; border-right: none;">
+                            <p>Total Earn: <span id="totalpay"></span> </p>
+                            <p>Total Dedcution: <span id="totaldeduc"></span></p>
+                            <p>Final Balance : <span id="finalbal"></span></p>
+                            <input id="TotalPayable" name="TotalPayable" hidden>
+                            <input id="TotalDeductions" name="TotalDeductions" hidden>
+                            <input id="FinalBalance" name="FinalBalance" hidden>
+                            <input id="LeaveWagesCf" name="LeaveWagesCf" hidden>
+                            @*<input id="LeaveWagesBf" name="LeaveWagesBf" hidden>*@
+                            <input id="AppliedCba" name="AppliedCba" hidden>
+                            @*<input id="Tax" name="Tax" hidden>*@
+                            @*<input id="Udamount" name="Udamount" hidden>
+                                <input id="Wfamount" name="Wfamount" hidden>*@
+                            <input id="IsTransitApply" name="IsTransitApply" hidden>
+                            <input id="IsPromoted" name="IsPromoted" hidden>
+                            <input id="IsLeaveWagesCf" name="IsLeaveWagesCf" hidden>
+                            <input id="Avc" name="Avc" hidden>
+                            <input id="Gratuity" name="Gratuity" hidden>
+                            <input id="IndPfamount" name="IndPfamount" hidden>
+                            <input id="IsAddPrevBal" name="IsAddPrevBal" hidden>
+                            <input id="IsHoldWageAllotment" name="IsHoldWageAllotment" hidden>
+
+                            <input id="whTdeduction" name="whTdeduction" hidden>
+                            <input id="UDdeduction" name="UDdeduction" hidden>
+                            <input id="wFdeduction" name="wFdeduction" hidden>
+                            <input id="tax" name="tax" hidden>
+                            <input id="udAmount" name="udAmount" hidden>
+                            <input id="wfAmount" name="wfAmount" hidden>
+                            <button class="btn btn-success form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip"
+                                    data-trigger="hover" data-placement="top" data-title="Download BOW" title="Download BOW" onclick="DownloadBOW()">
+                                <i class="fas fa-download"
+                                   aria-hidden="true"></i> BOW
+                            </button>
+                            <button onclick="deleteBow()" class="btn btn-red form-small p-t-3 p-b-3 m-r-5" type="button"
+                                    data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Delete BOW" data-original-title="" title="Delete BOW">
+                                <i class="fas  fa-trash" aria-hidden="true"></i> BOW
+                            </button>
                         </div>
-                        <div class="col-4">
-                            <label>Travel Date</label>
-                            <input type="text" disabled />
-                        </div>
-                        <div class="col-4">
-                            <label>Extra Crew On Board</label>
-                            <input type="text" disabled />
+                        <div class="col-lg-7" style="padding: 5px 20px; background: #F2F4F8; border:1px solid #e0e0e0">
+                            Bank Details*:
+                            <div id="crewbank" name="crewbank"></div>
                         </div>
                     </div>
-                    <br />
                     <div class="row">
-                        <div class="col-4">
-                            <label>Country</label>
-                            <select id="CountryList" name="CountryList">
-                            </select>
+                        <div class="col-xl-6 col-lg-12">
+                            <h4>Earning</h4>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="signOffdate">Sign Off Date</label>
+                                    <input id="signOffdate" placeholder="Sign Off Date" class="form-control" name="signOffdate" required>
+                                    <input id="CrewId" name="CrewId" hidden>
+                                    <input id="CrewListId" name="CrewListId" hidden>
+                                    <input id="ContractId" name="ContractId" hidden>
+                                    <input id="PortageBillId" name="PortageBillId" hidden>
+                                    <input id="From" name="From" hidden>
+                                    <input id="To" name="To" hidden>
+                                    <input id="Days" name="Days" hidden>
+                                    <input id="Vesselid" name="Vesselid" hidden>
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="otHours">OT Hours</label>
+                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="otHours" onchange="calculateot()" id="otHours">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="extraot">OT Earning</label> 
+                                    <input placeholder="OT Earning" type="number" class="form-control" value="0" name="extraot" readonly id="extraot">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="earningother">OT Earning</label>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onchange="calculateearning()" name="earningother" id="earningother">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="transitDays">Transit Days</label>
+                                    <input placeholder="Transit Days" class="form-control" onchange="calculateearning()" type="number" value="0" name="transitDays" id="transitDays">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="reimbursement">Reimbursement</label>
+                                    <input placeholder="Reimbursement" class="form-control" onchange="calculateearning()" type="number" value="0" name="reimbursement" id="reimbursement">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="leaveWagesBF">Leave Wages B/F</label>
+                                    <input placeholder="Leave Wages B/F" class="form-control" readonly type="number" value="0" name="leaveWagesBF" id="leaveWagesBF">
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <label>Sign-On-Port</label>
-                            <select id="ddlSeaport" name="ddlSeaport"></select>
-                        </div>
-                        <div class="col-4">
-                            <label>Expect Sign-On-Date</label>
-                            <input type="date" id="exportSignOn" />
+                        <div class="col-xl-6 col-lg-12">
+                            <h4>Deduction</h4>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="cashAdvance">Cash Advance</label>
+                                    <input placeholder="Cash Advance" type="number" class="form-control" value="0" onchange="calculateearning()" name="cashAdvance" id="cashAdvance">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="bondedStores">Bonded Stores</label>
+                                    <input placeholder="Bonded Stores" type="number" class="form-control" value="0" onchange="calculateearning()" name="bondedStores" id="bondedStores">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="otherDeductions">Other Deductions</label>
+                                    <input placeholder="Other Deductions" class="form-control" onchange="calculateearning()" value="0" type="number" name="otherDeductions" id="otherDeductions">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="allotments">Allotments</label>
+                                    <input placeholder="Allotments" class="form-control" onchange="calculateearning()" type="number" value="0" name="allotments" id="allotments">
+                                </div>
+                                <div *ngIf="bankselected >1;">
+                                    <div class="col form-group input-container">
+                                        <label for="allotment2">Allotments</label>
+                                        <input placeholder="Allotments" class="form-control" onchange="calculateearning()" type="number" value="0" name="allotment2" id="allotment2">
+                                    </div>
+                                </div>
+                                <div class="col form-group s4">
+                                    <input class="form-control" onchange="calculateearning()" type="checkbox" id="IsLeaveWagesCF" name="IsLeaveWagesCF" title="Is leave wage carry forward?">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group">
+                                    <label>Attachment:</label><br>
+                                    <input type="file" class="form-control" accept="application/pdf"  id="Attachment" name="Attachment" multiple>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group s4">
+                                    <input placeholder="Remarks" id="remarks" class="form-control" name="remarks">
+                                    <span class="mandatory-fields">*Note: If total earning and deduction doesn't match, then remarks field will be mandatory.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-4">
-                            <label>Duration(Months)</label>
-                            <input type="text" id="durationDays" disabled />
-                        </div>
-                        <div class="col-4">
-                            <label>Relief Date</label>
-                            <input type="text" id="reliefDate" disabled />
-                        </div>
-
-                    </div>
-                    <br />
-                    <div class="row">
-
-                        <div class="col-5">
-                            <label>Remarks</label>
-                            <textarea style="width:inherit"></textarea>
-                        </div>
-
-                    </div>
-                    <br />
-
-                    <div class="row">
-
-                        <input type="checkbox" id="allowBeginTravelSignOnSameDate" name="allowBeginTravelSignOnSameDate">
-                        <label for="allowBeginTravelSignOnSameDate">Allow Begin Travel & Sign-On on same date</label>
-                        <input type="checkbox" id="ownerWage" name="ownerWage">
-
-                        <label for="ownerWage">Owner Wage?</label>
-                    </div>
-                    <div class="row">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>&nbsp;
-                        <button type="submit" value="Save" class="btn btn-info align-right">Submit</button>
-                    </div>
-                    <br />
                 </form>
             </div>
             <div class="modal-footer">
-                <Button type="submit" name="submit" id="changepassword" class="btn btn-success">Submit</Button>
+                <Button type="submit" name="submit" id="savebowdata" class="btn btn-success">Submit</Button>
                 <Button type="button" class="btn btn-default" data-dismiss="modal">Close</Button>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-@*@travel to vessel*@
-<script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
+<!--Bow modal end-->
+@*portageBillPopup*@
+<!--Portage entry start-->
+<div class="modal fade" id="portageBillPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <b>Portage Entry</b>
+                </h4>
+                <div class="w-75">
+                    <div class="float-right">
+                        <span style="color:red" id="pcrewname">&nbsp;</span><span style="color:red">|</span>&nbsp;<span style="color:red" id="pcrewrank"></span>&nbsp;<span style="color:red">|</span>&nbsp;<span style="color:red">Currency:</span><span style="color:red" id="pcurrency"></span>
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="portageform">
+                    <div style="Color:red; padding-bottom:10px; font-size: 12px !important;"> </div>
+                    <h4 style="font-weight: bold; color: #233855; " class="m-b-15">
+                        <span style="color: #c73f16; float: right; font-size: 14px;">
+                            <span id="crewname"></span><span class="p-l-5 p-r-5">|</span>  <span id="crewrank"></span>
+                            <span class="p-l-5 p-r-5">|</span> Currency: <span id="currency"></span>
+                        </span><br>
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h4>
+                    <div class="row" style="margin: 20px 0px;">
+                        <div class="col-lg-5"
+                             style="padding: 5px 20px; background: #F2F4F8; border:1px solid #e0e0e0; border-right: none;">
+                            <p>Total Earn: <span id="ptotalpay"></span> </p>
+                            <p>Total Dedcution: <span id="ptotaldeduc"></span></p>
+                            <p>Final Balance : <span id="pfinalbal"></span></p>
+                            <input id="pTotalPayable" name="pTotalPayable" hidden>
+                            <input id="pTotalDeductions" name="pTotalDeductions" hidden>
+                            <input id="pFinalBalance" name="pFinalBalance" hidden>
+                            <input id="ptotalearncurrent" name="ptotalearncurrent" hidden>
+                            <input id="pLeaveWagesCf" name="pLeaveWagesCf" hidden>
+                            @*<input id="pLeaveWagesBf" name="pLeaveWagesBf" hidden>*@
+                            <input id="pAppliedCba" name="pAppliedCba" hidden>
+                            <input id="pIsTransitApply" name="pIsTransitApply" hidden>
+                            <input id="pIsPromoted" name="pIsPromoted" hidden>
+                            <input id="pIsLeaveWagesCf" name="pIsLeaveWagesCf" hidden>
+                            <input id="pAvc" name="pAvc" hidden>
+                            <input id="pGratuity" name="pGratuity" hidden>
+                            <input id="pIndPfamount" name="pIndPfamount" hidden>
+                            <input id="pIsAddPrevBal" name="pIsAddPrevBal" hidden>
+                            <input id="pIsHoldWageAllotment" name="pIsHoldWageAllotment" hidden>
+                            <input id="pwhTdeduction" name="pwhTdeduction" hidden>
+                            <input id="pUDdeduction" name="pUDdeduction" hidden>
+                            <input id="pwFdeduction" name="pwFdeduction" hidden>
+                            <input id="ptax" name="ptax" hidden>
+                            <input id="pudAmount" name="pudAmount" hidden>
+                            <input id="pwfAmount" name="pwfAmount" hidden>
+                        </div>
+                        <div class="col-lg-7" style="padding: 5px 20px; background: #F2F4F8; border:1px solid #e0e0e0">
+                            Bank Details*:
+                            <div id="pcrewbank" name="pcrewbank"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-12">
+                            <h4>Earning</h4>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="potHours">OT Hours</label>
+                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="potHours" onchange="calculateot()" id="potHours">
+                                    <input id="pCrewId" name="pCrewId" hidden>
+                                    <input id="pCrewListId" name="pCrewListId" hidden>
+                                    <input id="pContractId" name="pContractId" hidden>
+                                    <input id="pPortageBillId" name="pPortageBillId" hidden>
+                                    <input id="pFrom" name="pFrom" hidden>
+                                    <input id="pTo" name="pTo" hidden>
+                                    <input id="pDays" name="pDays" hidden>
+                                    <input id="pVesselid" name="pVesselid" hidden>
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="pextraot">OT Earning</label>
+                                    <input placeholder="OT Earning" type="number" class="form-control" value="0" name="pextraot" readonly id="pextraot">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="pearningother">OT Earning</label>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onchange="calculateportageearning()" name="pearningother" id="pearningother">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="ptransitDays">Transit Days</label>
+                                    <input placeholder="Transit Days" class="form-control" readonly onchange="calculateportageearning()" type="number" value="0" name="ptransitDays" id="ptransitDays">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="preimbursement">Reimbursement</label>
+                                    <input placeholder="Reimbursement" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="preimbursement" id="preimbursement">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="pleaveWagesBF">Leave Wages B/F</label>
+                                    <input placeholder="Leave Wages B/F" class="form-control" readonly type="number" value="0" name="pleaveWagesBF" id="pleaveWagesBF">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <h4>Deduction</h4>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="pcashAdvance">Cash Advance</label>
+                                    <input placeholder="Cash Advance" type="number" class="form-control" value="0" onchange="calculateportageearning()" name="pcashAdvance" id="pcashAdvance">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="pbondedStores">Bonded Stores</label>
+                                    <input placeholder="Bonded Stores" type="number" class="form-control" value="0" onchange="calculateportageearning()" name="pbondedStores" id="pbondedStores">
+                                </div>
+                                <div class="col form-group input-container">
+                                    <label for="potherDeductions">Other Deductions</label>
+                                    <input placeholder="Other Deductions" class="form-control" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group input-container">
+                                    <label for="pallotments">Allotments</label>
+                                    <input placeholder="Allotments" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="pallotments" id="pallotments">
+                                </div>
+                                <div *ngIf="bankselected >1;">
+                                    <div class="col form-group input-container">
+                                        <label for="pallotment2">Allotments</label>
+                                        <input placeholder="Allotments" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="pallotment2" id="pallotment2">
+                                    </div>
+                                </div>
+                                <div class="col form-group s4">
+                                    <input class="form-control" onchange="calculateearning()" type="checkbox" id="pIsLeaveWagesCF" name="pIsLeaveWagesCF" title="Is leave wage carry forward?">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group">
+                                    <label>Attachment:</label><br>
+                                    <input type="file" class="form-control" accept="application/pdf" id="pAttachment" name="pAttachment" multiple>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group s4">
+                                    <input placeholder="Remarks" id="premarks" class="form-control" name="premarks">
+                                    <span class="mandatory-fields">*Note: If total earning and deduction doesn't match, then remarks field will be mandatory.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <Button type="submit" name="submit" id="saveportagedata" class="btn btn-success">Submit</Button>
+                <Button type="button" class="btn btn-default" data-dismiss="modal">Close</Button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Portage entry end-->
+@*<script>
     function myFunction() {
         document.getElementById("myDropdown").classList.toggle("show");
     }
@@ -803,81 +1099,22 @@
             }
         }
     }
-</script>
+</script>*@
 <script type="text/javascript">
     $(document).ready(function () {
-
         $(".tabs-list li a").click(function (e) {
             e.preventDefault();
         });
-
         $(".tabs-list li").click(function () {
             var tabid = $(this).find("a").attr("href");
-            $(".tabs-list li,.tabs div.tab").removeClass("active");   // removing active class from tab
-
+            $(".tabs-list li,.tabs div.tab").removeClass("active");   
             $(".tab").hide();   // hiding open tab
             $(tabid).show();    // show tab
             $(this).addClass("active"); //  adding active class to clicked tab
-
         });
-
     });
 </script>
-@*@travel to vessel Popup*@
-<script type="text/javascript">
-    $(function () {
-        $(".travelToVesselPopup").click(function () {
-            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-            $.ajax({
-                type: "GET",
-                url: "/Home/TravelToVessels",
-                data: { 'crewId': crewId },
-                success: function (response) {
-                    console.log(response)
-                    console.log(response.countryList);
-                    $.each(response.countryList, function (index, value) {
 
-                        var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
-                        console.log(targetstring);
-                        $('#CountryList').append(targetstring);
-                    })
-                    $('#changepasswordmodel').modal('show');
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-
-        });
-        //$("#CustomerGrid .travelToVesselPopup").click(function () {
-        //    var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-        //    $.ajax({
-        //        type: "GET",
-        //        url: "/Home/TravelToVessel",
-        //        data: { 'crewId': crewId },
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "html",
-        //        success: function (response) {
-        //            $("#travelToVesselModal").find(".modal-body").html(response);
-        //            $("#travelToVesselModal").find(".modal-footer").html(response);
-        //            $("#travelToVesselModal").modal('show');
-        //            $('#travelToVesselModal').on('hidden.bs.modal', function () {
-        //                location.reload();
-        //            })
-        //        },
-        //        failure: function (response) {
-        //            alert(response.responseText);
-        //        },
-        //        error: function (response) {
-        //            alert(response.responseText);
-        //        }
-        //    });
-        //});
-    });
-</script>
 @*@Particulars*@
 <script type="text/javascript">
     $(function () {
@@ -906,40 +1143,12 @@
         });
     });
 </script>
-@*@Reliever*@
-<script type="text/javascript">
-    $(function () {
-        $("#CustomerGrid .reliverDetails").click(function () {
-            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
-            $.ajax({
-                type: "GET",
-                url: "/Home/Details",
-                data: { 'crewId': crewId },
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    $("#partialModal").find(".modal-body").html(response);
-                    $("#partialModal").modal('show');
-                    $('#partialModal').on('hidden.bs.modal', function () {
-                        location.reload();
-                    })
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-        });
-    });
-</script>
+
 
 @*ExcelFile*@
 
 <script>
-
-                            function exported(e) {
+ function exported(e) {
                                 var value = $("#myselection option:selected");
                                 var name = value.val();
                                 if (name == "Atlantic") {
@@ -961,9 +1170,7 @@
                                 if (name == "FPD01") {
                                     url =('@Url.Action("generateFPD01", "Home")');
 
-
                                     }
-
                                $.ajax({
                                    type: "POST",
                                    url: url,
@@ -976,31 +1183,24 @@
                                          window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
                                      }
                                  });
-                                /*window.open(url);*/
                               }
 </script>
 
 
-                          <script>
-
-                            function exportToExcel(e) {
-
-
+<script>
+        function exportToExcel(e) {
                                $.ajax({
                                    type: "POST",
                                    url: '@Url.Action("Genneratexcel", "Portagebill")',
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
                                  }).done(function (data) {
-
-
                                      if (data.fileName != "") {
                                          window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
                                      }
                                  });
-                           
                               }
-                             </script>
+</script>
 
 
 
@@ -1024,7 +1224,7 @@
 
     th {
         /*  position:absolute;
-    *position: relative; /*ie7*/
+        *position: relative; /*ie7*/
         /*  left:0; */
         width: 100px;
     }
@@ -1042,6 +1242,1116 @@
         left: 100px;
         width: 100px;
     }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script>
+    var addFormFocusEventHandler = function () {
+        var placeholder;
+        $(document).on("focus", "div.input-container :input", function () {
+            $(this).closest("div.input-container").addClass("input-focused");
+            placeholder = $(this).prop("placeholder");
+            $(this).prop("placeholder", " ");
+        }).on("blur", "div.input-container :input", function () {
+            $(this).closest("div.input-container").removeClass("input-focused");
+            $(this).prop("placeholder", placeholder);
+            placeholder = "";
+        });
+    };
+    var addFormValueEventHandler = function () {
+        $(document).on("blur", "div.input-container :input", function () {
+            if ($(this).val()) {
+                $(this).closest("div.input-container").addClass("input-has-value");
+            } else {
+                $(this).closest("div.input-container").removeClass("input-has-value");
+            }
+        });
+    };
+    var initialize = function () {
+        addFormFocusEventHandler();
+        addFormValueEventHandler();
+    };
+    initialize();
+</script>
+<script>
+    var totaldeduction = 0; var totalearning = 0; var currency = 0;
+    var numberofdays = 0; var BankAllotmentId = 0; var BankAllotmentId2 = 0;
+    var from = 0; var to = 0; var days = 0; var portageBillId = 0;
+    var basicwage = 0; var totalearncurrent = 0;
+    var FixedGtOT = 0;
+    var leavePay = 0;
+    var UniformAllow = 0;
+    var PensionFund = 0;
+    var securityAllow = 0;
+    var OtherAllow = 0;
+    var totalWages = 0;
+    var reimbursement = 0;
+    var otrate = 0;
+    var prevMonthBal = 0;
+    var authorityDeduction = 0;
+    var acba = 0;
+    var vesselid = 0;
+    var pfamount = 0;
+    var gratuity = 0;
+    var indPFAmount = 0;
+    var avc = 0;
+    var finalbal = 0;
+    var filepath = 0; var BowRequestId = 0;
+    var gratuity = 0; var indPFAmount = 0; var avc = 0;
+    var enabled = 0; var transitwage = 0
+    var UDdeduction = 0; var WFdeduction = 0; var WHTdeduction = 0;
+    var udAmount = 0; var wfAmount = 0; var tax = 0; var nigpfAmount = 0;
+    var otearning = 0; var othour = 0; var otherEarnings = 0; var transitDays = 0; var reimbursement = 0; var leaveWagesBF = 0;
+    var ca = 0; var bs = 0; var od = 0; var allotment = 0; var allotment2 = 0;
+    var selectbankids = [];
+    $("#allotment2").hide();
+    $("#pallotment2").hide();
+    /* function to delete the bow request */
+    function deleteBow() {
+        $.ajax({
+            url: "/Portagebill/deletebow",
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: { 'id': portageBillId },
+            success: function (response) {
+                alert("succesfully deleted")
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    }
+
+    /* function to open the bow modal popup */
+    function getdataforbow(From, To, CrewId, CrewListId, ContractId, CrewName, Currency, RankName, signOffDate) {
+        sessionStorage.setItem('crewid', CrewId);
+        sessionStorage.setItem('CrewListId', CrewListId);
+        selectbankids = [];
+        $('#bowmodel').modal('show');
+        $("#crewrank").text(RankName);
+        $("#crewname").text(CrewName);
+        $("#currency").text(Currency);
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetCrewBankDetails",
+            data: { 'crewId': CrewId },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#crewbank").empty();
+                var table = $('<table></table>');
+                $(response).each(function (index, item) {
+                    var i = parseInt(index) + 1;
+                    table.append($('<tr></tr>')
+                        .append($('<td style="width: 100%;"></td>')
+                            .append($('<input style="float: left;" class="checktest" onchange="getbankid()">').attr({
+                                'id': 'chk' + i,
+                                'type': 'checkbox',
+                                'name': 'bankid',
+                                'value': item.crewBankDetailsId
+                            }))
+                            .append($("<label style='float: right;width:97%'>").attr(
+                                {
+                                    'for': 'chk' + i
+                                })
+                                .text(item.fulldetail))
+                        ));
+                });
+                $('#crewbank').append(table);              
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+        if (signOffDate != null && signOffDate != '') {
+            $.ajax({
+                type: "GET",
+                url: "/Portagebill/getBOWData",
+                data: { 'crewId': CrewId, 'crewListId': CrewListId, 'signOffDate': signOffDate },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    currency = (response[0].currency || 0);
+                    from = response[0].from;
+                    to = response[0].to;
+                    basicwage = (response[0].basicWages || 0);
+                    FixedGtOT = (response[0].fixedGtOT || 0);
+                    leavePay = (response[0].leavePay || 0);
+                    UniformAllow = (response[0].uniformAllow || 0);
+                    PensionFund = (response[0].pensionFund || 0);
+                    securityAllow = (response[0].securityAllow || 0);
+                    OtherAllow = (response[0].otherAllow || 0);
+                    numberofdays = (response[0].numberofday || 0);
+                    otherEarnings = (response[0].otherEarnings || 0);
+                    reimbursement = (response[0].reimbursement || 0);
+                    portageBillId = (response[0].portageBillId || 0);
+                    ca = (response[0].cashAdvance || 0);
+                    bs = (response[0].bondedStores || 0);
+                    od = (response[0].otherDeductions || 0);
+                    allotment = (response[0].allotments || 0);
+                    allotment2 = (response[0].otHours || 0);
+                    othour = (response[0].otHours || 0);
+                    extraot = (response[0].extraot || 0);
+                    $("#signOffdate").val(response[0].signOffDate);
+                    transitDays = (response[0].transitDays || 0);
+                    $("#CrewId").val((response[0].crewId || 0));
+                    $("#CrewListId").val((response[0].crewListId || 0));
+                    $("#ContractId").val((response[0].contractId || 0));
+                    $("#PortageBillId").val((response[0].portageBillId || 0));
+                    $("#From").val((response[0].from || 0));
+                    $("#To").val((response[0].to || 0));
+                    $("#Days").val((response[0].days || 0));
+                    $("#Vesselid").val((response[0].vesselid || 0));
+                    avc = (response[0].avc || 0);
+                    gratuity = (response[0].gratuity || 0);
+                    indPFAmount = (response[0].gratuity || 0);
+                    $("#Avc").val(avc);
+                    $("#Gratuity").val(gratuity);
+                    $("#IndPfamount").val(indPFAmount);
+                    nigpfAmount = (response[0].pfAmount || 0);
+
+                    var vid = $('#vesselid').val();
+                    var month = $('#month').val();
+                    var year = $('#year').val();
+                    console.log(vid, month, year)
+                    $.ajax({
+                        type: "GET",
+                        url: "/Portagebill/GetBankAllotment",
+                        data: { 'vesselId': vid, 'month': month, 'year': year, 'crewid': CrewId, 'ispromoted': 'no' },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response)
+                        },
+                        })
 
 
+                    if (portageBillId == 0) {
+                        $("#cashAdvance").val(0);
+                        $("#bondedStores").val(0);
+                        $("#otherDeductions").val(0);
+                        $("#allotments").val(0); $("#allotment2").val(0);
+                        $("#otHours").val(0);
+                        $("#extraot").val(0);
+                        $("#earningother").val(otherEarnings);
+                        $("#transitDays").val(0);
+                        $("#reimbursement").val(reimbursement);
+                    }
+                    else {
+                        $("#cashAdvance").val(ca);
+                        $("#bondedStores").val(bs);
+                        $("#otherDeductions").val(od);
+                        $("#allotments").val(allotment);
+                        $("#otHours").val(othour);
+                        $("#extraot").val(extraot);
+                        $("#earningother").val(otherEarnings);
+                        $("#transitDays").val(transitDays);
+                        $("#reimbursement").val(reimbursement);
 
+                        totalearning = (response[0].totalPayable || 0);
+                        totaldeduction = (response[0].totalDeductions || 0);
+                        finalbal = (response[0].finalBalance || 0);
+                        $("#totalpay").text(totalearning);
+                        $("#totaldeduc").text(totaldeduction);
+                        $("#finalbal").text(finalbal);
+                        $("#TotalPayable").val(totalearning);
+                        $("#TotalDeductions").val(totaldeduction);
+                        $("#FinalBalance").val(finalbal);
+                    }
+                    otrate = (response[0].otrate || 0);
+                    prevMonthBal = (response[0].prevMonthBal || 0);
+                    transitwage = (response[0].transitwage || 0);
+                    days = (response[0].totalDays || 0);
+                    authorityDeduction = (response[0].authorityDeduction || 0);
+                    UDdeduction = (response[0].uDdeduction || 0);
+                    WFdeduction = (response[0].wFdeduction || 0);
+                    WHTdeduction = (response[0].whTdeduction || 0);
+                    udAmount = (response[0].wfAmount || 0);
+                    wFdeduction = (response[0].wFdeduction || 0);
+                    wfAmount = (response[0].wfAmount || 0);
+                    leaveWagesBF = (response[0].leaveWagesBF || 0);
+                    $("#leaveWagesBF").val(leaveWagesBF);
+                    // totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings)
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    }
+
+    /* function to get the selected bankid */
+    function getbankid() {
+        selectbankids = [];
+        var id = 0;
+        $('input[name=bankid]').each(function (index, item) {
+            if ($(this).is(":checked")) {
+                id = $(this).val();
+                selectbankids.push(id);
+            }
+            else {
+                var index = selected.indexOf(id);
+                if (index > -1) {
+                    selectbankids.splice(index, 1);
+                }
+            }
+        });
+        console.log(selectbankids);
+        if (selectbankids > 1)
+            $("#allotment2").show();
+            else
+            $("#allotment2").hide();       
+    }
+
+    /* function to save the bow data */
+    $("#savebowdata").click(function () {
+        var formData = new FormData();
+        formData.append("gratuity", '15');
+        console.log(formData)
+        var valdata = $("#bowform").serialize();
+        $.ajax({
+            url: "/Portagebill/AddPortageBill",
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: valdata,
+            success: function (response) {
+                if (response == "success") {
+                    console.log("success", selectbankids)
+                    $.each(selectbankids, function (k, v) {
+                        console.log(k, v)
+                        var selectedbankid = v;
+                        console.log(selectedbankid)
+                        var model = "";
+                        if (k == 1) {
+                            model = {
+                                "Crew": $('#CrewId').val(),
+                                "VesselId": $('#Vesselid').val(),
+                                'BankId': selectedbankid,
+                                "From": $('#From').val(),
+                                "To": $('#To').val(),
+                                'Allotments': $('#allotments').val(),
+                                "IsMidMonthAllotment": 0
+                            }
+                        }
+                        else {
+                            model = {
+                                "Crew": $('#CrewId').val(),
+                                "VesselId": $('#Vesselid').val(),
+                                'BankId': selectedbankid,
+                                "From": $('#From').val(),
+                                "To": $('#To').val(),
+                                'Allotments': $('#allotment2').val(),
+                                "IsMidMonthAllotment": 0
+                            }
+                        }
+                        console.log(model)
+                        $.ajax({
+                            url: "/Portagebill/AddBankAllotment",
+                            type: "POST",
+                            dataType: 'json',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                            data: { item: model, 'itemlength': selectbankids },
+                            success: function (response) {
+                                if (response == "success") {
+                                    $("#bowform").get(0).reset;
+                                    $('#bowmodel').modal('hide');
+                                }
+                            },
+                            failure: function (response) {
+                                alert(response.responseText);
+                            },
+                            error: function (response) {
+                                alert(response.responseText);
+                            }
+                        });
+                    });
+                    //for (var i = 0; i < selectbankids; i++) {
+                    //    var selectedbankid = selectbankids[i];
+
+                    //    console.log(selectedbankid)
+                    //    var formData = new FormData();
+                    //    formData.append('CrewId', '1300');
+                    //    formData.append('Vesselid', $('#Vesselid').val());
+                    //    formData.append('BankId', selectedbankid);
+                    //    console.log(formData)
+                    //    $.ajax({
+                    //        url: "/Portagebill/AddBankAllotment",
+                    //        type: "POST",
+                    //        dataType: 'json',
+                    //        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    //        data: { formData, 'itemlength': selectbankids },
+                    //        success: function (response) {
+                    //            if (response == "success") {
+                    //                $("#bowform").get(0).reset;
+                    //                $('#bowmodel').modal('hide');
+                    //            }
+                    //        },
+                    //        failure: function (response) {
+                    //            alert(response.responseText);
+                    //        },
+                    //        error: function (response) {
+                    //            alert(response.responseText);
+                    //        }
+                    //    });
+                    //}
+                    $("#bowform").get(0).reset;
+                    $('#bowmodel').modal('hide');
+                    var url = window.location.href;
+                    console.log(url);
+                    location.reload(true);
+                }
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    });
+
+    function BankallotmentSubmit() {
+        for (var i = 0; i < selectbankids; i++) {
+            var selectedbankid = selectbankids[i];
+            console.log(selectedbankid)
+            var formData = new FormData();
+            formData.append('CrewId', '1300');
+            formData.append('Vesselid', $('#Vesselid').val());
+            formData.append('BankId', selectedbankid);
+
+            $.ajax({
+                url: "/Portagebill/AddBankAllotment",
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { formData, 'itemlength': selectbankids },
+                success: function (response) {
+                    if (response == "success") {
+                        $("#bowform").get(0).reset;
+                        $('#bowmodel').modal('hide');
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    }
+
+    /* function to calculate on load of signoffdate slection */
+    function calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, totaldays, numberofdays, transitwage, otherEarnings) {
+        var total = (parseInt(basicwage) * totaldays / numberofdays) + (parseInt(FixedGtOT) * totaldays / numberofdays) + (parseInt(leavePay) * totaldays / numberofdays)
+            + (parseInt(UniformAllow) * totaldays / numberofdays) + (parseInt(PensionFund) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays)
+            + (parseInt(OtherAllow) * totaldays / numberofdays) + transitwage + otherEarnings;
+        return total;
+    }
+
+    /* function to calculate ot with earning */
+    function calculateot() {
+        othour = $("#otHours").val();
+        otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
+        transitDays = $("#transitDays").val();
+        transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        otherEarnings = parseFloat($("#earningother").val());
+        reimbursement = parseFloat($("#reimbursement").val());
+        totalearning = Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + otherEarnings + reimbursement);
+        finalbal = Math.round(totalearning - totaldeduction);
+        $("#totalpay").text(totalearning);
+        $("#totaldeduc").text(totaldeduction);
+        $("#finalbal").text(finalbal);
+        $("#TotalPayable").val(totalearning);
+        $("#TotalDeductions").val(totaldeduction);
+        $("#FinalBalance").val(finalbal);
+    }
+
+    /* function to calculate the earning   */
+    function calculateearning() {
+        othour = $("#otHours").val();
+        otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
+        otherEarnings = parseFloat($("#earningother").val());
+        transitDays = $("#transitDays").val();
+        transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        reimbursement = parseFloat($("#reimbursement").val());
+        totalearning = Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
+        //console.log((parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
+        //    , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
+        //    , (parseInt(OtherAllow) * days / numberofdays), parseFloat(transitwage), parseFloat(otherEarnings), parseFloat(reimbursement));
+        // console.log(totalearning - totaldeduction);
+        finalbal = Math.round(totalearning - totaldeduction);
+        $("#totalpay").text(totalearning);
+        $("#totaldeduc").text(totaldeduction);
+        $("#finalbal").text(finalbal);
+        $("#TotalPayable").val(totalearning);
+        $("#TotalDeductions").val(totaldeduction);
+        $("#FinalBalance").val(finalbal);
+        this.calculatededuction();
+        //ca = $("#cashAdvance").val();
+        //bs = $("#bondedStores").val();
+        //od = $("#otherDeductions").val();
+        //allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
+        //console.log(parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment))
+        //totaldeduction = (parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment));
+        //finalbal = totalearning - totaldeduction;
+        //this.calculatededuction();
+        //$("#totalpayable").text(totalearning);
+        //$("#totaldeduction").text(totaldeduction);
+        //$("#finalbal").text(finalbal);
+    }
+
+    /* Its function to calculate the deduction  */
+    function calculatededuction() {
+        if (currency == "NGN") {
+            ca = $("#cashAdvance").val();
+            bs = $("#bondedStores").val();
+            od = $("#otherDeductions").val();
+            allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
+            /* console.log(parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment))*/
+            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + parseFloat(allotment) + (parseFloat(totalearning) * UDdeduction / 100) + (parseFloat(totalearning) * WFdeduction / 100) + (parseFloat(totalearning) * WHTdeduction / 100)));
+            udAmount = (parseFloat(totalearning) * UDdeduction / 100);
+            wfAmount = (parseFloat(totalearning) * WFdeduction / 100);
+            tax = (parseFloat(totalearning) * WHTdeduction / 100);
+            $("#wfAmount").val(wfAmount);
+            $("#udAmount").val(udAmount);
+            $("#tax").val(tax);
+        }
+        else {
+            ca = $("#cashAdvance").val();
+            bs = $("#bondedStores").val();
+            od = $("#otherDeductions").val();
+            allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
+            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat(authorityDeduction)));
+        }
+        finalbal = Math.round(totalearning - totaldeduction);
+        $("#totalpay").text(totalearning);
+        $("#totaldeduc").text(totaldeduction);
+        $("#finalbal").text(finalbal);
+        $("#TotalPayable").val(totalearning);
+        $("#TotalDeductions").val(totaldeduction);
+        $("#FinalBalance").val(finalbal);
+    }
+
+    /* Jquery datepicker   */
+    var jQDate = $.noConflict();
+    jQDate(function () {
+        jQDate("#signOffdate").datepicker({
+            dateFormat: 'dd-MM-yyyy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    });
+
+    /* Bow generate pop
+   on sifoof date slection fill the data
+   */
+    jQDate('#signOffdate').datepicker({
+        onSelect: function (dateText) {
+            var CrewId = sessionStorage.getItem("crewid")
+            var crewListId = sessionStorage.getItem("CrewListId");
+            alert(CrewId)
+            $.ajax({
+                type: "GET",
+                url: "/Portagebill/getBOWData",
+                data: { 'crewId': CrewId, 'crewListId': crewListId, 'signOffDate': dateText },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    currency = (response[0].currency || 0);
+                    from = response[0].from;
+                    to = response[0].to;
+                    basicwage = (response[0].basicWages || 0);
+                    FixedGtOT = (response[0].fixedGtOT || 0);
+                    leavePay = (response[0].leavePay || 0);
+                    UniformAllow = (response[0].uniformAllow || 0);
+                    PensionFund = (response[0].pensionFund || 0);
+                    securityAllow = (response[0].securityAllow || 0);
+                    OtherAllow = (response[0].otherAllow || 0);
+                    numberofdays = (response[0].numberofday || 0);
+                    otherEarnings = (response[0].otherEarnings || 0);
+                    reimbursement = (response[0].reimbursement || 0);
+                    portageBillId = (response[0].portageBillId || 0);
+                    appliedCBA = (response[0].appliedCBA || 0);
+
+                    ca = (response[0].cashAdvance || 0);
+                    bs = (response[0].bondedStores || 0);
+                    od = (response[0].otherDeductions || 0);
+                    allotment = (response[0].allotments || 0);
+                    allotment2 = (response[0].otHours || 0);
+                    othour = (response[0].otHours || 0);
+                    extraot = (response[0].extraot || 0);
+                    transitDays = (response[0].transitDays || 0);
+
+                    avc = (response[0].avc || 0);
+                    gratuity = (response[0].gratuity || 0);
+                    indPFAmount = (response[0].gratuity || 0);
+                    nigpfAmount = (response[0].pfAmount || 0);
+                    $("#Avc").val(avc);
+                    $("#Gratuity").val(gratuity);
+                    $("#IndPfamount").val(indPFAmount);
+                    //UDdeduction = (response[0].uDdeduction || 0);
+                    //WFdeduction = (response[0].wFdeduction || 0);
+                    //WHTdeduction = (response[0].whTdeduction || 0);
+                    WHTdeduction = (response[0].whTdeduction || 0);
+                    tax = (response[0].tax || 0);
+                    UDdeduction = (response[0].uDdeduction || 0);
+                    udAmount = (response[0].wfAmount || 0);
+                    WFdeduction = (response[0].wFdeduction || 0);
+                    wfAmount = (response[0].wfAmount || 0);
+                    console.log(whTdeduction, wFdeduction, UDdeduction)
+                    $("#CrewId").val((response[0].crewId || 0));
+                    $("#CrewListId").val((response[0].crewListId || 0));
+                    $("#ContractId").val((response[0].contractId || 0));
+                    $("#PortageBillId").val((response[0].portageBillId || 0));
+                    $("#From").val((response[0].from || 0));
+                    $("#To").val((response[0].to || 0));
+                    $("#Days").val((response[0].days || 0));
+                    $("#Vesselid").val((response[0].vesselid || 0));
+                    if (portageBillId == 0) {
+                        $("#cashAdvance").val(0);
+                        $("#bondedStores").val(0);
+                        $("#otherDeductions").val(0);
+                        $("#allotments").val(0); $("#allotment2").val(0);
+                        $("#otHours").val(0);
+                        $("#extraot").val(0);
+                        $("#earningother").val(otherEarnings);
+                        $("#transitDays").val(0);
+                        $("#reimbursement").val(reimbursement);
+                    }
+                    else {
+                        //ca = (response[0].cashAdvance || 0);
+                        //bs = (response[0].bondedStores || 0);
+                        //od = (response[0].otherDeductions || 0);
+                        //allotment = (response[0].allotments || 0);
+                        //allotment2 = (response[0].otHours || 0);
+                        $("#cashAdvance").val(ca);
+                        $("#bondedStores").val(bs);
+                        $("#otherDeductions").val(od);
+                        $("#allotments").val(allotment);
+                        $("#otHours").val(othour);
+                        $("#extraot").val(extraot);
+                        $("#earningother").val(otherEarnings);
+                        $("#transitDays").val(transitDays);
+                        $("#reimbursement").val(reimbursement);
+                    }
+                    otrate = (response[0].otrate || 0);
+                    prevMonthBal = (response[0].prevMonthBal || 0);
+                    transitwage = (response[0].transitwage || 0);
+                    days = (response[0].totalDays || 0);
+                    authorityDeduction = (response[0].authorityDeduction || 0);
+                    leaveWagesBF = (response[0].leaveWagesBF || 0);
+                    $("#leaveWagesBF").val(leaveWagesBF);
+                    console.log(basicwage, ca, bs, od, allotment);
+                    console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+                    totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings)
+                    totaldeduction = (ca + bs + od + allotment);
+                    $("#totalpay").text(totalearning);
+                    $("#totaldeduc").text(totaldeduction);
+                    $("#finalbal").text(finalbal);
+                    $("#TotalPayable").val(totalearning);
+                    $("#TotalDeductions").val(totaldeduction);
+                    $("#FinalBalance").val(finalbal);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    });
+
+
+    /* portage entry pop get data */
+    function onsignersdata(crewname, rank, currency, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, UniformAllow, PensionFund, otherallow,
+        OTHours, otrate, UDdeduction, WFdeduction, WHTdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal,onboard)
+    {
+        $("#pcrewrank").text(rank);
+        $("#pcrewname").text(crewname);
+        $("#pcurrency").text(currency);
+        $("#portageBillPopup").modal('show');
+        var vid = $('#vesselid').val();
+        var month = $('#month').val();
+        var year = $('#year').val();
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetCrewBankDetails",
+            data: { 'crewId': CrewId },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#pcrewbank").empty();
+                var table = $('<table></table>');
+                $(response).each(function (index, item) {
+                    var i = parseInt(index) + 1;
+                    table.append($('<tr></tr>')
+                        .append($('<td style="width: 100%;"></td>')
+                            .append($('<input style="float: left;" onchange="getportagebillbankid()">').attr({
+                                'id': 'chk' + i,
+                                'type': 'checkbox',
+                                'name': 'pbankid',
+                                'value': item.crewBankDetailsId
+                            }))
+                            .append($("<label style='float: right;width:97%'>").attr(
+                                {
+                                    'for': 'chk' + i
+                                })
+                                .text(item.fulldetail))
+                        ));
+                });
+                $('#pcrewbank').append(table);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+
+        if (PortageBillId != 0 && PortageBillId != '') {
+            $.ajax({
+                type: "GET",
+                url: "/Portagebill/GetDataByPoratgeId",
+                data: { 'portageid': PortageBillId, 'crewid': CrewId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    from = response.from;
+                    to = response.to;
+                    basicwage = (BasicWages || 0);
+                    FixedGtOT = (fixott || 0);
+                    leavePay = (LeavePay || 0);
+                    UniformAllow = (UniformAllow || 0);
+                    PensionFund = (PensionFund || 0);
+                    securityAllow = (SecurityAllow || 0);
+                    OtherAllow = (otherallow || 0);
+                    numberofdays = (numberofday || 0);
+                    otherEarnings = (response.otherEarnings || 0);
+                    reimbursement = (response.reimbursement || 0);
+                    portageBillId = (response.portageBillId || 0);
+                    appliedCBA = (response.appliedCBA || 0);
+                    ca = (response.cashAdvance || 0);
+                    bs = (response.bondedStores || 0);
+                    od = (response.otherDeductions || 0);
+                    allotment = (response.allotments || 0);
+                    allotment2 = (response.otHours || 0);
+                    othour = (response.otHours || 0);
+                    extraot = (response.extraot || 0);
+                    transitDays = (response.transitDays || 0);
+                    avc = (response.avc || 0);
+                    gratuity = (response.gratuity || 0);
+                    indPFAmount = (response.gratuity || 0);
+                    nigpfAmount = (response.pfAmount || 0);
+                    $("#pAvc").val(avc);
+                    $("#pGratuity").val(gratuity);
+                    $("#pIndPfamount").val(indPFAmount);
+                   
+                    WHTdeduction = (response.whTdeduction || 0);
+                    tax = (response.tax || 0);
+                    UDdeduction = (response.uDdeduction || 0);
+                    udAmount = (response.wfAmount || 0);
+                    WFdeduction = (response.wFdeduction || 0);
+                    wfAmount = (response.wfAmount || 0);
+                    console.log(WHTdeduction, WFdeduction, UDdeduction)
+                    $("#pCrewId").val((response.crewId || 0));
+                    $("#pCrewListId").val((response.crewListId || 0));
+                    $("#pContractId").val((response.contractId || 0));
+                    $("#pPortageBillId").val(portageBillId);
+                    $("#pFrom").val((response.from || 0));
+                    $("#pTo").val((response.to || 0));
+                    $("#pDays").val((response.days || 0));
+                    $("#pVesselid").val((response.vesselid || 0));
+                    //if (portageBillId == 0) {
+                    //    $("#pcashAdvance").val(0);
+                    //    $("#pbondedStores").val(0);
+                    //    $("#potherDeductions").val(0);
+                    //    $("#pallotments").val(0); $("#allotment2").val(0);
+                    //    $("#potHours").val(0);
+                    //    $("#pextraot").val(0);
+                    //    $("#pearningother").val(otherEarnings);
+                    //    $("#ptransitDays").val(0);
+                    //    $("#preimbursement").val(reimbursement);
+                    //}
+                    //else {
+                        $("#pcashAdvance").val(ca);
+                        $("#pbondedStores").val(bs);
+                        $("#potherDeductions").val(od);
+                        $("#pallotments").val(allotment);
+                        $("#potHours").val(othour);
+                        $("#pextraot").val(extraot);
+                        $("#pearningother").val(otherEarnings);
+                        $("#ptransitDays").val(transitDays);
+                        $("#preimbursement").val(reimbursement);
+                    //}
+                    otrate = (response.otrate || 0);
+                    prevMonthBal = (response.prevMonthBal || 0);
+                    transitwage = (response.transitwage || 0);
+                    days = (response.days || 0);
+                    authorityDeduction = (response.authorityDeduction || 0);
+                    leaveWagesBF = (response.leaveWagesBF || 0);
+                    $("#pleaveWagesBF").val(leaveWagesBF);
+                    console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+                    totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+                    totalearning = (response.totalPayable || 0);
+                    totaldeduction = (response.totalDeductions || 0);
+                    finalbal = (response.finalBalance || 0);
+                    $("#ptotalpay").text(totalearning);
+                    $("#ptotaldeduc").text(totaldeduction);
+                    $("#pfinalbal").text(finalbal);
+                    $("#pTotalPayable").val(totalearning);
+                    $("#pTotalDeductions").val(totaldeduction);
+                    $("#pFinalBalance").val(finalbal);
+                    $("#ptotalearncurrent").val(totalearncurrent);
+                    $.ajax({
+                        type: "GET",
+                        url: "/Portagebill/GetBankAllotment",
+                        data: { 'vesselId': vid, 'month': month, 'year': year, 'crewid': CrewId, 'ispromoted': 'no' },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                           
+                          //  $('input.type_checkbox[value="6"]').prop('checked', true);
+                            
+
+                            $(response).each(function (index, item) {
+
+                                var i = parseInt(index) + 1;
+                                console.log(i, item, item.bankId)
+                                $('input[name=pbankid][value="'+item.bankId+'"]').prop('checked', true);
+                            });
+                            console.log(response)
+                        },
+                    })
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+        else {
+            console.log(crewname, rank, currency, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, UniformAllow, PensionFund, otherallow,
+                OTHours, otrate, UDdeduction, WFdeduction, WHTdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings,leaveWagesbf,cbaid,prevmonthbal);
+            numberofdays = numberofday;
+            basicwage = BasicWages;
+            FixedGtOT = fixott;
+            securityAllow = SecurityAllow;
+            leavePay = LeavePay;
+            UniformAllow = UniformAllow;
+            PensionFund = PensionFund;
+            OtherAllow = otherallow;
+           // numberofdays = OTHours;
+            otrate = otrate;
+            UDdeduction = UDdeduction;
+            WFdeduction = WFdeduction;
+            WHTdeduction = WHTdeduction;
+            gratuity = Gratuity;
+            indPFAmount = IndPFAmount;
+            avc = AVC;
+            days = TotalDays;
+            transitwage = transitwages;
+            appliedCBA = cbaid;
+            otherEarnings = OtherEarnings;
+            leaveWagesBF = leaveWagesbf;
+            console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+            totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+            totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+            $("#pleaveWagesBF").val(leaveWagesBF);
+            $("#pCrewListId").val(CrewListId);
+            $("#pContractId").val(ContractId);
+            $("#pPortageBillId").val(PortageBillId);
+            $("#pFrom").val(From);
+            $("#pCrewId").val(CrewId);
+            $("#pTo").val(To);
+            $("#pDays").val(TotalDays);
+            $("#pVesselid").val(vesselid);
+            $("#pwhTdeduction").val(WHTdeduction);
+            $("#pUDdeduction").val(UDdeduction);
+            $("#pwFdeduction").val(WFdeduction);
+            $("#pAvc").val(avc);
+            $("#pGratuity").val(gratuity);
+            $("#pIndPfamount").val(indPFAmount);
+            $("#pAppliedCba").val(appliedCBA),
+                console.log(totalearning);
+            $("#ptotalearncurrent").val(totalearncurrent);
+            calculateportageearning();
+        }
+    }
+
+    /* function to get the portagebill selected bankid */
+    function getportagebillbankid() {
+        selectbankids = [];
+        $('input[name=pbankid]').each(function (index, item) {
+            if ($(this).is(":checked")) {             
+                selectbankids.push($(this).val());
+            }
+            else {
+                removeVal(selectbankids, $(this).val());              
+            }
+        });
+        console.log(selectbankids);
+        if (selectbankids.length > 1)
+            $("#pallotment2").show();
+        else
+            $("#pallotment2").hide();
+    }
+    function removeVal(arr, val) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == val)
+                arr.splice(i, 1);
+        }
+    }
+
+    /* Add and update the monthly portage allotment */
+    $("#saveportagedata").click(function () {
+        console.log($("#pTotalDeductions").val(), $("#pLeaveWagesCf").val(), $("#ptotalearncurrent").val());
+        var portageBillVM = {
+            PortageBillId: $("#pPortageBillId").val(),
+            From: $("#pFrom").val(),
+            To: $("#pTo").val(),
+            Vesselid: $("#pVesselid").val(),
+            Othours: $("#pOTHours").val(),
+            Days: $("#pDays").val(),
+            ExtraOt: $("#pextraot").val(),
+            BankId: $("#pBankid").val(),
+            AppliedCba: $("#pAppliedCba").val(),
+            CrewId: $("#pCrewId").val(),
+            CrewListId: $("#pCrewListId").val(),
+            ContractId: $("#pContractId").val(),
+            TotalDeductions: $("#pTotalDeductions").val(),
+            FinalBalance: $("#pFinalBalance").val(),
+            OtherEarnings: $("#pearningother").val(),
+            Reimbursement: $("#preimbursement").val(),
+            CashAdvance: $("#pcashAdvance").val(),
+            BondedStores: $("#pbondedStores").val(),
+            OtherDeductions: $("#potherDeductions").val(),
+            Allotments: parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val()),
+            LeaveWagesBf: $("#pLeaveWagesBf").val(),
+            TotalEarnings: $("#ptotalearncurrent").val(),
+            Remarks: $("#premarks").val(),
+            TransitDays: $("#ptransitDays").val(),
+            OTHours: $("#potHours").val(),
+            TotalPayable: $("#pTotalPayable").val(),
+            LeaveWagesCf: $("#pLeaveWagesCf").val(),
+            AVC: $("#pAvc").val(),
+            IsLeaveWagesCf: $("#pIsLeaveWagesCf").val(),
+            IsTransitApply: $("#pIsTransitApply").val(),
+            IsPromoted: $("#pIsPromoted").val(),
+            Gratuity: $("#pGratuity").val(),
+            IndPfamount: $("#pIndPfamount").val(),
+            IsAddPrevBal: $("#pIsAddPrevBal").val(),
+            IsHoldWageAllotment: $("#pIsHoldWageAllotment").val(),
+            WHTdeduction: $("#pwhTdeduction").val(),
+            UDdeduction: $("#pUDdeduction").val(),
+            WFdeduction: $("#pwFdeduction").val(),
+            Tax: $("#ptax").val(),
+            UDAmount: $("#pudAmount").val(),
+            WFAmount: $("#pwfAmount").val(),
+            LeaveWagesBF: $("#pleaveWagesBF").val(),
+            Allotment2: $("#pallotment2").val(),
+        };
+        $.ajax({
+            url: "/Portagebill/AddPortageBill",
+            type: "POST",
+            data: portageBillVM,
+            dataType: 'json',
+            success: function (response) {
+                savebaksada();
+                alert('Portage Bill Updated');
+                $('#portageBillPopup').modal('hide');
+            }
+        })
+    })
+
+    function savebaksada() {
+        console.log("function hit");
+        console.log($('#pallotments').val(), $('#pallotment2').val())
+        $.each(selectbankids, function (k, v) {
+            console.log(k, v)
+            var selectedbankid = v;
+            console.log(selectedbankid)
+            var model = "";
+            if (k == 1) {
+                model = {
+                    "Crew": $('#pCrewId').val(),
+                    "VesselId": $('#pVesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#pFrom').val(),
+                    "To": $('#pTo').val(),
+                    'Allotments': $('#pallotments').val(),
+                    "IsMidMonthAllotment": 0
+                }
+            }
+            else {
+                model = {
+                    "Crew": $('#pCrewId').val(),
+                    "VesselId": $('#pVesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#pFrom').val(),
+                    "To": $('#pTo').val(),
+                    'Allotments': $('#pallotment2').val(),
+                    "IsMidMonthAllotment": 0
+                }
+            }
+            console.log(model)
+            $.ajax({
+                url: "/Portagebill/AddBankAllotment",
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { item: model, 'itemlength': selectbankids },
+                success: function (response) {
+                    if (response == "success") {
+                    
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    }
+    /* function to calculate ot with earning */
+    function calculateportageot() {
+        othour = $("#potHours").val();
+        otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
+        transitDays = $("#ptransitDays").val();
+        transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        otherEarnings = parseFloat($("#pearningother").val());
+        reimbursement = parseFloat($("#preimbursement").val());
+        totalearning = Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + otherEarnings + reimbursement);
+        finalbal = Math.round(totalearning - totaldeduction);
+        $("#ptotalpay").text(totalearning);
+        $("#ptotaldeduc").text(totaldeduction);
+        $("#pfinalbal").text(finalbal);
+        $("#pTotalPayable").val(totalearning);
+        $("#pTotalDeductions").val(totaldeduction);
+        $("#pFinalBalance").val(finalbal);
+    }
+
+    /* function to calculate the earning   */
+    function calculateportageearning() {
+        console.log("succes");
+        othour = $("#potHours").val();
+        otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
+        otherEarnings = parseFloat($("#pearningother").val());
+        transitDays = $("#ptransitDays").val();
+        transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        reimbursement = parseFloat($("#preimbursement").val());
+        totalearning = Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
+        console.log((parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
+            , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
+            , (parseInt(OtherAllow) * days / numberofdays), parseFloat(transitwage), parseFloat(otherEarnings), parseFloat(reimbursement));
+         console.log(totalearning - totaldeduction);
+        finalbal = Math.round(totalearning - totaldeduction);
+        var leavewagescf = ((leaveWagesBF || 0) + (parseInt(leavePay) * days / numberofdays)).toFixed(2);
+        console.log(leavewagescf);
+        $("#pLeaveWagesCf").val(leavewagescf);
+        $("#ptotalpay").text(totalearning);
+        $("#ptotaldeduc").text(totaldeduction);
+        $("#pfinalbal").text(finalbal);
+        $("#pTotalPayable").val(totalearning);
+        $("#pTotalDeductions").val(totaldeduction);
+        $("#pFinalBalance").val(finalbal);
+        console.log(finalbal, totaldeduction,totalearning);
+        this.calculateportagededuction();
+    }
+
+    /* Its function to calculate the deduction  */
+    function calculateportagededuction() {
+        var leavewagesdeuction = (parseInt(leavePay) * days / numberofdays);
+        if (currency == "NGN") {
+            ca = $("#pcashAdvance").val();
+            bs = $("#pbondedStores").val();
+            od = $("#potherDeductions").val();
+            allotment = parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val());
+            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + leavewagesdeuction + parseFloat(allotment) + (parseFloat(totalearning) * UDdeduction / 100) + (parseFloat(totalearning) * WFdeduction / 100) + (parseFloat(totalearning) * WHTdeduction / 100)));
+            udAmount = (parseFloat(totalearning) * UDdeduction / 100);
+            wfAmount = (parseFloat(totalearning) * WFdeduction / 100);
+            tax = (parseFloat(totalearning) * WHTdeduction / 100);
+            $("#wfAmount").val(wfAmount);
+            $("#udAmount").val(udAmount);
+            $("#tax").val(tax);
+        }
+        else {
+            ca = $("#pcashAdvance").val();
+            bs = $("#pbondedStores").val();
+            od = $("#potherDeductions").val();
+            allotment = parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val());
+            totaldeduction = Math.round(parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat(authorityDeduction) + leavewagesdeuction );
+        }
+        finalbal = Math.round(totalearning - totaldeduction);
+        $("#ptotalpay").text(totalearning);
+        $("#ptotaldeduc").text(totaldeduction);
+        $("#pfinalbal").text(finalbal);
+        $("#pTotalPayable").val(totalearning);
+        $("#pTotalDeductions").val(totaldeduction);
+        $("#pFinalBalance").val(finalbal);
+    }
+
+    /* inputs keyup function for portage entry calculation */
+    //$("#potherEarnings").keyup(function () {
+    //    calculateEarning();
+    //});
+    //$("#preimbursement").keyup(function () {
+    //    calculateEarning();
+    //});
+    //$("#cashAdvance").keyup(function () {
+    //    calculateEarning();
+    //});
+    //$("#bondedStores").keyup(function () {
+    //    calculateEarning();
+    //});
+    //$("#otherDeductions").keyup(function () {
+    //    calculateEarning();
+    //});
+    //$("#allotments").keyup(function () {
+    //    calculateEarning();
+    //});
+
+    /* function to downlaod the salary slip */
+     function DownloadSalarySlip(e) {
+          $.ajax({
+           type: "POST",
+           url: '@Url.Action("VesselPayslip", "Portagebill")',
+           contentType: "application/json; charset=utf-8",
+            dataType: "json",
+                                 }).done(function (data) {
+                                     if (data.fileName != "") {
+           window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+          }
+</script>

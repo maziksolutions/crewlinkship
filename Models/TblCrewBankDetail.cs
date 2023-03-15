@@ -28,6 +28,7 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public string Attachment { get; set; }
         public int? CreatedBy { get; set; }
+        public string Fulldetail => "(" + AccountType + ")" + Beneficiary + "Account Number : " + AccountNumber + "Bank Name : " + BankName + "Bank Address : " + BankAddress;
 
         public virtual TblCity City { get; set; }
         public virtual TblCountry Country { get; set; }
