@@ -973,6 +973,8 @@
                             <input id="ptax" name="ptax" hidden>
                             <input id="pudAmount" name="pudAmount" hidden>
                             <input id="pwfAmount" name="pwfAmount" hidden>
+                            <input id="pBankAllotmentId1" name="pBankAllotmentId1" value="0" hidden>
+                            <input id="pBankAllotmentId2" name="pBankAllotmentId2" value="0" hidden>
                         </div>
                         <div class="col-lg-7" style="padding: 5px 20px; background: #F2F4F8; border:1px solid #e0e0e0">
                             Bank Details*:
@@ -2037,17 +2039,20 @@
                         dataType: "json",
                         success: function (bankallormentdetail) {
                             if (bankallormentdetail.length == 1) {
-
+                                console.log(bankallormentdetail)
                                 selectbankids = []
                                 $("#pallotments").val(bankallormentdetail[0].allotments);
+                                $("#pBankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
                                 $('input[name=pbankid][value="' + bankallormentdetail[0].bankId + '"]').prop('checked', true);
                             }
                             else if (bankallormentdetail.length >= 2) {
                                 $("#pallotments").val(bankallormentdetail[0].allotments);
+                                $("#pBankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
                                 $('input[name=pbankid][value="' + bankallormentdetail[0].bankId + '"]').prop('checked', true);
                                 $("#pallotment2").val(bankallormentdetail[1].allotments);
                                 $("#poratgeallotment2").show();
                                 $('input[name=pbankid][value="' + bankallormentdetail[1].bankId + '"]').prop('checked', true);
+                                $("#pBankAllotmentId2").val(bankallormentdetail[1].bankAllotmentId);
                             }                          
                         },
                     })
@@ -2276,6 +2281,7 @@
             if (k == 0) {
                 console.log(k, v)
                 model = {
+                    "BankAllotmentId": $('#pBankAllotmentId1').val(),
                     "Crew": $('#pCrewId').val(),
                     "VesselId": $('#pVesselid').val(),
                     'BankId': selectedbankid,
@@ -2288,6 +2294,7 @@
             else {
                 console.log(k, v)
                 model = {
+                    "BankAllotmentId": $('#pBankAllotmentId2').val(),
                     "Crew": $('#pCrewId').val(),
                     "VesselId": $('#pVesselid').val(),
                     'BankId': selectedbankid,
