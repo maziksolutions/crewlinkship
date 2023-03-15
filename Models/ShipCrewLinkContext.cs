@@ -91,9 +91,10 @@ namespace crewlinkship.Models
         public virtual DbSet<PortageBillPDFSignoffVM> PortageBillPDFSignoffVM { get; set; }
 
         
-
+            public virtual DbSet<PortageBillBowVM> portageBillBows { get; set; }
         public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
+        public virtual DbSet<tblPBBankAllotment> PBBankAllotment { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -1186,6 +1187,15 @@ namespace crewlinkship.Models
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
             });
+
+
+            modelBuilder.Entity<tblPBBankAllotment>(entity =>
+            {
+                entity.HasKey(e => e.BankAllotmentId);
+                entity.ToTable("tblPBBankAllotment");  
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+            });
+
 
             modelBuilder.Entity<TblPortageBill>(entity =>
             {
