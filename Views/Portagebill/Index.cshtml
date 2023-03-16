@@ -1412,7 +1412,8 @@
                     $("#PortageBillId").val((response[0].portageBillId || 0));
                     $("#From").val((response[0].from || 0));
                     $("#To").val((response[0].to || 0));
-                    $("#Days").val((response[0].days || 0));
+                    days = (response[0].totalDays || 0);
+                    $("#Days").val(days);
                     $("#Vesselid").val((response[0].vesselid || 0));
                     avc = (response[0].avc || 0);
                     gratuity = (response[0].gratuity || 0);
@@ -1486,7 +1487,7 @@
                     otrate = (response[0].otrate || 0);
                     prevMonthBal = (response[0].prevMonthBal || 0);
                     transitwage = (response[0].transitwage || 0);
-                    days = (response[0].totalDays || 0);
+                   
                     authorityDeduction = (response[0].authorityDeduction || 0);
                     UDdeduction = (response[0].uDdeduction || 0);
                     WFdeduction = (response[0].wFdeduction || 0);
@@ -1668,7 +1669,7 @@
                 data: { formData, 'itemlength': selectbankids },
                 success: function (response) {
                     if (response == "success") {
-                        resetportageform();
+                        //resetportageform();
                         $('#bowmodel').modal('hide');
                     }
                 },
@@ -1848,7 +1849,7 @@
                     $("#PortageBillId").val((response[0].portageBillId || 0));
                     $("#From").val((response[0].from || 0));
                     $("#To").val((response[0].to || 0));
-                    $("#Days").val((response[0].days || 0));
+                    $("#Days").val((response[0].totalDays || 0));
                     $("#Vesselid").val((response[0].vesselid || 0));
                     if (portageBillId == 0) {
                         $("#cashAdvance").val(0);
@@ -2146,6 +2147,7 @@
                             console.log(selectbankids);
                         },
                     })
+                    console.log(basicwage, FixedGtOT);
                 },
                 failure: function (response) {
                     alert(response.responseText);
@@ -2422,6 +2424,7 @@
     }
     /* function to calculate ot with earning */
     function calculateportageot() {
+        console.log(basicwage, FixedGtOT)
         othour = $("#potHours").val();
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         console.log(othour, otrate);
@@ -2444,6 +2447,7 @@
 
     /* function to calculate the earning   */
     function calculateportageearning() {
+        console.log(basicwage, FixedGtOT)
         console.log("succes");
         othour = $("#potHours").val();
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
