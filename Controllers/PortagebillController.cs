@@ -277,6 +277,7 @@ namespace crewlinkship.Controllers
                                         _context.SaveChanges();
                                     }
                                 }
+                                return Json("success");
                             }
                         }
                     }
@@ -327,6 +328,7 @@ namespace crewlinkship.Controllers
                                     }
                                 }
                             }
+                            return Json("success");
                         }
                     }
                 }

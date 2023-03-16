@@ -16,137 +16,138 @@
         max-height: 70vh;
     }
 
-    table {
+    .tbl table {
         max-width: max-content;
     }
 
-        table th {
+    .tbl th {
+        position: sticky;
+        top: 0px;
+        background: #ffffff;
+        z-index: 2;
+    }
+
+    .tbl td {
+        background: #fff;
+    }
+
+        .tbl td:first-child,
+        .tbl th:first-child {
             position: sticky;
-            top: 0px;
-            background: #ffffff;
-            z-index: 2;
+            left: 0;
+            z-index: 4;
         }
 
-        table td {
-            background: #fff;
+        .tbl td:nth-child(2),
+        .tbl th:nth-child(2) {
+            position: sticky;
+            left: 51px;
+            z-index: 1;
         }
 
-    td:first-child,
-    th:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 4;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(2) {
+            z-index: 3;
+        }
 
-    td:nth-child(2),
-    th:nth-child(2) {
-        position: sticky;
-        left: 51px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(3),
+        .tbl th:nth-child(3) {
+            position: sticky;
+            left: 148px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(2) {
-        z-index: 3;
-    }
-
-    td:nth-child(3),
-    th:nth-child(3) {
-        position: sticky;
-        left: 148px;
-        z-index: 1;
-    }
-
-    td:first-child,
-    th:nth-child(3) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(3) {
+            z-index: 3;
+        }
 
 
-    td:nth-child(4),
-    th:nth-child(4) {
-        position: sticky;
-        left: 235px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(4),
+        .tbl th:nth-child(4) {
+            position: sticky;
+            left: 235px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(4) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(4) {
+            z-index: 3;
+        }
 
 
-    td:nth-child(5),
-    th:nth-child(5) {
-        position: sticky;
-        left: 280px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(5),
+        .tbl th:nth-child(5) {
+            position: sticky;
+            left: 280px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(5) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(5) {
+            z-index: 3;
+        }
 
-    td:nth-child(6),
-    th:nth-child(6) {
-        position: sticky;
-        left: 367px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(6),
+        .tbl th:nth-child(6) {
+            position: sticky;
+            left: 367px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(6) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(6) {
+            z-index: 3;
+        }
 
-    td:nth-child(7),
-    th:nth-child(7) {
-        position: sticky;
-        left: 470px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(7),
+        .tbl th:nth-child(7) {
+            position: sticky;
+            left: 470px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(7) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(7) {
+            z-index: 3;
+        }
 
-    td:nth-child(8),
-    th:nth-child(8) {
-        position: sticky;
-        left: 516px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(8),
+        .tbl th:nth-child(8) {
+            position: sticky;
+            left: 516px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(8) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(8) {
+            z-index: 3;
+        }
 
-    td:nth-child(9),
-    th:nth-child(9) {
-        position: sticky;
-        left: 559px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(9),
+        .tbl th:nth-child(9) {
+            position: sticky;
+            left: 559px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(9) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(9) {
+            z-index: 3;
+        }
 
-    td:nth-child(10),
-    th:nth-child(10) {
-        position: sticky;
-        left: 638px;
-        z-index: 1;
-    }
+        .tbl td:nth-child(10),
+        .tbl th:nth-child(10) {
+            position: sticky;
+            left: 638px;
+            z-index: 1;
+        }
 
-    td:first-child,
-    th:nth-child(10) {
-        z-index: 3;
-    }
+        .tbl td:first-child,
+        .tbl th:nth-child(10) {
+            z-index: 3;
+        }
+
 
     .tabs {
         width: 100%;
@@ -353,7 +354,7 @@
                             <div class="tbl-container">
                                 <div class="tbl-fixed">
                                     <div id="tab1" class="tab active">
-                                        <table mat-table id="tblonbaord" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                        <table mat-table id="tblonbaord" class="tbl table table-hover table-bordered mb-0 crew-table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th></th>
@@ -498,7 +499,7 @@
                                         </table>
                                     </div>
                                     <div id="tab2" class="tab">
-                                        <table mat-table id="tblpromotion" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                        <table mat-table id="tblpromotion" class="tbl table table-hover table-bordered mb-0 crew-table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Sr.No.</th>
@@ -620,7 +621,7 @@
                                         </table>
                                     </div>
                                     <div id="tab3" class="tab">
-                                        <table mat-table id="tbloffsigners" class="table table-hover table-bordered mb-0 crew-table table-striped">
+                                        <table mat-table id="tbloffsigners" class="tbl table table-hover table-bordered mb-0 crew-table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Sr.No.</th>
@@ -769,8 +770,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Generate Bow</h4>
+                <h4 class="modal-title">Generate Bow</h4> <button type="button" onclick="resetbowform()" class="close" data-dismiss="modal">&times;</button>
             </div> <form id="bowform">
                 <div class="modal-body">
                     <div style="Color:red; padding-bottom:10px; font-size: 12px !important;"> </div>
@@ -853,7 +853,7 @@
                             </div>
                             <div class="row">
                                 <div class="col form-group input-container">
-                                    <label for="earningother">OT Earning</label>
+                                    <label for="earningother">Other Earning</label>
                                     <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onchange="calculateearning()" name="earningother" id="earningother">
                                 </div>
                                 <div class="col form-group input-container">
@@ -913,7 +913,7 @@
                 </div>
                 <div class="modal-footer">
                     <Button type="submit" name="submit" id="savebowdata" class="btn btn-success">Submit</Button>
-                    <Button type="button" class="btn btn-default" data-dismiss="modal">Close</Button>
+                    <Button type="button" onclick="resetbowform()" class="btn btn-default" data-dismiss="modal">Close</Button>
                 </div>
             </form>
         </div>
@@ -1003,7 +1003,7 @@
                                     <input placeholder="OT Earning" type="number" class="form-control" value="0" name="pextraot" readonly id="pextraot" required>
                                 </div>
                                 <div class="col form-group input-container">
-                                    <label for="pearningother">OT Earning</label>
+                                    <label for="pearningother">Other Earning</label>
                                     <input placeholder="Other Earnings" class="form-control" type="number" value="0" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
                                 </div>
                             </div>
@@ -1211,25 +1211,26 @@
         display: block;
     }
 
-    table {
+    .tbl {
         table-layout: fixed;
         width: 100%;
         *margin-left: -100px; /*ie7*/
     }
 
-    td, th {
-        vertical-align: top;
-        border-top: 1px solid #ccc;
-        padding: 10px;
-        width: 100px;
-    }
+        .tbl td, .tbl th {
+            vertical-align: top;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            width: 100px;
+        }
 
-    th {
-        /*  position:absolute;
+        .tbl th {
+            /*  position:absolute;
         *position: relative; /*ie7*/
-        /*  left:0; */
-        width: 100px;
-    }
+            /*  left:0; */
+            width: 100px;
+        }
+
 
     .hard_left {
         position: absolute;
@@ -1632,10 +1633,10 @@
                     //            alert(response.responseText);
                     //        }
                     //    });
-                    //}
-                    resetbowform();
+                    //}                   
                     alert("Bow data has been saved.")
                     $('#bowmodel').modal('hide');
+                    resetbowform();
                     var url = window.location.href;                   
                     location.reload(true);
                 }
@@ -1698,7 +1699,7 @@
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         otherEarnings = parseFloat($("#earningother").val());
         reimbursement = parseFloat($("#reimbursement").val());
-        totalearning = otearning+ Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+        totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + otherEarnings + reimbursement);
         finalbal = Math.round(totalearning - totaldeduction);
@@ -1719,7 +1720,7 @@
         transitDays = $("#transitDays").val();
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         reimbursement = parseFloat($("#reimbursement").val());
-        totalearning = (otearning||0)+ Math.round((parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
+        totalearning = Math.round( parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
         console.log((otearning || 0),(parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
@@ -1796,7 +1797,6 @@
         onSelect: function (dateText) {
             var CrewId = sessionStorage.getItem("crewid")
             var crewListId = sessionStorage.getItem("CrewListId");
-            alert(CrewId)
             $.ajax({
                 type: "GET",
                 url: "/Portagebill/getBOWData",
@@ -1908,6 +1908,7 @@
     /* reset bow form data
   */
     function resetbowform() {
+        $("#signOffdate").val("");
         $("#PortageBillId").val(0);
         $("#From").val(0);
         $("#To").val(0);
@@ -1957,7 +1958,7 @@
     }
 
     /* portage entry pop get data */
-    function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, UniformAllow, PensionFund, otherallow,
+    function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, uniformallow, pensionfund, otherallow,
         OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment,onboard)
     {
         nigpfAmount= npfamount;
@@ -2029,8 +2030,8 @@
                     basicwage = (BasicWages || 0);
                     FixedGtOT = (fixott || 0);
                     leavePay = (LeavePay || 0);
-                    UniformAllow = (UniformAllow || 0);
-                    PensionFund = (PensionFund || 0);
+                    UniformAllow = (uniformallow || 0);
+                    PensionFund = (pensionfund || 0);
                     securityAllow = (SecurityAllow || 0);
                     OtherAllow = (otherallow || 0);
                     numberofdays = (numberofday || 0);
@@ -2049,7 +2050,6 @@
                     avc = (response.avc || 0);
                     gratuity = (response.gratuity || 0);
                     indPFAmount = (response.gratuity || 0);
-                    nigpfAmount = (response.pfAmount || 0);
                     $("#pAvc").val(avc);
                     $("#pGratuity").val(gratuity);
                     $("#pIndPfamount").val(indPFAmount);
@@ -2156,15 +2156,15 @@
             });
         }
         else {
-            console.log(crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, UniformAllow, PensionFund, otherallow,
+            console.log(crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, uniformallow, pensionfund, otherallow,
                 OTHours, OtRate, UDdeduction, WFdeduction, WHTdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings,leaveWagesbf,cbaid,prevmonthbal);
             numberofdays = numberofday;
             basicwage = BasicWages;
             FixedGtOT = fixott;
             securityAllow = SecurityAllow;
             leavePay = LeavePay;
-            UniformAllow = UniformAllow;
-            PensionFund = PensionFund;
+            UniformAllow = uniformallow;
+            PensionFund = pensionfund;
             OtherAllow = otherallow;
            // numberofdays = OTHours;
             otrate = OtRate;
