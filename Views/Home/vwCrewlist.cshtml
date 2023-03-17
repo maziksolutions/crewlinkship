@@ -32,7 +32,7 @@
         <div class="content-body">
             <div class="row match-height" id="switch">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <div class="card m-b-0">                       
+                    <div class="card m-b-0">
                         <div id='myVesselModal' class='modal'>
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -79,11 +79,11 @@
                                                 }
                                                 @if (item.Reliever1 > 0 && item.Reliever?.Status == "Sign In transit")
                                                 {
-                                            <a class="dropdown-item" style="width:15%; float:right;">
-                                                <i class="fa fa-check-circle green"></i>
-                                            </a>
+                                                    <a class="dropdown-item" style="width:15%; float:right;">
+                                                        <i class="fa fa-check-circle green"></i>
+                                                    </a>
                                                 }
-</td>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -185,7 +185,7 @@
                                 if (name == "IMO") {
                                     url =('@Url.Action("GenerateIMOPDF", "Home")');
 
-                                   
+
                                     }
                                 if (name == "FPD01") {
                                     url =('@Url.Action("generateFPD01", "Home")');
@@ -225,37 +225,36 @@
                                                 $("#activitySignOnId").val(response.result?.activitySignOnId);
                                                 $("#rankCode").html(response.result?.crew?.firstName + ' ' + (response.result?.crew?.middelName ?? '') + ' ' + response.result?.crew?.lastName + '(' + response.result?.rank?.code + ')');
                                                 $("#signOnReason").val(response.result?.signOnReason?.reason);
-                                                var tdate = new Date(response.result?.expectedTravelDate);                                              
+                                                var tdate = new Date(response.result?.expectedTravelDate);
                                                 var tday = tdate.getDate();
                                                 var tmonth = tdate.getMonth() + 1;
                                                 var tyear = tdate.getFullYear();
-                                                var tformat = tmonth + "/" + tday + "/" + tyear;
+                                                var tformat = tday + "/" + tmonth + "/" + tyear;
                                                 $("#signOnDate").val(tformat);
 
 
                                                 $("#extraCrewOnBoard").val(response.result?.extraCrewOnBoard);
-                                                
-
                                                 var expdate = new Date(response.result?.expectedSignOnDate);
                                                 var expday = expdate.getDate();
                                                 var expmonth = expdate.getMonth() + 1;
                                                 var expyear = expdate.getFullYear();
-                                                var expformat = expmonth + "/" + expday + "/" + expyear;
+
+                                                var expformat = expday + "/" + expmonth + "/" + expyear;
                                                 $("#exportSignOn").val(expformat);
 
                                                 $("#durationDays").val(response.result?.duration);
 
                                                 var rdate = new Date(response.result?.reliefDate);
-                                               
+
                                                 var rday = rdate.getDate();
                                                 var rmonth = rdate.getMonth() + 1;
                                                 var ryear = rdate.getFullYear();
-                                                var rformat = rmonth + "/" + rday + "/" + ryear;
+                                                var rformat = rday + "/" + rmonth + "/" + ryear;
                                                 $("#reliefDate").val(rformat);
 
                                                 $("#remarks").val(response.result?.remarks);
                                                 $("#travelToVesselPopup").modal('show');
-                                                
+
                                                 /*seaportId Dropdown*/
 
                                                 var seaportId = "<option value=" + response.result?.seaport?.seaportId + ">" + response.result?.seaport?.seaportName + "</option>";
@@ -353,10 +352,10 @@
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            <label>Expect Sign-On-Date</label>
-                            <input type="text" id="exportSignOn" class="form-control input-sm" />
+                            <label>Sign-On-Date</label>
+                            <input id="exportSignOn" class="form-control input-sm" />
                         </div>
-                    </div>                
+                    </div>
 
 
                 </div>
@@ -384,8 +383,8 @@
                             <textarea class="form-control" id="remarks"></textarea>
                         </div>
                     </div>
-                </div>              
-             
+                </div>
+
             </div>
             <div class="modal-footer">
                 <Button type="submit" id="updateSignOn" class="btn btn-dark">Submit</Button>
@@ -395,12 +394,18 @@
         </div>
     </div>
 </div>
+<link type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+      rel="stylesheet" />
+<script type="text/javascript"
+        src="https://code.jquery.com/jquery-1.12.4.js">
+</script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
+</script>
 
 
-
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+@*<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>*@
 <script type="text/javascript">
 @*@Change Country To SeaPort*@
     $(function () {
@@ -441,7 +446,7 @@
                 data: tblActivitySignOn,
                 dataType: 'json',
                 success: function (response) {
-                    alert('Activity performed successfully');                   
+                    alert('Activity performed successfully');
                     $('#travelToVesselPopup').modal('hide');
                     window.location.reload();
                    //$('#travelToVesselPopup').on('hide', function () {
@@ -460,25 +465,32 @@
     $(function () {
         ; (function ($, window, document, undefined) {
             jQDate("#exportSignOn").on("change", function () {
-                var datecal = new Date($("#exportSignOn").val());
-                var duration = $("#durationDays").val().split('.');
-                var month = duration[0];
-                var days = 0;
-                var time = datecal.getTime();
-                if (duration[1] > 0)
-                    days = 15;
-                if (!isNaN(datecal.getTime())) {
-                    if (days > 0)
-                        datecal.setDate(datecal.getDate() + Number(days));
-                    datecal.setMonth(datecal.getMonth() + Number(month));
-                    console.log(datecal.toInputFormat().toString())
-                    var dayre = datecal.getDate();
-                    var monthre = (datecal.getMonth()) + 1;
-                    var yearre = datecal.getFullYear();
-                    var formatre = monthre + "/" + dayre + "/" + yearre;
+                if ($("#exportSignOn").val() != null) {
+                    var datecal = $("#exportSignOn").val();
+                    var customDate = new Date(datecal.split('/')[1] + '/' + datecal.split('/')[0] + '/' + datecal.split('/')[2]);
+                    var duration = $("#durationDays").val().split('.');
+                    var month = duration[0];
+                    var days = 0;
+                    var time = customDate.getTime();
+                    if (duration[1] > 0)
+                        days = 15;
+                    if (!isNaN(customDate.getTime())) {
+                        if (days > 0)
+                            customDate.setDate(customDate.getDate() + Number(days));
+                        customDate.setMonth(customDate.getMonth() + Number(month));
+                        var dayre = customDate.getDate();
+                        var monthre = (customDate.getMonth()) + 1;
+                        var yearre = customDate.getFullYear();
+                        var formatre = dayre + "/" + monthre + "/" + yearre;
+                        console.log(formatre)
+                        $("#reliefDate").val(formatre);
+                    }
 
-                    $("#reliefDate").val(formatre);
-                } else {
+                    else {
+                        alert("Invalid Date");
+                    }
+                }
+                else {
                     alert("Invalid Date");
                 }
             });
@@ -494,6 +506,7 @@
     var jQDate = $.noConflict();
     jQDate(function () {
         jQDate("#exportSignOn").datepicker({
+            dateFormat: 'dd/mm/yy',
             changeMonth: true,
             changeYear: true,
         });
