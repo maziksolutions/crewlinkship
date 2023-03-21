@@ -252,14 +252,14 @@ namespace crewlinkship.Controllers
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
                 return PartialView(vcm);
             }
             return RedirectToAction("UserLogin", "Login");
         }
         public IActionResult TravelToVessel(int? crewId)
         {
-            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
+            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
             ViewBag.imo = vesselDetails.Imo;
             ViewBag.shipType = vesselDetails.Ship.ShipCategory;
@@ -289,6 +289,22 @@ namespace crewlinkship.Controllers
             return Json(seaport);
         }
         [HttpPost]
+        public JsonResult TravelToVesselReverse(int? crewId)
+        {
+            var updateCrewDetails = _context.TblCrewDetails.Where(c => c.CrewId == crewId).FirstOrDefault();
+            if (updateCrewDetails != null)
+            {
+                updateCrewDetails.PreviousStatus = "Approver"; //Approver
+                updateCrewDetails.PlanStatus = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.Status = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.ModifiedBy = "Master";
+                updateCrewDetails.ModifiedDate = DateTime.Now;
+                _context.TblCrewDetails.Update(updateCrewDetails);
+                _context.SaveChanges();
+            }
+            return Json(updateCrewDetails);
+        }
+        [HttpPost]
         public int TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
         {
             try
@@ -308,9 +324,9 @@ namespace crewlinkship.Controllers
                     var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
                     if (updateCrewDetails != null)
                     {
-                        updateCrewDetails.PreviousStatus = "Travel to vessel";
-                        updateCrewDetails.PlanStatus = "Sign In transit";
-                        updateCrewDetails.Status = "Sign In transit";
+                        updateCrewDetails.PreviousStatus = "Travel to vessel"; //Approver
+                        updateCrewDetails.PlanStatus = "Sign In transit"; // Travel to vessel
+                        updateCrewDetails.Status = "Sign In transit"; // Travel to vessel
                         updateCrewDetails.PoolId = vesselPooId.PoolId;
                         updateCrewDetails.ModifiedBy = "Master";
                         updateCrewDetails.ModifiedDate = DateTime.Now;

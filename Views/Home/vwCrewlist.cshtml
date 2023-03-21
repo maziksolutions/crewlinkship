@@ -58,7 +58,10 @@
                                     @foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
+                                            <td scope="row"><span>@item.Rank.Code</span> <span hidden="hidden" id="crewIdcrewList">@item.CrewId</span>
+                                                <span hidden="hidden" id=""></span>              
+                                            
+                                            </td>
                                             <td scope="row">
                                                 <a class="details" style="color: #0068F7" href="javascript:;">@(item.Crew!=null? item.Crew.FirstName:"")  @(item.Crew!=null? item.Crew.MiddleName : "") @(item.Crew!=null? item.Crew.LastName : "")</a>
                                             </td>
@@ -79,9 +82,11 @@
                                                 }
                                                 @if (item.Reliever1 > 0 && item.Reliever?.Status == "Sign In transit")
                                                 {
-                                                    <a class="dropdown-item" style="width:15%; float:right;">
-                                                        <i class="fa fa-check-circle green"></i>
-                                                    </a>
+                                            <a style="width:15%; float:right;">
+                                                <i class="fa fa-check-circle green"></i>&nbsp;&nbsp;&nbsp;
+                                                <i id="reverseData" title="Reverse OnBoard Activity"class="fa fa-undo"></i>
+                                            </a>
+                                                    @*<button type="submit" id="revertData">*@@*</button>*@
                                                 }
                                             </td>
                                         </tr>
@@ -482,7 +487,6 @@
                         var monthre = (customDate.getMonth()) + 1;
                         var yearre = customDate.getFullYear();
                         var formatre = dayre + "/" + monthre + "/" + yearre;
-                        console.log(formatre)
                         $("#reliefDate").val(formatre);
                     }
 
@@ -511,6 +515,30 @@
             changeYear: true,
         });
     });
+
+    /*Reverse OnBoard Activity Data*/
+    $(function () {
+        $("#reverseData").click(function () {
+            if (confirm('Are you sure reverse onboard Activity?')) { 
+            var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
+            $.ajax({
+                url: "/Home/TravelToVesselReverse/",
+                type: "POST",
+                data: {'crewId': crewId},
+                dataType: 'json',
+                success: function (response) {
+                    alert('OnBoard activity data reversed successfully');
+                    window.location.reload();
+                },
+                error: function (textStatus, errorThrown) {
+                    alert('error')
+                    Success = false;
+                }
+            });
+            }
+        });
+    });
+
 </script>
 
 
