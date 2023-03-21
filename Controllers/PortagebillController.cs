@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using Ionic.Zip;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace crewlinkship.Controllers
 {
@@ -32,40 +34,54 @@ namespace crewlinkship.Controllers
             _context = context;
             _appEnvironment = appEnvironment;
         }
-        public IActionResult Index(int? vesselId, int? month)
-        {
-            /*int vesselId = 138; int month = 2;*/
-            int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 75, month, year, ispromoted, checkpbtilldate);
+        //public IActionResult Index(int? vesselId, int? month)
+        //{
+        //    /*int vesselId = 138; int month = 2;*/
+        //    int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
+        //    var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 75, month, year, ispromoted, checkpbtilldate);
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
+        //    ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
 
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+        //    ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+        //    ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
-            return View(data);        
-        }
+        //    return View(data);        
+        //}
 
         
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
         {
-            string checkpbtilldate = "";
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x=>x.VesselId==75), "VesselId", "VesselName");
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
-            var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselId, month, year, "yes");
-            var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselId, month, year);
-            var tables = new PortageViewModel
+                string checkpbtilldate = "";
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (accessToken != null)
             {
-                onsignersportage = data,
-                promotionsportagebill = promotiondata,
-                offsignersporatge = signoffcrewdata
-            };
-            return View(tables);
+                ViewBag.name = HttpContext.Session.GetString("name");
+
+            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
+
+            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
+                var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 75, month, year, "yes");
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 75, month, year);
+                var tables = new PortageViewModel
+                {
+                    onsignersportage = data,
+                    promotionsportagebill = promotiondata,
+                    offsignersporatge = signoffcrewdata
+                };
+
+                return View(tables);
+            }
+
+            return RedirectToAction("UserLogin", "Login");
         }
+
         public JsonResult GetDataByPoratgeId(int portageid,int crewid)
         {
             var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == portageid && c.CrewId== crewid);
