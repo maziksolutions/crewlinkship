@@ -289,6 +289,22 @@ namespace crewlinkship.Controllers
             return Json(seaport);
         }
         [HttpPost]
+        public JsonResult TravelToVesselReverse(int? crewId)
+        {
+            var updateCrewDetails = _context.TblCrewDetails.Where(c => c.CrewId == crewId).FirstOrDefault();
+            if (updateCrewDetails != null)
+            {
+                updateCrewDetails.PreviousStatus = "Approver"; //Approver
+                updateCrewDetails.PlanStatus = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.Status = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.ModifiedBy = "Master";
+                updateCrewDetails.ModifiedDate = DateTime.Now;
+                _context.TblCrewDetails.Update(updateCrewDetails);
+                _context.SaveChanges();
+            }
+            return Json(updateCrewDetails);
+        }
+        [HttpPost]
         public int TravelToVesselUpdate(TblActivitySignOn tblActivitySignOn)
         {
             try
@@ -308,9 +324,9 @@ namespace crewlinkship.Controllers
                     var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
                     if (updateCrewDetails != null)
                     {
-                        updateCrewDetails.PreviousStatus = "Travel to vessel";
-                        updateCrewDetails.PlanStatus = "Sign In transit";
-                        updateCrewDetails.Status = "Sign In transit";
+                        updateCrewDetails.PreviousStatus = "Travel to vessel"; //Approver
+                        updateCrewDetails.PlanStatus = "Sign In transit"; // Travel to vessel
+                        updateCrewDetails.Status = "Sign In transit"; // Travel to vessel
                         updateCrewDetails.PoolId = vesselPooId.PoolId;
                         updateCrewDetails.ModifiedBy = "Master";
                         updateCrewDetails.ModifiedDate = DateTime.Now;
