@@ -2538,8 +2538,7 @@
             }
         }      
 
-        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
+        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if (sessionStorage.getItem('selectedYear') != null) {
             var currentSelectedYear = sessionStorage.getItem('selectedYear');            
             $('select[name^="year"] option[value=' + currentSelectedYear+']').attr("selected", "selected");
