@@ -304,6 +304,10 @@
                         </div>
                         <div class="col">
                             @Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control", id = "year" })
+
+                            @*@Html.DropDownList("demo", (IEnumerable<SelectListItem>)ViewBag.Months, "Month")
+                            @Html.DropDownList("hfg", (IEnumerable<SelectListItem>)ViewBag.Years, "Year")*@
+
                         </div>
                         <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="search" name="action" type="submit" data-toggle="tooltip"
                                 data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
@@ -793,9 +797,10 @@
                             <input id="LeaveWagesCf" name="LeaveWagesCf" hidden>
                             @*<input id="LeaveWagesBf" name="LeaveWagesBf" hidden>*@
                             <input id="AppliedCba" name="AppliedCba" hidden>
+                            <input id="Transitwages" name="Transitwages" hidden>
                             @*<input id="Tax" name="Tax" hidden>*@
                             @*<input id="Udamount" name="Udamount" hidden>
-                        <input id="Wfamount" name="Wfamount" hidden>*@
+        <input id="Wfamount" name="Wfamount" hidden>*@
                             <input id="IsTransitApply" name="IsTransitApply" hidden>
                             <input id="IsPromoted" name="IsPromoted" hidden>
                             <input id="IsLeaveWagesCf" name="IsLeaveWagesCf" hidden>
@@ -804,7 +809,7 @@
                             <input id="IndPfamount" name="IndPfamount" hidden>
                             <input id="IsAddPrevBal" name="IsAddPrevBal" hidden>
                             <input id="IsHoldWageAllotment" name="IsHoldWageAllotment" hidden>
-
+                            <input id="TotalEarnings" name="TotalEarnings" hidden>
                             <input id="whTdeduction" name="whTdeduction" hidden>
                             <input id="UDdeduction" name="UDdeduction" hidden>
                             <input id="wFdeduction" name="wFdeduction" hidden>
@@ -853,8 +858,8 @@
                             </div>
                             <div class="row">
                                 <div class="col form-group input-container">
-                                    <label for="earningother">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onchange="calculateearning()" name="earningother" id="earningother">
+                                    <label for="OtherEarnings">Other Earning</label>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onchange="calculateearning()" name="OtherEarnings" id="OtherEarnings">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="transitDays">Transit Days</label>
@@ -899,6 +904,7 @@
                                 </div>
 
                                 <div class="col form-group s4">
+                                    <label for="IsLeaveWagesCF">Is leave wage carry forward?</label>
                                     <input class="form-control" onchange="calculateearning()" type="checkbox" id="IsLeaveWagesCF" name="IsLeaveWagesCF" title="Is leave wage carry forward?">
                                 </div>
                             </div>
@@ -1306,7 +1312,7 @@
     var UDdeduction = 0; var WFdeduction = 0; var WHTdeduction = 0;
     var udAmount = 0; var wfAmount = 0; var tax = 0; var nigpfAmount = 0;
     var otearning = 0; var othour = 0; var otherEarnings = 0; var transitDays = 0; var reimbursement = 0; var leaveWagesBF = 0;
-    var ca = 0; var bs = 0; var od = 0; var allotment = 0; var allotment2 = 0; var midmonthallotment = 0;
+    var ca = 0; var bs = 0; var od = 0; var allotment = 0; var allotment2 = 0; var midmonthallotment = 0; var crewstatus = "";
     var selectbankids = [];
     $("#bowallotment2").hide();
     $("#poratgeallotment2").hide();
@@ -1459,7 +1465,7 @@
                         $("#allotments").val(0); $("#allotment2").val(0);
                         $("#otHours").val(0);
                         $("#extraot").val(0);
-                        $("#earningother").val(otherEarnings);
+                        $("#OtherEarnings").val(otherEarnings);
                         $("#transitDays").val(0);
                         $("#reimbursement").val(reimbursement);
                     }
@@ -1470,7 +1476,7 @@
                         $("#allotments").val(allotment);
                         $("#otHours").val(othour);
                         $("#extraot").val(extraot);
-                        $("#earningother").val(otherEarnings);
+                        $("#OtherEarnings").val(otherEarnings);
                         $("#transitDays").val(transitDays);
                         $("#reimbursement").val(reimbursement);
 
@@ -1522,8 +1528,11 @@
         });
         if (selectbankids.length > 1)
             $("#bowallotment2").show();
-            else
+        else {
             $("#bowallotment2").hide();
+            $("#allotment2").val(0);
+        }
+        calculateearning();
     }
 
     /* function to save the bow data */
@@ -1546,7 +1555,7 @@
             savebowdata();
     });
 
-    function savebowdata() {
+    function savebowdata() {       
         var valdata = $("#bowform").serialize();
         $.ajax({
             url: "/Portagebill/AddPortageBill",
@@ -1687,8 +1696,8 @@
     function calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, totaldays, numberofdays, transitwage, otherEarnings) {
         var total = (parseInt(basicwage) * totaldays / numberofdays) + (parseInt(FixedGtOT) * totaldays / numberofdays) + (parseInt(leavePay) * totaldays / numberofdays)
             + (parseInt(UniformAllow) * totaldays / numberofdays) + (parseInt(PensionFund) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays)
-            + (parseInt(OtherAllow) * totaldays / numberofdays) + parseInt(transitwage) + parseInt(otherEarnings);
-        return total;
+            + (parseInt(OtherAllow) * totaldays / numberofdays) + parseInt(transitwage) + parseInt(otherEarnings) + parseFloat(leaveWagesBF);
+        return Math.round(total);
     }
 
     /* function to calculate ot with earning */
@@ -1698,11 +1707,13 @@
         $("#extraot").val(otearning);
         transitDays = $("#transitDays").val();
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
-        otherEarnings = parseFloat($("#earningother").val());
+        $("#Transitwages").val(transitwage);
+        otherEarnings = parseFloat($("#OtherEarnings").val());
         reimbursement = parseFloat($("#reimbursement").val());
+        leaveWagesBF = parseFloat($("#leaveWagesBF").val());
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
-            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + otherEarnings + reimbursement);
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement) + parseFloat(leaveWagesBF));
         finalbal = Math.round(totalearning - totaldeduction);
         $("#totalpay").text(totalearning);
         $("#totaldeduc").text(totaldeduction);
@@ -1710,6 +1721,7 @@
         $("#TotalPayable").val(totalearning);
         $("#TotalDeductions").val(totaldeduction);
         $("#FinalBalance").val(finalbal);
+        $("#TotalEarnings").val(totalearning);
     }
 
     /* function to calculate the earning   */
@@ -1717,16 +1729,18 @@
         othour = $("#otHours").val();
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#extraot").val(otearning);
-        otherEarnings = parseFloat($("#earningother").val());
+        otherEarnings = parseFloat($("#OtherEarnings").val());
         transitDays = $("#transitDays").val();
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        $("#Transitwages").val(transitwage);
         reimbursement = parseFloat($("#reimbursement").val());
+        leaveWagesBF = parseFloat($("#leaveWagesBF").val());
         totalearning = Math.round( parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
-            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
+            + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement) + parseFloat(leaveWagesBF));
         console.log((otearning || 0),(parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
             , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
-            , (parseInt(OtherAllow) * days / numberofdays), parseFloat(transitwage), parseFloat(otherEarnings), parseFloat(reimbursement));
+            , (parseInt(OtherAllow) * days / numberofdays), parseFloat(transitwage), parseFloat(otherEarnings), parseFloat(reimbursement) + parseFloat(leaveWagesBF));
          console.log(totalearning - totaldeduction);
         finalbal = Math.round(totalearning - totaldeduction);
         $("#totalpay").text(totalearning);
@@ -1735,6 +1749,7 @@
         $("#TotalPayable").val(totalearning);
         $("#TotalDeductions").val(totaldeduction);
         $("#FinalBalance").val(finalbal);
+        $("#TotalEarnings").val(totalearning);
         this.calculatededuction();
         //ca = $("#cashAdvance").val();
         //bs = $("#bondedStores").val();
@@ -1751,13 +1766,20 @@
 
     /* Its function to calculate the deduction  */
     function calculatededuction() {
+        if (IsLeaveWagesCF.checked) {
+            console.log()
+            $('#LeaveWagesCf').val((parseFloat($('#leaveWagesBF').val()) + (parseInt(leavePay) * days / numberofdays)).toFixed(2));
+        }
+        else {
+            $('#LeaveWagesCf').val(0)
+        }
         if (currency == "NGN") {
             ca = $("#cashAdvance").val();
             bs = $("#bondedStores").val();
             od = $("#otherDeductions").val();
             allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
             /* console.log(parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment))*/
-            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + parseFloat(allotment) + (parseFloat(totalearning) * UDdeduction / 100) + (parseFloat(totalearning) * WFdeduction / 100) + (parseFloat(totalearning) * WHTdeduction / 100)));
+            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + parseFloat(allotment) + (parseFloat(totalearning) * UDdeduction / 100) + (parseFloat(totalearning) * WFdeduction / 100) + parseFloat($('#LeaveWagesCf').val()) + (parseFloat(totalearning) * WHTdeduction / 100)));
             udAmount = (parseFloat(totalearning) * UDdeduction / 100);
             wfAmount = (parseFloat(totalearning) * WFdeduction / 100);
             tax = (parseFloat(totalearning) * WHTdeduction / 100);
@@ -1770,7 +1792,8 @@
             bs = $("#bondedStores").val();
             od = $("#otherDeductions").val();
             allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
-            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat(authorityDeduction)));
+            totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat($('#LeaveWagesCf').val()) + parseFloat(authorityDeduction)));
+            console.log((parseFloat(ca), parseFloat(bs), parseFloat(od), parseFloat(allotment), parseFloat($('#LeaveWagesCf').val()), parseFloat(authorityDeduction)));
         }
         finalbal = Math.round(totalearning - totaldeduction);
         $("#totalpay").text(totalearning);
@@ -1821,6 +1844,7 @@
                     reimbursement = (response[0].reimbursement || 0);
                     portageBillId = (response[0].portageBillId || 0);
                     appliedCBA = (response[0].appliedCBA || 0);
+                    $("#AppliedCba").val(appliedCBA);                    
                     ca = (response[0].cashAdvance || 0);
                     bs = (response[0].bondedStores || 0);
                     od = (response[0].otherDeductions || 0);
@@ -1829,10 +1853,13 @@
                     othour = (response[0].otHours || 0);
                     extraot = (response[0].extraot || 0);
                     transitDays = (response[0].transitDays || 0);
+                    transitwage = (response[0].transitWages || 0);
+                    $("#Transitwages").val(transitwage);
                     avc = (response[0].avc || 0);
                     gratuity = (response[0].gratuity || 0);
                     indPFAmount = (response[0].gratuity || 0);
                     nigpfAmount = (response[0].pfAmount || 0);
+                    $("#Avc").val(avc);
                     $("#Avc").val(avc);
                     $("#Gratuity").val(gratuity);
                     $("#IndPfamount").val(indPFAmount);
@@ -1858,7 +1885,7 @@
                         $("#allotments").val(0); $("#allotment2").val(0);
                         $("#otHours").val(0);
                         $("#extraot").val(0);
-                        $("#earningother").val(otherEarnings);
+                        $("#OtherEarnings").val(otherEarnings);
                         $("#transitDays").val(0);
                         $("#reimbursement").val(reimbursement);
                     }
@@ -1874,7 +1901,7 @@
                         $("#allotments").val(allotment);
                         $("#otHours").val(othour);
                         $("#extraot").val(extraot);
-                        $("#earningother").val(otherEarnings);
+                        $("#OtherEarnings").val(otherEarnings);
                         $("#transitDays").val(transitDays);
                         $("#reimbursement").val(reimbursement);
                     }
@@ -1924,7 +1951,7 @@
         $("#ContractId").val(0);
         $("#TotalDeductions").val(0);
         $("#FinalBalance").val(0);
-        $("#earningother").val(0);
+        $("#OtherEarnings").val(0);
         $("#reimbursement").val(0);
         $("#cashAdvance").val(0);
         $("#bondedStores").val(0);
@@ -1967,6 +1994,7 @@
         $("#pcrewrank").text(rank);
         $("#pcrewname").text(crewname);
         currency = curr;
+        crewstatus = onboard;
         $("#pcurrency").text(currency);
         $("#portageBillPopup").modal('show');
         var vid = $('#vesselid').val();
@@ -2078,7 +2106,7 @@
                     $("#pTo").val((response.to || 0));
                     $("#pDays").val((response.days || 0));
                     $("#pVesselid").val((response.vesselid || 0));
-                    $("#pTransitwages").val((response.transitWages || 0));
+                  
                     //if (portageBillId == 0) {
                     //    $("#pcashAdvance").val(0);
                     //    $("#pbondedStores").val(0);
@@ -2102,7 +2130,8 @@
                     otrate = OtRate;
                     console.log(otrate)
                   
-                    transitwage = (response.transitwage || 0);
+                    transitwage = (response.transitWages || 0);
+                    $("#pTransitwages").val(transitwage);
                     days = (response.days || 0);
                     authorityDeduction = (response.authorityDeduction || 0);
                     leaveWagesBF = (response.leaveWagesBF || 0);
@@ -2186,7 +2215,7 @@
             console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
             totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
             totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
-          
+            $("#pearningother").val(otherEarnings);
             $("#pleaveWagesBF").val(leaveWagesBF);
             $("#pCrewListId").val(CrewListId);
             $("#pmidmonthallotment").val(midmonthallotment);
@@ -2275,8 +2304,10 @@
         });
         if (selectbankids.length > 1)
             $("#poratgeallotment2").show();
-        else
-            $("#poratgeallotment2").hide();
+        else {
+            $("#poratgeallotment2").hide(); $("#pallotment2").val(0);
+        }
+        calculateportageearning();
     }
     function removeVal(arr, val) {
         for (var i = 0; i < arr.length; i++) {
@@ -2430,7 +2461,10 @@
         console.log(othour, otrate);
         $("#pextraot").val(otearning);
         transitDays = $("#ptransitDays").val();
-        transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
+        if (crewstatus =="onboard")
+            transitwage = transitwage
+        else
+            transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         otherEarnings = parseFloat($("#pearningother").val());
         reimbursement = parseFloat($("#preimbursement").val());
         totalearning = Math.round(parseFloat(otearning)+(parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
@@ -2454,6 +2488,9 @@
         $("#pextraot").val(otearning);
         otherEarnings = parseFloat($("#pearningother").val());
         transitDays = $("#ptransitDays").val();
+        if (crewstatus == "onboard")
+            transitwage = transitwage
+        else
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         reimbursement = parseFloat($("#preimbursement").val());
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)

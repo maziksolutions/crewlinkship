@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using Ionic.Zip;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace crewlinkship.Controllers
 {
@@ -32,13 +34,41 @@ namespace crewlinkship.Controllers
             _context = context;
             _appEnvironment = appEnvironment;
         }
-        public IActionResult Index(int? vesselId, int? month)
+        public IActionResult Index()
         {
-            /*int vesselId = 138; int month = 2;*/
-            int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 75, month, year, ispromoted, checkpbtilldate);
+            var accessToken = HttpContext.Session.GetString("token");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            ViewBag.Months = new SelectList(Enumerable.Range(1, 12).Select(x =>
+        new SelectListItem()
+        {
+            Text = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[x - 1] + " (" + x + ")",
+            Value = x.ToString()
+        }), "Value", "Text");
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
+            ViewBag.Years = new SelectList(Enumerable.Range(DateTime.Today.Year, 20).Select(x =>
+          new SelectListItem()
+          {
+              Text = x.ToString(),
+              Value = x.ToString()
+          }), "Value", "Text");
+            var todaydate = DateTime.Now;
+            var firstDayOfCMonth = new DateTime(todaydate.Year, todaydate.Month, 1);
+            var firstDayOfSMonth = new DateTime(todaydate.Year, todaydate.Month, 1);
+            DateTimeFormatInfo info = DateTimeFormatInfo.GetInstance(null);
+            
+
+            DateTimeFormatInfo dtfi = new DateTimeFormatInfo(); //System.Globalization
+
+            int CurrentMonth = DateTime.Now.Month;
+            int PreviousMonth = getPreviousMonth(CurrentMonth);
+            int PreviousPreviousMonth = getPreviousMonth(PreviousMonth);
+
+            /*int vesselId = 138; int month = 2;*/// .Where(x => x.IsDeleted == false && x.VesselId == 75)
+            int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
+            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 75, 1, year, ispromoted, checkpbtilldate);
+
+            ViewBag.vessel = new SelectList(_context.TblVessels, "VesselId", "VesselName");
 
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
 
@@ -46,14 +76,55 @@ namespace crewlinkship.Controllers
 
             return View(data);        
         }
-
-        
+        //.Where(x=>x.VesselId==75)
+        public int getPreviousMonth(int month)
+        {
+            if (month > 1)
+                return (month - 1);
+            return (12);
+        }
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
-        {
+        {          
+            int CurrentMonth = DateTime.Now.Month;
+            int PreviousMonth = getPreviousMonth(CurrentMonth);
+            var months = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+           
+
+      //      ViewBag.Months = new SelectList(Enumerable.Range(1, 12).Select(x =>
+      //new SelectListItem()
+      //{
+      //    Disabled = true,
+      //    Text = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[x - 1],
+      //    Value = x.ToString(),
+      //    authors.Add("",""),
+      //}), "Value", "Text");
+
+            ViewBag.Years = new SelectList(Enumerable.Range(DateTime.Today.Year, 20).Select(x =>
+          new SelectListItem()
+          {
+              Text = x.ToString(),
+              Value = x.ToString(),
+              Disabled=true
+          }), "Value", "Text");
+            var selectedValue = "";
+            var newitems = DateTimeFormatInfo
+         .InvariantInfo
+         .DayNames
+         .Select((dayName, index) => new SelectListItem
+         {
+             Value = (index + 1).ToString(),
+             Text = dayName,
+             Selected = (selectedValue == (index + 1).ToString())
+         });
+            DateTimeFormatInfo dtfi = new DateTimeFormatInfo(); //System.Globalization
+
+         
+           
+
             string checkpbtilldate = "";
             var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x=>x.VesselId==75), "VesselId", "VesselName");
+            ViewBag.vessel = new SelectList(_context.TblVessels, "VesselId", "VesselName");
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
             var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselId, month, year, "yes");
