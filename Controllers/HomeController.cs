@@ -252,14 +252,14 @@ namespace crewlinkship.Controllers
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
                 return PartialView(vcm);
             }
             return RedirectToAction("UserLogin", "Login");
         }
         public IActionResult TravelToVessel(int? crewId)
         {
-            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
+            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
             ViewBag.imo = vesselDetails.Imo;
             ViewBag.shipType = vesselDetails.Ship.ShipCategory;

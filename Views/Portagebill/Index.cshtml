@@ -298,25 +298,22 @@
                     <div class="row">
 
                         <div class="col">
-                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control input-sm", id = "vesselid" })
-                            @*<select id="vesselid" class="form-control">
-                                    <option value="0">select year</option>
-                                    <option value="75">Anfa.</option>
-                                </select>*@
-                        </div>
-                        <div class="col">
+                            @*@Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control input-sm", id = "vesselid" })*@
+                            <select hidden id="vesselid" name="vesselid" class="form-control input-sm">     
+                                <option value="75">Anfa.</option>
+                            </select>
+
                             <select id="year" name="year" class="form-control input-sm">
                                 <option value="0">select year</option>
                             </select>
-
-                            @*@Html.DropDownList("month", Enumerable.Range(1, 12).Select(x => new SelectListItem { Value = x.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(x) }), "Select Month", new { @class = "form-control" })*@
                         </div>
                         <div class="col">
                             <select id="month" name="month" class="form-control input-sm">
                                 <option value="0">select Month</option>
                             </select>
-                            @*@Html.DropDownList("year", Enumerable.Range(0, (DateTime.Now.Year - 2015 - 1)).Select(i => new SelectListItem { Text = (DateTime.Now.Year - i).ToString(), Value = (DateTime.Now.Year - i).ToString() }), "Select Year", new { @class = "form-control", id = "year" })*@
+
                         </div>
+                       
                         <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="search" name="action" data-toggle="tooltip" type="submit" id="abcdefghi" 
                                 data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
                             <i class="far fa-eye"></i>
@@ -2527,6 +2524,8 @@
         var currentYear = new Date().getFullYear();
         var currentMonth = new Date().getMonth();
         var cascadedDropDownMonthId = "#month";
+       
+  
         if (currentMonth >= 3) {
             for (var i = currentYear; i > currentYear - 1; i--) {
                 $("#year").append('<option value="' + i.toString() + '">' + i.toString() + '</option>');
@@ -2556,6 +2555,7 @@
                 else {
                     for (var month = 12; month > 12 - currentMonth; month--) {
                         $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
+
                     }
                 }
 
@@ -2595,10 +2595,10 @@
             sessionStorage.setItem('selectedMonth', parseInt($(this).val()));
         });
 
-
+       
     });
 
-  
+   
 </script>
 @*<script>
 
