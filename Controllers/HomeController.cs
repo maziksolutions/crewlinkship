@@ -301,7 +301,7 @@ namespace crewlinkship.Controllers
         [HttpPost]
         public JsonResult TravelToVesselReverse(int? crewId)
         {
-            var updateCrewDetails = _context.TblCrewDetails.Where(c => c.CrewId == crewId).FirstOrDefault();
+            var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crewId);
             if (updateCrewDetails != null)
             {
                 updateCrewDetails.PreviousStatus = "Approver"; //Approver
