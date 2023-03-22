@@ -279,12 +279,10 @@
                                                     <td>@ViewBag.passport</td>
                                                     <th>Seaman Book No</th>
                                                     <td>@ViewBag.cdc</td>
-                                                    <th>INDOS No</th>
-                                                    <td>----</td>
-                                                </tr>
-                                                <tr>
                                                     <th>Civil Status</th>
                                                     <td>@item.CivilStatus</td>
+                                                </tr>
+                                                <tr>
                                                     <th>Gender</th>
                                                     <td>@item.Gender</td>
                                                     <th>English Fluency</th>
@@ -319,11 +317,11 @@
                                             {
                                                 <tr>
                                                     <th width="13.3%">Height (cms)</th>
-                                                    <td width="20%">@item.Height</td>
+                                                    <td width="20%">@item.Height<span hidden="hidden" id="heights">@item.Height</span><span hidden="hidden" id="weights">@item.Weight</span><span hidden="hidden" id="crewIdcrewList">@item.CrewId</span></td>
                                                     <th width="13.3%">Weight(kg)</th>
                                                     <td width="20%">@item.Weight</td>
                                                     <th width="13.3%">BMI</th>
-                                                    <td width="20%" class="text-white bg-amber bg-accent-4">27</td>
+                                                    <td width="20%" class="text-white bg-amber bg-accent-4"><span id="totalvalBMI"></span></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Hair Color</th>
@@ -424,3 +422,18 @@
     </div>
 </div>
 <div class="sidenav-overlay"></div>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        var userWeight = $('#weights').html();
+        var heights = $('#heights').html();
+        var userHeight = heights / 100;
+        var total = userWeight / (userHeight * userHeight);
+        if (total)
+            return $('#totalvalBMI').html(Math.floor(total));
+           
+        else
+            return 'NA';
+    })
+
+</script>
