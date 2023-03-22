@@ -79,7 +79,7 @@
 <script type="text/javascript">
     $(function () {
         $("#navigation .details").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/Details",
@@ -105,7 +105,7 @@
 <script type="text/javascript">
     $(function () {
         $("#navigation .address").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/Address",
@@ -131,7 +131,7 @@
 <script type="text/javascript">
     $(function () {
         $("#license").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/License",
@@ -157,7 +157,7 @@
 <script type="text/javascript">
     $(function () {
         $("#courses").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/Courses",
@@ -183,7 +183,7 @@
 <script type="text/javascript">
     $(function () {
         $("#otherDocuments").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/OtherDocuments",
@@ -209,7 +209,7 @@
 <script type="text/javascript">
     $(function () {
         $("#crewtraveldoc").click(function () {
-            var crewId = $("#CrewAddId").html();
+            var crewId = @ViewBag.crewidforBank;
             $.ajax({
                 type: "GET",
                 url: "/Home/Crewtraveldoc",
@@ -261,6 +261,9 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
+                                        
+
+
                                         @foreach (TblCrewBankDetail item in ViewBag.primaryBank)
                                         {
                                             <tr>
@@ -269,7 +272,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Acc Number</th>
-                                                <td>@item.AccountNumber<span hidden="hidden" id="CrewAddId">@item.CrewId</span></td>
+                                                <td>@item.AccountNumber</td>
                                             </tr>
                                             <tr>
                                                 <th>IFSC/IBAN Number(If applicable)</th>

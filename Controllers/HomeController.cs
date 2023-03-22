@@ -62,17 +62,20 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             if (accessToken != null)
             {
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
 
-                ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().PassportNumber;
-                ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault().Cdcnumber;
+                ViewBag.passport = _context.TblPassports.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber;
+                ViewBag.cdc = _context.TblCdcs.Where(p => p.CrewId == crewId && p.IsDeleted == false).FirstOrDefault()?.Cdcnumber;
 
                 ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c => c.Country)
                   .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
+              
+                
                 return PartialView();
+               
+
             }
             return RedirectToAction("UserLogin", "Login");
         }
@@ -89,6 +92,7 @@ namespace crewlinkship.Controllers
                 ViewBag.address = _context.TblCrewAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
                 ViewBag.corsAddress = _context.TblCrewCorrespondenceAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
@@ -100,12 +104,14 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
+            
             if (accessToken != null)
             {
+
                 ViewBag.primaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Primary").ToList();
                 ViewBag.secondaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Secondary").ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
@@ -121,6 +127,7 @@ namespace crewlinkship.Controllers
                 ViewBag.nationalLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == false).ToList();
                 ViewBag.flagLicence = _context.TblCrewLicenses.Include(x => x.License).Include(x => x.Country).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.License.Authority.ToLower().Contains("flag") == true).ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
@@ -136,6 +143,7 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.courses = _context.TblCrewCourses.Include(x => x.CourseNavigation).Include(x => x.Institute).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
@@ -151,6 +159,7 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && excludedDoc.Contains(","+ x.DocumentId+",")==false).ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
@@ -169,6 +178,7 @@ namespace crewlinkship.Controllers
                 ViewBag.cdc = _context.TblCdcs.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
                 ViewBag.visa = _context.TblVisas.Include(x => x.Country).Where(x => x.CrewId == crewId).ToList();
                 ViewBag.yf = _context.TblYellowfevers.Include(x => x.VendorRegister).Where(x => x.CrewId == crewId).ToList();
+                ViewBag.crewidforBank = crewId;
                 return PartialView();
             }
             return RedirectToAction("UserLogin", "Login");
