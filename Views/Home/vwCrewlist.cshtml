@@ -280,7 +280,9 @@
 
                                                 $("#remarks").val(response.result?.remarks);
                                                 $("#travelToVesselPopup").modal('show');
-
+                                                $('#travelToVesselPopup').on('hidden.bs.modal', function () {
+                                                    location.reload();
+                                                })
                                                 /*seaportId Dropdown*/
 
                                                 var seaportId = "<option value=" + response.result?.seaport?.seaportId + ">" + response.result?.seaport?.seaportName + "</option>";
@@ -297,10 +299,7 @@
                                                     var targetstring = "<option value=" + value.value + ">" + value.text + "</option>";
                                                     $('#CountryList').append(targetstring);
                                                 })
-
                                             },
-
-
                                             failure: function (response) {
                                                 alert(response.responseText);
                                             },
