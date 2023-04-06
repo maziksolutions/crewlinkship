@@ -1701,7 +1701,8 @@ namespace crewlinkship.Models
 
             modelBuilder.Entity<Userlogin>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+                entity.HasKey(e => e.UerId);
 
                 entity.ToTable("Userlogin");
 

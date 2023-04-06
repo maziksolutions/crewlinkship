@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Helpers;
+using System.Data;
+using System.Reflection;
 
 namespace crewlinkship.Controllers
 {
@@ -47,6 +49,200 @@ namespace crewlinkship.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+        public DataTable LINQResultToDataTable<T>(IEnumerable<T> Linqlist)
+        {
+            DataTable dt = new DataTable();
+            PropertyInfo[] columns = null;
+
+            if (Linqlist == null) return dt;
+
+            foreach (T Record in Linqlist)
+            {
+
+                if (columns == null)
+                {
+                    columns = ((Type)Record.GetType()).GetProperties();
+                    foreach (PropertyInfo GetProperty in columns)
+                    {
+                        Type colType = GetProperty.PropertyType;
+
+                        if ((colType.IsGenericType) && (colType.GetGenericTypeDefinition()
+                        == typeof(Nullable<>)))
+                        {
+                            colType = colType.GetGenericArguments()[0];
+                        }
+
+                        dt.Columns.Add(new DataColumn(GetProperty.Name, colType));
+                    }
+                }
+
+                DataRow dr = dt.NewRow();
+
+                foreach (PropertyInfo pinfo in columns)
+                {
+                    dr[pinfo.Name] = pinfo.GetValue(Record, null) == null ? DBNull.Value : pinfo.GetValue
+                    (Record, null);
+                }
+
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
+        public IActionResult Takebackup()
+        {
+            var ActivitySignOffs = _context.TblActivitySignOffs.Where(x=> x.IsDeleted == false).Select(x => new TblActivitySignOffVM
+            {
+                ActivitySignOffId = x.ActivitySignOffId,
+                CrewId = x.CrewId.Value,
+                CrewListId = x.CrewListId.Value,
+                SignOffDate = x.SignOffDate.Value.ToString(),
+                SeaportId = x.SeaportId.Value.ToString(),
+                EndTravelDate = x.EndTravelDate.Value.ToString(),
+                LeaveStartDate = x.LeaveStartDate.Value.ToString(),
+                CompletionDate = x.CompletionDate.Value.ToString(),
+                SignOffReasonId = x.SignOffReasonId.HasValue ? x.SignOffReasonId.Value : default,
+                DoagivenDate = x.DoagivenDate.Value.ToString(),
+                DateOfAvailability = x.DateOfAvailability.Value.ToString(),
+                AllowEndTravel = x.AllowEndTravel.Value,
+                DispensationApplied = x.DispensationApplied,
+                Remarks = x.Remarks,
+                ReasonDelayedId = x.ReasonDelayedId.HasValue ? x.ReasonDelayedId.Value : default,
+                ModifiedBy = x.ModifiedBy,
+                IsDeleted = x.IsDeleted.Value,
+                RecDate = x.RecDate.Value,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+                ModifiedDate = x.ModifiedDate.Value.ToString(),
+                Attachment = x.Attachment,
+                StayInHotel = x.StayInHotel.HasValue ? x.StayInHotel.Value : default,
+                StayOnBoard = x.StayOnBoard.HasValue ? x.StayOnBoard.Value : default,
+                StayStartDate = x.StayStartDate.Value.ToString(),
+                InjurySubTypeId = x.InjurySubTypeId.HasValue ? x.InjurySubTypeId.Value : default,
+                InjuryType = x.InjuryType,
+            }).ToList();
+
+            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false);
+            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false);
+            var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false);
+
+            var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false);
+            var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false);
+            var Contract = _context.TblContracts.Where(x => x.IsDeleted == false);
+            var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false);
+            var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false);
+            var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false);
+            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false);
+            var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false);
+            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false);
+            var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false);
+            var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false);
+            var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false);
+            var PBBankAllotment = _context.PBBankAllotment.Where(x => x.IsDeleted == false);
+            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false);
+            var ReimbursementOrDeductions = _context.TblReimbursementOrDeductions.Where(x => x.IsDeleted == false);
+            var TransferCrews = _context.TblTransferCrews.Where(x => x.IsDeleted == false);
+            var Visas = _context.TblVisas.Where(x => x.IsDeleted == false);
+            var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false);
+
+            var crewlistdats = _context.TblCrewLists.ToList();
+            DataTable dtcrewlistdats = new DataTable();
+            dtcrewlistdats = LINQResultToDataTable(crewlistdats);
+            DataTable dtCloned = dtcrewlistdats.Clone();
+            dtCloned.Columns["SignOnDate"].DataType = typeof(string);
+            dtCloned.Columns["DueDate"].DataType = typeof(string);
+            foreach (DataRow row in dtcrewlistdats.Rows)
+            {
+                dtCloned.ImportRow(row);
+            } 
+          try
+            {           
+            var TblPortageBills = _context.TblPortageBills.ToList();
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+               var wsActivitySignOffs = wb.Worksheets.Add("tblActivitySignOff");
+               wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOffs);
+
+               var wsActivitySignOns = wb.Worksheets.Add("tblActivitySignOn");
+               wb.Worksheet(2).Cell(1, 1).InsertTable(ActivitySignOns);
+
+               var wsAssignmentsWithOthers = wb.Worksheets.Add("tblAssignmentsWithOthers");
+               wb.Worksheet(3).Cell(1, 1).InsertTable(ActivitySignOffs);
+
+              var wsAssignmentsWithOur = wb.Worksheets.Add("tblAssignmentsWithOur");
+              wb.Worksheet(4).Cell(1, 1).InsertTable(ActivitySignOns);
+
+                    var wsBowRequest = wb.Worksheets.Add("tblBowRequest");
+                    wb.Worksheet(5).Cell(1, 1).InsertTable(BowRequest);
+
+                    var wsCdc = wb.Worksheets.Add("tblCDC");
+                    wb.Worksheet(6).Cell(1, 1).InsertTable(Cdc);
+
+                    var wsContract = wb.Worksheets.Add("tblContract");
+                    wb.Worksheet(7).Cell(1, 1).InsertTable(Contract);
+
+                    var wsCrewAddress = wb.Worksheets.Add("tblCrewAddress");
+                    wb.Worksheet(8).Cell(1, 1).InsertTable(CrewAddresses);
+
+                    var wsCrewBankDetails = wb.Worksheets.Add("tblCrewBankDetails");
+                    wb.Worksheet(9).Cell(1, 1).InsertTable(CrewBankDetails);
+
+                    var wsCrewCourses = wb.Worksheets.Add("tblCrewCourses");
+                    wb.Worksheet(10).Cell(1, 1).InsertTable(CrewCourses);
+
+                    var wsCrewDetails = wb.Worksheets.Add("tblCrewDetails");
+                    wb.Worksheet(11).Cell(1, 1).InsertTable(CrewDetails);
+
+                    var wsCrewLicense = wb.Worksheets.Add("tblCrewLicense");
+                    wb.Worksheet(12).Cell(1, 1).InsertTable(CrewLicenses);
+
+                    var wsCrewList = wb.Worksheets.Add("tblCrewList");
+                    wb.Worksheet(13).Cell(1, 1).InsertTable(CrewLists);
+
+                    var wsCrewOtherDocuments = wb.Worksheets.Add("tblCrewOtherDocuments");
+                    wb.Worksheet(14).Cell(1, 1).InsertTable(CrewOtherDocuments);
+
+                    var wsMidMonthAllotment = wb.Worksheets.Add("tblMidMonthAllotment");
+                    wb.Worksheet(15).Cell(1, 1).InsertTable(MidMonthAllotments);
+
+                    var wsNigerianDeduction = wb.Worksheets.Add("tblNigerianDeduction");
+                    wb.Worksheet(16).Cell(1, 1).InsertTable(NigerianDeductions);
+
+                    var wsPBBankAllotment = wb.Worksheets.Add("tblPBBankAllotment");
+                    wb.Worksheet(17).Cell(1, 1).InsertTable(PBBankAllotment);
+
+                    var wsPortageBill = wb.Worksheets.Add("tblPortageBill");
+                    wb.Worksheet(18).Cell(1, 1).InsertTable(PortageBills);
+
+                    var wsReimbursementOrDeduction = wb.Worksheets.Add("tblReimbursementOrDeduction");
+                    wb.Worksheet(19).Cell(1, 1).InsertTable(ReimbursementOrDeductions);
+
+                    var wsTransferCrew = wb.Worksheets.Add("tblTransferCrew");
+                    wb.Worksheet(20).Cell(1, 1).InsertTable(TransferCrews);
+
+                    var wsVisa = wb.Worksheets.Add("tblVisa");
+                    wb.Worksheet(21).Cell(1, 1).InsertTable(Visas);
+
+                    var wsYellowfever = wb.Worksheets.Add("tblYellowfever");
+                    wb.Worksheet(22).Cell(1, 1).InsertTable(Yellowfevers);
+                    //var ws = wb.Worksheets.Add("TblCrewList");
+                    //wb.Worksheet(3).Cell(1, 1).InsertTable(Userlogins);
+                    //var ws1 = wb.Worksheets.Add("TblPortageBills");
+                    //wb.Worksheet(4).Cell(1, 1).InsertTable(TblPortageBills);
+                    //var ws2 = wb.Worksheets.Add("TblActivitySignOffs");
+                    //wb.Worksheet(5).Cell(1, 1).InsertTable(dtCloned);
+                    using (MemoryStream mstream = new MemoryStream())
+                {
+                    wb.SaveAs(mstream);
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
+                }
+            }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //var data = _context.Database.ExecuteSqlRaw("DBBACKUP");
+            return null;
         }
         public IActionResult Privacy()
         {
