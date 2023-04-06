@@ -49,4 +49,31 @@ namespace crewlinkship.Models
         public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
     }
+    public class TblCrewListVM
+    {
+        public int CrewListId { get; set; }
+        public int RankId { get; set; }
+        public int VesselId { get; set; }
+        public int CrewId { get; set; }
+        public string SignOnDate { get; set; }
+        public string DueDate { get; set; }
+        public int Reliever1 { get; set; }
+        public int Reliever2 { get; set; }
+        public string ReptriationPort { get; set; }
+        public string EngagementPort { get; set; }
+        public string Er { get; set; }
+        public string Ermonth { get; set; }
+        public string Status { get; set; }
+        public bool IsDeleted { get; set; }
+        public string RecDate { get; set; }
+        public string ModifiedBy { get; set; }
+        public bool IsSignOff { get; set; }
+        public string ReplacedWith { get; set; }
+        public string OldDueDate { get; set; }
+        public string ModifiedDate { get; set; }
+        public bool IsPromoted { get; set; }
+        public int ActivityCode { get; set; }
+        public int ReliverRankId { get; set; }
+        public int PlanActivityCode { get; set; }
+    }
 }

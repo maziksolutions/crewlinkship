@@ -91,7 +91,7 @@ namespace crewlinkship.Controllers
         }
         public IActionResult Takebackup()
         {
-            var ActivitySignOffs = _context.TblActivitySignOffs.Where(x=> x.IsDeleted == false).Select(x => new TblActivitySignOffVM
+            var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false).Select(x => new TblActivitySignOffVM
             {
                 ActivitySignOffId = x.ActivitySignOffId,
                 CrewId = x.CrewId.Value,
@@ -126,15 +126,252 @@ namespace crewlinkship.Controllers
             var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false);
 
             var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false);
-            var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false);
-            var Contract = _context.TblContracts.Where(x => x.IsDeleted == false);
+            var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false).Select(x => new TblCdcVM
+            {
+
+                Cdcid = x.Cdcid,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
+                Cdcnumber = x.Cdcnumber,
+                Place = x.Place,
+                Doi = x.Doi.HasValue ? x.Doi.Value.ToString() : default,
+                Doe = x.Doe.HasValue ? x.Doe.Value.ToString() : default,
+                FilePath = x.FilePath,
+                IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
+                VerifiedBy = x.VerifiedBy,
+                VerifyDate = x.VerifyDate.HasValue ? x.VerifyDate.Value.ToString() : default,
+                VerificationPath = x.VerificationPath,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+                EmailPath = x.EmailPath,
+
+
+            }).ToList();
+            var Contract = _context.TblContracts.Where(x => x.IsDeleted == false).Select(x => new TblContractVM {
+                ContractId = x.ContractId,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                Cbaid = x.Cbaid.HasValue ? x.Cbaid.Value : default,
+                SeaportId = x.SeaportId.HasValue ? x.SeaportId.Value : default,
+                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+                Osa = x.Osa.HasValue ? x.Osa.Value : default,
+                Waf = x.Waf.HasValue ? x.Waf.Value : default,
+                ContractPath = x.ContractPath,
+                TotalWage = x.TotalWage.HasValue ? x.TotalWage.Value : default,
+                EngagementPort = x.EngagementPort,
+                ReptriationPort = x.ReptriationPort,
+                Sca = x.Sca.HasValue ? x.Sca.Value : default,
+                Other = x.Other.HasValue ? x.Other.Value : default,
+                Seniority = x.Seniority.HasValue ? x.Seniority.Value : default,
+                ReviseReason = x.ReviseReason,
+                Duration = x.Duration,
+                Plus = x.Plus.HasValue ? x.Plus.Value : default,
+                SignonDate = x.SignonDate.HasValue ? x.SignonDate.ToString() : default,
+                PayCommence = x.PayCommence.HasValue ? x.PayCommence.ToString() : default,
+                Expirydate = x.Expirydate.HasValue ? x.Expirydate.ToString() : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+                Pf = x.Pf.HasValue ? x.Pf.Value : default,
+                Ud = x.Ud.HasValue ? x.Ud.Value : default,
+                Wf = x.Wf.HasValue ? x.Wf.Value : default,
+                Pfamount = x.Pfamount.HasValue ? x.Pfamount.Value : default,
+                Udamount = x.Udamount.HasValue ? x.Udamount.Value : default,
+                Wfamount = x.Wfamount.HasValue ? x.Wfamount.Value : default,
+                BasicWage = x.BasicWage.HasValue ? x.BasicWage.Value : default,
+                FixedOvertime = x.FixedOvertime.HasValue ? x.FixedOvertime.Value : default,
+                LeaveWages = x.LeaveWages.HasValue ? x.LeaveWages.Value : default,
+                PensionFund = x.PensionFund.HasValue ? x.PensionFund.Value : default,
+                SubsistenceAllowance = x.SubsistenceAllowance.HasValue ? x.SubsistenceAllowance.Value : default,
+                UniformAllowance = x.UniformAllowance.HasValue ? x.UniformAllowance.Value : default,
+                Acmapproval = x.Acmapproval.HasValue ? x.Acmapproval.Value : default,
+                AcmapprovedBy = x.AcmapprovedBy.HasValue ? x.AcmapprovedBy.Value : default,
+                GwapprovedBy = x.GwapprovedBy.HasValue ? x.GwapprovedBy.Value : default,
+                Gwapproval = x.Gwapproval.HasValue ? x.Gwapproval.Value : default,
+                IsOnlyBasic = x.IsOnlyBasic.HasValue ? x.IsOnlyBasic.Value : default,
+                Note = x.Note,
+                CrewListId = x.CrewListId.HasValue ? x.CrewListId.Value : default,
+                Gwpath = x.Gwpath
+            }).ToList();
+
             var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false);
             var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false);
-            var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false);
-            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false);
-            var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false);
-            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false);
-            var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false);
+            var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false).Select(x => new TblCrewCourseVM
+            {
+                CrewCoursesId = x.CrewCoursesId,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                CourseId = x.CourseId.HasValue ? x.CourseId.Value : default,
+                InstituteId = x.InstituteId.HasValue ? x.InstituteId.Value : default,
+                AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
+                Course = x.Course,
+                CertificateNumber = x.CertificateNumber,
+                PlaceOfIssue = x.PlaceOfIssue,
+                IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
+                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
+                IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
+                LimitationRemarks = x.LimitationRemarks,
+                Attachment = x.Attachment,
+                Verification = x.Verification,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+                VerifiedBy = x.VerifiedBy,
+                VerifiedDate = x.VerifiedDate.HasValue ? x.VerifiedDate.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+            }).ToList();
+
+            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false).Select(x => new TblCrewDetailVM
+            {
+
+                CrewId = x.CrewId,
+                CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
+                RankId = x.RankId.HasValue ? x.RankId.Value : default,
+                PoolId = x.PoolId.HasValue ? x.PoolId.Value : default,
+                ZonalId = x.ZonalId.HasValue ? x.ZonalId.Value : default,
+                MtunionId = x.MtunionId.HasValue ? x.MtunionId.Value : default,
+                NtbrReasonId = x.NtbrReasonId.HasValue ? x.NtbrReasonId.Value : default,
+                InActiveReasonId = x.InActiveReasonId.HasValue ? x.InActiveReasonId.Value : default,
+                EmpNumber = x.EmpNumber,
+                Status = x.Status,
+                PreviousStatus = x.PreviousStatus,
+                FirstName = x.FirstName,
+                MiddleName = x.MiddleName,
+                LastName = x.LastName,
+                Dob = x.Dob.HasValue ? x.Dob.Value.ToString() : default,
+                PlaceOfBirth = x.PlaceOfBirth,
+                CivilStatus = x.CivilStatus,
+                Doa = x.Doa.HasValue ? x.Doa.Value.ToString() : default,
+                Gender = x.Gender,
+                EnglishFluency = x.EnglishFluency,
+                UserImage = x.UserImage,
+                ShipCategory = x.ShipCategory,
+                AppliedOn = x.AppliedOn.HasValue ? x.AppliedOn.Value.ToString() : default,
+                FirstJoinDate = x.FirstJoinDate.HasValue ? x.FirstJoinDate.Value.ToString() : default,
+                OtherTravelDocNo = x.OtherTravelDocNo,
+                ManningOffice = x.ManningOffice,
+                MembershipNumber = x.MembershipNumber,
+                DateOfJoining = x.DateOfJoining.HasValue ? x.DateOfJoining.Value.ToString() : default,
+                Attachment = x.Attachment,
+                Benefits = x.Benefits,
+                Height = x.Height,
+                Weight = x.Weight,
+                ShoesSize = x.ShoesSize,
+                BoilerSuitSize = x.BoilerSuitSize,
+                ShirtSize = x.ShirtSize,
+                TrouserSize = x.TrouserSize,
+                HairColor = x.HairColor,
+                EyeColor = x.EyeColor,
+                DistinguishMark = x.DistinguishMark,
+                Resume = x.Resume,
+                Remark = x.Remark,
+                ApplicantStatus = x.ApplicantStatus,
+                LastVessel = x.LastVessel.HasValue ? x.LastVessel.Value : default,
+                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+                ReliefDate = x.ReliefDate.HasValue ? x.ReliefDate.Value.ToString() : default,
+                IsNtbr = x.IsNtbr.HasValue ? x.IsNtbr.Value : default,
+                Ntbron = x.Ntbron.HasValue ? x.Ntbron.Value.ToString() : default,
+                Ntbrby = x.Ntbrby,
+                InActive = x.InActive.HasValue ? x.InActive.Value : default,
+                InActiveOn = x.InActiveOn.HasValue ? x.InActiveOn.Value.ToString() : default,
+                InActiveBy = x.InActiveBy,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+                Signature = x.Signature,
+                PlanRankId = x.PlanRankId.HasValue ? x.PlanRankId.Value : default,
+                PlanStatus = x.PlanStatus,
+                PlanVesselId = x.PlanVesselId.HasValue ? x.PlanVesselId.Value : default,
+                ImpRemark = x.ImpRemark,
+                ApprovedBy = x.ApprovedBy.HasValue ? x.ApprovedBy.Value : default,
+                MaskAttachment = x.MaskAttachment,
+                MaskRemarks = x.MaskRemarks,
+                MaskedBy = x.MaskedBy,
+
+
+
+
+            }).ToList();
+            var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false).Select(x => new TblCrewLicenseVM
+            {
+            CrewLicenseId = x.CrewLicenseId,
+                CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
+                LicenseId = x.LicenseId.HasValue? x.LicenseId.Value : default,
+                LicenseNumber = x.LicenseNumber,
+                PlaceOfIssue = x.PlaceOfIssue,
+                IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
+                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
+                CountryId = x.CountryId.HasValue? x.CountryId.Value : default,
+                AuthorityId = x.AuthorityId.HasValue? x.AuthorityId.Value : default,
+                IsVerified = x.IsVerified.HasValue? x.IsVerified.Value : default,
+                LimitationRemarks = x.LimitationRemarks,
+                Verification = x.Verification,
+                VerifiedBy = x.VerifiedBy,
+                VerifiedDate = x.VerifiedDate.HasValue? x.VerifiedDate.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
+                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
+
+            }).ToList();
+            
+
+
+
+            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false).Select(x => new TblCrewListVM
+            {
+            CrewListId = x.CrewListId,
+                RankId = x.RankId.HasValue? x.RankId.Value : default,
+                VesselId = x.VesselId.HasValue? x.VesselId.Value : default,
+                CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
+                SignOnDate = x.SignOnDate.HasValue? x.SignOnDate.ToString() : default,
+                DueDate = x.DueDate.HasValue? x.DueDate.ToString() : default,
+                Reliever1 = x.Reliever1.HasValue? x.Reliever1.Value : default,
+                Reliever2 = x.Reliever2.HasValue? x.Reliever2.Value : default,
+                ReptriationPort = x.ReptriationPort,
+                EngagementPort = x.EngagementPort,
+                Er = x.Er,
+                Ermonth = x.Ermonth,
+                Status = x.Status,
+                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                IsSignOff = x.IsSignOff.HasValue? x.IsSignOff.Value : default,
+                ReplacedWith = x.ReplacedWith,
+                OldDueDate = x.OldDueDate.HasValue? x.OldDueDate.ToString() : default,
+                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
+                IsPromoted = x.IsPromoted.HasValue? x.IsPromoted.Value : default,
+                ActivityCode = x.ActivityCode.HasValue? x.ActivityCode.Value : default,
+                ReliverRankId = x.ReliverRankId.HasValue? x.ReliverRankId.Value : default,
+                PlanActivityCode = x.PlanActivityCode.HasValue? x.PlanActivityCode.Value : default
+            }).ToList();
+
+            var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false).Select(x => new TblCrewOtherDocumentVM
+            {
+                CrewOtherDocumentsId = x.CrewOtherDocumentsId,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                DocumentId = x.DocumentId.HasValue ? x.DocumentId.Value : default,
+                AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
+                DocumentNo = x.DocumentNo,
+                IssueDate = x.IssueDate.HasValue ? x.IssueDate.Value.ToString() : default,
+                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString() : default,
+                ExtendedDate = x.ExtendedDate.HasValue ? x.ExtendedDate.Value.ToString() : default,
+                PlaceOfIssue = x.PlaceOfIssue,
+                Attachment = x.Attachment,
+                Remarks = x.Remarks,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+
+            }).ToList();
             var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false);
             var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false);
             var PBBankAllotment = _context.PBBankAllotment.Where(x => x.IsDeleted == false);
@@ -142,7 +379,24 @@ namespace crewlinkship.Controllers
             var ReimbursementOrDeductions = _context.TblReimbursementOrDeductions.Where(x => x.IsDeleted == false);
             var TransferCrews = _context.TblTransferCrews.Where(x => x.IsDeleted == false);
             var Visas = _context.TblVisas.Where(x => x.IsDeleted == false);
-            var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false);
+            var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false).Select(x => new
+             TblYellowfeverVM
+            {
+                YellowFeverId = x.YellowFeverId,
+                CrewId = x.CrewId,
+                Reference = x.Reference,
+                Place = x.Place,
+                VendorRegisterId = x.VendorRegisterId.HasValue? x.VendorRegisterId.Value : default,
+                VaccineDate = x.VaccineDate.ToString(),
+                VaccineBatch = x.VaccineBatch,
+                Attachment = x.Attachment,
+                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
+                CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
+
+            }).ToList();
 
             var crewlistdats = _context.TblCrewLists.ToList();
             DataTable dtcrewlistdats = new DataTable();
