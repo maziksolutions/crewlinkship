@@ -1274,7 +1274,7 @@ namespace crewlinkship.Controllers
         {
             var datas = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", portageid).ToList();
 
-            string localpath = "https://localhost:44336/";
+            string localpath = "http://ship.crewlinkasm.com/";
             string url = "";
             var portageids = datas;
             using (ZipFile zip = new ZipFile())
