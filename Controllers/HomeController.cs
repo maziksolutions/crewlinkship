@@ -26,6 +26,9 @@ using System.Net.Http.Headers;
 using System.Web.Helpers;
 using System.Data;
 using System.Reflection;
+using System.Data.OleDb;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace crewlinkship.Controllers
 {
@@ -36,12 +39,13 @@ namespace crewlinkship.Controllers
         private readonly shipCrewlinkContext _context;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly AppSettings _appSettings;
-
+        private readonly IConfiguration _configuration;
         public bool IMOFull { get; private set; }
 
-        public HomeController(shipCrewlinkContext context ,IHostingEnvironment appEnvironment, IOptions<AppSettings> appSettings)
+        public HomeController(shipCrewlinkContext context, IHostingEnvironment appEnvironment, IConfiguration configuration, IOptions<AppSettings> appSettings)
         {
             // _logger = logger;
+            _configuration = configuration;
             _context = context;
             _appEnvironment = appEnvironment;
             _appSettings = appSettings.Value;
@@ -89,142 +93,263 @@ namespace crewlinkship.Controllers
             }
             return dt;
         }
+
+        [HttpPost]
+        // [Route("importdata")]
+        public IActionResult ImportData()
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    string folderName = "Import/";
+                    string webRootPath = _appEnvironment.WebRootPath;
+                    string newPath = Path.Combine(webRootPath, folderName);
+                    if (!Directory.Exists(newPath))
+                    {
+                        Directory.CreateDirectory(newPath);
+                    }
+                    if (file.Length > 0)
+                    {
+                        string fileExtension = Path.GetExtension(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('\"'));
+                        string fileName = "Import_" + Guid.NewGuid() + fileExtension;
+                        string fullPath = Path.Combine(newPath, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            var serverUrl = _configuration["serverUrl"];
+                            // item.Attachment = serverUrl + folderName + fileName;
+                        }
+                        string extension = Path.GetExtension(fileName);
+                        string conString = string.Empty;
+                        var constr = _configuration.GetConnectionString("excelconnection");
+                        constr = string.Format(constr, fullPath);
+                        DataSet dsTables = new DataSet();
+                        using (OleDbConnection connExcel = new OleDbConnection(constr))
+                        {
+                            using (OleDbCommand cmdExcel = new OleDbCommand())
+                            {
+                                using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                                {
+                                    cmdExcel.Connection = connExcel;
+                                    connExcel.Open();
+                                    DataTable dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                                    connExcel.Close();
+                                    for (int i = 0; i < dtExcelSchema.Rows.Count; i++)
+                                    {
+                                        string sheetName = dtExcelSchema.Rows[i]["TABLE_NAME"].ToString();
+                                        //Read Data from current Sheet.
+                                        connExcel.Open();
+                                        cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                                        odaExcel.SelectCommand = cmdExcel;
+                                        DataTable dt = new DataTable(sheetName.Replace("$", string.Empty));
+                                        odaExcel.Fill(dt);
+                                        if (dt.Rows.Count > 0 && dt.Rows[0][0].ToString() != "")
+                                        {
+                                            dsTables.Tables.Add(dt);
+                                        }
+                                        connExcel.Close();
+                                    }
+                                }
+                            }
+                        }
+                        conString = _configuration.GetConnectionString("sqlcon");
+                        for (int i = 0; i < dsTables.Tables.Count; i++)
+                        {
+                            if (dsTables.Tables[i].Rows.Count > 0)
+                            {
+                                using (SqlConnection con = new SqlConnection(conString))
+                                {
+                                    using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                                    {
+                                        sqlBulkCopy.DestinationTableName = "dbo." + dsTables.Tables[i].TableName;
+                                        con.Open();
+                                        if (dsTables.Tables[i].Rows.Count > 0)
+                                        {
+                                            sqlBulkCopy.WriteToServer(dsTables.Tables[i]);
+                                            con.Close();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { throw ex; };
+            return null;
+        }
+
         public IActionResult Takebackup()
         {
-            var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false).Select(x => new TblActivitySignOffVM
+            var currentDate = DateTime.Now;
+            var sixMonth = currentDate.AddMonths(-6);
+
+            //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
+            //{
+            //    ActivitySignOffId = x.ActivitySignOffId,
+            //    CrewId = x.CrewId.Value,
+            //    CrewListId = x.CrewListId.Value,
+            //    SignOffDate = x.SignOffDate.Value.ToString(),
+            //    SeaportId = x.SeaportId.Value.ToString(),
+            //    EndTravelDate = x.EndTravelDate.Value.ToString(),
+            //    LeaveStartDate = x.LeaveStartDate.Value.ToString(),
+            //    CompletionDate = x.CompletionDate.Value.ToString(),
+            //    SignOffReasonId = x.SignOffReasonId.HasValue ? x.SignOffReasonId.Value : default,
+            //    DoagivenDate = x.DoagivenDate.Value.ToString(),
+            //    DateOfAvailability = x.DateOfAvailability.Value.ToString(),
+            //    AllowEndTravel = x.AllowEndTravel.Value,
+            //    DispensationApplied = x.DispensationApplied,
+            //    Remarks = x.Remarks,
+            //    ReasonDelayedId = x.ReasonDelayedId.HasValue ? x.ReasonDelayedId.Value : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    IsDeleted = x.IsDeleted.Value,
+            //    RecDate = x.RecDate.Value,
+            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+            //    ModifiedDate = x.ModifiedDate.Value.ToString(),
+            //    Attachment = x.Attachment,
+            //    StayInHotel = x.StayInHotel.HasValue ? x.StayInHotel.Value : default,
+            //    StayOnBoard = x.StayOnBoard.HasValue ? x.StayOnBoard.Value : default,
+            //    StayStartDate = x.StayStartDate.Value.ToString(),
+            //    InjurySubTypeId = x.InjurySubTypeId.HasValue ? x.InjurySubTypeId.Value : default,
+            //    InjuryType = x.InjuryType,
+            //}).ToList();
+
+            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblActivitySignOnVM
             {
-                ActivitySignOffId = x.ActivitySignOffId,
+
+                ActivitySignOnId = x.ActivitySignOnId,
                 CrewId = x.CrewId.Value,
-                CrewListId = x.CrewListId.Value,
-                SignOffDate = x.SignOffDate.Value.ToString(),
-                SeaportId = x.SeaportId.Value.ToString(),
-                EndTravelDate = x.EndTravelDate.Value.ToString(),
-                LeaveStartDate = x.LeaveStartDate.Value.ToString(),
-                CompletionDate = x.CompletionDate.Value.ToString(),
-                SignOffReasonId = x.SignOffReasonId.HasValue ? x.SignOffReasonId.Value : default,
-                DoagivenDate = x.DoagivenDate.Value.ToString(),
-                DateOfAvailability = x.DateOfAvailability.Value.ToString(),
-                AllowEndTravel = x.AllowEndTravel.Value,
-                DispensationApplied = x.DispensationApplied,
-                Remarks = x.Remarks,
-                ReasonDelayedId = x.ReasonDelayedId.HasValue ? x.ReasonDelayedId.Value : default,
-                ModifiedBy = x.ModifiedBy,
-                IsDeleted = x.IsDeleted.Value,
-                RecDate = x.RecDate.Value,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-                ModifiedDate = x.ModifiedDate.Value.ToString(),
-                Attachment = x.Attachment,
-                StayInHotel = x.StayInHotel.HasValue ? x.StayInHotel.Value : default,
-                StayOnBoard = x.StayOnBoard.HasValue ? x.StayOnBoard.Value : default,
-                StayStartDate = x.StayStartDate.Value.ToString(),
-                InjurySubTypeId = x.InjurySubTypeId.HasValue ? x.InjurySubTypeId.Value : default,
-                InjuryType = x.InjuryType,
-            }).ToList();
-
-            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false);
-            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false);
-            var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false);
-
-            var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false);
-            var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false).Select(x => new TblCdcVM
-            {
-
-                Cdcid = x.Cdcid,
-                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-                CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
-                Cdcnumber = x.Cdcnumber,
-                Place = x.Place,
-                Doi = x.Doi.HasValue ? x.Doi.Value.ToString() : default,
-                Doe = x.Doe.HasValue ? x.Doe.Value.ToString() : default,
-                FilePath = x.FilePath,
-                IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-                VerifiedBy = x.VerifiedBy,
-                VerifyDate = x.VerifyDate.HasValue ? x.VerifyDate.Value.ToString() : default,
-                VerificationPath = x.VerificationPath,
-                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-                EmailPath = x.EmailPath,
-
-
-            }).ToList();
-            var Contract = _context.TblContracts.Where(x => x.IsDeleted == false).Select(x => new TblContractVM {
-                ContractId = x.ContractId,
-                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-                Cbaid = x.Cbaid.HasValue ? x.Cbaid.Value : default,
-                SeaportId = x.SeaportId.HasValue ? x.SeaportId.Value : default,
-                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
-                Osa = x.Osa.HasValue ? x.Osa.Value : default,
-                Waf = x.Waf.HasValue ? x.Waf.Value : default,
-                ContractPath = x.ContractPath,
-                TotalWage = x.TotalWage.HasValue ? x.TotalWage.Value : default,
-                EngagementPort = x.EngagementPort,
-                ReptriationPort = x.ReptriationPort,
-                Sca = x.Sca.HasValue ? x.Sca.Value : default,
-                Other = x.Other.HasValue ? x.Other.Value : default,
-                Seniority = x.Seniority.HasValue ? x.Seniority.Value : default,
-                ReviseReason = x.ReviseReason,
+                ContractId = x.ContractId.Value,
+                VesselId = x.VesselId.Value,
+                CountryId = x.CountryId.Value,
+                SeaportId = x.SeaportId.Value,
+                RankId = x.RankId.Value,
+                SignOnReasonId = x.SignOnReasonId.Value,
+                ReliveesCrewListId = x.ReliveesCrewListId.Value,
+                Contract = x.Contract,
+                ExpectedSignOnDate = x.ExpectedSignOnDate,
                 Duration = x.Duration,
-                Plus = x.Plus.HasValue ? x.Plus.Value : default,
-                SignonDate = x.SignonDate.HasValue ? x.SignonDate.ToString() : default,
-                PayCommence = x.PayCommence.HasValue ? x.PayCommence.ToString() : default,
-                Expirydate = x.Expirydate.HasValue ? x.Expirydate.ToString() : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                ReliefDate = x.ReliefDate.Value.ToString(),
+                ExpectedTravelDate = x.ExpectedTravelDate.Value.ToString(),
+                ExtraCrewOnBoard = x.ExtraCrewOnBoard,
+                ExtraCrewReasonId = x.ExtraCrewReasonId.Value,
+                ExtraApprovedBy = x.ExtraApprovedBy,
+                DocsValidityCheckPeriod = x.DocsValidityCheckPeriod,
+                AllowBeginTravel = x.AllowBeginTravel.HasValue ? x.AllowBeginTravel.Value : default,
+                PreJoiningMedicals = x.PreJoiningMedicals,
+                Appraisal = x.Appraisal.Value,
+                OwnerWage = x.OwnerWage.Value,
+                Remarks = x.Remarks,
                 ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-                Pf = x.Pf.HasValue ? x.Pf.Value : default,
-                Ud = x.Ud.HasValue ? x.Ud.Value : default,
-                Wf = x.Wf.HasValue ? x.Wf.Value : default,
-                Pfamount = x.Pfamount.HasValue ? x.Pfamount.Value : default,
-                Udamount = x.Udamount.HasValue ? x.Udamount.Value : default,
-                Wfamount = x.Wfamount.HasValue ? x.Wfamount.Value : default,
-                BasicWage = x.BasicWage.HasValue ? x.BasicWage.Value : default,
-                FixedOvertime = x.FixedOvertime.HasValue ? x.FixedOvertime.Value : default,
-                LeaveWages = x.LeaveWages.HasValue ? x.LeaveWages.Value : default,
-                PensionFund = x.PensionFund.HasValue ? x.PensionFund.Value : default,
-                SubsistenceAllowance = x.SubsistenceAllowance.HasValue ? x.SubsistenceAllowance.Value : default,
-                UniformAllowance = x.UniformAllowance.HasValue ? x.UniformAllowance.Value : default,
-                Acmapproval = x.Acmapproval.HasValue ? x.Acmapproval.Value : default,
-                AcmapprovedBy = x.AcmapprovedBy.HasValue ? x.AcmapprovedBy.Value : default,
-                GwapprovedBy = x.GwapprovedBy.HasValue ? x.GwapprovedBy.Value : default,
-                Gwapproval = x.Gwapproval.HasValue ? x.Gwapproval.Value : default,
-                IsOnlyBasic = x.IsOnlyBasic.HasValue ? x.IsOnlyBasic.Value : default,
-                Note = x.Note,
-                CrewListId = x.CrewListId.HasValue ? x.CrewListId.Value : default,
-                Gwpath = x.Gwpath
+                ModifiedDate = x.ModifiedDate.Value.ToString(),
+                IsDeleted = x.IsDeleted.Value,
+                IsSignon = x.IsSignon.Value,
+                RecDate = x.RecDate.Value.ToString(),
+                CreatedBy = x.CreatedBy
             }).ToList();
+            //{;
+            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
 
-            var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false);
-            var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false);
-            var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false).Select(x => new TblCrewCourseVM
-            {
-                CrewCoursesId = x.CrewCoursesId,
-                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-                CourseId = x.CourseId.HasValue ? x.CourseId.Value : default,
-                InstituteId = x.InstituteId.HasValue ? x.InstituteId.Value : default,
-                AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-                Course = x.Course,
-                CertificateNumber = x.CertificateNumber,
-                PlaceOfIssue = x.PlaceOfIssue,
-                IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-                IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-                LimitationRemarks = x.LimitationRemarks,
-                Attachment = x.Attachment,
-                Verification = x.Verification,
-                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-                VerifiedBy = x.VerifiedBy,
-                VerifiedDate = x.VerifiedDate.HasValue ? x.VerifiedDate.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            }).ToList();
+            //var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCdcVM
+            //{
+            //    Cdcid = x.Cdcid,
+            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+            //    CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
+            //    Cdcnumber = x.Cdcnumber,
+            //    Place = x.Place,
+            //    Doi = x.Doi.HasValue ? x.Doi.Value.ToString() : default,
+            //    Doe = x.Doe.HasValue ? x.Doe.Value.ToString() : default,
+            //    FilePath = x.FilePath,
+            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
+            //    VerifiedBy = x.VerifiedBy,
+            //    VerifyDate = x.VerifyDate.HasValue ? x.VerifyDate.Value.ToString() : default,
+            //    VerificationPath = x.VerificationPath,
+            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+            //    EmailPath = x.EmailPath,
+            //}).ToList();
+            //var Contract = _context.TblContracts.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblContractVM {
+            //    ContractId = x.ContractId,
+            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+            //    Cbaid = x.Cbaid.HasValue ? x.Cbaid.Value : default,
+            //    SeaportId = x.SeaportId.HasValue ? x.SeaportId.Value : default,
+            //    VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+            //    Osa = x.Osa.HasValue ? x.Osa.Value : default,
+            //    Waf = x.Waf.HasValue ? x.Waf.Value : default,
+            //    ContractPath = x.ContractPath,
+            //    TotalWage = x.TotalWage.HasValue ? x.TotalWage.Value : default,
+            //    EngagementPort = x.EngagementPort,
+            //    ReptriationPort = x.ReptriationPort,
+            //    Sca = x.Sca.HasValue ? x.Sca.Value : default,
+            //    Other = x.Other.HasValue ? x.Other.Value : default,
+            //    Seniority = x.Seniority.HasValue ? x.Seniority.Value : default,
+            //    ReviseReason = x.ReviseReason,
+            //    Duration = x.Duration,
+            //    Plus = x.Plus.HasValue ? x.Plus.Value : default,
+            //    SignonDate = x.SignonDate.HasValue ? x.SignonDate.ToString() : default,
+            //    PayCommence = x.PayCommence.HasValue ? x.PayCommence.ToString() : default,
+            //    Expirydate = x.Expirydate.HasValue ? x.Expirydate.ToString() : default,
+            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
+            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+            //    Pf = x.Pf.HasValue ? x.Pf.Value : default,
+            //    Ud = x.Ud.HasValue ? x.Ud.Value : default,
+            //    Wf = x.Wf.HasValue ? x.Wf.Value : default,
+            //    Pfamount = x.Pfamount.HasValue ? x.Pfamount.Value : default,
+            //    Udamount = x.Udamount.HasValue ? x.Udamount.Value : default,
+            //    Wfamount = x.Wfamount.HasValue ? x.Wfamount.Value : default,
+            //    BasicWage = x.BasicWage.HasValue ? x.BasicWage.Value : default,
+            //    FixedOvertime = x.FixedOvertime.HasValue ? x.FixedOvertime.Value : default,
+            //    LeaveWages = x.LeaveWages.HasValue ? x.LeaveWages.Value : default,
+            //    PensionFund = x.PensionFund.HasValue ? x.PensionFund.Value : default,
+            //    SubsistenceAllowance = x.SubsistenceAllowance.HasValue ? x.SubsistenceAllowance.Value : default,
+            //    UniformAllowance = x.UniformAllowance.HasValue ? x.UniformAllowance.Value : default,
+            //    Acmapproval = x.Acmapproval.HasValue ? x.Acmapproval.Value : default,
+            //    AcmapprovedBy = x.AcmapprovedBy.HasValue ? x.AcmapprovedBy.Value : default,
+            //    GwapprovedBy = x.GwapprovedBy.HasValue ? x.GwapprovedBy.Value : default,
+            //    Gwapproval = x.Gwapproval.HasValue ? x.Gwapproval.Value : default,
+            //    IsOnlyBasic = x.IsOnlyBasic.HasValue ? x.IsOnlyBasic.Value : default,
+            //    Note = x.Note,
+            //    CrewListId = x.CrewListId.HasValue ? x.CrewListId.Value : default,
+            //    Gwpath = x.Gwpath
+            //}).ToList();
 
-            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false).Select(x => new TblCrewDetailVM
+            //var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewCourseVM
+            //{
+            //    CrewCoursesId = x.CrewCoursesId,
+            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+            //    CourseId = x.CourseId.HasValue ? x.CourseId.Value : default,
+            //    InstituteId = x.InstituteId.HasValue ? x.InstituteId.Value : default,
+            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
+            //    Course = x.Course,
+            //    CertificateNumber = x.CertificateNumber,
+            //    PlaceOfIssue = x.PlaceOfIssue,
+            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
+            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
+            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
+            //    LimitationRemarks = x.LimitationRemarks,
+            //    Attachment = x.Attachment,
+            //    Verification = x.Verification,
+            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+            //    VerifiedBy = x.VerifiedBy,
+            //    VerifiedDate = x.VerifiedDate.HasValue ? x.VerifiedDate.ToString() : default,
+            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+            //}).ToList();
+
+            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewDetailVM
             {
 
                 CrewId = x.CrewId,
@@ -282,121 +407,176 @@ namespace crewlinkship.Controllers
                 RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
                 ModifiedBy = x.ModifiedBy,
                 ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
                 Signature = x.Signature,
                 PlanRankId = x.PlanRankId.HasValue ? x.PlanRankId.Value : default,
                 PlanStatus = x.PlanStatus,
                 PlanVesselId = x.PlanVesselId.HasValue ? x.PlanVesselId.Value : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
                 ImpRemark = x.ImpRemark,
                 ApprovedBy = x.ApprovedBy.HasValue ? x.ApprovedBy.Value : default,
-                MaskAttachment = x.MaskAttachment,
                 MaskRemarks = x.MaskRemarks,
+                MaskAttachment = x.MaskAttachment,
                 MaskedBy = x.MaskedBy,
-
-
-
-
             }).ToList();
-            var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false).Select(x => new TblCrewLicenseVM
+            //var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewLicenseVM
+            //{
+            //CrewLicenseId = x.CrewLicenseId,
+            //    CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
+            //    LicenseId = x.LicenseId.HasValue? x.LicenseId.Value : default,
+            //    LicenseNumber = x.LicenseNumber,
+            //    PlaceOfIssue = x.PlaceOfIssue,
+            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
+            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
+            //    CountryId = x.CountryId.HasValue? x.CountryId.Value : default,
+            //    AuthorityId = x.AuthorityId.HasValue? x.AuthorityId.Value : default,
+            //    IsVerified = x.IsVerified.HasValue? x.IsVerified.Value : default,
+            //    LimitationRemarks = x.LimitationRemarks,
+            //    Verification = x.Verification,
+            //    VerifiedBy = x.VerifiedBy,
+            //    VerifiedDate = x.VerifiedDate.HasValue? x.VerifiedDate.ToString() : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
+            //    IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
+            //    RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+            //    CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
+
+            //}).ToList();
+
+            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewListVM
             {
-            CrewLicenseId = x.CrewLicenseId,
-                CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
-                LicenseId = x.LicenseId.HasValue? x.LicenseId.Value : default,
-                LicenseNumber = x.LicenseNumber,
-                PlaceOfIssue = x.PlaceOfIssue,
-                IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-                CountryId = x.CountryId.HasValue? x.CountryId.Value : default,
-                AuthorityId = x.AuthorityId.HasValue? x.AuthorityId.Value : default,
-                IsVerified = x.IsVerified.HasValue? x.IsVerified.Value : default,
-                LimitationRemarks = x.LimitationRemarks,
-                Verification = x.Verification,
-                VerifiedBy = x.VerifiedBy,
-                VerifiedDate = x.VerifiedDate.HasValue? x.VerifiedDate.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
-
-            }).ToList();
-            
-
-
-
-            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false).Select(x => new TblCrewListVM
-            {
-            CrewListId = x.CrewListId,
-                RankId = x.RankId.HasValue? x.RankId.Value : default,
-                VesselId = x.VesselId.HasValue? x.VesselId.Value : default,
-                CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
-                SignOnDate = x.SignOnDate.HasValue? x.SignOnDate.ToString() : default,
-                DueDate = x.DueDate.HasValue? x.DueDate.ToString() : default,
-                Reliever1 = x.Reliever1.HasValue? x.Reliever1.Value : default,
-                Reliever2 = x.Reliever2.HasValue? x.Reliever2.Value : default,
+                CrewListId = x.CrewListId,
+                RankId = x.RankId.HasValue ? x.RankId.Value : default,
+                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                SignOnDate = x.SignOnDate.HasValue ? x.SignOnDate.ToString() : default,
+                DueDate = x.DueDate.HasValue ? x.DueDate.ToString() : default,
+                Reliever1 = x.Reliever1.HasValue ? x.Reliever1.Value : default,
+                Reliever2 = x.Reliever2.HasValue ? x.Reliever2.Value : default,
                 ReptriationPort = x.ReptriationPort,
                 EngagementPort = x.EngagementPort,
                 Er = x.Er,
                 Ermonth = x.Ermonth,
+                OldDueDate = x.OldDueDate.HasValue ? x.OldDueDate.ToString() : default,
                 Status = x.Status,
-                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                IsSignOff = x.IsSignOff.HasValue? x.IsSignOff.Value : default,
-                ReplacedWith = x.ReplacedWith,
-                OldDueDate = x.OldDueDate.HasValue? x.OldDueDate.ToString() : default,
-                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-                IsPromoted = x.IsPromoted.HasValue? x.IsPromoted.Value : default,
-                ActivityCode = x.ActivityCode.HasValue? x.ActivityCode.Value : default,
-                ReliverRankId = x.ReliverRankId.HasValue? x.ReliverRankId.Value : default,
-                PlanActivityCode = x.PlanActivityCode.HasValue? x.PlanActivityCode.Value : default
-            }).ToList();
-
-            var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false).Select(x => new TblCrewOtherDocumentVM
-            {
-                CrewOtherDocumentsId = x.CrewOtherDocumentsId,
-                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-                DocumentId = x.DocumentId.HasValue ? x.DocumentId.Value : default,
-                AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-                DocumentNo = x.DocumentNo,
-                IssueDate = x.IssueDate.HasValue ? x.IssueDate.Value.ToString() : default,
-                ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString() : default,
-                ExtendedDate = x.ExtendedDate.HasValue ? x.ExtendedDate.Value.ToString() : default,
-                PlaceOfIssue = x.PlaceOfIssue,
-                Attachment = x.Attachment,
-                Remarks = x.Remarks,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
                 IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-
-            }).ToList();
-            var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false);
-            var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false);
-            var PBBankAllotment = _context.PBBankAllotment.Where(x => x.IsDeleted == false);
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false);
-            var ReimbursementOrDeductions = _context.TblReimbursementOrDeductions.Where(x => x.IsDeleted == false);
-            var TransferCrews = _context.TblTransferCrews.Where(x => x.IsDeleted == false);
-            var Visas = _context.TblVisas.Where(x => x.IsDeleted == false);
-            var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false).Select(x => new
-             TblYellowfeverVM
-            {
-                YellowFeverId = x.YellowFeverId,
-                CrewId = x.CrewId,
-                Reference = x.Reference,
-                Place = x.Place,
-                VendorRegisterId = x.VendorRegisterId.HasValue? x.VendorRegisterId.Value : default,
-                VaccineDate = x.VaccineDate.ToString(),
-                VaccineBatch = x.VaccineBatch,
-                Attachment = x.Attachment,
-                IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
                 ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-                CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+                IsSignOff = x.IsSignOff.HasValue ? x.IsSignOff.Value : default,
+                IsPromoted = x.IsPromoted.HasValue ? x.IsPromoted.Value : default,
+                ActivityCode = x.ActivityCode.HasValue ? x.ActivityCode.Value : default,
+                PlanActivityCode = x.PlanActivityCode.HasValue ? x.PlanActivityCode.Value : default,
+                ReplacedWith = x.ReplacedWith,
+                ReliverRankId = x.ReliverRankId.HasValue ? x.ReliverRankId.Value : default,
 
             }).ToList();
+
+            //var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewOtherDocumentVM
+            //{
+            //    CrewOtherDocumentsId = x.CrewOtherDocumentsId,
+            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+            //    DocumentId = x.DocumentId.HasValue ? x.DocumentId.Value : default,
+            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
+            //    DocumentNo = x.DocumentNo,
+            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.Value.ToString() : default,
+            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString() : default,
+            //    ExtendedDate = x.ExtendedDate.HasValue ? x.ExtendedDate.Value.ToString() : default,
+            //    PlaceOfIssue = x.PlaceOfIssue,
+            //    Attachment = x.Attachment,
+            //    Remarks = x.Remarks,
+            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+
+            //}).ToList();
+            //var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            var PBBankAllotment = _context.PBBankAllotment.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x=> new tblPBBankAllotmentVM {
+                VesselPortId = x.BankAllotmentId,
+                Crew = x.Crew,
+                VesselId =x.VesselId,
+                BankId = x.BankId,
+                From = x.From,
+                To = x.To,
+                Allotments = x.Allotments,
+                IsMidMonthAllotment = x.IsMidMonthAllotment,
+                IsDeleted = x.IsDeleted,
+                Recdate= x.Recdate,
+                IsPromoted = x.IsPromoted
+            }).ToList();
+            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblPortageBillVM
+            {
+                VesselPortId = x.PortageBillId,
+                CrewId = x.CrewId,
+                CrewListId = x.CrewListId,
+                ContractId = x.ContractId,
+                From = x.From.Value.ToString(),
+                To = x.To.Value.ToString(),
+                Days = x.Days,
+                Othours = x.Othours,
+                ExtraOt = x.ExtraOt,
+                OtherEarnings = x.OtherEarnings,
+                TransitDays = x.TransitDays,
+                TransitWages = x.TransitWages,
+                TotalEarnings = x.TotalEarnings,
+                PrevMonthBal = x.PrevMonthBal,
+                Reimbursement = x.Reimbursement,
+                TotalPayable = x.TotalPayable,
+                LeaveWagesCf = x.LeaveWagesCf,
+                CashAdvance = x.CashAdvance,
+                BondedStores = x.BondedStores,
+                OtherDeductions = x.OtherDeductions,
+                Allotments = x.Allotments,
+                TotalDeductions = x.TotalDeductions,
+                LeaveWagesBf = x.LeaveWagesBf,
+                FinalBalance = x.FinalBalance,
+                SignOffDate = x.SignOffDate.Value.ToString(),
+                Remarks = x.Remarks,
+                IsDeleted = x.IsDeleted,
+                RecDate = x.RecDate.Value.ToString(),
+                CreatedBy = x.CreatedBy,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.Value.ToString(),
+                AppliedCba = x.AppliedCba,
+                BillStatus = x.BillStatus,
+                BankId = x.BankId,
+                Vesselid = x.Vesselid,
+                Udamount = x.Udamount,
+                Wfamount = x.Wfamount,
+                Tax = x.Tax,
+                IsTransitApply = x.IsTransitApply,
+                IsPromoted = x.IsPromoted,
+                IsLeaveWagesCf = x.IsLeaveWagesCf,
+                Attachment = x.Attachment,
+                IndPfamount = x.IndPfamount,
+                Gratuity = x.Gratuity,
+                Avc = x.Avc,
+                IsAddPrevBal = x.IsAddPrevBal,
+                IsHoldWageAllotment = x.IsHoldWageAllotment
+            }).ToList();
+            //var ReimbursementOrDeductions = _context.TblReimbursementOrDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var TransferCrews = _context.TblTransferCrews.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var Visas = _context.TblVisas.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            //var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new
+            // TblYellowfeverVM
+            //{
+            //    YellowFeverId = x.YellowFeverId,
+            //    CrewId = x.CrewId,
+            //    Reference = x.Reference,
+            //    Place = x.Place,
+            //    VendorRegisterId = x.VendorRegisterId.HasValue? x.VendorRegisterId.Value : default,
+            //    VaccineDate = x.VaccineDate.ToString(),
+            //    VaccineBatch = x.VaccineBatch,
+            //    Attachment = x.Attachment,
+            //    IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
+            //    RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
+            //    CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
+
+            //}).ToList();
 
             var crewlistdats = _context.TblCrewLists.ToList();
             DataTable dtcrewlistdats = new DataTable();
@@ -407,77 +587,78 @@ namespace crewlinkship.Controllers
             foreach (DataRow row in dtcrewlistdats.Rows)
             {
                 dtCloned.ImportRow(row);
-            } 
-          try
-            {           
-            var TblPortageBills = _context.TblPortageBills.ToList();
-            using (XLWorkbook wb = new XLWorkbook())
+            }
+            try
             {
-               var wsActivitySignOffs = wb.Worksheets.Add("tblActivitySignOff");
-               wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOffs);
+                var TblPortageBills = _context.TblPortageBills.ToList();
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    //var wsActivitySignOffs = wb.Worksheets.Add("tblImportActivitySignOff");
 
-               var wsActivitySignOns = wb.Worksheets.Add("tblActivitySignOn");
-               wb.Worksheet(2).Cell(1, 1).InsertTable(ActivitySignOns);
+                    //wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOffs);
 
-               var wsAssignmentsWithOthers = wb.Worksheets.Add("tblAssignmentsWithOthers");
-               wb.Worksheet(3).Cell(1, 1).InsertTable(ActivitySignOffs);
+                    var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
+                    wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOns);
 
-              var wsAssignmentsWithOur = wb.Worksheets.Add("tblAssignmentsWithOur");
-              wb.Worksheet(4).Cell(1, 1).InsertTable(ActivitySignOns);
+                    //var wsAssignmentsWithOthers = wb.Worksheets.Add("tblImportAssignmentsWithOther");
+                    //wb.Worksheet(2).Cell(1, 1).InsertTable(AssignmentsWithOthers);
 
-                    var wsBowRequest = wb.Worksheets.Add("tblBowRequest");
-                    wb.Worksheet(5).Cell(1, 1).InsertTable(BowRequest);
+                    //var wsAssignmentsWithOur = wb.Worksheets.Add("tblImportAssignmentsWithOur");
+                    //wb.Worksheet(4).Cell(1, 1).InsertTable(AssignmentsWithOur);
 
-                    var wsCdc = wb.Worksheets.Add("tblCDC");
-                    wb.Worksheet(6).Cell(1, 1).InsertTable(Cdc);
+                    //      var wsBowRequest = wb.Worksheets.Add("tblImportBowRequest");
+                    //      wb.Worksheet(5).Cell(1, 1).InsertTable(BowRequest);
 
-                    var wsContract = wb.Worksheets.Add("tblContract");
-                    wb.Worksheet(7).Cell(1, 1).InsertTable(Contract);
+                    //      var wsCdc = wb.Worksheets.Add("tblImportCdc");
+                    //      wb.Worksheet(6).Cell(1, 1).InsertTable(Cdc);
 
-                    var wsCrewAddress = wb.Worksheets.Add("tblCrewAddress");
-                    wb.Worksheet(8).Cell(1, 1).InsertTable(CrewAddresses);
+                    //var wsContract = wb.Worksheets.Add("tblImportContract");
+                    //wb.Worksheet(7).Cell(1, 1).InsertTable(Contract);
 
-                    var wsCrewBankDetails = wb.Worksheets.Add("tblCrewBankDetails");
-                    wb.Worksheet(9).Cell(1, 1).InsertTable(CrewBankDetails);
+                    //var wsCrewAddress = wb.Worksheets.Add("tblImportCrewAddress");
+                    //wb.Worksheet(8).Cell(1, 1).InsertTable(CrewAddresses);
 
-                    var wsCrewCourses = wb.Worksheets.Add("tblCrewCourses");
-                    wb.Worksheet(10).Cell(1, 1).InsertTable(CrewCourses);
+                    //var wsCrewBankDetails = wb.Worksheets.Add("tblImportCrewBankDetail");
+                    //wb.Worksheet(9).Cell(1, 1).InsertTable(CrewBankDetails);
 
-                    var wsCrewDetails = wb.Worksheets.Add("tblCrewDetails");
-                    wb.Worksheet(11).Cell(1, 1).InsertTable(CrewDetails);
+                    //var wsCrewCourses = wb.Worksheets.Add("tblImportCrewCourse");
+                    //wb.Worksheet(10).Cell(1, 1).InsertTable(CrewCourses);
 
-                    var wsCrewLicense = wb.Worksheets.Add("tblCrewLicense");
-                    wb.Worksheet(12).Cell(1, 1).InsertTable(CrewLicenses);
+                    var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
+                    wb.Worksheet(2).Cell(1, 1).InsertTable(CrewDetails);
 
-                    var wsCrewList = wb.Worksheets.Add("tblCrewList");
-                    wb.Worksheet(13).Cell(1, 1).InsertTable(CrewLists);
+                    //var wsCrewLicense = wb.Worksheets.Add("tblImportCrewLicense");
+                    //wb.Worksheet(12).Cell(1, 1).InsertTable(CrewLicenses);
 
-                    var wsCrewOtherDocuments = wb.Worksheets.Add("tblCrewOtherDocuments");
-                    wb.Worksheet(14).Cell(1, 1).InsertTable(CrewOtherDocuments);
+                    var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
+                    wb.Worksheet(3).Cell(1, 1).InsertTable(CrewLists);
 
-                    var wsMidMonthAllotment = wb.Worksheets.Add("tblMidMonthAllotment");
-                    wb.Worksheet(15).Cell(1, 1).InsertTable(MidMonthAllotments);
+                    //var wsCrewOtherDocuments = wb.Worksheets.Add("tblImportCrewOtherDocument");
+                    //wb.Worksheet(14).Cell(1, 1).InsertTable(CrewOtherDocuments);
 
-                    var wsNigerianDeduction = wb.Worksheets.Add("tblNigerianDeduction");
-                    wb.Worksheet(16).Cell(1, 1).InsertTable(NigerianDeductions);
+                    //var wsMidMonthAllotment = wb.Worksheets.Add("tblImportMidMonthAllotment");
+                    //wb.Worksheet(15).Cell(1, 1).InsertTable(MidMonthAllotments);
 
-                    var wsPBBankAllotment = wb.Worksheets.Add("tblPBBankAllotment");
-                    wb.Worksheet(17).Cell(1, 1).InsertTable(PBBankAllotment);
+                    //var wsNigerianDeduction = wb.Worksheets.Add("tblImportNigerianDeduction");
+                    //wb.Worksheet(16).Cell(1, 1).InsertTable(NigerianDeductions);
 
-                    var wsPortageBill = wb.Worksheets.Add("tblPortageBill");
-                    wb.Worksheet(18).Cell(1, 1).InsertTable(PortageBills);
+                    var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
+                    wb.Worksheet(4).Cell(1, 1).InsertTable(PBBankAllotment);
 
-                    var wsReimbursementOrDeduction = wb.Worksheets.Add("tblReimbursementOrDeduction");
-                    wb.Worksheet(19).Cell(1, 1).InsertTable(ReimbursementOrDeductions);
+                    var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
+                    wb.Worksheet(5).Cell(1, 1).InsertTable(PortageBills);
 
-                    var wsTransferCrew = wb.Worksheets.Add("tblTransferCrew");
-                    wb.Worksheet(20).Cell(1, 1).InsertTable(TransferCrews);
+                    //var wsReimbursementOrDeduction = wb.Worksheets.Add("TblImportContractReimDedu");
+                    //wb.Worksheet(19).Cell(1, 1).InsertTable(ReimbursementOrDeductions);
 
-                    var wsVisa = wb.Worksheets.Add("tblVisa");
-                    wb.Worksheet(21).Cell(1, 1).InsertTable(Visas);
+                    //var wsTransferCrew = wb.Worksheets.Add("tblImportTransferCrew");
+                    //wb.Worksheet(20).Cell(1, 1).InsertTable(TransferCrews);
 
-                    var wsYellowfever = wb.Worksheets.Add("tblYellowfever");
-                    wb.Worksheet(22).Cell(1, 1).InsertTable(Yellowfevers);
+                    //var wsVisa = wb.Worksheets.Add("tblImportVisa");
+                    //wb.Worksheet(21).Cell(1, 1).InsertTable(Visas);
+
+                    //var wsYellowfever = wb.Worksheets.Add("tblImportYellowfever");
+                    //wb.Worksheet(22).Cell(1, 1).InsertTable(Yellowfevers);
                     //var ws = wb.Worksheets.Add("TblCrewList");
                     //wb.Worksheet(3).Cell(1, 1).InsertTable(Userlogins);
                     //var ws1 = wb.Worksheets.Add("TblPortageBills");
@@ -485,11 +666,11 @@ namespace crewlinkship.Controllers
                     //var ws2 = wb.Worksheets.Add("TblActivitySignOffs");
                     //wb.Worksheet(5).Cell(1, 1).InsertTable(dtCloned);
                     using (MemoryStream mstream = new MemoryStream())
-                {
-                    wb.SaveAs(mstream);
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
+                    {
+                        wb.SaveAs(mstream);
+                        return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
+                    }
                 }
-            }
             }
             catch (Exception ex)
             {
@@ -521,10 +702,10 @@ namespace crewlinkship.Controllers
 
                 ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c => c.Country)
                   .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
-              
-                
+
+
                 return PartialView();
-               
+
 
             }
             return RedirectToAction("UserLogin", "Login");
@@ -536,7 +717,6 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             if (accessToken != null)
             {
                 ViewBag.address = _context.TblCrewAddresses.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Include(x => x.Airport).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
@@ -554,7 +734,7 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            
+
             if (accessToken != null)
             {
 
@@ -607,7 +787,7 @@ namespace crewlinkship.Controllers
             var excludedDoc = ",1,4,9,11,14,15,16,45,47,48,";
             if (accessToken != null)
             {
-                ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && excludedDoc.Contains(","+ x.DocumentId+",")==false).ToList();
+                ViewBag.otherDocuments = _context.TblCrewOtherDocuments.Include(x => x.Document).Include(x => x.Authority).Where(x => x.IsDeleted == false && x.CrewId == crewId && excludedDoc.Contains("," + x.DocumentId + ",") == false).ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
                 ViewBag.crewidforBank = crewId;
                 return PartialView();
@@ -679,20 +859,20 @@ namespace crewlinkship.Controllers
 
                 var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
 
-            ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId==crewId).ToList();
+                ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
 
-            //ViewBag.imo = vesselDetails.Imo;
-            //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
-            //ViewBag.flag = vesselDetails.Flag.CountryName;
+                //ViewBag.imo = vesselDetails.Imo;
+                //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
+                //ViewBag.flag = vesselDetails.Flag.CountryName;
 
-         
+
 
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
 
                 return View(crewlist);
             }
 
-            return RedirectToAction("UserLogin","Login");
+            return RedirectToAction("UserLogin", "Login");
 
         }
 
@@ -712,11 +892,23 @@ namespace crewlinkship.Controllers
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h=>h.OffCBA).Include(x=>x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h => h.OffCBA).Include(x => x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
                 return PartialView(vcm);
             }
             return RedirectToAction("UserLogin", "Login");
         }
+
+
+        public IActionResult ImportExportPage()
+        {
+            ViewBag.name = HttpContext.Session.GetString("name");
+            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+            return PartialView();
+        }
+
+
+
         public IActionResult TravelToVessel(int? crewId)
         {
             var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
@@ -727,11 +919,11 @@ namespace crewlinkship.Controllers
             var vcm = _context.TblVesselCbas.Include(x => x.Country).Where(x => x.IsDeleted == false && x.VesselId == 156).ToList();
             return PartialView(vcm);
         }
-           
-       
+
+
         public JsonResult TravelToVessels(int? crewId)
         {
-           var travelToVesse = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();  
+            var travelToVesse = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).FirstOrDefault();
             ViewBag.countryList = new SelectList(_context.TblCountries, "CountryId", "CountryName");
             var result = new { Result = travelToVesse, countryList = ViewBag.countryList };
             return Json(result);
@@ -739,7 +931,7 @@ namespace crewlinkship.Controllers
         public JsonResult GetSeaPort(int? CountryId)
         {
             ViewBag.seaPort = _context.TblSeaports.Where(x => x.CountryId == CountryId).ToList();
-            return Json(new SelectList(ViewBag.seaPort, "SeaportId","SeaportName"));
+            return Json(new SelectList(ViewBag.seaPort, "SeaportId", "SeaportName"));
         }
 
         public JsonResult GetSeaPortByCountry(int? CountryId)
@@ -811,7 +1003,7 @@ namespace crewlinkship.Controllers
             {
                 return -1;
             }
-           
+
             return 1;
 
         }
@@ -827,9 +1019,9 @@ namespace crewlinkship.Controllers
 
         public IActionResult AtlanticExcelFile(int vesselId = 75)
         {
-         IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c=>c.Crew).Include(r => r.Rank).Include(ct=>ct.Crew.Country).Include(po=>po.Vessel.PortOfTakeovers).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId!=null).OrderBy(r=>r.Rank.CrewSort).ToList();
-            
-            string fileName =  "Atlantic Crewlist" + ".xlsx";
+            IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(po => po.Vessel.PortOfTakeovers).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+
+            string fileName = "Atlantic Crewlist" + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
             //string fullPath = path_Root + "\\Upload\\ExcelFile\\" + fileName;
 
@@ -841,13 +1033,13 @@ namespace crewlinkship.Controllers
             {
 
                 var worksheet = workbook.Worksheets.Add("Atlantic Crewlist");
-               
+
                 var imagePath = path_Root + "\\Upload\\Alogo\\Atlanticlogo.png";
                 var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(60, 76);
-               
+
                 worksheet.Range("A1:A4").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Range("A1:A4").Style.Border.InsideBorderColor = XLColor.White;
-               
+
                 worksheet.Column("A").Width = 8.43;
                 worksheet.Column("B").Width = 35.29;
                 worksheet.Column("C").Width = 22.29;
@@ -940,9 +1132,9 @@ namespace crewlinkship.Controllers
                 worksheet.Columns().AdjustToContents();
                 worksheet.Rows().AdjustToContents();
                 var errorMessage = "you can return the errors here!";
-             
+
                 return Json(new { fileName = fileName, errorMessage });
-    
+
             }
         }
 
@@ -1047,9 +1239,9 @@ namespace crewlinkship.Controllers
                     worksheet.Range("G2:G3").Style.Border.RightBorder = XLBorderStyleValues.Medium;
                     worksheet.Range("G2:G3").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
                     worksheet.Range("G2:G3").Style.Border.TopBorderColor = XLColor.Black;
-                 
 
-                    worksheet.Cell("G2").Value = "Report Date:";  
+
+                    worksheet.Cell("G2").Value = "Report Date:";
                     worksheet.Range("G2:G3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     worksheet.Cell("G3").Value = DateTime.Now.ToString("dd-MMM-yyyy");
                     worksheet.Cell("G2").Style.Font.Bold = true;
@@ -1061,7 +1253,7 @@ namespace crewlinkship.Controllers
 
                     worksheet.Cell(currentRow, 2).Value = applicant.VesselName;
                     worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                   
+
                     worksheet.Cell(currentRow, 3).Value = applicant.RankName;
                     worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
@@ -1133,11 +1325,11 @@ namespace crewlinkship.Controllers
 
         public IActionResult OLPExcelFile(int vesselId = 75)
         {
-            IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p=>p.Vessel.Pool).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+            IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel.Pool).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             string fileName = "Seafarers list v1.0" + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
-            
+
             using (var workbook = new XLWorkbook())
             {
 
@@ -1158,7 +1350,7 @@ namespace crewlinkship.Controllers
                 worksheet.Column("L").Width = 25.29;
 
                 var currentRow = 1;
-               
+
                 worksheet.Cell(currentRow, 1).Value = "vUserID";
                 worksheet.Cell(currentRow, 2).Value = "vFirstname";
                 worksheet.Cell(currentRow, 3).Value = "vLastname";
@@ -1171,17 +1363,17 @@ namespace crewlinkship.Controllers
                 worksheet.Cell(currentRow, 10).Value = "uPersonnelPoolID";
                 worksheet.Cell(currentRow, 11).Value = "iManagedByID";
                 worksheet.Cell(currentRow, 12).Value = "vEmail";
-             
+
 
                 foreach (var applicant in CrewList)
                 {
                     var passport = _context.TblPassports.Where(p => p.CrewId == applicant.CrewId && p.IsDeleted == false).FirstOrDefault();
                     var Email = _context.TblCrewAddresses.Where(p => p.CrewId == applicant.CrewId && p.IsDeleted == false).FirstOrDefault();
-                 
+
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = applicant.Crew?.EmpNumber;
                     worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                   
+
                     worksheet.Cell(currentRow, 2).Value = $"{ConvrtToTitlecase(applicant.Crew?.FirstName)} {ConvrtToTitlecase(applicant.Crew?.MiddleName)}";
                     worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
@@ -1231,9 +1423,9 @@ namespace crewlinkship.Controllers
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
-           
+
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
-           
+
 
             var iMOCrewLists = CrewList.AsEnumerable() // Client-side from here on
                        .Select((t, index) => new IMOCrewListVM
@@ -1248,7 +1440,7 @@ namespace crewlinkship.Controllers
                            DOB = t.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
                            PassportNo = _context.TblPassports.Where(p => p.CrewId == t.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
                            BirthPlace = t.Crew?.PlaceOfBirth
-                       }) ;
+                       });
 
 
             if (CrewList.Count() > 20)
@@ -1270,12 +1462,12 @@ namespace crewlinkship.Controllers
         }
 
 
-        public IActionResult getIMOdata2(int vesselId =75)
+        public IActionResult getIMOdata2(int vesselId = 75)
         {
 
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
-          
+
             var iMOCrewLists2 = CrewList.AsEnumerable() // Client-side from here on
                        .Select((s, indexs) => new IMOCrewListVM
                        {
@@ -1296,7 +1488,7 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.imoData2 = iMOCrewLists2.Where(x => x.RowNumber > 20);
             }
-             return PartialView();
+            return PartialView();
         }
 
 
@@ -1306,12 +1498,12 @@ namespace crewlinkship.Controllers
 
         public JsonResult GenerateIMOPDF(int vesselId = 75)
         {
-            
+
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
             //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
             string url = " http://ship.crewlinkasm.com/Home/getIMOdata";
-           
+
             var webRoot = _appEnvironment.WebRootPath;
             string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDF_HeaderIMO.htm");
             string pdf_page_size = PdfPageSize.A4.ToString();
@@ -1324,7 +1516,7 @@ namespace crewlinkship.Controllers
             // instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
             converter.Header.DisplayOnFirstPage = true;
-         
+
             converter.Options.PdfPageSize = pageSize;
             converter.Options.PdfPageOrientation = pdfOrientation;
             converter.Options.WebPageWidth = webPageWidth;
@@ -1398,7 +1590,7 @@ namespace crewlinkship.Controllers
                 doc.Append(doc2);
             }
             string fileName = "IMOCrewList" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
-           
+
             doc.Save(fileName);
 
             return Json(new { fileName = fileName });
@@ -1420,14 +1612,14 @@ namespace crewlinkship.Controllers
                        {
                            SNo = index + 1,
                            VesselName = t.Vessel?.VesselName,
-                           CrewName = (t.Crew.LastName == null ? "" : t.Crew.LastName) + " " + (t.Crew.FirstName == null ? "" : t.Crew.FirstName )+ " " + (t.Crew.MiddleName == null ? "" : t.Crew.MiddleName),
+                           CrewName = (t.Crew.LastName == null ? "" : t.Crew.LastName) + " " + (t.Crew.FirstName == null ? "" : t.Crew.FirstName) + " " + (t.Crew.MiddleName == null ? "" : t.Crew.MiddleName),
                            Rank = t.Rank?.Code,
                            Nationality = t.Crew?.Country?.Nationality,
                            Passport = _context.TblPassports.Where(p => p.CrewId == t.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
                            CDC = _context.TblCdcs.Where(p => p.CrewId == t.CrewId && p.IsDeleted == false).FirstOrDefault()?.Cdcnumber,
                            DateSignedOn = t.SignOnDate,
                            ReliefDate = t.DueDate,
-                           PortOfJoining = _context.TblActivitySignOns.Include(s=>s.Seaport).Where(c=>c.CrewId ==         t.CrewId).FirstOrDefault().Seaport?.SeaportName,
+                           PortOfJoining = _context.TblActivitySignOns.Include(s => s.Seaport).Where(c => c.CrewId == t.CrewId).FirstOrDefault().Seaport?.SeaportName,
                            DOB = t.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
 
                        });
@@ -1453,7 +1645,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public JsonResult generateFPD01(int vesselId =75)
+        public JsonResult generateFPD01(int vesselId = 75)
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1523,15 +1715,15 @@ namespace crewlinkship.Controllers
             //}
 
             string fileName = "FPD01Crewlist" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
-           
-           
+
+
             doc.Save(fileName);
 
 
             return Json(new { fileName = fileName });
         }
 
-       
+
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
@@ -1549,21 +1741,21 @@ namespace crewlinkship.Controllers
             var name = HttpContext.Session.GetString("name");
 
             var User = _context.Userlogins.SingleOrDefault(x => x.Password == oldpwd && x.UserName == name && x.IsDeleted == false);
-                if (User != null && newpwd == crfmpwd)
-                {
-                    User.Password = newpwd;
-                    User.ModifiedDate = DateTime.Now;
-                    _context.Userlogins.Update(User);
-                    _context.SaveChanges();
-                    return Json("success");
-                }
-                return Json("fail");
+            if (User != null && newpwd == crfmpwd)
+            {
+                User.Password = newpwd;
+                User.ModifiedDate = DateTime.Now;
+                _context.Userlogins.Update(User);
+                _context.SaveChanges();
+                return Json("success");
+            }
+            return Json("fail");
         }
 
 
         public IActionResult ExportVesselParticulars(int vesselId = 75)
         {
-           
+
             var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
                 .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
                 .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
@@ -2239,7 +2431,7 @@ namespace crewlinkship.Controllers
 
                     workbook.SaveAs(fileName);
                 }
-               
+
                 var errorMessage = "you can return the errors here!";
 
                 return Json(new { fileName = fileName, errorMessage });
@@ -2247,7 +2439,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public IActionResult PdfVesselPaticular( int vesselId  = 75)
+        public IActionResult PdfVesselPaticular(int vesselId = 75)
         {
             ViewBag.vesseldata = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
                .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
@@ -2272,7 +2464,7 @@ namespace crewlinkship.Controllers
             //string url = serverUrl + "api/vessel/vesselData?vesselId=" + vesselId;
 
             string url = "  http://ship.crewlinkasm.com/Home/PdfVesselPaticular";
-      
+
 
             string pdf_page_size = PdfPageSize.A4.ToString();
             PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
@@ -2293,8 +2485,8 @@ namespace crewlinkship.Controllers
             // create a new pdf document converting an url
             PdfDocument doc = converter.ConvertUrl(url);
 
-            string fileName = "VesselParticularPDF"+".pdf";
-            
+            string fileName = "VesselParticularPDF" + ".pdf";
+
             doc.Save(fileName);
 
             return Json(new { fileName = fileName });
@@ -2302,4 +2494,6 @@ namespace crewlinkship.Controllers
 
 
     }
+
 }
+
