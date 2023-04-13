@@ -79,15 +79,15 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-        public int? CreatedBy { get; set; }
         public string Signature { get; set; }
         public int? PlanRankId { get; set; }
         public string PlanStatus { get; set; }
         public int? PlanVesselId { get; set; }
+        public int? CreatedBy { get; set; }
         public string ImpRemark { get; set; }
         public int? ApprovedBy { get; set; }
-        public string MaskAttachment { get; set; }
         public string MaskRemarks { get; set; }
+        public string MaskAttachment { get; set; }
         public string MaskedBy { get; set; }
 
         public virtual TblCountry Country { get; set; }
@@ -166,16 +166,16 @@ namespace crewlinkship.Models
         public bool IsDeleted { get; set; }
         public string RecDate { get; set; }
         public string ModifiedBy { get; set; }
-        public string ModifiedDate { get; set; }
-        public int CreatedBy { get; set; }
+        public string ModifiedDate { get; set; }      
         public string Signature { get; set; }
         public int PlanRankId { get; set; }
         public string PlanStatus { get; set; }
         public int PlanVesselId { get; set; }
+        public int CreatedBy { get; set; }
         public string ImpRemark { get; set; }
-        public int ApprovedBy { get; set; }
-        public string MaskAttachment { get; set; }
+        public int ApprovedBy { get; set; }        
         public string MaskRemarks { get; set; }
+        public string MaskAttachment { get; set; }
         public string MaskedBy { get; set; }
 
     }
