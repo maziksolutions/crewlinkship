@@ -947,8 +947,8 @@ namespace crewlinkship.Controllers
             if (updateCrewDetails != null)
             {
                 updateCrewDetails.PreviousStatus = "Approver"; //Approver
-                updateCrewDetails.PlanStatus = "Travel to vessel"; // Travel to vessel
-                updateCrewDetails.Status = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.PlanStatus = "Travel To Vessel"; // Travel to vessel
+                updateCrewDetails.Status = "Travel To Vessel"; // Travel to vessel
                 updateCrewDetails.ModifiedBy = "Master";
                 updateCrewDetails.ModifiedDate = DateTime.Now;
                 _context.TblCrewDetails.Update(updateCrewDetails);
@@ -976,9 +976,9 @@ namespace crewlinkship.Controllers
                     var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
                     if (updateCrewDetails != null)
                     {
-                        updateCrewDetails.PreviousStatus = "Travel to vessel"; //Approver
-                        updateCrewDetails.PlanStatus = "Sign In transit"; // Travel to vessel
-                        updateCrewDetails.Status = "Sign In transit"; // Travel to vessel
+                        updateCrewDetails.PreviousStatus = "Travel To Vessel"; //Approver
+                        updateCrewDetails.PlanStatus = "Sign In Transit"; // Travel to vessel
+                        updateCrewDetails.Status = "Sign In Transit"; // Travel to vessel
                         updateCrewDetails.PoolId = vesselPooId.PoolId;
                         updateCrewDetails.ModifiedBy = "Master";
                         updateCrewDetails.ModifiedDate = DateTime.Now;
