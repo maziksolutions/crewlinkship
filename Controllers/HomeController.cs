@@ -1035,7 +1035,7 @@ namespace crewlinkship.Controllers
                 var worksheet = workbook.Worksheets.Add("Atlantic Crewlist");
 
                 var imagePath = path_Root + "\\Upload\\Alogo\\Atlanticlogo.png";
-                var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(60, 76);
+                var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(87, 76);
 
                 worksheet.Range("A1:A4").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Range("A1:A4").Style.Border.InsideBorderColor = XLColor.White;
@@ -1096,6 +1096,8 @@ namespace crewlinkship.Controllers
                     worksheet.Cell("I2").Value = applicant.Vessel.Capacity;
                     worksheet.Cell("I3").Value = applicant.Vessel.AccommodationBerth;
                     worksheet.Cell("I4").Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                    worksheet.Cell("I3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+
 
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = currentRow - 6;
@@ -1160,7 +1162,7 @@ namespace crewlinkship.Controllers
                 var worksheet = workbook.Worksheets.Add("OCIMF");
 
                 var imagePath = path_Root + "\\Upload\\Alogo\\ATLANTAS2.png";
-                var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(101, 77);
+                var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(115, 77);
 
                 worksheet.Range("A1:A4").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Range("A1:A4").Style.Border.InsideBorderColor = XLColor.White;
@@ -1419,182 +1421,367 @@ namespace crewlinkship.Controllers
             }
         }
 
-        public IActionResult getIMOdata(int vesselId = 75)
+        //public IActionResult getIMOdata(int vesselId = 75)
+        //{
+        //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+
+
+        //    ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
+
+
+        //    var iMOCrewLists = CrewList.AsEnumerable() // Client-side from here on
+        //               .Select((t, index) => new IMOCrewListVM
+        //               {
+        //                   RowNumber = index + 1,
+        //                   CrewListId = t.CrewListId,
+        //                   Rank = t.Rank.Code,
+        //                   FirstName = t.Crew?.FirstName,
+        //                   LastName = t.Crew?.LastName,
+        //                   MiddleName = t.Crew?.MiddleName,
+        //                   nationality = t.Crew?.Country?.Nationality,
+        //                   DOB = t.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
+        //                   PassportNo = _context.TblPassports.Where(p => p.CrewId == t.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
+        //                   BirthPlace = t.Crew?.PlaceOfBirth
+        //               });
+
+
+        //    if (CrewList.Count() > 20)
+        //    {
+        //        IMOFull = true;
+        //        ViewBag.count = IMOFull;
+        //        ViewBag.imoData = iMOCrewLists.Take(20).OrderBy(x => x.RowNumber);
+        //    }
+        //    else
+        //    {
+        //        IMOFull = false;
+        //        ViewBag.count = IMOFull;
+        //        ViewBag.imoData = iMOCrewLists;
+        //    }
+
+
+        //    return PartialView();
+
+        //}
+
+
+        //public IActionResult getIMOdata2(int vesselId = 75)
+        //{
+
+        //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+
+
+        //    var iMOCrewLists2 = CrewList.AsEnumerable() // Client-side from here on
+        //               .Select((s, indexs) => new IMOCrewListVM
+        //               {
+        //                   RowNumber = indexs + 1,
+        //                   CrewListId = s.CrewListId,
+        //                   Rank = s.Rank.Code,
+        //                   FirstName = s.Crew?.FirstName,
+        //                   LastName = s.Crew?.LastName,
+        //                   MiddleName = s.Crew?.MiddleName,
+        //                   nationality = s.Crew?.Country?.Nationality,
+        //                   DOB = s.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
+        //                   PassportNo = _context.TblPassports.Where(p => p.CrewId == s.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
+        //                   BirthPlace = s.Crew?.PlaceOfBirth
+        //               });
+
+
+        //    if (CrewList.Count() > 20)
+        //    {
+        //        ViewBag.imoData2 = iMOCrewLists2.Where(x => x.RowNumber > 20);
+        //    }
+        //    return PartialView();
+        //}
+
+
+
+        public IActionResult IMOExcelFile(int vesselId = 75)
         {
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
 
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
+            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselId).ToList();
 
+            string fileName = "IMO" + ".xlsx";
+            string path_Root = _appEnvironment.WebRootPath;
 
-            var iMOCrewLists = CrewList.AsEnumerable() // Client-side from here on
-                       .Select((t, index) => new IMOCrewListVM
-                       {
-                           RowNumber = index + 1,
-                           CrewListId = t.CrewListId,
-                           Rank = t.Rank.Code,
-                           FirstName = t.Crew?.FirstName,
-                           LastName = t.Crew?.LastName,
-                           MiddleName = t.Crew?.MiddleName,
-                           nationality = t.Crew?.Country?.Nationality,
-                           DOB = t.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
-                           PassportNo = _context.TblPassports.Where(p => p.CrewId == t.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
-                           BirthPlace = t.Crew?.PlaceOfBirth
-                       });
-
-
-            if (CrewList.Count() > 20)
+            using (var workbook = new XLWorkbook())
             {
-                IMOFull = true;
-                ViewBag.count = IMOFull;
-                ViewBag.imoData = iMOCrewLists.Take(20).OrderBy(x => x.RowNumber);
-            }
-            else
-            {
-                IMOFull = false;
-                ViewBag.count = IMOFull;
-                ViewBag.imoData = iMOCrewLists;
-            }
+
+                var worksheet = workbook.Worksheets.Add("IMO");
+
+                //var imagePath = path_Root + "\\Upload\\Alogo\\ATLANTAS2.png";
+                //var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(115, 77);
+
+                var imagePath = path_Root + "\\Upload\\Alogo\\Atlanticlogo.png";
+                var image = worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell("A1")).WithSize(90, 76);
 
 
-            return PartialView();
+
+                worksheet.Range("A1:A4").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                worksheet.Range("A1:A4").Style.Border.InsideBorderColor = XLColor.White;
+
+                worksheet.Column("A").Width = 14.29;
+                worksheet.Column("B").Width = 27.00;
+                worksheet.Column("C").Width = 19.57;
+                worksheet.Column("D").Width = 14.29;
+                worksheet.Column("E").Width = 41.00;
+                worksheet.Column("F").Width = 28.71;
+              
+
+       
+                worksheet.Range("C2:E3").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("C2:E3").Style.Border.OutsideBorderColor = XLColor.Black;
+                worksheet.Cell("C2").Value = "Crew List";
+                worksheet.Cell("C2").Style.Font.Shadow = true;
+                worksheet.Cell("C2").Style.Font.FontSize = 14;
+                worksheet.Cell("C2").Style.Font.Bold = true;
+                worksheet.Cell("C2").Style.Font.FontName = "Calibri Light";
+                worksheet.Cell("C2").Style.Font.Underline = XLFontUnderlineValues.Single;
+                worksheet.Cell("C2").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Cell("C2").Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                worksheet.Range("C2:E3").Merge();
+
+
+
+
+                var currentRow = 11;
+                //worksheet.Row(currentRow).Style.Font.SetFontColor(XLColor.White);
+                //worksheet.Range("A11:F11").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+                worksheet.Row(currentRow).Style.Font.Bold = true;
+                //worksheet.Cell("F10").Style.Fill.SetBackgroundColor(XLColor.FromHtml("253B5B"));
+
+                worksheet.Range("A6:C6").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("A6:C6").Style.Border.OutsideBorderColor = XLColor.Black;
+                worksheet.Range("D6:F6").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("D6:F6").Style.Border.OutsideBorderColor = XLColor.Black;
+                worksheet.Range("A10:C10").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("A10:C10").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Range("D10:E10").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("D10:E10").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Range("A7:A10").Style.Border.LeftBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("A7:A10").Style.Border.LeftBorderColor = XLColor.Black;
+
+                worksheet.Range("F7:F10").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("F7:F10").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Cell("F10").Style.Border.TopBorder = XLBorderStyleValues.Medium;
+                worksheet.Cell("F10").Style.Border.TopBorderColor= XLColor.Black;
+
+                worksheet.Range("D6:E6").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("D6:E6").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Range("A11:F11").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("A11:F11").Style.Border.OutsideBorderColor = XLColor.Black;
+
+                worksheet.Range("A7:C9").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                worksheet.Range("A7:C9").Style.Border.OutsideBorderColor = XLColor.Black;
+                worksheet.Cell("B7").Value = "Name and type of ship";
+                worksheet.Cell("B8").Value = "IMO number";
+                worksheet.Cell("B9").Value = "Call sign";
+                worksheet.Cell("B10").Value = "Flag State of ship";
+
+                worksheet.Cell("E10").Value = "5.Last port of call";
+                
+                worksheet.Cell("A7").Value = "1.1";
+                worksheet.Cell("A8").Value = "1.2";
+                worksheet.Cell("A9").Value = "1.3";
+                worksheet.Cell("A10").Value = "4";
+
+
+                worksheet.Cell("E6").Value ="Arrival";
+                worksheet.Cell("F6").Value ="Departure";
+                
+                worksheet.Cell("E7").Value = "2 Port of arrival / departure";
+                worksheet.Cell("F7").Value = "3 Date of arrival/departure";
+
+                //worksheet.Range("B6:B9").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                foreach (var applicant in vesselDetails)
+                {
+                    worksheet.Cell("C7").Value = applicant.VesselName +"|" +applicant.Ship.ShipCategory;
+                    worksheet.Cell("C7").Style.Font.Bold = true;
+
+                    worksheet.Cell("C8").Value = applicant.Imo;
+                    worksheet.Cell("C8").Style.Font.Bold = true;
+
+                    worksheet.Cell("C9").Value = applicant.CallSign;
+                    worksheet.Cell("C9").Style.Font.Bold = true;
+
+                    worksheet.Cell("C10").Value = applicant.Flag.CountryName;
+                    worksheet.Cell("C10").Style.Font.Bold = true;
+                }
+
+
+
+                worksheet.Cell(currentRow, 1).Value = "7 Sr. No.";
+                worksheet.Cell(currentRow, 2).Value = "8  Family name, given names ";
+                worksheet.Cell(currentRow, 3).Value = "9 Rank or rating";
+                worksheet.Cell(currentRow, 4).Value = "10 Nationality";
+                worksheet.Cell(currentRow, 5).Value = "11 Date and place of birth";
+                worksheet.Cell("F10").Value = "6  Nature and No. of identity document(seaman’s passport)";
+               
+                //worksheet.Cell("F10").Style.Font.SetFontColor(XLColor.White);
+                worksheet.Cell("F10").Style.Font.Bold = true;
+                worksheet.Cell("F10").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Range("F10:F11").Merge();
+                worksheet.Cell("F10").Style.Alignment.WrapText = true;
+
+
+
+                worksheet.Range("A11:F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                foreach (var applicant in CrewList)
+                {
+                    var passport = _context.TblPassports.Where(p => p.CrewId == applicant.CrewId && p.IsDeleted == false).FirstOrDefault();
+
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = currentRow - 11;
+                    worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Column("A").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                    worksheet.Cell("A11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+
+                    worksheet.Cell(currentRow, 2).Value = $"{ConvrtToTitlecase(applicant.Crew?.LastName)} {ConvrtToTitlecase(applicant.Crew?.FirstName)} {ConvrtToTitlecase(applicant.Crew?.MiddleName)}"; 
+                    worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                    worksheet.Cell(currentRow, 3).Value = applicant.Rank.Code;
+                    worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                    worksheet.Cell(currentRow, 4).Value = applicant.Crew?.Country?.Nationality;
+                    worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                    worksheet.Cell(currentRow, 5).Value = (applicant.Crew?.Dob ?? DateTime.Parse("01-01-1900")).ToString("dd-MMM-yyyy") +","
+                        +"  "+applicant.Crew?.PlaceOfBirth;
+                    worksheet.Cell(currentRow, 5).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Column("E").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                    worksheet.Cell("E11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    worksheet.Cell(currentRow, 6).Value = passport?.PassportNumber;
+                    worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                   
+                    workbook.SaveAs(fileName);
+                }
+                worksheet.Cells().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Columns().AdjustToContents();
+                worksheet.Rows().AdjustToContents();
+                var errorMessage = "you can return the errors here!";
+
+                return Json(new { fileName = fileName, errorMessage });
+
+            }
 
         }
 
 
-        public IActionResult getIMOdata2(int vesselId = 75)
-        {
-
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
-
-
-            var iMOCrewLists2 = CrewList.AsEnumerable() // Client-side from here on
-                       .Select((s, indexs) => new IMOCrewListVM
-                       {
-                           RowNumber = indexs + 1,
-                           CrewListId = s.CrewListId,
-                           Rank = s.Rank.Code,
-                           FirstName = s.Crew?.FirstName,
-                           LastName = s.Crew?.LastName,
-                           MiddleName = s.Crew?.MiddleName,
-                           nationality = s.Crew?.Country?.Nationality,
-                           DOB = s.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
-                           PassportNo = _context.TblPassports.Where(p => p.CrewId == s.CrewId && p.IsDeleted == false).FirstOrDefault()?.PassportNumber,
-                           BirthPlace = s.Crew?.PlaceOfBirth
-                       });
-
-
-            if (CrewList.Count() > 20)
-            {
-                ViewBag.imoData2 = iMOCrewLists2.Where(x => x.RowNumber > 20);
-            }
-            return PartialView();
-        }
 
 
 
         #region IMO PDF
         //Generate IMO PDF from crewlist
 
-        public JsonResult GenerateIMOPDF(int vesselId = 75)
-        {
+        //public JsonResult GenerateIMOPDF(int vesselId = 75)
+        //{
 
-            var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
+        //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
-            //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
-            string url = " http://ship.crewlinkasm.com/Home/getIMOdata";
+        //    //string url =  "api/crewlist/getIMOdata?vesselId=" + vesselId;
+        //    string url = " http://ship.crewlinkasm.com/Home/getIMOdata";
 
-            var webRoot = _appEnvironment.WebRootPath;
-            string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDF_HeaderIMO.htm");
-            string pdf_page_size = PdfPageSize.A4.ToString();
-            PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
-            string pdf_orientation = PdfPageOrientation.Portrait.ToString();
-            PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
-                pdf_orientation, true);
-            int webPageWidth = 1000;
-            int webPageHeight = 0;
-            // instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-            converter.Header.DisplayOnFirstPage = true;
+        //    var webRoot = _appEnvironment.WebRootPath;
+        //    string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDF_HeaderIMO.htm");
+        //    string pdf_page_size = PdfPageSize.A4.ToString();
+        //    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
+        //    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+        //    PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+        //        pdf_orientation, true);
+        //    int webPageWidth = 1000;
+        //    int webPageHeight = 0;
+        //    // instantiate a html to pdf converter object
+        //    HtmlToPdf converter = new HtmlToPdf();
+        //    converter.Header.DisplayOnFirstPage = true;
 
-            converter.Options.PdfPageSize = pageSize;
-            converter.Options.PdfPageOrientation = pdfOrientation;
-            converter.Options.WebPageWidth = webPageWidth;
-            converter.Options.WebPageHeight = webPageHeight;
-            converter.Options.MarginLeft = 10;
-            converter.Options.MarginRight = 10;
-            int headerHeight = 80;
-            int footerHeight = 15;
-            // header settings
-            converter.Options.DisplayHeader = true;
-            converter.Header.DisplayOnFirstPage = true;
-            converter.Header.DisplayOnOddPages = true;
-            converter.Header.DisplayOnEvenPages = true;
-            converter.Header.Height = headerHeight;
-            PdfHtmlSection headerHtml = new PdfHtmlSection(headerUrl);
-            headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-            converter.Header.Add(headerHtml);
-            // footer settings
-            converter.Options.DisplayFooter = true;
-            converter.Footer.DisplayOnFirstPage = true;
-            converter.Footer.DisplayOnOddPages = true;
-            converter.Footer.DisplayOnEvenPages = true;
-            converter.Footer.Height = footerHeight;
-            // create a new pdf document converting an url
-            PdfDocument doc1 = converter.ConvertUrl(url);
-
-
-            //page2 
-
-            string url2 = " http://ship.crewlinkasm.com/Home/getIMOdata2";
-            //string url2 = localpath+"api/crewlist/getIMOdata2?vesselId=" + vesselId;
-            string pdf_page_size2 = PdfPageSize.A4.ToString();
-            PdfPageSize pageSize2 = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size2, true);
-            string pdf_orientation2 = PdfPageOrientation.Portrait.ToString();
-            PdfPageOrientation pdfOrientation2 = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
-                pdf_orientation2, true);
-            int webPageWidth2 = 1000;
-            int webPageHeight2 = 0;
-            // instantiate a html to pdf converter object
-            HtmlToPdf converter2 = new HtmlToPdf();
-            converter2.Options.PdfPageSize = pageSize2;
-            converter2.Options.PdfPageOrientation = pdfOrientation2;
-            converter2.Options.WebPageWidth = webPageWidth2;
-            converter2.Options.WebPageHeight = webPageHeight2;
-            converter2.Options.MarginLeft = 10;
-            converter2.Options.MarginRight = 10;
-            int headerHeight2 = 80;
-            int footerHeight2 = 15;
-            // header settings
-            converter2.Options.DisplayHeader = true;
-            converter2.Header.DisplayOnFirstPage = true;
-            converter2.Header.DisplayOnOddPages = true;
-            converter2.Header.DisplayOnEvenPages = true;
-            converter2.Header.Height = headerHeight2;
-            PdfHtmlSection headerHtml2 = new PdfHtmlSection(headerUrl);
-            headerHtml2.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-            converter2.Header.Add(headerHtml2);
-            // footer settings
-            converter2.Options.DisplayFooter = true;
-            converter2.Footer.DisplayOnFirstPage = true;
-            converter2.Footer.DisplayOnOddPages = true;
-            converter2.Footer.DisplayOnEvenPages = true;
-            converter2.Footer.Height = footerHeight2;
+        //    converter.Options.PdfPageSize = pageSize;
+        //    converter.Options.PdfPageOrientation = pdfOrientation;
+        //    converter.Options.WebPageWidth = webPageWidth;
+        //    converter.Options.WebPageHeight = webPageHeight;
+        //    converter.Options.MarginLeft = 10;
+        //    converter.Options.MarginRight = 10;
+        //    int headerHeight = 80;
+        //    int footerHeight = 15;
+        //    // header settings
+        //    converter.Options.DisplayHeader = true;
+        //    converter.Header.DisplayOnFirstPage = true;
+        //    converter.Header.DisplayOnOddPages = true;
+        //    converter.Header.DisplayOnEvenPages = true;
+        //    converter.Header.Height = headerHeight;
+        //    PdfHtmlSection headerHtml = new PdfHtmlSection(headerUrl);
+        //    headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+        //    converter.Header.Add(headerHtml);
+        //    // footer settings
+        //    converter.Options.DisplayFooter = true;
+        //    converter.Footer.DisplayOnFirstPage = true;
+        //    converter.Footer.DisplayOnOddPages = true;
+        //    converter.Footer.DisplayOnEvenPages = true;
+        //    converter.Footer.Height = footerHeight;
+        //    // create a new pdf document converting an url
+        //    PdfDocument doc1 = converter.ConvertUrl(url);
 
 
-            PdfDocument doc = new PdfDocument();
-            doc.Append(doc1);
-            if (CrewList.Count() > 20)
-            {
-                PdfDocument doc2 = converter2.ConvertUrl(url2);
-                doc.Append(doc2);
-            }
-            string fileName = "IMOCrewList" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
+        //    //page2 
 
-            doc.Save(fileName);
+        //    string url2 = " http://ship.crewlinkasm.com/Home/getIMOdata2";
+        //    //string url2 = localpath+"api/crewlist/getIMOdata2?vesselId=" + vesselId;
+        //    string pdf_page_size2 = PdfPageSize.A4.ToString();
+        //    PdfPageSize pageSize2 = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size2, true);
+        //    string pdf_orientation2 = PdfPageOrientation.Portrait.ToString();
+        //    PdfPageOrientation pdfOrientation2 = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+        //        pdf_orientation2, true);
+        //    int webPageWidth2 = 1000;
+        //    int webPageHeight2 = 0;
+        //    // instantiate a html to pdf converter object
+        //    HtmlToPdf converter2 = new HtmlToPdf();
+        //    converter2.Options.PdfPageSize = pageSize2;
+        //    converter2.Options.PdfPageOrientation = pdfOrientation2;
+        //    converter2.Options.WebPageWidth = webPageWidth2;
+        //    converter2.Options.WebPageHeight = webPageHeight2;
+        //    converter2.Options.MarginLeft = 10;
+        //    converter2.Options.MarginRight = 10;
+        //    int headerHeight2 = 80;
+        //    int footerHeight2 = 15;
+        //    // header settings
+        //    converter2.Options.DisplayHeader = true;
+        //    converter2.Header.DisplayOnFirstPage = true;
+        //    converter2.Header.DisplayOnOddPages = true;
+        //    converter2.Header.DisplayOnEvenPages = true;
+        //    converter2.Header.Height = headerHeight2;
+        //    PdfHtmlSection headerHtml2 = new PdfHtmlSection(headerUrl);
+        //    headerHtml2.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+        //    converter2.Header.Add(headerHtml2);
+        //    // footer settings
+        //    converter2.Options.DisplayFooter = true;
+        //    converter2.Footer.DisplayOnFirstPage = true;
+        //    converter2.Footer.DisplayOnOddPages = true;
+        //    converter2.Footer.DisplayOnEvenPages = true;
+        //    converter2.Footer.Height = footerHeight2;
 
-            return Json(new { fileName = fileName });
-        }
+
+        //    PdfDocument doc = new PdfDocument();
+        //    doc.Append(doc1);
+        //    if (CrewList.Count() > 20)
+        //    {
+        //        PdfDocument doc2 = converter2.ConvertUrl(url2);
+        //        doc.Append(doc2);
+        //    }
+        //    string fileName = "IMOCrewList" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
+
+        //    doc.Save(fileName);
+
+        //    return Json(new { fileName = fileName });
+        //}
 
         #endregion
 
