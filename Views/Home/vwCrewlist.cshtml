@@ -77,7 +77,7 @@
                                                     <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
                                                     @(item.Reliever != null? item.Reliever.FirstName:"") @(item.Reliever != null? item.Reliever.MiddleName : "") @(item.Reliever != null? item.Reliever.LastName : "")
                                                 </a>
-                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Travel to vessel")
+                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Travel To Vessel")
                                                 {
                                                     <a class="dropdown-item travelToVessel" style="width:15%; float:right;"><i class="fas fa-edit"></i></a>
                                                 }

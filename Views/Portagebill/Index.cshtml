@@ -2576,7 +2576,7 @@
             $('select[name^="year"] option[value=' + currentSelectedYear+']').attr("selected", "selected");
             if (currentMonth >= 3) {
                 for (var month = currentMonth; month > currentMonth - 3; month--) {
-                    $(cascadedDropDownMonthId).append('<option value="' + (month) + '">' + monthNames[month] + '</option>');
+                    $(cascadedDropDownMonthId).append('<option value="' + (month +1) + '">' + monthNames[month] + '</option>');
                 }
             }
             else if (currentMonth <= 2) {
@@ -2605,7 +2605,7 @@
             sessionStorage.setItem('selectedYear', parseInt($(this).val()));           
             if (currentMonth >= 3) {
                 for (var month = currentMonth; month > currentMonth - 3; month--) {
-                    $(cascadedDropDownMonthId).append('<option value="' + (month) + '">' + monthNames[month] + '</option>');
+                    $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
                 }
             }
             else if (currentMonth <= 2) {
@@ -2626,11 +2626,8 @@
         });
         $("#month").on('change', function () {           
             sessionStorage.setItem('selectedMonth', parseInt($(this).val()));
-        });
-
-       
+        });       
     });
-
     //$(document).ready(function () {
     //    debugger
     //    $("#abcdefghi").on("click", function () {
@@ -2642,7 +2639,6 @@
     //            alert('Your Message');
     //        }
     //    });
-
     //});
 </script>
 @*<script>

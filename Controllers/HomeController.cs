@@ -29,7 +29,8 @@ using System.Reflection;
 using System.Data.OleDb;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-
+using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 namespace crewlinkship.Controllers
 {
     //[Authorize]
@@ -123,40 +124,63 @@ namespace crewlinkship.Controllers
                         }
                         string extension = Path.GetExtension(fileName);
                         string conString = string.Empty;
-                        var constr = _configuration.GetConnectionString("excelconnection");
-                        constr = string.Format(constr, fullPath);
-                        DataSet dsTables = new DataSet();
-                        using (OleDbConnection connExcel = new OleDbConnection(constr))
+                        switch (extension)
                         {
-                            using (OleDbCommand cmdExcel = new OleDbCommand())
+                            case ".xls": //Excel 97-03.
+                                conString = _configuration.GetConnectionString("excelconnection03");
+                                break;
+                            case ".xlsx": //Excel 07 and above.
+                                conString = _configuration.GetConnectionString("excelconnection07");
+                                break;
+                        }
+                        DataSet dsTables = new DataSet();
+                        using (XLWorkbook workBook = new XLWorkbook(fullPath))
+                        {
+                            int x = 1;
+                            foreach (IXLWorksheet wk in workBook.Worksheets)
                             {
-                                using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                                IXLWorksheet workSheet = workBook.Worksheet(x);
+                                string sheetname = workSheet.Name;
+                                //Create a new DataTable.
+                                DataTable dt = new DataTable();
+                                dt.TableName = sheetname;
+                            //Loop through the Worksheet rows.
+                            bool firstRow = true;
+                            bool secondRow = true;
+                                foreach (IXLRow row in workSheet.Rows())
+                            {
+                                //Use the first row to add columns to DataTable.
+                                if (firstRow)
                                 {
-                                    cmdExcel.Connection = connExcel;
-                                    connExcel.Open();
-                                    DataTable dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                                    connExcel.Close();
-                                    for (int i = 0; i < dtExcelSchema.Rows.Count; i++)
+                                    foreach (IXLCell cell in row.Cells())
                                     {
-                                        string sheetName = dtExcelSchema.Rows[i]["TABLE_NAME"].ToString();
-                                        //Read Data from current Sheet.
-                                        connExcel.Open();
-                                        cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                                        odaExcel.SelectCommand = cmdExcel;
-                                        DataTable dt = new DataTable(sheetName.Replace("$", string.Empty));
-                                        odaExcel.Fill(dt);
-                                        if (dt.Rows.Count > 0 && dt.Rows[0][0].ToString() != "")
-                                        {
-                                            dsTables.Tables.Add(dt);
-                                        }
-                                        connExcel.Close();
+                                        dt.Columns.Add(cell.Value.ToString());
                                     }
+                                    firstRow = false;
                                 }
+                                else
+                                {
+                                    //Add rows to DataTable.
+                                    dt.Rows.Add();
+                                    int i = 0;
+                                        foreach (IXLCell cell in row.Cells(1, dt.Columns.Count))
+                                        {
+                                            if (cell.Value.ToString() == "")
+                                                dt.Rows[dt.Rows.Count - 1][i] = null;
+                                            else
+                                                dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
+                                        i++;
+                                    }
+                                }                               
                             }
+                                x++;
+                                dsTables.Tables.Add(dt);
+                            }                           
                         }
                         conString = _configuration.GetConnectionString("sqlcon");
                         for (int i = 0; i < dsTables.Tables.Count; i++)
                         {
+                            ViewBag.Message = String.Format("success");
                             if (dsTables.Tables[i].Rows.Count > 0)
                             {
                                 using (SqlConnection con = new SqlConnection(conString))
@@ -174,18 +198,74 @@ namespace crewlinkship.Controllers
                                 }
                             }
                         }
+
+                        // var constr = _configuration.GetConnectionString("excelconnection");
+                        //conString = string.Format(conString, fullPath);                       
+                        //using (OleDbConnection connExcel = new OleDbConnection(conString))
+                        //{
+                        //    using (OleDbCommand cmdExcel = new OleDbCommand())
+                        //    {
+                        //        ViewBag.Message = String.Format("success");
+                        //        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        //        {
+                        //            ViewBag.Message = String.Format("success");
+                        //            cmdExcel.Connection = connExcel;
+                        //            connExcel.Open();
+                        //            DataTable dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        //            connExcel.Close();
+                        //            for (int i = 0; i < dtExcelSchema.Rows.Count; i++)
+                        //            {
+                        //                ViewBag.Message = String.Format("success");
+                        //                string sheetName = dtExcelSchema.Rows[i]["TABLE_NAME"].ToString();
+                        //                //Read Data from current Sheet.
+                        //                connExcel.Open();
+                        //                cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                        //                odaExcel.SelectCommand = cmdExcel;
+                        //                DataTable dt = new DataTable(sheetName.Replace("$", string.Empty));
+                        //                odaExcel.Fill(dt);
+                        //                if (dt.Rows.Count > 0 && dt.Rows[0][0].ToString() != "")
+                        //                {
+                        //                    dsTables.Tables.Add(dt);
+                        //                }
+                        //                connExcel.Close();
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        //conString = _configuration.GetConnectionString("sqlcon");
+                        //for (int i = 0; i < dsTables.Tables.Count; i++)
+                        //{
+                        //    ViewBag.Message = String.Format("success");
+                        //    if (dsTables.Tables[i].Rows.Count > 0)
+                        //    {
+                        //        using (SqlConnection con = new SqlConnection(conString))
+                        //        {
+                        //            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                        //            {
+                        //                sqlBulkCopy.DestinationTableName = "dbo." + dsTables.Tables[i].TableName;
+                        //                con.Open();
+                        //                if (dsTables.Tables[i].Rows.Count > 0)
+                        //                {
+                        //                    sqlBulkCopy.WriteToServer(dsTables.Tables[i]);
+                        //                    con.Close();
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        _context.Database.ExecuteSqlRaw("EXEC ImportCrewlinkdata");
                     }
                 }
+
             }
             catch (Exception ex) { throw ex; };
-            return null;
+            return RedirectToAction("ImportExportPage", "home");
         }
 
         public IActionResult Takebackup()
         {
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddMonths(-6);
-
+            var sixMonth = currentDate.AddDays(-6);
             //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
             //{
             //    ActivitySignOffId = x.ActivitySignOffId,
@@ -216,7 +296,7 @@ namespace crewlinkship.Controllers
             //    InjuryType = x.InjuryType,
             //}).ToList();
 
-            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblActivitySignOnVM
+            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate>= sixMonth)).Select(x => new TblActivitySignOnVM
             {
 
                 ActivitySignOnId = x.ActivitySignOnId,
@@ -250,7 +330,7 @@ namespace crewlinkship.Controllers
                 CreatedBy = x.CreatedBy
             }).ToList();
             //{;
-            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
+            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth));
             //var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
 
             //var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
@@ -349,7 +429,7 @@ namespace crewlinkship.Controllers
             //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
             //}).ToList();
 
-            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewDetailVM
+            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewDetailVM
             {
 
                 CrewId = x.CrewId,
@@ -442,7 +522,7 @@ namespace crewlinkship.Controllers
 
             //}).ToList();
 
-            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewListVM
+            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewListVM
             {
                 CrewListId = x.CrewListId,
                 RankId = x.RankId.HasValue ? x.RankId.Value : default,
@@ -506,7 +586,7 @@ namespace crewlinkship.Controllers
                 Recdate= x.Recdate,
                 IsPromoted = x.IsPromoted
             }).ToList();
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblPortageBillVM
+            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
             {
                 VesselPortId = x.PortageBillId,
                 CrewId = x.CrewId,
@@ -665,10 +745,11 @@ namespace crewlinkship.Controllers
                     //wb.Worksheet(4).Cell(1, 1).InsertTable(TblPortageBills);
                     //var ws2 = wb.Worksheets.Add("TblActivitySignOffs");
                     //wb.Worksheet(5).Cell(1, 1).InsertTable(dtCloned);
+                    string filename = "ShipModuleBackup_"+ DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
                     using (MemoryStream mstream = new MemoryStream())
                     {
                         wb.SaveAs(mstream);
-                        return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
+                        return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
                     }
                 }
             }
@@ -946,9 +1027,9 @@ namespace crewlinkship.Controllers
             var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crewId);
             if (updateCrewDetails != null)
             {
-                updateCrewDetails.PreviousStatus = "Approver"; //Approver
-                updateCrewDetails.PlanStatus = "Travel to vessel"; // Travel to vessel
-                updateCrewDetails.Status = "Travel to vessel"; // Travel to vessel
+                updateCrewDetails.PreviousStatus = "Approved"; //Approver
+                updateCrewDetails.PlanStatus = "Travel To Vessel"; // Travel to vessel
+                updateCrewDetails.Status = "Travel To Vessel"; // Travel to vessel
                 updateCrewDetails.ModifiedBy = "Master";
                 updateCrewDetails.ModifiedDate = DateTime.Now;
                 _context.TblCrewDetails.Update(updateCrewDetails);
@@ -976,9 +1057,9 @@ namespace crewlinkship.Controllers
                     var updateCrewDetails = _context.TblCrewDetails.FirstOrDefault(c => c.CrewId == crew.CrewId);
                     if (updateCrewDetails != null)
                     {
-                        updateCrewDetails.PreviousStatus = "Travel to vessel"; //Approver
-                        updateCrewDetails.PlanStatus = "Sign In transit"; // Travel to vessel
-                        updateCrewDetails.Status = "Sign In transit"; // Travel to vessel
+                        updateCrewDetails.PreviousStatus = "Travel To Vessel"; //Approver
+                        updateCrewDetails.PlanStatus = "Sign In Transit"; // Travel to vessel
+                        updateCrewDetails.Status = "Sign In Transit"; // Travel to vessel
                         updateCrewDetails.PoolId = vesselPooId.PoolId;
                         updateCrewDetails.ModifiedBy = "Master";
                         updateCrewDetails.ModifiedDate = DateTime.Now;

@@ -8,25 +8,26 @@
         <div class="content-header row">
             <div class="split left border">
                 <div class="centered">
-                    @using (Html.BeginForm("ImportData", "Home", FormMethod.Post, new { enctype = "multipart/form-data" })) { 
+                    @using (Html.BeginForm("ImportData", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
                         <h4 class="content-header-title m-b-10 m-t-5">
                             Import
                         </h4>
-                    <br />
-                    <br />
-                    <h3 class="text-dark">
-                        @Html.TextBox("file", "", new { type = "file" , accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" }) <br />
                         <br />
-                        <input type="submit" class="btn btn-dark" value="Upload" />
-                    </h3>
-                    <br />
+                        <br />
+                        <h3 class="text-dark">
+                            @Html.TextBox("file", "", new { type = "file", accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" }) <br />
+                            <br />
+                            <input type="submit" class="btn btn-dark" value="Upload" />
+                        </h3>
+                        <br />
 
-                    @*<h3 class="text-dark">Download Excel Sheet&nbsp; <i class="fas fa-print"></i></h3>*@
-                    @*<a asp-controller="Home" asp-action="ImportData" class="btn btn-dark" style="width:100px;" type="button">Import Data</a>*@
+                        @*<h3 class="text-dark">Download Excel Sheet&nbsp; <i class="fas fa-print"></i></h3>*@
+                        @*<a asp-controller="Home" asp-action="ImportData" class="btn btn-dark" style="width:100px;" type="button">Import Data</a>*@
 
                     }
                 </div>
-                </div>
+            </div>
             <div class="split right">
                 <div class="centered">
                     <h4 class="content-header-title m-b-10 m-t-5">
@@ -39,11 +40,11 @@
                             <h3 class="text-dark">Download Excel Sheet&nbsp; <i class="fas fa-print"></i></h3>
                         </a>
                     </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 <style>
@@ -83,17 +84,16 @@
 
 
 
-
 @*<script type="text/javascript">
-    $(function () {
-        $("#impBtn").click(function () {
-            $.ajax({
-                type: "POST",
-                url: "/Home/Takebackup",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
+        $(function () {
+            $("#impBtn").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Takebackup",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+
             })
-            
         })
-    })
-</script>*@
+    </script>*@
