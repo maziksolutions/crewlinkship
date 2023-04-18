@@ -1521,7 +1521,7 @@ namespace crewlinkship.Controllers
                 worksheet.Range("A1:A4").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 worksheet.Range("A1:A4").Style.Border.InsideBorderColor = XLColor.White;
 
-                worksheet.Column("A").Width = 14.29;
+                worksheet.Column("A").Width = 7.00;
                 worksheet.Column("B").Width = 27.00;
                 worksheet.Column("C").Width = 19.57;
                 worksheet.Column("D").Width = 14.29;
