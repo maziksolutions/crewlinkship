@@ -71,17 +71,20 @@
                                             <td>@item.SignOnDate?.ToString("dd-MMM-yyyy")</td>
                                             <td>@item.DueDate?.ToString("dd-MMM-yyyy")</td>
                                             <td scope="row">
+                                                @if(item.Reliever1 > 0 && item.Reliever?.Status == "Travel To Vessel" || item.Reliever1 > 0 && item.Reliever?.Status == "Sign In Transit")
+                                                {
                                                 @(item.ReliverRank!=null? item.ReliverRank.Code+":" :"")
                                                 @*<a href="#"><i class="fas fa-ellipsis-v"></i></a>*@
                                                 <a class="reliverDetails" style="color: #0068F7" href="javascript:;">
                                                     <span hidden="hidden" id="crewReliverId">@item.Reliever1</span>
                                                     @(item.Reliever != null? item.Reliever.FirstName:"") @(item.Reliever != null? item.Reliever.MiddleName : "") @(item.Reliever != null? item.Reliever.LastName : "")
                                                 </a>
+                                                }
                                                 @if (item.Reliever1 > 0 && item.Reliever?.Status == "Travel To Vessel")
                                                 {
                                                     <a class="dropdown-item travelToVessel" style="width:15%; float:right;"><i class="fas fa-edit"></i></a>
                                                 }
-                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Sign In transit")
+                                                @if (item.Reliever1 > 0 && item.Reliever?.Status == "Sign In Transit")
                                                 {
                                                     <a style="width:15%; float:right;">
                                                         <i class="fa fa-check-circle green" title="Candidate Approved"></i>&nbsp;&nbsp;&nbsp;
@@ -164,6 +167,7 @@
                             <script type="text/javascript">
                                 $(function () {
                                     $("#CustomerGrid .reliverDetails").click(function () {
+                                        debugger
                                         var crewId = $(this).closest("tr").find("td").find("#crewReliverId").html();
                                         if (crewId > 0) {
                                             $.ajax({
@@ -209,7 +213,7 @@
                                     url = '@Url.Action("OLPExcelFile", "Home")';
                                 }
                                 if (name == "IMO") {
-                                    url =('@Url.Action("GenerateIMOPDF", "Home")');
+                                    url =('@Url.Action("IMOExcelFile", "Home")');
 
 
                                     }
