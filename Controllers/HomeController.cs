@@ -1049,6 +1049,7 @@ namespace crewlinkship.Controllers
                     crew.ExpectedSignOnDate = tblActivitySignOn.ExpectedSignOnDate;
                     crew.ReliefDate = tblActivitySignOn.ReliefDate;
                     crew.Remarks = tblActivitySignOn.Remarks;
+                    crew.ModifiedDate = DateTime.Now;
                     _context.TblActivitySignOns.Update(crew);
                     _context.SaveChanges();
                     //update status in crewdetails 
