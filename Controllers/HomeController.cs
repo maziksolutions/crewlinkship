@@ -146,7 +146,6 @@ namespace crewlinkship.Controllers
                                 dt.TableName = sheetname;
                             //Loop through the Worksheet rows.
                             bool firstRow = true;
-                            bool secondRow = true;
                                 foreach (IXLRow row in workSheet.Rows())
                             {
                                 //Use the first row to add columns to DataTable.

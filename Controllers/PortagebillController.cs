@@ -34,22 +34,18 @@ namespace crewlinkship.Controllers
             _context = context;
             _appEnvironment = appEnvironment;
         }
-        //public IActionResult Index(int? vesselId, int? month)
+        //public IActionResult Index()
         //{
         //    /*int vesselId = 138; int month = 2;*/
         //    int year = 2023; string ispromoted = "no"; string checkpbtilldate = "";
         //    var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 75, month, year, ispromoted, checkpbtilldate);
-
         //    ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
-
         //    ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-
         //    ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-
-        //    return View(data);        
+        //    return View(data);
         //}
 
-        
+       // [Route("Portagebill/Index/{vesselId:int}/{month:int}/{year:int}")]
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
         {

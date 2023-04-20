@@ -1192,7 +1192,8 @@ namespace crewlinkship.Models
             modelBuilder.Entity<tblPBBankAllotment>(entity =>
             {
                 entity.HasKey(e => e.BankAllotmentId);
-                entity.ToTable("tblPBBankAllotment");  
+                entity.ToTable("tblPBBankAllotment");
+                entity.Property(e => e.Recdate).HasDefaultValueSql("(getdate())");
                 entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
                 entity.Property(e => e.IsPromoted).HasDefaultValueSql("((0))");
             });
@@ -1201,15 +1202,11 @@ namespace crewlinkship.Models
             modelBuilder.Entity<TblPortageBill>(entity =>
             {
                 entity.HasKey(e => e.PortageBillId);
-
                 entity.ToTable("tblPortageBill");
-
                 entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
-
                 entity.Property(e => e.Avc)
                     .HasColumnType("decimal(18, 2)")
                     .HasColumnName("AVC");
-
                 entity.Property(e => e.BillStatus).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.ExtraOt).HasColumnName("ExtraOT");
