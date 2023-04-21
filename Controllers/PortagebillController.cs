@@ -60,11 +60,11 @@ namespace crewlinkship.Controllers
 
             var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 75), "VesselId", "VesselName");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 110), "VesselId", "VesselName");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
-                var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 75, month, year, "yes");
-                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 75, month, year);
+                var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 110, month, year, "yes");
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 110, month, year);
                 var tables = new PortageViewModel
                 {
                     onsignersportage = data,
@@ -82,6 +82,11 @@ namespace crewlinkship.Controllers
         {
             var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == portageid && c.CrewId== crewid);
             return Json(data);
+        }
+        public JsonResult getBowRequest(int crewListId)
+        {
+            var bowreq = _context.TblBowRequests.FirstOrDefault(t => t.CrewListId == crewListId && t.IsDeleted == false);
+            return Json(bowreq);
         }
         public JsonResult getBOWData(int crewId, int crewListId, DateTime signOffDate)
         {

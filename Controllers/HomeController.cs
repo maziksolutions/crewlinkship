@@ -903,10 +903,10 @@ namespace crewlinkship.Controllers
             if (accessToken != null)
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
 
                 ViewBag.HandOverport = "NA";
-                var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault().PortOfHandover;
+                var HandOverPortId = _context.TblVessels.Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault().PortOfHandover;
                 if (HandOverPortId != null)
                 {
                     ViewBag.HandOverport = _context.TblSeaports.Where(x => x.SeaportId == HandOverPortId).FirstOrDefault().SeaportName;
@@ -915,8 +915,8 @@ namespace crewlinkship.Controllers
                     .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
                     .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
                     .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
-                    .Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+                    .Where(x => x.IsDeleted == false && x.VesselId == 110).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
                 return View(vesselName);
             }
             return RedirectToAction("UserLogin", "Login");
@@ -935,19 +935,19 @@ namespace crewlinkship.Controllers
                 //ViewBag.name = TempData["name"] as string;
                 ViewBag.name = HttpContext.Session.GetString("name");
 
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
 
-                var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 75 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+                var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 110 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
 
                 ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-                ViewBag.bowRequestCount = _context.TblBowRequests.Where(x => x.VesselId == 75 && x.Status == "Requested").Count();
+                ViewBag.bowRequestCount = _context.TblBowRequests.Where(x => x.VesselId == 110 && x.Status == "Requested").Count();
                 //ViewBag.imo = vesselDetails.Imo;
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
 
 
 
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
 
                 return View(crewlist);
             }
@@ -965,14 +965,14 @@ namespace crewlinkship.Controllers
             if (accessToken != null)
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
                 //var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 19).FirstOrDefault();
                 //ViewBag.vesselName = vesselDetails.VesselName;
                 //ViewBag.imo = vesselDetails.Imo;
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
-                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h => h.OffCBA).Include(x => x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 75).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
+                var vcm = _context.TblVesselCbas.Include(x => x.Country).Include(h => h.OffCBA).Include(x => x.RatingCBA).Where(x => x.IsDeleted == false && x.VesselId == 110).ToList();
                 return PartialView(vcm);
             }
             return RedirectToAction("UserLogin", "Login");
@@ -982,8 +982,8 @@ namespace crewlinkship.Controllers
         public IActionResult ImportExportPage()
         {
             ViewBag.name = HttpContext.Session.GetString("name");
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 75).ToList();
+            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
             return PartialView();
         }
 
@@ -991,7 +991,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult TravelToVessel(int? crewId)
         {
-            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 75).FirstOrDefault();
+            var vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
             ViewBag.vesselName = vesselDetails.VesselName;
             ViewBag.imo = vesselDetails.Imo;
             ViewBag.shipType = vesselDetails.Ship.ShipCategory;
@@ -1097,7 +1097,7 @@ namespace crewlinkship.Controllers
                 return value;
         }
 
-        public IActionResult AtlanticExcelFile(int vesselId = 75)
+        public IActionResult AtlanticExcelFile(int vesselId = 110)
         {
             IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(po => po.Vessel.PortOfTakeovers).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1162,7 +1162,7 @@ namespace crewlinkship.Controllers
                     worksheet.Cell("A5").Value = "Vessel name:" + applicant.Vessel.VesselName;
                     worksheet.Cell("A5").Style.Font.Bold = true;
                     worksheet.Cell("A5").Style.Font.FontSize = 14;
-                    worksheet.Rows("5").Height = 18.75;
+                    worksheet.Rows("5").Height = 18.110;
                     worksheet.Cell("A5").Style.Font.FontName = "Calibri Light";
 
                     worksheet.Cell("H2").Value = "Life Boat Capacity:";
@@ -1229,7 +1229,7 @@ namespace crewlinkship.Controllers
             return File(fileByteArray, "application/vnd.ms-excel", fileName);
         }
 
-        public IActionResult GetOCIMFExcelFile(int vesselId = 75)
+        public IActionResult GetOCIMFExcelFile(int vesselId = 110)
         {
             var crew = _context.OCIMFVMs.FromSqlRaw("GetOCIMF @p0", vesselId).ToList();
 
@@ -1405,7 +1405,7 @@ namespace crewlinkship.Controllers
 
         }
 
-        public IActionResult OLPExcelFile(int vesselId = 75)
+        public IActionResult OLPExcelFile(int vesselId = 110)
         {
             IEnumerable<TblCrewList> CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel.Pool).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1501,7 +1501,7 @@ namespace crewlinkship.Controllers
             }
         }
 
-        //public IActionResult getIMOdata(int vesselId = 75)
+        //public IActionResult getIMOdata(int vesselId = 110)
         //{
         //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1544,7 +1544,7 @@ namespace crewlinkship.Controllers
         //}
 
 
-        //public IActionResult getIMOdata2(int vesselId = 75)
+        //public IActionResult getIMOdata2(int vesselId = 110)
         //{
 
         //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
@@ -1575,7 +1575,7 @@ namespace crewlinkship.Controllers
 
 
 
-        public IActionResult IMOExcelFile(int vesselId = 75)
+        public IActionResult IMOExcelFile(int vesselId = 110)
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1763,7 +1763,7 @@ namespace crewlinkship.Controllers
         #region IMO PDF
         //Generate IMO PDF from crewlist
 
-        //public JsonResult GenerateIMOPDF(int vesselId = 75)
+        //public JsonResult GenerateIMOPDF(int vesselId = 110)
         //{
 
         //    var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
@@ -1866,7 +1866,7 @@ namespace crewlinkship.Controllers
         #endregion
 
 
-        public IActionResult FPD012(int vesselId = 75)
+        public IActionResult FPD012(int vesselId = 110)
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -1912,7 +1912,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public JsonResult generateFPD01(int vesselId = 75)
+        public JsonResult generateFPD01(int vesselId = 110)
         {
             var CrewList = _context.TblCrewLists.Include(c => c.Crew).Include(r => r.Rank).Include(ct => ct.Crew.Country).Include(p => p.Vessel).Where(x => x.IsDeleted == false && x.VesselId == vesselId && x.IsDeleted == false && x.CrewId != null).OrderBy(r => r.Rank.CrewSort).ToList();
 
@@ -2020,7 +2020,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public IActionResult ExportVesselParticulars(int vesselId = 75)
+        public IActionResult ExportVesselParticulars(int vesselId = 110)
         {
 
             var vesselName = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
@@ -2706,7 +2706,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public IActionResult PdfVesselPaticular(int vesselId = 75)
+        public IActionResult PdfVesselPaticular(int vesselId = 110)
         {
             ViewBag.vesseldata = _context.TblVessels.Include(x => x.Flag).Include(x => x.PortOfRegistryNavigation).Include(x => x.Ship)
                .Include(x => x.Owner).Include(x => x.DisponentOwner).Include(x => x.Manager).Include(x => x.Crewmanager)
