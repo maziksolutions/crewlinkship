@@ -80,13 +80,13 @@ namespace crewlinkship.ViewModel
         public string modifyby { get; set; }
         public string ispromoted { get; set; }
         public string signoffreason { get; set; }
-        public int Islocked { get; set; }
+        public int? Islocked { get; set; }
         public string Attachment { get; set; }
         public decimal? Gratuity { get; set; }
         public decimal? IndPFAmount { get; set; }
         public decimal? AVC { get; set; }
         public string bowRequest { get; set; }
-        public bool IsAddPrevBal { get; set; }
+        public bool? IsAddPrevBal { get; set; }
         public decimal? MidMonthAllotment { get; set; }
     }
     public class PortageBillSignoffVM

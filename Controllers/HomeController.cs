@@ -30,7 +30,9 @@ using System.Data.OleDb;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Mail;
+
 namespace crewlinkship.Controllers
 {
     //[Authorize]
@@ -186,7 +188,7 @@ namespace crewlinkship.Controllers
                                 {
                                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                                     {
-                                        sqlBulkCopy.DestinationTableName = "dbo." + dsTables.Tables[i].TableName;
+                                        sqlBulkCopy.DestinationTableName = dsTables.Tables[i].TableName;
                                         con.Open();
                                         if (dsTables.Tables[i].Rows.Count > 0)
                                         {
@@ -572,7 +574,7 @@ namespace crewlinkship.Controllers
             //}).ToList();
             //var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
             //var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            var PBBankAllotment = _context.PBBankAllotment.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x=> new tblPBBankAllotmentVM {
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x=> new tblPBBankAllotmentVM {
                 VesselPortId = x.BankAllotmentId,
                 Crew = x.Crew,
                 VesselId =x.VesselId,
@@ -2760,8 +2762,70 @@ namespace crewlinkship.Controllers
             return Json(new { fileName = fileName });
         }
 
+        public IActionResult Emailconfigure()
+        {
+            ViewBag.name = HttpContext.Session.GetString("name");
+            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
 
-    }
+           var Email = _context.TblEmails.FirstOrDefault();
+
+            if(Email != null)
+            {
+                return RedirectToAction("GetEmailDetail");
+            }
+
+            return PartialView();
+        }
+
+        [HttpGet]
+         public IActionResult GetEmailDetail()
+        {
+            ViewBag.name = HttpContext.Session.GetString("name");
+            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
+            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
+
+            ViewBag.Email = _context.TblEmails.ToList();
+            return PartialView();
+        }
+
+        [HttpPost]
+        public IActionResult EmailSend(TblEmail tblEmail)
+        {
+
+            var addressTo = tblEmail.EmailId;
+            var SecretEmail = tblEmail.EmailId;
+            var SecretPassword = tblEmail.Password;
+            var SecretPort =tblEmail.Port;
+            var fromAddress = new MailAddress(SecretEmail);
+            var fromPassword = SecretPassword;
+            var toAddress = new MailAddress(addressTo);
+         
+        SmtpClient smtp = new SmtpClient
+            {   Host= tblEmail.Smtp,
+                Port = SecretPort,
+               DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
+               UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+              
+            })
+            {
+
+                smtp.Send(message);
+
+                _context.TblEmails.Add(tblEmail);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Emailconfigure");
+        }
+
+
+        }
 
 }
 
