@@ -20,47 +20,55 @@
                             </div>
                             <div class="card-content">
                                 <div class="card-body">
-                                  
-                                        @using (Html.BeginForm("EmailSend", "Home", FormMethod.Post))
-                                        {
-                                            <fieldset class="form-group mb-1">
-                                              
-                                                @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control", @placeholder = "Your Email Address" })
-                                                @Html.ValidationMessageFor(m => m.EmailId, "", new { @class = "error" })
-                                            </fieldset>
-                                            <fieldset class="form-group mb-1">
-                                               
-                                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter Password" })
-                                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "error" })
-                                            </fieldset>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <fieldset class="form-group mb-1">
-                                                      
-                                                        @Html.TextBoxFor(m => m.Smtp, new { @class = "form-control", @placeholder = "SMTP" })
-                                                        @Html.ValidationMessageFor(m => m.Smtp, "", new { @class = "error" })
-                                                    </fieldset>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <fieldset class="form-group mb-1">
-                                                       
-                                                        @Html.TextBoxFor(m => m.Pop, new { @class = "form-control", @placeholder = "POP" })
-                                                        @Html.ValidationMessageFor(m => m.Pop, "", new { @class = "error" })
-                                                    </fieldset>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <fieldset class="form-group mb-1">
-                                                       
-                                                        @Html.TextBoxFor(m => m.Port, new { @class = "form-control", @placeholder = "PORT" })
-                                                        @Html.ValidationMessageFor(m => m.Port, "", new { @class = "error" })
-                                                    </fieldset>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
-                                        }
-                                  
 
-                                    </div>
+
+                                    @using (Html.BeginForm("EmailSave", "Home", FormMethod.Post))
+                                    {
+
+
+                                        <fieldset class="form-group mb-1">
+
+                                            <input type="text" id="emailId" name="emailId" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.EmailId)" placeholder="Your Email Address">
+
+                                        </fieldset>
+                                        <fieldset class="form-group mb-1">
+
+                                            <input type="password" id="Password" name="password" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Password)" placeholder="Enter Password">
+
+
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <fieldset class="form-group mb-1">
+
+                                                    <input type="text" id="Smtp" name="smtp" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Smtp)" placeholder="SMTP">
+
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <fieldset class="form-group mb-1">
+
+                                                    <input type="text" id="Pop" name="pop" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Pop)" placeholder="POP">
+
+
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <fieldset class="form-group mb-1">
+
+                                                    <input type="text" id="Port" name="port" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Port)" placeholder="PORT">
+
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
+
+
+                                    }
+                                    &nbsp;
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Check SMTP</button>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Check POP</button>
+                                </div>
 
                             </div>
                         </div>
@@ -70,6 +78,7 @@
         </div>
     </div>
 </div>
+
 
 
 
