@@ -31,6 +31,13 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using OpenPop.Pop3;
+using crewlinkship.ViewModel;
+using OpenPop.Mime;
+using Limilabs.Client.IMAP;
+using Limilabs.Mail;
+using Limilabs.Mail.MIME;
+
 namespace crewlinkship.Controllers
 {
     //[Authorize]
@@ -55,7 +62,126 @@ namespace crewlinkship.Controllers
         {
             return View();
         }
-        public DataTable LINQResultToDataTable<T>(IEnumerable<T> Linqlist)
+        public IActionResult ReadEmail()
+        {
+            return View(Read_Emails());
+        }
+        private List<EmailModel> Read_Emails()
+        {
+            using (Imap imap = new Imap())
+            {
+                //imap.Connect("smtp.office365.com");   // or ConnectSSL for SSL
+                //imap.UseBestLogin("no-reply@aships.co.uk", "AGWebmaster2018!");
+
+                imap.Connect("mail.maziksolutions.com");   // or ConnectSSL for SSL
+                imap.UseBestLogin("vijay@maziksolutions.com", "IPO@#2023Kite");
+                imap.SelectInbox();
+                List<long> uids = imap.Search(Flag.Unseen);
+                int count = uids.Count();
+                foreach (long uid in uids)
+                {
+                    var eml = imap.GetMessageByUID(uid);
+                    IMail email = new MailBuilder()
+                        .CreateFromEml(eml);
+                    string subject = email.Subject;
+                    string test = email.TextDataString;
+                    var attachments = email.Attachments;
+                    if (attachments.Count != 0)
+                    {
+                        foreach (MimeData attach in email.Attachments)
+                        {
+                            string filename = attach.FileName;
+                            string extension = Path.GetExtension(filename);
+                            if (extension == ".bak" || extension == ".Bak")
+                            {
+                                //string path = string.Concat(Server.MapPath("../upload/" + filename));
+                                //attach.Save(path);
+                                //uploadbackup(filename, path);
+                            }
+                        }
+                    }
+                }
+                imap.Close();
+            }
+
+            //Pop3Client pop3Client = new Pop3Client();
+            //pop3Client.Connect("mail.maziksolutions.com");
+            //pop3Client.Authenticate("vijay@maziksolutions.com", "IPO@#2023Kite", AuthenticationMethod.UsernameAndPassword);
+
+            //int count = pop3Client.GetMessageCount();
+            //List<EmailModel> emails = new List<EmailModel>();
+            //int counter = 0;
+            //for (int i = count; i >= 1; i--)
+            //{
+            //    Message message = pop3Client.GetMessage(i);
+            //    EmailModel email = new EmailModel()
+            //    {
+            //        MessageNumber = i,
+            //        From = string.Format("<a href = 'mailto:{1}'>{0}</a>", message.Headers.From.DisplayName, message.Headers.From.Address),
+            //        Subject = message.Headers.Subject,
+            //        DateSent = message.Headers.DateSent
+            //    };
+            //    MessagePart body = message.FindFirstHtmlVersion();
+            //    if (body != null)
+            //    {
+            //        email.Body = body.GetBodyAsText();
+            //    }
+            //    else
+            //    {
+            //        body = message.FindFirstPlainTextVersion();
+            //        if (body != null)
+            //        {
+            //            email.Body = body.GetBodyAsText();
+            //        }
+            //    }
+            //    emails.Add(email);
+            //    counter++;
+            //    if (counter > 2)
+            //    {
+            //        break;
+            //    }
+            //}
+
+            return null;
+        }
+    //public void readallemails()
+    //{            
+    //    Pop3Client pop3Client;
+    //    if (Session["Pop3Client"] == null)
+    //    {
+    //        pop3Client = new Pop3Client();
+    //        pop3Client.Connect("imap.gmail.com", 995, true);
+    //        pop3Client.Authenticate("maziksol@gmail.com","mzk@sol.com");
+    //        Session["Pop3Client"] = pop3Client;
+    //    }
+    //    else
+    //    {
+    //        pop3Client = (Pop3Client)Session["Pop3Client"];
+    //    }
+    //    int count = pop3Client.GetMessageCount();
+    //    DataTable dtMessages = new DataTable();
+    //    dtMessages.Columns.Add("MessageNumber");
+    //    dtMessages.Columns.Add("From");
+    //    dtMessages.Columns.Add("Subject");
+    //    dtMessages.Columns.Add("DateSent");
+    //    int counter = 0;
+    //    for (int i = count; i >= 1; i--)
+    //    {
+    //      OpenPop.Mime.Message message = pop3Client.GetMessage(i);
+    //        dtMessages.Rows.Add();
+    //        dtMessages.Rows[dtMessages.Rows.Count - 1]["MessageNumber"] = i;
+    //        dtMessages.Rows[dtMessages.Rows.Count - 1]["Subject"] = message.Headers.Subject;
+    //        dtMessages.Rows[dtMessages.Rows.Count - 1]["DateSent"] = message.Headers.DateSent;
+    //        counter++;
+    //        if (counter > 5)
+    //        {
+    //            break;
+    //        }
+    //    }
+    //    gvEmails.DataSource = dtMessages;
+    //    gvEmails.DataBind();
+    //}
+    public DataTable LINQResultToDataTable<T>(IEnumerable<T> Linqlist)
         {
             DataTable dt = new DataTable();
             PropertyInfo[] columns = null;
