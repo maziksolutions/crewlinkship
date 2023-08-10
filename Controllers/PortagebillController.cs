@@ -21,6 +21,8 @@ using System.ComponentModel.DataAnnotations;
 using Ionic.Zip;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace crewlinkship.Controllers
 {
@@ -48,12 +50,15 @@ namespace crewlinkship.Controllers
        // [Route("Portagebill/Index/{vesselId:int}/{month:int}/{year:int}")]
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
-        {
-                string checkpbtilldate = "";
+        {          
+            string checkpbtilldate = "";
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            try
+            {
 
+            
             if (accessToken != null)
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
@@ -63,9 +68,13 @@ namespace crewlinkship.Controllers
             ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 110), "VesselId", "VesselName");
                 ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
-                var promotiondata = _context.PortageBillVM.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 110, month, year, "yes");
+                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 110, month, year, "yes");
                 var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 110, month, year);
-                var tables = new PortageViewModel
+
+                    ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselId).ToList().FirstOrDefault()?.BillStatus;
+
+
+                    var tables = new PortageViewModel
                 {
                     onsignersportage = data,
                     promotionsportagebill = promotiondata,
@@ -74,14 +83,20 @@ namespace crewlinkship.Controllers
 
                 return View(tables);
             }
-
+            }
+            catch (Exception ex) { }
             return RedirectToAction("UserLogin", "Login");
         }
 
         public JsonResult GetDataByPoratgeId(int portageid,int crewid)
         {
-            var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == portageid && c.CrewId== crewid);
-            return Json(data);
+            try
+            {
+                var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == portageid && c.CrewId == crewid);
+                return Json(data);
+            }
+            catch(Exception ex) { throw ex; }
+            return null;
         }
         public JsonResult getBowRequest(int crewListId)
         {
@@ -220,7 +235,7 @@ namespace crewlinkship.Controllers
             }
             return null;
         }
-        public JsonResult AddBankAllotment(tblPBBankAllotment item, int itemlength)
+        public JsonResult AddBankAllotment(TblPbbankAllotment item, int itemlength)
         {
             DateTime today = DateTime.Today;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -234,7 +249,7 @@ namespace crewlinkship.Controllers
             {
                 if (item.BankAllotmentId == 0)
                 {
-                    _context.PBBankAllotment.Add(new tblPBBankAllotment
+                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
                     {
                         Crew = item.Crew,
                         VesselId = item.VesselId,
@@ -251,9 +266,9 @@ namespace crewlinkship.Controllers
                 {
                     if (item.IsMidMonthAllotment == false)
                     {
-                        var checkdata = _context.PBBankAllotment.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == false && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                        var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == false && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
                         var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
-                        var data = _context.PBBankAllotment.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
+                        var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
                         if (checkdata.Count() == itemlength)
                         {
                             if (data != null)
@@ -264,7 +279,7 @@ namespace crewlinkship.Controllers
                                 data.From = item.From;
                                 data.To = item.To;
                                 data.Allotments = item.Allotments;
-                                _context.PBBankAllotment.Update(data);
+                                _context.TblPbbankAllotments.Update(data);
                                 _context.SaveChanges();
                                 return Json("success");
                             }
@@ -283,14 +298,14 @@ namespace crewlinkship.Controllers
                                         data.From = item.From;
                                         data.To = item.To;
                                         data.Allotments = item.Allotments;
-                                        _context.PBBankAllotment.Update(data);
+                                        _context.TblPbbankAllotments.Update(data);
                                         _context.SaveChanges();
                                     }
                                     else
                                     {
-                                        var datanew = _context.PBBankAllotment.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
                                         datanew.IsDeleted = true;
-                                        _context.PBBankAllotment.Update(datanew);
+                                        _context.TblPbbankAllotments.Update(datanew);
                                         _context.SaveChanges();
                                     }
                                 }
@@ -300,9 +315,9 @@ namespace crewlinkship.Controllers
                     }
                     else
                     {
-                        var checkdata = _context.PBBankAllotment.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == true && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                        var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == true && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
                         var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
-                        var data = _context.PBBankAllotment.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
+                        var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
                         if (checkdata.Count() == itemlength)
                         {
                             if (data != null)
@@ -313,7 +328,7 @@ namespace crewlinkship.Controllers
                                 data.From = item.From;
                                 data.To = item.To;
                                 data.Allotments = item.Allotments;
-                                _context.PBBankAllotment.Update(data);
+                                _context.TblPbbankAllotments.Update(data);
                                 _context.SaveChanges();
                                 return Json("success");
                             }
@@ -332,15 +347,15 @@ namespace crewlinkship.Controllers
                                         data.From = item.From;
                                         data.To = item.To;
                                         data.Allotments = item.Allotments;
-                                        _context.PBBankAllotment.Update(data);
+                                        _context.TblPbbankAllotments.Update(data);
                                         _context.SaveChanges();
                                         return Json("success");
                                     }
                                     else
                                     {
-                                        var datanew = _context.PBBankAllotment.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
                                         datanew.IsDeleted = true;
-                                        _context.PBBankAllotment.Update(datanew);
+                                        _context.TblPbbankAllotments.Update(datanew);
                                         _context.SaveChanges();
                                     }
                                 }
@@ -365,7 +380,7 @@ namespace crewlinkship.Controllers
                 promoted = false;
             else
                 promoted = true;
-            var data = _context.PBBankAllotment.Where(x => x.VesselId == vesselId && x.From.Month == month && x.From.Year == year && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false).ToList();
+            var data = _context.TblPbbankAllotments.Where(x => x.VesselId == vesselId && x.From.Month == month && x.From.Year == year && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false).ToList();
             return Json(data);
         }
         public JsonResult deletebow(int id)
@@ -392,15 +407,17 @@ namespace crewlinkship.Controllers
             var data = _context.TblCrewBankDetails.Where(t => t.CrewId == crewId && t.IsDeleted == false).OrderBy(x => x.AccountType).ToList();
           return Json(data);
         }
-        public IActionResult Genneratexcel(string vesselId = "Bakerloo", int month = 12, int year = 2021, string currency = "", string checkpbtilldate = "")
+      
+        public IActionResult Genneratexcel(string vesselId, int month, int year, string currency, string checkpbtilldate)
         {
-            
-            var query = _context.PortageBillPDFVM.FromSqlRaw("spPortagePDFFile @p0, @p1, @p2,@p3,@p4", vesselId, month, year, currency, checkpbtilldate).ToList();
+            string vid = vesselId.Trim();
+            // int? vesselId, int? month, int? year
+             var query = _context.PortageBillPDFVM.FromSqlRaw("spPortagePDFFile @p0, @p1, @p2,@p3,@p4", vid, month, year, currency, checkpbtilldate).ToList();
 
             DataTable dt = new DataTable();
             dt = LINQResultToDataTable(query);
 
-            var signoffdata = _context.PortageBillPDFSignoffVM.FromSqlRaw("spSignOFFPortagePDFFile @p0, @p1, @p2,@p3", vesselId, month, year, currency).ToList();
+            var signoffdata = _context.PortageBillPDFSignoffVM.FromSqlRaw("spSignOFFPortagePDFFile @p0, @p1, @p2,@p3", vid, month, year, currency).ToList();
 
             DataTable dtsignoff = new DataTable();
             dtsignoff = LINQResultToDataTable(signoffdata);
@@ -1271,103 +1288,115 @@ namespace crewlinkship.Controllers
         }
 
 
-        public JsonResult VesselPayslip(int portageid = 1)
+        public JsonResult VesselPayslip(string vesselId, int month, int year)
         {
-            var datas = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", portageid).ToList();
+            var getpblist = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList().Select(x => x.PortageBillId);
+            string pid = string.Join(",", getpblist);
+            string[] portageid = pid.Split(',');          
 
-            string localpath = "http://ship.crewlinkasm.com/";
-            string url = "";
-            var portageids = datas;
             using (ZipFile zip = new ZipFile())
-            {
+            {               
                 zip.AlternateEncodingUsage = ZipOption.AsNecessary;
                 // zip.AddDirectoryByName("Files");
-                foreach (var item in portageids)
+                foreach (var pitem in portageid)
                 {
-                    ViewBag.vesselname = item.Vessel;
-                    string crewpayslipname = "";
-                    string cu = "";
-                    int portagebillid = item.pid;
-                    var data = datas.FirstOrDefault(x => x.pid == portagebillid);
-                    string attachment = data.Attachment;
-                    string functionreturn = RetunFileName(portagebillid);
-                    cu = functionreturn.Substring(0, functionreturn.IndexOf("-"));
-                    crewpayslipname = functionreturn.Substring(functionreturn.IndexOf("-") + 1);
-                    string filename = crewpayslipname + "_" + "Salaryslip" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
-                    if (attachment == null || attachment == "")
-                    {
-                        if (cu != null)
+                    //var datas = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", pitem);
+                    //var request = HttpContext.Current.Request;                  
+                    string requesturl = HttpContext.Request.GetEncodedUrl();
+                    string newurl = requesturl.Substring(0, requesturl.LastIndexOf("/"));
+                    string finalurl = newurl.Substring(0, newurl.LastIndexOf("/"));
+                    string localpath = finalurl +"/";
+                    string url = "";
+                    //var portageids = datas;
+                    //foreach (var item in portageids)
+                    //{
+                        ViewBag.vesselname = "";
+                        string crewpayslipname = "";
+                        string cu = "";
+                     //   int portagebillid = item.PortageBillId.Value;
+                     //   var data = datas.FirstOrDefault(x => x.pid == portagebillid);
+                        string attachment = "";
+                        string functionreturn = RetunFileName(int.Parse(pitem));
+                        cu = functionreturn.Substring(0, functionreturn.IndexOf("-"));
+                        crewpayslipname = functionreturn.Substring(functionreturn.IndexOf("-") + 1);
+                        string filename = crewpayslipname + "_" + "Salaryslip" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                        if (attachment == null || attachment == "")
                         {
-                            if (cu == "NGN")
-                                url = localpath + "Portagebill/Nigpayslips?pid=" + portagebillid;
-                            else
-                                url = localpath + "Portagebill/Indpayslip?pid=" + portagebillid;
+                            if (cu != null)
+                            {
+                                if (cu == "NGN")
+                                    url = localpath + "Portagebill/Nigpayslips?pid=" + pitem;
+                                else
+                                    url = localpath + "Portagebill/Indpayslip?pid=" + pitem;
+                            }
+                            var webRoot = _appEnvironment.WebRootPath;
+                            string footerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFFooter.htm");
+                            string pdf_page_size = PdfPageSize.A4.ToString();
+                            PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
+                            string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                            PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation), pdf_orientation, true);
+                            int webPageWidth = 1000;
+                            int webPageHeight = 0;
+                            // instantiate a html to pdf converter object
+                            HtmlToPdf converter = new HtmlToPdf();
+                            converter.Header.DisplayOnFirstPage = false;
+                            converter.Header.DisplayOnOddPages = true;
+                            converter.Header.DisplayOnEvenPages = true;
+                            // set converter options
+                            converter.Options.PdfPageSize = pageSize;
+                            converter.Options.PdfPageOrientation = pdfOrientation;
+                            converter.Options.WebPageWidth = webPageWidth;
+                            converter.Options.WebPageHeight = webPageHeight;
+                            int headerHeight = 60;
+                            //int footerHeight = 50;
+                            // header settings
+                            converter.Options.DisplayHeader = true;
+                            converter.Header.DisplayOnFirstPage = false;
+                            converter.Header.DisplayOnOddPages = true;
+                            converter.Header.DisplayOnEvenPages = true;
+                            converter.Header.Height = headerHeight;
+                            PdfDocument doc = converter.ConvertUrl(url);
+                            // byte[] pdf = doc.Save();
+                            MemoryStream ms = new System.IO.MemoryStream();
+                            doc.Save(ms);
+                            //byte[] bytes = ms.ToArray();
+                            ms.Position = 0;
+                            string folderName = "Salaryslip";
+                            //string localpath = _config.GetValue<string>("serverUrl");
+                            string webRootPath = _appEnvironment.WebRootPath;
+                            string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                            string PathToShow = Path.Combine(localpath, folderName + "/" + filename);
+                            FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                            ms.WriteTo(file);
+                            file.Close();
+                            string filePath = filename;
+                            //zip.AddFile(PathToSave, "Files");
+                            zip.AddFile(PathToSave).FileName = filename;
                         }
-                        var webRoot = _appEnvironment.WebRootPath;
-                        string footerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFFooter.htm");
-                        string pdf_page_size = PdfPageSize.A4.ToString();
-                        PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
-                        string pdf_orientation = PdfPageOrientation.Portrait.ToString();
-                        PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation), pdf_orientation, true);
-                        int webPageWidth = 1000;
-                        int webPageHeight = 0;
-                        // instantiate a html to pdf converter object
-                        HtmlToPdf converter = new HtmlToPdf();
-                        converter.Header.DisplayOnFirstPage = false;
-                        converter.Header.DisplayOnOddPages = true;
-                        converter.Header.DisplayOnEvenPages = true;
-                        // set converter options
-                        converter.Options.PdfPageSize = pageSize;
-                        converter.Options.PdfPageOrientation = pdfOrientation;
-                        converter.Options.WebPageWidth = webPageWidth;
-                        converter.Options.WebPageHeight = webPageHeight;
-                        int headerHeight = 60;
-                        //int footerHeight = 50;
-                        // header settings
-                        converter.Options.DisplayHeader = true;
-                        converter.Header.DisplayOnFirstPage = false;
-                        converter.Header.DisplayOnOddPages = true;
-                        converter.Header.DisplayOnEvenPages = true;
-                        converter.Header.Height = headerHeight;
-                        PdfDocument doc = converter.ConvertUrl(url);
-                        // byte[] pdf = doc.Save();
-                        MemoryStream ms = new System.IO.MemoryStream();
-                        doc.Save(ms);
-                        //byte[] bytes = ms.ToArray();
-                        ms.Position = 0;
-                        string folderName = "Salaryslip";
-                        //string localpath = _config.GetValue<string>("serverUrl");
-                        string webRootPath = _appEnvironment.WebRootPath;
-                        string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
-                        string PathToShow = Path.Combine(localpath, folderName + "/" + filename);
-                        FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
-                        ms.WriteTo(file);
-                        file.Close();
-                        string filePath = filename;
-                        //zip.AddFile(PathToSave, "Files");
-                        zip.AddFile(PathToSave).FileName = filename;
-                    }
-                    else
-                    {
-                        string filepath = attachment.Substring(attachment.LastIndexOf("/") + 1);
-                        string folderName = "Upload/Payslip/";
-                        string webRootPath = _appEnvironment.WebRootPath;
-                        string PathToSave = Path.Combine(webRootPath, folderName + "/" + filepath);
-                        zip.AddFile(PathToSave).FileName = filename;
-                        //zip.AddFile(PathToSave, "Files");
-                    }
+                        else
+                        {
+                            string filepath = attachment.Substring(attachment.LastIndexOf("/") + 1);
+                            string folderName = "Upload/Payslip/";
+                            string webRootPath = _appEnvironment.WebRootPath;
+                            string PathToSave = Path.Combine(webRootPath, folderName + "/" + filepath);
+                            zip.AddFile(PathToSave).FileName = filename;
+                            //zip.AddFile(PathToSave, "Files");
+                        }
+                    //}
                 }
                 string vesselnames = ViewBag.vesselname;
                 string zipName = vesselnames + "_" + DateTime.Now.ToString("yyyy-MMM-dd") + ".zip";
                 zip.Save(zipName);
                 return Json(new { fileName = zipName });
+                
             }
             return null;
         }
 
         public string RetunFileName(int portagebillid)
         {
-            var PortageBill = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", portagebillid).AsEnumerable().FirstOrDefault();
+            _context.ChangeTracker.Clear();
+            var PortageBill = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", portagebillid).AsTracking().AsEnumerable().FirstOrDefault();
             return PortageBill.Currency + "-" + PortageBill.RankName + " " + PortageBill.CrewName + "_" + Convert.ToDateTime(PortageBill.From).ToString("MMM-yyyy");
         }
         public async Task<IActionResult> Indpayslip(string pid)
@@ -1429,5 +1458,30 @@ namespace crewlinkship.Controllers
             }
             return dt;
         }
-    }
+
+        public JsonResult LockPortageBill(string vesselId, int month, int year)
+        {
+            var Portdata = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
+
+            string checkpbtilldate = "";
+
+            var PortdataVM = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate).ToList();     
+
+            return Json(new { portageBillData = Portdata , portageBillVM = PortdataVM });
+        }
+
+        public JsonResult UpdateBillStatus(string vesselId, int month, int year)
+        {
+           var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
+
+            foreach(var item in portUpdate)
+            {
+                 item.BillStatus = 1;
+                _context.TblPortageBills.Update(item);
+                _context.SaveChanges();
+            }
+            return Json(new { updatePortageBill = portUpdate });
+        }
+
+        }
 }
