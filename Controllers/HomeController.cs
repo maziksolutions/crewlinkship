@@ -2768,58 +2768,56 @@ namespace crewlinkship.Controllers
             ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
             ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
 
+             ViewBag.Email = _context.TblEmails.FirstOrDefault();
+
+            return PartialView();
+        }
+
+
+        [HttpPost]
+        public IActionResult EmailSave(TblEmail tblEmail)
+        {
+
+            //    var addressTo = tblEmail.EmailId;
+            //    var SecretEmail = tblEmail.EmailId;
+            //    var SecretPassword = tblEmail.Password;
+            //    var SecretPort =tblEmail.Port;
+            //    var fromAddress = new MailAddress(SecretEmail);
+            //    var fromPassword = SecretPassword;
+            //    var toAddress = new MailAddress(addressTo);
+
+            //SmtpClient smtp = new SmtpClient
+            //    {   Host= tblEmail.Smtp,
+            //        Port = SecretPort,
+            //       DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
+            //       UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            //    };
+
+            //    using (var message = new MailMessage(fromAddress, toAddress)
+            //    {
+
+            //    })
+            //    {
+
+            //        smtp.Send(message);
+
            var Email = _context.TblEmails.FirstOrDefault();
 
             if(Email != null)
             {
-                return RedirectToAction("GetEmailDetail");
-            }
-
-            return PartialView();
-        }
-
-        [HttpGet]
-         public IActionResult GetEmailDetail()
-        {
-            ViewBag.name = HttpContext.Session.GetString("name");
-            ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
-            ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 110).ToList();
-
-            ViewBag.Email = _context.TblEmails.ToList();
-            return PartialView();
-        }
-
-        [HttpPost]
-        public IActionResult EmailSend(TblEmail tblEmail)
-        {
-
-            var addressTo = tblEmail.EmailId;
-            var SecretEmail = tblEmail.EmailId;
-            var SecretPassword = tblEmail.Password;
-            var SecretPort =tblEmail.Port;
-            var fromAddress = new MailAddress(SecretEmail);
-            var fromPassword = SecretPassword;
-            var toAddress = new MailAddress(addressTo);
-         
-        SmtpClient smtp = new SmtpClient
-            {   Host= tblEmail.Smtp,
-                Port = SecretPort,
-               DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
-               UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            };
-
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-              
-            })
-            {
-
-                smtp.Send(message);
-
-                _context.TblEmails.Add(tblEmail);
+                Email.EmailId = tblEmail.EmailId;
+                Email.Password = tblEmail.Password;
+                Email.Smtp = tblEmail.Smtp;
+                Email.Pop = tblEmail.Pop;
+                Email.Port = tblEmail.Port;
+                _context.TblEmails.Update(tblEmail);
                 _context.SaveChanges();
             }
+
+            _context.TblEmails.Add(tblEmail);
+                _context.SaveChanges();
+            //}
 
             return RedirectToAction("Emailconfigure");
         }
