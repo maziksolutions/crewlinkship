@@ -9,52 +9,10 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/themes/smoothness/jquery-ui.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
-    <script type="text/javascript">
-        $("[id*=lnkView]").live("click", function () {
-            var subject = $(this).text();
-            var row = $(this).closest("tr");
-            $("#body").html($(".body", row).html());
-            $("#dialog").dialog({
-                title: subject,
-                buttons: {
-                    Ok: function () {
-                        $(this).dialog('close');
-                    }
-                }
-            });
 
-            return false;
-        });
-    </script>
 </head>
 <body>
-    <table>
-        <tr>
-            <th>From</th>
-            <th>Subject</th>
-            <th>Date</th>
-        </tr>
-        @foreach (EmailModel email in Model)
-        {
-            <tr>
-                <td>@Html.Raw(email.From)</td>
-                <td>
-                    <a id="lnkView" href="#">@email.Subject</a>
-                    <span class="body" style="display: none">
-                        @Html.Raw(email.Body)
-                    </span>
-                </td>
-                <td>@email.DateSent</td>
-            </tr>
-        }
-    </table>
-    <div id="dialog" style="display: none">
-        <span id="body"></span>
-    </div>
+  
+  
 </body>
 </html>
