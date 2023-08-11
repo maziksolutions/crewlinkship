@@ -2,7 +2,7 @@
 using crewlinkship.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using crewlinkship.ViewModel;
+
 #nullable disable
 
 namespace crewlinkship.Models
@@ -47,9 +47,36 @@ namespace crewlinkship.Models
         public virtual DbSet<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
         public virtual DbSet<TblDisponentOwner> TblDisponentOwners { get; set; }
         public virtual DbSet<TblEcdi> TblEcdis { get; set; }
+        public virtual DbSet<TblEmail> TblEmails { get; set; }
         public virtual DbSet<TblEngineModel> TblEngineModels { get; set; }
         public virtual DbSet<TblEngineSubType> TblEngineSubTypes { get; set; }
         public virtual DbSet<TblEnginetype> TblEnginetypes { get; set; }
+        public virtual DbSet<TblImportActivitySignOff> TblImportActivitySignOffs { get; set; }
+        public virtual DbSet<TblImportActivitySignOn> TblImportActivitySignOns { get; set; }
+        public virtual DbSet<TblImportAssignmentsWithOther> TblImportAssignmentsWithOthers { get; set; }
+        public virtual DbSet<TblImportAssignmentsWithOur> TblImportAssignmentsWithOurs { get; set; }
+        public virtual DbSet<TblImportBowRequest> TblImportBowRequests { get; set; }
+        public virtual DbSet<TblImportCdc> TblImportCdcs { get; set; }
+        public virtual DbSet<TblImportContract> TblImportContracts { get; set; }
+        public virtual DbSet<TblImportContractReimDedu> TblImportContractReimDedus { get; set; }
+        public virtual DbSet<TblImportCrewAddress> TblImportCrewAddresses { get; set; }
+        public virtual DbSet<TblImportCrewBankDetail> TblImportCrewBankDetails { get; set; }
+        public virtual DbSet<TblImportCrewCorAddress> TblImportCrewCorAddresses { get; set; }
+        public virtual DbSet<TblImportCrewCourse> TblImportCrewCourses { get; set; }
+        public virtual DbSet<TblImportCrewDetail> TblImportCrewDetails { get; set; }
+        public virtual DbSet<TblImportCrewLicense> TblImportCrewLicenses { get; set; }
+        public virtual DbSet<TblImportCrewList> TblImportCrewLists { get; set; }
+        public virtual DbSet<TblImportCrewOtherDocument> TblImportCrewOtherDocuments { get; set; }
+        public virtual DbSet<TblImportMidMonthAllotment> TblImportMidMonthAllotments { get; set; }
+        public virtual DbSet<TblImportNigerianDeduction> TblImportNigerianDeductions { get; set; }
+        public virtual DbSet<TblImportPassport> TblImportPassports { get; set; }
+        public virtual DbSet<TblImportPbbankAllotment> TblImportPbbankAllotments { get; set; }
+        public virtual DbSet<TblImportPortageBill> TblImportPortageBills { get; set; }
+        public virtual DbSet<TblImportTransferCrew> TblImportTransferCrews { get; set; }
+        public virtual DbSet<TblImportVessel> TblImportVessels { get; set; }
+        public virtual DbSet<TblImportVesselCba> TblImportVesselCbas { get; set; }
+        public virtual DbSet<TblImportVisa> TblImportVisas { get; set; }
+        public virtual DbSet<TblImportYellowfever> TblImportYellowfevers { get; set; }
         public virtual DbSet<TblInstitute> TblInstitutes { get; set; }
         public virtual DbSet<TblIssuingAuthority> TblIssuingAuthorities { get; set; }
         public virtual DbSet<TblLicenceRegister> TblLicenceRegisters { get; set; }
@@ -60,6 +87,7 @@ namespace crewlinkship.Models
         public virtual DbSet<TblOverTime> TblOverTimes { get; set; }
         public virtual DbSet<TblOwner> TblOwners { get; set; }
         public virtual DbSet<TblPassport> TblPassports { get; set; }
+        public virtual DbSet<TblPbbankAllotment> TblPbbankAllotments { get; set; }
         public virtual DbSet<TblPfrate> TblPfrates { get; set; }
         public virtual DbSet<TblPool> TblPools { get; set; }
         public virtual DbSet<TblPortageBill> TblPortageBills { get; set; }
@@ -87,21 +115,14 @@ namespace crewlinkship.Models
         public virtual DbSet<OCIMFVM> OCIMFVMs { get; set; }
         public virtual DbSet<PortageBillVM> PortageBillVMs { get; set; }
         public virtual DbSet<PortageBillPDFVM> PortageBillPDFVM { get; set; }
-
         public virtual DbSet<PortageBillPDFSignoffVM> PortageBillPDFSignoffVM { get; set; }
-
-        
-            public virtual DbSet<PortageBillBowVM> portageBillBows { get; set; }
+        public virtual DbSet<PortageBillBowVM> portageBillBows { get; set; }
         public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
-        public virtual DbSet<tblPBBankAllotment> PBBankAllotment { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-
-                optionsBuilder.UseSqlServer("Server=DESKTOP-VTEH8LV;Database=shipCrewlink;Trusted_Connection=True;");
-            }
+          
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -125,10 +146,6 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.Crew)
                     .WithMany(p => p.TblActivitySignOffs)
                     .HasForeignKey(d => d.CrewId);
-
-                entity.HasOne(d => d.CrewList)
-                    .WithMany(p => p.TblActivitySignOffs)
-                    .HasForeignKey(d => d.CrewListId);
 
                 entity.HasOne(d => d.Seaport)
                     .WithMany(p => p.TblActivitySignOffs)
@@ -269,10 +286,6 @@ namespace crewlinkship.Models
                 entity.HasOne(d => d.VendorRegister)
                     .WithMany(p => p.TblAssignmentsWithOurs)
                     .HasForeignKey(d => d.VendorRegisterId);
-
-                entity.HasOne(d => d.Vessel)
-                    .WithMany(p => p.TblAssignmentsWithOurs)
-                    .HasForeignKey(d => d.VesselId);
             });
 
             modelBuilder.Entity<TblAuthority>(entity =>
@@ -313,6 +326,10 @@ namespace crewlinkship.Models
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.VesselId).HasColumnName("vesselId");
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblBowRequests)
+                    .HasForeignKey(d => d.CrewId);
             });
 
             modelBuilder.Entity<TblBudgetCode>(entity =>
@@ -516,6 +533,14 @@ namespace crewlinkship.Models
                 entity.Property(e => e.Wf).HasColumnName("WF");
 
                 entity.Property(e => e.Wfamount).HasColumnName("WFAmount");
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblContracts)
+                    .HasForeignKey(d => d.CrewId);
+
+                entity.HasOne(d => d.Seaport)
+                    .WithMany(p => p.TblContracts)
+                    .HasForeignKey(d => d.SeaportId);
             });
 
             modelBuilder.Entity<TblCountry>(entity =>
@@ -865,6 +890,37 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.StateId);
             });
 
+            modelBuilder.Entity<TblEmail>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+
+                entity.ToTable("tblEmail");
+
+                entity.Property(e => e.EmailId)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("EmailID");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pop)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("POP");
+
+                entity.Property(e => e.Port)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("PORT");
+
+                entity.Property(e => e.Smtp)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("SMTP");
+            });
+
             modelBuilder.Entity<TblEngineModel>(entity =>
             {
                 entity.HasKey(e => e.EngineModelId);
@@ -926,6 +982,406 @@ namespace crewlinkship.Models
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Type).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<TblImportActivitySignOff>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportActivitySignOff");
+
+                entity.Property(e => e.DoagivenDate).HasColumnName("DOAGivenDate");
+            });
+
+            modelBuilder.Entity<TblImportActivitySignOn>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportActivitySignOn");
+            });
+
+            modelBuilder.Entity<TblImportAssignmentsWithOther>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportAssignmentsWithOther");
+
+                entity.Property(e => e.Dwt).HasColumnName("DWT");
+
+                entity.Property(e => e.Grt).HasColumnName("GRT");
+
+                entity.Property(e => e.Imo).HasColumnName("IMO");
+
+                entity.Property(e => e.Kw).HasColumnName("KW");
+            });
+
+            modelBuilder.Entity<TblImportAssignmentsWithOur>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportAssignmentsWithOur");
+            });
+
+            modelBuilder.Entity<TblImportBowRequest>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportBowRequest");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.VesselId).HasColumnName("vesselId");
+            });
+
+            modelBuilder.Entity<TblImportCdc>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCdc");
+
+                entity.Property(e => e.Cdcid).HasColumnName("CDCId");
+
+                entity.Property(e => e.Cdcnumber).HasColumnName("CDCNumber");
+
+                entity.Property(e => e.Doe).HasColumnName("DOE");
+
+                entity.Property(e => e.Doi).HasColumnName("DOI");
+            });
+
+            modelBuilder.Entity<TblImportContract>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportContract");
+
+                entity.Property(e => e.Acmapproval).HasColumnName("ACMApproval");
+
+                entity.Property(e => e.AcmapprovedBy).HasColumnName("ACMApprovedBy");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+
+                entity.Property(e => e.Gwapproval).HasColumnName("GWapproval");
+
+                entity.Property(e => e.GwapprovedBy).HasColumnName("GWApprovedBy");
+
+                entity.Property(e => e.Gwpath).HasColumnName("GWPath");
+
+                entity.Property(e => e.Osa).HasColumnName("OSA");
+
+                entity.Property(e => e.Pf).HasColumnName("PF");
+
+                entity.Property(e => e.Pfamount).HasColumnName("PFAmount");
+
+                entity.Property(e => e.Sca).HasColumnName("SCA");
+
+                entity.Property(e => e.Ud).HasColumnName("UD");
+
+                entity.Property(e => e.Udamount).HasColumnName("UDAmount");
+
+                entity.Property(e => e.Waf).HasColumnName("WAF");
+
+                entity.Property(e => e.Wf).HasColumnName("WF");
+
+                entity.Property(e => e.Wfamount).HasColumnName("WFAmount");
+            });
+
+            modelBuilder.Entity<TblImportContractReimDedu>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportContractReimDedu");
+
+                entity.Property(e => e.Component).HasMaxLength(450);
+
+                entity.Property(e => e.Type).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<TblImportCrewAddress>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewAddress");
+            });
+
+            modelBuilder.Entity<TblImportCrewBankDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewBankDetail");
+
+                entity.Property(e => e.Ifsccode).HasColumnName("IFSCCode");
+            });
+
+            modelBuilder.Entity<TblImportCrewCorAddress>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tblImportCrewCorAddress");
+
+                entity.Property(e => e.Caddress1).HasColumnName("CAddress1");
+
+                entity.Property(e => e.Caddress2).HasColumnName("CAddress2");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.SameAddress).HasDefaultValueSql("((0))");
+            });
+
+            modelBuilder.Entity<TblImportCrewCourse>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewCourse");
+            });
+
+            modelBuilder.Entity<TblImportCrewDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewDetail");
+
+                entity.Property(e => e.Doa).HasColumnName("DOA");
+
+                entity.Property(e => e.Dob).HasColumnName("DOB");
+
+                entity.Property(e => e.IsNtbr).HasColumnName("IsNTBR");
+
+                entity.Property(e => e.MtunionId).HasColumnName("MTUnionId");
+
+                entity.Property(e => e.Ntbrby).HasColumnName("NTBRBy");
+
+                entity.Property(e => e.Ntbron).HasColumnName("NTBROn");
+            });
+
+            modelBuilder.Entity<TblImportCrewLicense>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewLicense");
+            });
+
+            modelBuilder.Entity<TblImportCrewList>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewList");
+
+                entity.Property(e => e.Er).HasColumnName("ER");
+
+                entity.Property(e => e.Ermonth).HasColumnName("ERMonth");
+            });
+
+            modelBuilder.Entity<TblImportCrewOtherDocument>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportCrewOtherDocument");
+            });
+
+            modelBuilder.Entity<TblImportMidMonthAllotment>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportMidMonthAllotment");
+
+                entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
+            });
+
+            modelBuilder.Entity<TblImportNigerianDeduction>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportNigerianDeduction");
+
+                entity.Property(e => e.Cbaid).HasColumnName("CBAId");
+            });
+
+            modelBuilder.Entity<TblImportPassport>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tblImportPassport");
+
+                entity.Property(e => e.Doe).HasColumnName("DOE");
+
+                entity.Property(e => e.Doi).HasColumnName("DOI");
+
+                entity.Property(e => e.Ecnr).HasColumnName("ECNR");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PassportNumber).HasMaxLength(450);
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<TblImportPbbankAllotment>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tblImportPBBankAllotment");
+
+                entity.Property(e => e.Vesselportid).HasColumnName("vesselportid");
+            });
+
+            modelBuilder.Entity<TblImportPortageBill>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportPortageBill");
+
+                entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
+
+                entity.Property(e => e.Avc)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("AVC");
+
+                entity.Property(e => e.ExtraOt).HasColumnName("ExtraOT");
+
+                entity.Property(e => e.Gratuity).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.IndPfamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("indPFAmount");
+
+                entity.Property(e => e.IsLeaveWagesCf).HasColumnName("IsLeaveWagesCF");
+
+                entity.Property(e => e.LeaveWagesBf).HasColumnName("LeaveWagesBF");
+
+                entity.Property(e => e.LeaveWagesCf).HasColumnName("LeaveWagesCF");
+
+                entity.Property(e => e.Othours).HasColumnName("OTHours");
+
+                entity.Property(e => e.Tax).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Udamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("UDAmount");
+
+                entity.Property(e => e.Vesselportid).HasColumnName("vesselportid");
+
+                entity.Property(e => e.Wfamount)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("WFAmount");
+            });
+
+            modelBuilder.Entity<TblImportTransferCrew>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportTransferCrew");
+            });
+
+            modelBuilder.Entity<TblImportVessel>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tblImportVessel");
+
+                entity.Property(e => e.Bow).HasColumnName("BOW");
+
+                entity.Property(e => e.CargoHolds).HasColumnName("cargoHolds");
+
+                entity.Property(e => e.Cpp).HasColumnName("CPP");
+
+                entity.Property(e => e.Ecdis1).HasColumnName("ECDIS1");
+
+                entity.Property(e => e.Ecdis2).HasColumnName("ECDIS2");
+
+                entity.Property(e => e.Ecdis2maker1).HasColumnName("ECDIS2Maker1");
+
+                entity.Property(e => e.Ecdis2maker2).HasColumnName("ECDIS2Maker2");
+
+                entity.Property(e => e.Ecdis2mode2).HasColumnName("ECDIS2Mode2");
+
+                entity.Property(e => e.Ecdis2model).HasColumnName("ECDIS2Model");
+
+                entity.Property(e => e.Ecdisid1).HasColumnName("ECDISId1");
+
+                entity.Property(e => e.Ecdisid2).HasColumnName("ECDISId2");
+
+                entity.Property(e => e.Ecdisid3).HasColumnName("ECDISId3");
+
+                entity.Property(e => e.Ecdistype1).HasColumnName("ECDISType1");
+
+                entity.Property(e => e.Ecdistype2).HasColumnName("ECDISType2");
+
+                entity.Property(e => e.Ecdistype3).HasColumnName("ECDISType3");
+
+                entity.Property(e => e.Fbbfax).HasColumnName("FBBFax");
+
+                entity.Property(e => e.Fbbphone).HasColumnName("FBBPhone");
+
+                entity.Property(e => e.Gthour).HasColumnName("GTHour");
+
+                entity.Property(e => e.Hm).HasColumnName("HM");
+
+                entity.Property(e => e.Imo).HasColumnName("IMO");
+
+                entity.Property(e => e.Isp).HasColumnName("ISP");
+
+                entity.Property(e => e.Kghr).HasColumnName("KGHR");
+
+                entity.Property(e => e.Kw).HasColumnName("KW");
+
+                entity.Property(e => e.Lbp).HasColumnName("LBP");
+
+                entity.Property(e => e.Loa).HasColumnName("LOA");
+
+                entity.Property(e => e.Mcr).HasColumnName("MCR");
+
+                entity.Property(e => e.Mmsi).HasColumnName("MMSI");
+
+                entity.Property(e => e.Pi).HasColumnName("PI");
+
+                entity.Property(e => e.SatBfax).HasColumnName("SatBFax");
+
+                entity.Property(e => e.SatBphone).HasColumnName("SatBPhone");
+
+                entity.Property(e => e.Satctelex).HasColumnName("SATCTelex");
+
+                entity.Property(e => e.Stern).HasColumnName("STERN");
+
+                entity.Property(e => e.VesselName).HasMaxLength(450);
+
+                entity.Property(e => e.Vsatfax).HasColumnName("VSATFax");
+
+                entity.Property(e => e.Vsatphone).HasColumnName("VSATPhone");
+            });
+
+            modelBuilder.Entity<TblImportVesselCba>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tblImportVesselCBA");
+
+                entity.Property(e => e.Cbarating).HasColumnName("CBARating");
+
+                entity.Property(e => e.OfficerCba).HasColumnName("OfficerCBA");
+
+                entity.Property(e => e.VesselCbaid).HasColumnName("VesselCBAId");
+            });
+
+            modelBuilder.Entity<TblImportVisa>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportVisa");
+
+                entity.Property(e => e.Doe).HasColumnName("DOE");
+
+                entity.Property(e => e.Doi).HasColumnName("DOI");
+
+                entity.Property(e => e.VisaNumber).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<TblImportYellowfever>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TblImportYellowfever");
             });
 
             modelBuilder.Entity<TblInstitute>(entity =>
@@ -1051,6 +1507,10 @@ namespace crewlinkship.Models
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
 
+                entity.HasOne(d => d.Cba)
+                    .WithMany(p => p.TblNigerianDeductions)
+                    .HasForeignKey(d => d.Cbaid);
+
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.TblNigerianDeductions)
                     .HasForeignKey(d => d.RankId);
@@ -1088,6 +1548,10 @@ namespace crewlinkship.Models
                 entity.Property(e => e.Otrate).HasColumnName("OTRate");
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Cba)
+                    .WithMany(p => p.TblOverTimes)
+                    .HasForeignKey(d => d.Cbaid);
 
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.TblOverTimes)
@@ -1144,6 +1608,21 @@ namespace crewlinkship.Models
                     .HasForeignKey(d => d.CountryId);
             });
 
+            modelBuilder.Entity<TblPbbankAllotment>(entity =>
+            {
+                entity.HasKey(e => e.BankAllotmentId);
+
+                entity.ToTable("tblPBBankAllotment");
+
+                entity.Property(e => e.IsMidMonthAllotment)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.IsPromoted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Recdate).HasDefaultValueSql("(getdate())");
+            });
+
             modelBuilder.Entity<TblPfrate>(entity =>
             {
                 entity.HasKey(e => e.PfrateId);
@@ -1170,6 +1649,10 @@ namespace crewlinkship.Models
 
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
 
+                entity.HasOne(d => d.Cba)
+                    .WithMany(p => p.TblPfrates)
+                    .HasForeignKey(d => d.Cbaid);
+
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.TblPfrates)
                     .HasForeignKey(d => d.RankId);
@@ -1188,25 +1671,18 @@ namespace crewlinkship.Models
                 entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
             });
 
-
-            modelBuilder.Entity<tblPBBankAllotment>(entity =>
-            {
-                entity.HasKey(e => e.BankAllotmentId);
-                entity.ToTable("tblPBBankAllotment");
-                entity.Property(e => e.Recdate).HasDefaultValueSql("(getdate())");
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
-                entity.Property(e => e.IsPromoted).HasDefaultValueSql("((0))");
-            });
-
-
             modelBuilder.Entity<TblPortageBill>(entity =>
             {
                 entity.HasKey(e => e.PortageBillId);
+
                 entity.ToTable("tblPortageBill");
+
                 entity.Property(e => e.AppliedCba).HasColumnName("AppliedCBA");
+
                 entity.Property(e => e.Avc)
                     .HasColumnType("decimal(18, 2)")
                     .HasColumnName("AVC");
+
                 entity.Property(e => e.BillStatus).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.ExtraOt).HasColumnName("ExtraOT");
@@ -1247,9 +1723,17 @@ namespace crewlinkship.Models
                     .HasColumnType("decimal(18, 2)")
                     .HasColumnName("WFAmount");
 
-                entity.HasOne(d => d.Contract)
+                entity.HasOne(d => d.AppliedCbaNavigation)
                     .WithMany(p => p.TblPortageBills)
-                    .HasForeignKey(d => d.ContractId);
+                    .HasForeignKey(d => d.AppliedCba);
+
+                entity.HasOne(d => d.Crew)
+                    .WithMany(p => p.TblPortageBills)
+                    .HasForeignKey(d => d.CrewId);
+
+                //entity.HasOne(d => d.CrewList)
+                //    .WithMany(p => p.TblPortageBills)
+                //    .HasForeignKey(d => d.CrewListId);
             });
 
             modelBuilder.Entity<TblPrincipal>(entity =>
@@ -1604,6 +2088,10 @@ namespace crewlinkship.Models
 
                 entity.Property(e => e.VesselId).HasColumnName("vesselId");
 
+                //entity.HasOne(d => d.NewVessel)
+                //    .WithMany(p => p.TblVesselChangeNewVessels)
+                //    .HasForeignKey(d => d.NewVesselId);
+
                 entity.HasOne(d => d.Vessel)
                     .WithMany(p => p.TblVesselChanges)
                     .HasForeignKey(d => d.VesselId)
@@ -1698,8 +2186,7 @@ namespace crewlinkship.Models
 
             modelBuilder.Entity<Userlogin>(entity =>
             {
-                //entity.HasNoKey();
-                entity.HasKey(e => e.UerId);
+                entity.HasNoKey();
 
                 entity.ToTable("Userlogin");
 

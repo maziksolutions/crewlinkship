@@ -66,7 +66,7 @@
 
                                     }
                                     &nbsp;
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Check SMTP</button>
+                                    <button type="submit" id="checksmtp" class="btn btn-primary btn-lg btn-block" onclick="SMTPButton()"><i class="ft-unlock"></i> Check SMTP</button>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Check POP</button>
                                 </div>
 
@@ -79,7 +79,44 @@
     </div>
 </div>
 
+<script>
+    function SMTPButton() {
+           getSmtp = $("#Smtp").val();
+           getport = $("#Port").val();
 
+          $.ajax({
+           type: "POST",
+              url: '@Url.Action("CheckSMTP", "Home")',
+              data: { 'smtp': getSmtp, 'portNo': getport },
+              dataType: "json",
+          }).done(function (data) {
+
+              alert(data.message)
+              if (data.message == true) {
+                 
+                  $("#checksmtp").removeClass('btn btn-primary');
+                  $("#checksmtp").addClass('btn btn-success');
+                  localStorage.ClassName = "btn btn-success";
+              }
+              if (data.message == false) {
+           
+                  $("#checksmtp").removeClass('btn btn-primary');
+                  $("#checksmtp").addClass('btn btn-danger');
+                  localStorage.ClassName = "btn btn-danger";
+              }
+              
+          });
+
+    }
+    $(document).ready(function () {
+        SetClass();
+    });
+
+    function SetClass() {
+        //before assigning class check local storage if it has any value
+        $("#checksmtp").addClass(localStorage.ClassName);
+    }
+</script>
 
 
 
