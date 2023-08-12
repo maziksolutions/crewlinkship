@@ -7,7 +7,7 @@ namespace crewlinkship.Models
 {
     public partial class TblEmail
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string EmailId { get; set; }
         public string Password { get; set; }
         public string Smtp { get; set; }

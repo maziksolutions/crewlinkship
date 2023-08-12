@@ -34,12 +34,15 @@ using System.Net;
 using System.Net.Mail;
 
 using Microsoft.EntityFrameworkCore;
-using OpenPop.Pop3;
+//using OpenPop.Pop3;
 using crewlinkship.ViewModel;
-using OpenPop.Mime;
+//using OpenPop.Mime;
 using Limilabs.Client.IMAP;
 using Limilabs.Mail;
 using Limilabs.Mail.MIME;
+using System.Net.Security;
+using System.Net.Sockets;
+
 
 namespace crewlinkship.Controllers
 {
@@ -3373,48 +3376,116 @@ namespace crewlinkship.Controllers
         public IActionResult EmailSave(TblEmail tblEmail)
         {
 
-            //    var addressTo = tblEmail.EmailId;
-            //    var SecretEmail = tblEmail.EmailId;
-            //    var SecretPassword = tblEmail.Password;
-            //    var SecretPort =tblEmail.Port;
-            //    var fromAddress = new MailAddress(SecretEmail);
-            //    var fromPassword = SecretPassword;
-            //    var toAddress = new MailAddress(addressTo);
-
-            //SmtpClient smtp = new SmtpClient
-            //    {   Host= tblEmail.Smtp,
-            //        Port = SecretPort,
-            //       DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
-            //       UseDefaultCredentials = false,
-            //    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            //    };
-
-            //    using (var message = new MailMessage(fromAddress, toAddress)
-            //    {
-
-            //    })
-            //    {
-
-            //        smtp.Send(message);
-
            var Email = _context.TblEmails.FirstOrDefault();
 
-            if(Email != null)
+
+            if (Email != null)
             {
+                Email.ID = Email.ID;
                 Email.EmailId = tblEmail.EmailId;
                 Email.Password = tblEmail.Password;
                 Email.Smtp = tblEmail.Smtp;
-                Email.Pop = tblEmail.Pop;
                 Email.Port = tblEmail.Port;
-                _context.TblEmails.Update(tblEmail);
-                _context.SaveChanges();
+                Email.Pop = tblEmail.Pop;
+                Email.PopPort = tblEmail.PopPort;
+                
+                _context.TblEmails.Update(Email);
+
             }
 
+            if (Email == null) { 
             _context.TblEmails.Add(tblEmail);
-                _context.SaveChanges();
-            //}
+            }
+
+            _context.SaveChanges();
 
             return RedirectToAction("Emailconfigure");
+        }
+
+
+        public JsonResult CheckSMTP(string smtp, int portNo)
+        {
+            try
+            {
+                using (var client = new TcpClient())
+                {
+                    var server = smtp;
+                    var port = portNo;
+
+                    IPHostEntry ipHostInfo = Dns.GetHostEntry(smtp);
+                    client.Connect(server, port);
+
+                    // As GMail requires SSL we should use SslStream
+                    // If your SMTP server doesn't support SSL you can
+                    // work directly with the underlying stream
+                    using (var stream = client.GetStream())
+                    //using (var sslStream = new SslStream(stream))
+                    {
+                        //sslStream.AuthenticateAsClient(server);
+                        using (var writer = new StreamWriter(stream))
+                        using (var reader = new StreamReader(stream))
+                        {
+                            writer.WriteLine("EHLO " + server);
+                            writer.Flush();
+
+                            //Console.WriteLine(reader.ReadLine());
+                            string result = reader.ReadLine();
+                            var messageSuccess = true;
+                            return Json(new { message = messageSuccess = true });
+                            //client.Close();
+                            // GMail responds with: 220 mx.google.com ESMTP
+                        }
+                    }
+                  
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                var messageError = false;
+                return Json(new { message = messageError = false });
+            }
+            return null;
+
+        }
+
+        public JsonResult POPCheck(string pop, int portpop,string email,string password)
+        {
+            try
+            {
+                using (TcpClient client = new TcpClient(pop, portpop))
+                using (NetworkStream stream = client.GetStream())
+                using (StreamReader reader = new StreamReader(stream))
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    string readserver =reader.ReadLine(); // Read server greeting
+
+                    // Send user command
+                    writer.WriteLine(email);
+                    writer.Flush();
+                    string username = reader.ReadLine();
+
+                    // Send password command
+                    writer.WriteLine(password);
+                    writer.Flush();
+                    string pwd = reader.ReadLine();
+
+                    // Send quit command
+                    writer.WriteLine("QUIT");
+                    writer.Flush();
+                    string result = reader.ReadLine();
+                    var messageSuccess = true;
+                    return Json(new { popmessage = messageSuccess = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                var errormessage = false;
+                return Json(new { popmessage = errormessage = false });
+            }
+            return null;
+
         }
 
 

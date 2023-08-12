@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
     <PackageReference Include="Intersoft.Crosslight" Version="6.0.5000.975" />
     <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
     <PackageReference Include="Mail.dll" Version="3.0.23156.1704" />
