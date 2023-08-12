@@ -84,8 +84,8 @@
 
 <script>
 
-    var portData = document.getElementById('Port').value = @ViewBag.Email.Port;
-    var smtpData = document.getElementById('Smtp').value = "@ViewBag.Email.Smtp";
+    var portData = document.getElementById('Port').value = @(ViewBag.Email == null ? "":ViewBag.Email.Port);
+    var smtpData = document.getElementById('Smtp').value = "@(ViewBag.Email == null ? "":ViewBag.Email.Smtp)";
 
     function SMTPButton() {
 
@@ -146,10 +146,10 @@
 
     /*POP Function*/
 
-    var popPortData = document.getElementById('PopPort').value = @ViewBag.Email.PopPort;
-    var popData = document.getElementById('Pop').value = "@ViewBag.Email.Pop";
-    var emailData = document.getElementById('emailId').value = "@ViewBag.Email.EmailId";
-    var pswdData = document.getElementById('Password').value = "@ViewBag.Email.Password";
+    var popPortData = document.getElementById('PopPort').value = @(ViewBag.Email == null ? "":ViewBag.Email.PopPort);
+    var popData = document.getElementById('Pop').value = "@(ViewBag.Email == null ? "":ViewBag.Email.Pop)";
+    var emailData = document.getElementById('emailId').value = "@(ViewBag.Email == null ? "":ViewBag.Email.EmailId)";
+    var pswdData = document.getElementById('Password').value = "@(ViewBag.Email == null ? "":ViewBag.Email.Password)";
 
     function POPButton() {
 
