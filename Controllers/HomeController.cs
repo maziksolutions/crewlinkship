@@ -43,6 +43,7 @@ using Limilabs.Mail.MIME;
 using System.Net.Security;
 using System.Net.Sockets;
 
+
 namespace crewlinkship.Controllers
 {
     //[Authorize]
@@ -3368,8 +3369,10 @@ namespace crewlinkship.Controllers
                 Email.EmailId = tblEmail.EmailId;
                 Email.Password = tblEmail.Password;
                 Email.Smtp = tblEmail.Smtp;
-                Email.Pop = tblEmail.Pop;
                 Email.Port = tblEmail.Port;
+                Email.Pop = tblEmail.Pop;
+                Email.PopPort = tblEmail.PopPort;
+                
                 _context.TblEmails.Update(Email);
 
             }
@@ -3420,21 +3423,56 @@ namespace crewlinkship.Controllers
                   
                 }
             }
-            catch (SocketException ex)
-            {
-                Console.WriteLine(ex);
-
-                var messageError = false;
-                return Json(new { message = messageError = false });
-
-            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                var messageError = false;
+                return Json(new { message = messageError = false });
             }
             return null;
 
         }
+
+        public JsonResult POPCheck(string pop, int portpop,string email,string password)
+        {
+            try
+            {
+                using (TcpClient client = new TcpClient(pop, portpop))
+                using (NetworkStream stream = client.GetStream())
+                using (StreamReader reader = new StreamReader(stream))
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    string readserver =reader.ReadLine(); // Read server greeting
+
+                    // Send user command
+                    writer.WriteLine(email);
+                    writer.Flush();
+                    string username = reader.ReadLine();
+
+                    // Send password command
+                    writer.WriteLine(password);
+                    writer.Flush();
+                    string pwd = reader.ReadLine();
+
+                    // Send quit command
+                    writer.WriteLine("QUIT");
+                    writer.Flush();
+                    string result = reader.ReadLine();
+                    var messageSuccess = true;
+                    return Json(new { popmessage = messageSuccess = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                var errormessage = false;
+                return Json(new { popmessage = errormessage = false });
+            }
+            return null;
+
+        }
+
+
         }
 
 }

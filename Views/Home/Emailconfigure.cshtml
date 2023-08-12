@@ -5,7 +5,7 @@
 }
 
 <div class="app-content container center-layout fixed-navbar-inner pb-5">
-    <div class="content-wrapper">
+    <div class="content-wrapper pt-5">
         <div class="content-header row">
         </div>
         <div class="content-body">
@@ -13,7 +13,7 @@
                 <div class="col-12 d-flex align-items-center justify-content-center">
                     <div class="col-md-6 col-10 box-shadow-2 p-0">
                         <div class="card border-grey border-lighten-3 px-2 py-2 m-0">
-                            <div class="card-header border-0">
+                            <div class="card-header border-0 pt-0">
                                 <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2 mb-0">
                                     <span>Email configure</span>
                                 </h6>
@@ -40,7 +40,7 @@
                                                 <fieldset class="form-group mb-1">
                                                     <input type="text" id="Smtp" name="smtp" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Smtp)" placeholder="SMTP">
                                                 </fieldset>
-                                            </div>                                         
+                                            </div>
                                             <div class="col-md-4">
                                                 <fieldset class="form-group mb-1">
                                                     <input type="text" id="Port" name="port" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Port)" placeholder="PORT">
@@ -55,21 +55,26 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <fieldset class="form-group mb-1">
-                                                    <input type="text" id="Port" name="port" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Port)" placeholder="PORT">
+                                                    <input type="text" id="PopPort" name="PopPort" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.PopPort)" placeholder="PopPort">
                                                 </fieldset>
                                             </div>
                                         </div>
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block mb-1"><i class="ft-unlock"></i> Register</button>
 
 
                                     }
-                                    &nbsp;
-                                    <button type="submit" id="checksmtp" class="btn btn-primary btn-lg btn-block" onclick="SMTPButton()"><i class="ft-unlock"></i> Check SMTP</button>
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="ft-unlock"></i> Check POP</button>
-                                </div>
-
+                                   
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="submit" id="checksmtp" class="btn btn-primary btn-lg btn-block" onclick="SMTPButton()"><i class="fa fa-paper-plane mr-1"></i>Check SMTP</button>
                                     </div>
-                        </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" id="checkpop" class="btn btn-primary btn-lg btn-block" onclick="POPButton()"><i class="fa fa-envelope fa-1.5x"></i> Check POP</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                    </div>
+                                </div>
                     </div>
                 </div>
             </section>
@@ -78,9 +83,30 @@
 </div>
 
 <script>
+
+    var portData = document.getElementById('Port').value = @ViewBag.Email.Port;
+    var smtpData = document.getElementById('Smtp').value = "@ViewBag.Email.Smtp";
+
     function SMTPButton() {
-           getSmtp = $("#Smtp").val();
-           getport = $("#Port").val();
+
+        getSmtp = smtpData;
+        getport = portData;
+
+        errorSmtp = $("#Smtp").val();
+        errorPort = $("#Port").val();
+
+        if (getport != errorPort) {
+
+            alert("Please Register Port after Check SMTP");
+            return  window.location.reload(true);
+        }
+
+        if (getSmtp != errorSmtp) {
+
+            alert("Please Register SMTP after Check SMTP");
+            return window.location.reload(true);
+        }
+
 
           $.ajax({
            type: "POST",
@@ -89,20 +115,22 @@
               dataType: "json",
           }).done(function (data) {
 
-              alert(data.message)
+
               if (data.message == true) {
-                 
+
                   $("#checksmtp").removeClass('btn btn-primary');
                   $("#checksmtp").addClass('btn btn-success');
-                  localStorage.ClassName = "btn btn-success";
+                  localStorage.ClassSmtp = "btn btn-success";
+                  window.location.reload(true);
               }
               if (data.message == false) {
-           
+
                   $("#checksmtp").removeClass('btn btn-primary');
                   $("#checksmtp").addClass('btn btn-danger');
-                  localStorage.ClassName = "btn btn-danger";
+                  localStorage.ClassSmtp = "btn btn-danger";
+                  window.location.reload(true);
               }
-              
+
           });
 
     }
@@ -112,8 +140,76 @@
 
     function SetClass() {
         //before assigning class check local storage if it has any value
-        $("#checksmtp").addClass(localStorage.ClassName);
+        $("#checksmtp").addClass(localStorage.ClassSmtp);
     }
+
+
+    /*POP Function*/
+
+    var popPortData = document.getElementById('PopPort').value = @ViewBag.Email.PopPort;
+    var popData = document.getElementById('Pop').value = "@ViewBag.Email.Pop";
+    var emailData = document.getElementById('emailId').value = "@ViewBag.Email.EmailId";
+    var pswdData = document.getElementById('Password').value = "@ViewBag.Email.Password";
+
+    function POPButton() {
+
+        getpop = popData;
+        getPort = popPortData;
+        mailId = emailData;
+        pswd = pswdData;
+
+
+
+        errorpop = $("#Pop").val();
+        errorPort = $("#PopPort").val();
+
+        if (getPort != errorPort) {
+
+            alert("Please Register Port after Check POP");
+            return window.location.reload(true);
+        }
+
+        if (getpop != errorpop) {
+
+            alert("Please Register POP after Check POP");
+            return window.location.reload(true);
+        }
+
+        alert(getPort);
+        alert(getpop);
+          $.ajax({
+           type: "POST",
+              url: '@Url.Action("POPCheck", "Home")',
+              data: { 'pop': getpop, 'portpop': getPort, 'email': mailId, 'password': pswd},
+              dataType: "json",
+          }).done(function (data) {
+
+              if (data.popmessage == true) {
+                  $("#checkpop").removeClass('btn btn-primary');
+                  $("#checkpop").addClass('btn btn-success');
+                  localStorage.ClassPop = "btn btn-success";
+                  window.location.reload(true);
+              }
+              if (data.popmessage == false) {
+
+                  $("#checkpop").removeClass('btn btn-primary');
+                  $("#checkpop").addClass('btn btn-danger');
+                  localStorage.ClassPop = "btn btn-danger";
+                  window.location.reload(true);
+              }
+
+          });
+    }
+
+    $(document).ready(function () {
+        SetpopClass();
+    });
+
+    function SetpopClass() {
+        //before assigning class check local storage if it has any value
+        $("#checkpop").addClass(localStorage.ClassPop);
+    }
+
 </script>
 
 
