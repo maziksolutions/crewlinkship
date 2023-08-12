@@ -70,13 +70,9 @@ namespace crewlinkship.Controllers
         }
         public IActionResult ReadEmail()
         {
-            return View(Read_Emails());
-        }
-        private List<EmailModel> Read_Emails()
-        {
             try
             {
-                var getemail = _context.TblEmails.FirstOrDefault();
+                var getemail = _context.TblEmails.FirstOrDefault();               
                 using (Imap imap = new Imap())
                 {
                     imap.Connect(getemail.Pop);   // or ConnectSSL for SSL
@@ -98,7 +94,7 @@ namespace crewlinkship.Controllers
                             {
                                 string filename = attach.FileName;
                                 string extension = Path.GetExtension(filename);
-                                if ((extension == ".xlsx" || extension == ".xls") && subject == "Crewlink Backup")
+                                if ((extension == ".xlsx" || extension == ".xls"))//&& subject == "Crewlink Backup"
                                 {
                                     string folderName = "Upload/backup/";
                                     string webRootPath = _appEnvironment.WebRootPath;
@@ -119,7 +115,7 @@ namespace crewlinkship.Controllers
                                                 break;
                                         }
                                         DataSet dsTables = new DataSet();
-                                        using (XLWorkbook workBook = new XLWorkbook(fullPath))
+                                        using (XLWorkbook workBook = new XLWorkbook(stream))
                                         {
                                             int x = 1;
                                             foreach (IXLWorksheet wk in workBook.Worksheets)
@@ -192,10 +188,9 @@ namespace crewlinkship.Controllers
                 }
             }
             catch (Exception ex) { throw ex; };
-          //  return RedirectToAction("ImportExportPage", "home");
-            return null;
+            return View();
         }
-
+      
         public IActionResult SendAutoBackup()
         {
             var currentDate = DateTime.Now;
@@ -586,49 +581,70 @@ namespace crewlinkship.Controllers
             {
                 var TblPortageBills = _context.TblPortageBills.ToList();
                 using (XLWorkbook wb = new XLWorkbook())
-                {                   
-                    var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
-                    wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOns);
-                   
-                    var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
-                    wb.Worksheet(2).Cell(1, 1).InsertTable(CrewDetails);
-
-                    var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
-                    wb.Worksheet(3).Cell(1, 1).InsertTable(CrewLists);
-
-                    var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
-                    wb.Worksheet(4).Cell(1, 1).InsertTable(PBBankAllotment);
-
-                    var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
-                    wb.Worksheet(5).Cell(1, 1).InsertTable(PortageBills);
-                    var getemail = _context.TblEmails.FirstOrDefault();
-                    string filename = "ShipModuleBackup_" + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
-                    using (MemoryStream mstream = new MemoryStream())
+                {
+                    int x = 1;
+                    if (ActivitySignOns.Count > 0)
                     {
-                        wb.SaveAs(mstream);
-                        mstream.Position = 0;
-                        string folderName = "Salaryslip";
-                        string webRootPath = _appEnvironment.WebRootPath;
-                        string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
-                        FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
-                        mstream.WriteTo(file);
-                        file.Close();
-                        // return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
-                        MailMessage mail = new MailMessage();
-                        mail.From = new MailAddress(getemail.EmailId, "Crewlink Backup");
-                        mail.Subject = "Crewlink Backup";
-                        mail.IsBodyHtml = true;
-                        mail.Attachments.Add(new Attachment(PathToSave));
-                        mail.To.Add(new MailAddress("maziksol@gmail.com"));
-                        SmtpClient smtp = new SmtpClient();
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Host = getemail.Smtp;
-                        if(getemail.Port != null && getemail.Port != 0)
-                        smtp.Port = getemail.Port;
-                        smtp.Credentials = new System.Net.NetworkCredential(getemail.EmailId, getemail.Password);
-                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                       // smtp.EnableSsl = true;
-                        smtp.Send(mail);
+                        var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(ActivitySignOns);
+                        x++;
+                    }
+                    if (CrewDetails.Count > 0)
+                    {
+                        var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewDetails);
+                        x++;
+                    }
+                    if (CrewLists.Count > 0)
+                    {
+                        var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewLists);
+                        x++;
+                    }
+                    if (PBBankAllotment.Count > 0)
+                    {
+                        var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PBBankAllotment);
+                        x++;
+                    }
+                    if (PortageBills.Count > 0)
+                    {
+                        var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PortageBills);
+                        x++;
+                    }
+                    int wbcount = wb.Worksheets.Count();
+                    if (wbcount > 0)
+                    {                  
+                     var getemail = _context.TblEmails.FirstOrDefault();
+                    string filename = "ShipModuleBackup_" + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
+                        using (MemoryStream mstream = new MemoryStream())
+                        {
+                            wb.SaveAs(mstream);
+                            mstream.Position = 0;
+                            string folderName = "Salaryslip";
+                            string webRootPath = _appEnvironment.WebRootPath;
+                            string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                            FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                            mstream.WriteTo(file);
+                            file.Close();
+                            // return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                            MailMessage mail = new MailMessage();
+                            mail.From = new MailAddress(getemail.EmailId, "Crewlink Backup");
+                            mail.Subject = "Crewlink Backup";
+                            mail.IsBodyHtml = true;
+                            mail.Attachments.Add(new Attachment(PathToSave));
+                            mail.To.Add(new MailAddress("vijay@maziksolutions.com"));
+                            SmtpClient smtp = new SmtpClient();
+                            smtp.UseDefaultCredentials = true;
+                            smtp.Host = getemail.Smtp;
+                            if (getemail.Port != null && getemail.Port != 0)
+                                smtp.Port = getemail.Port;
+                            smtp.Credentials = new System.Net.NetworkCredential(getemail.EmailId, getemail.Password);
+                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            // smtp.EnableSsl = true;
+                            smtp.Send(mail);
+                        }
                     }
                 }
             }

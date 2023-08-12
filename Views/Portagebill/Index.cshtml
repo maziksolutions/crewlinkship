@@ -437,7 +437,7 @@
                                                             }
                                                             <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,
     @item.SecurityAllow,@item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.OtherAllow,@item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
-                                                                <i class="fas fa-edit" style="display: @(ViewBag.portBill == 0? "contents" : "none")"></i>
+                                                                <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
                                                             </a>
                                                         </td>
                                                         <td> @sno</td>

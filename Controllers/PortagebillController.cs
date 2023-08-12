@@ -235,7 +235,7 @@ namespace crewlinkship.Controllers
             }
             return null;
         }
-        public JsonResult AddBankAllotment(TblPbbankAllotment item, int itemlength)
+        public JsonResult AddBankAllotment(tblPBBankAllotment item, int itemlength)
         {
             DateTime today = DateTime.Today;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -249,7 +249,7 @@ namespace crewlinkship.Controllers
             {
                 if (item.BankAllotmentId == 0)
                 {
-                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
+                    _context.TblPbbankAllotments.Add(new tblPBBankAllotment
                     {
                         Crew = item.Crew,
                         VesselId = item.VesselId,
