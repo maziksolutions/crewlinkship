@@ -12,6 +12,8 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.100.3" />
     <PackageReference Include="Intersoft.Crosslight" Version="6.0.5000.975" />
+    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
+    <PackageReference Include="Mail.dll" Version="3.0.23156.1704" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.32" />
@@ -22,8 +24,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="OpenPop.NET" Version="2.0.6.1120" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="22.2.0" />
     <PackageReference Include="Syncfusion.XlsIO.AspNet.Mvc5" Version="16.4.0.48" />
+    <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <!--<PackageReference Include="System.Security.Permissions" Version="7.0.0" />-->
   </ItemGroup>
 
