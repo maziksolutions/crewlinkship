@@ -33,27 +33,4 @@ namespace crewlinkship.Models
         public virtual TblCrewDetail Crew { get; set; }
         public virtual TblLicenceRegister License { get; set; }
     }
-    public class TblCrewLicenseVM
-    {
-        public int CrewLicenseId { get; set; }
-        public int CrewId { get; set; }
-        public int LicenseId { get; set; }
-        public string LicenseNumber { get; set; }
-        public string PlaceOfIssue { get; set; }
-        public string IssueDate { get; set; }
-        public string ExpiryDate { get; set; }
-        public int CountryId { get; set; }
-        public int AuthorityId { get; set; }
-        public bool IsVerified { get; set; }
-        public string LimitationRemarks { get; set; }
-        public string Attachment { get; set; }
-        public string Verification { get; set; }
-        public string VerifiedBy { get; set; }
-        public string VerifiedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public string ModifiedDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public string RecDate { get; set; }
-        public int CreatedBy { get; set; }
-    }
 }

@@ -20,6 +20,7 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public bool? IsLocked { get; set; }
 
+        public virtual TblCba Cba { get; set; }
         public virtual TblRankRegister Rank { get; set; }
     }
 }

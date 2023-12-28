@@ -77,6 +77,6 @@ namespace crewlinkship.Models
         public int PlanActivityCode { get; set; }
         public string ReplacedWith { get; set; }
         public int ReliverRankId { get; set; }
-      
+
     }
 }

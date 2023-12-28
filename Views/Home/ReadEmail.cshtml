@@ -1,6 +1,4 @@
-﻿@using crewlinkship.ViewModel
-
-@{
+﻿@{
     Layout = null;
 }
 
@@ -8,10 +6,61 @@
 
 <html>
 <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SendAutoBackup</title>
+    <!-- BEGIN VENDOR CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/vendors.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/charts/jquery-jvectormap-2.0.3.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/charts/morris.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/extensions/unslider.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/weather-icons/climacons.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/icheck/icheck.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/icheck/custom.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/toggle/switchery.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/selects/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/forms/spinner/jquery.bootstrap-touchspin.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/users.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/plugins/forms/switch.css">
+    <!-- END VENDOR CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/horizontal-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/fonts/simple-line-icons/style.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/timeline.css">
 
+    @*<link rel="stylesheet" type="text/css" href="~/app-assets/css/floating-labels.css">*@
+    <!-- BEGIN STACK CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/app.css">
+    <!-- END STACK CSS-->
+    <!-- BEGIN Page Level CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/vertical-overlay-menu.css">
+    <!-- END Page Level CSS-->
+    <!-- BEGIN Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <script src="~/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="~/css/jquery-ui.css">
+    <script src="~/js/jquery-ui.js"></script>
+    <script>
+        function ShowSuccessMsg() {
+            var win = window.open("about:blank", "_self");
+            win.close();
+        };
+    </script>
 </head>
-<body>
-  
-  
+<body class="vertical-layout vertical-overlay-menu 2-columns   menu-expanded fixed-navbar"
+      data-open="click" data-menu="vertical-overlay-menu" data-col="2-columns">
+    <div class="app-content content fixed-navbar-inner">
+        <div class="content-wrapper">
+            <div class="content-body">
+                @ViewBag.status
+                @if (ViewBag.JavaScriptFunction != null)
+                {
+                    <script type="text/javascript">
+            @Html.Raw(ViewBag.JavaScriptFunction)
+                    </script>
+                }
+            </div>
+        </div>
+    </div>
 </body>
 </html>

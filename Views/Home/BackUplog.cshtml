@@ -1,0 +1,84 @@
+﻿@addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
+@using crewlinkship.Models;
+@model tblBackupLogModel
+@{
+    ViewData["Title"] = "BackUplog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="app-content content fixed-navbar-inner">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="col-xl-6 col-lg-12">
+                <h4 class="content-header-title m-b-5 m-t-5">Backup Log</h4>
+            </div>
+            <div class="col-xl-6 col-lg-12">
+
+            </div>
+        </div>
+        <div class="card card-content">
+            <form asp-action="BackUplog" asp-controller="Home" method="post">
+                <table class="tbl table table-hover table-bordered mb-0 crew-table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                LogDescription
+                            </th>
+                            <th>
+                                RecDate
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (tblBackupLog item in Model.tblBackupLog)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LogDescription)
+                                </td>
+                                <td>
+                                    @item.RecDate.ToString("dd-MMM-yyyy")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        @for (int i = 1; i <= Model.PageCount; i++)
+                        {
+                            <td>
+                                @if (i != Model.CurrentPageIndex)
+                                {
+                                    <a href="javascript:PagerClick(@i);">@i</a>
+                                }
+                                else
+                                {
+                                    <span>@i</span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                </table>
+                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+            </form>
+            <script type="text/javascript">
+                function PagerClick(index) {                    
+                    document.getElementById("hfCurrentPageIndex").value = index;
+                    document.forms[0].submit();
+                }
+            </script>
+            @*  <nav>
+            @Html.PagedListPager(Model, page => Url.Action("index", new { page = page }), new PagedListRenderOptions()
+            {
+                ActiveLiElementClass = "active",
+                PageClasses = new[] { "page-link" },
+                LiElementClasses = new[] { "page-item" },
+                UlElementClasses = new[] { "pagination", "justify-content-center", "mt-3" },
+                LinkToNextPageFormat = "Next",
+                LinkToPreviousPageFormat = "Previous",
+                MaximumPageNumbersToDisplay = 5
+            })
+        </nav>*@
+        </div>
+    </div>
+</div>

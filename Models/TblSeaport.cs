@@ -12,6 +12,7 @@ namespace crewlinkship.Models
             TblActivitySignOffs = new HashSet<TblActivitySignOff>();
             TblActivitySignOns = new HashSet<TblActivitySignOn>();
             TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
+            TblContracts = new HashSet<TblContract>();
             TblVendorRegisters = new HashSet<TblVendorRegister>();
             TblVessels = new HashSet<TblVessel>();
         }
@@ -28,6 +29,7 @@ namespace crewlinkship.Models
         public virtual ICollection<TblActivitySignOff> TblActivitySignOffs { get; set; }
         public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
         public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual ICollection<TblContract> TblContracts { get; set; }
         public virtual ICollection<TblVendorRegister> TblVendorRegisters { get; set; }
         public virtual ICollection<TblVessel> TblVessels { get; set; }
     }

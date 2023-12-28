@@ -34,28 +34,4 @@ namespace crewlinkship.Models
         public virtual TblCrewDetail Crew { get; set; }
         public virtual TblInstitute Institute { get; set; }
     }
-    public class TblCrewCourseVM
-    {
-        public int CrewCoursesId { get; set; }
-        public int CrewId { get; set; }
-        public int CourseId { get; set; }
-        public int InstituteId { get; set; }
-        public int AuthorityId { get; set; }
-        public string Course { get; set; }
-        public string CertificateNumber { get; set; }
-        public string PlaceOfIssue { get; set; }
-        public string IssueDate { get; set; }
-        public string ExpiryDate { get; set; }
-        public bool IsVerified { get; set; }
-        public string LimitationRemarks { get; set; }
-        public string Attachment { get; set; }
-        public string Verification { get; set; }
-        public bool IsDeleted { get; set; }
-        public string RecDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public string ModifiedDate { get; set; }
-        public string VerifiedBy { get; set; }
-        public string VerifiedDate { get; set; }
-        public int CreatedBy { get; set; }
-    }
 }

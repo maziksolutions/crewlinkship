@@ -23,6 +23,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Configuration;
+using System.Net.Mail;
 
 namespace crewlinkship.Controllers
 {
@@ -30,12 +32,16 @@ namespace crewlinkship.Controllers
     {
         private readonly shipCrewlinkContext _context;
         private readonly IHostingEnvironment _appEnvironment;
-        public PortagebillController(shipCrewlinkContext context, IHostingEnvironment appEnvironment)
+        private readonly IConfiguration _configuration;
+        private int vesselidtouse;
+        public PortagebillController(shipCrewlinkContext context, IHostingEnvironment appEnvironment, IConfiguration configuration)
         {
             // _logger = logger;
             _context = context;
-            _appEnvironment = appEnvironment;
+            _appEnvironment = appEnvironment; _configuration = configuration;
+            vesselidtouse= _configuration.GetValue<int>("vesselinfo:checkvessel:datafor");
         }
+       // public int vesselidtouse { get => _configuration.GetValue<int>("vesselinfo:checkvessel:datafor"); }
         //public IActionResult Index()
         //{
         //    /*int vesselId = 138; int month = 2;*/
@@ -47,10 +53,10 @@ namespace crewlinkship.Controllers
         //    return View(data);
         //}
 
-       // [Route("Portagebill/Index/{vesselId:int}/{month:int}/{year:int}")]
+        // [Route("Portagebill/Index/{vesselId:int}/{month:int}/{year:int}")]
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
-        {          
+        {
             string checkpbtilldate = "";
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
@@ -65,11 +71,11 @@ namespace crewlinkship.Controllers
 
             var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 110), "VesselId", "VesselName");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 110).FirstOrDefault();
+            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == vesselidtouse), "VesselId", "VesselName");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
-                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 110, month, year, "yes");
-                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 110, month, year);
+                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes");
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year);
 
                     ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselId).ToList().FirstOrDefault()?.BillStatus;
 
@@ -235,7 +241,7 @@ namespace crewlinkship.Controllers
             }
             return null;
         }
-        public JsonResult AddBankAllotment(tblPBBankAllotment item, int itemlength)
+        public JsonResult AddBankAllotment(TblPbbankAllotment item, int itemlength)
         {
             DateTime today = DateTime.Today;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -249,7 +255,7 @@ namespace crewlinkship.Controllers
             {
                 if (item.BankAllotmentId == 0)
                 {
-                    _context.TblPbbankAllotments.Add(new tblPBBankAllotment
+                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
                     {
                         Crew = item.Crew,
                         VesselId = item.VesselId,
@@ -1416,8 +1422,106 @@ namespace crewlinkship.Controllers
             await Task.Delay(500);
             ViewBag.crewdeatil = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", pid);
             return PartialView();
+        }       
+        private void DeletePreviousFiles(string foldername)
+        {
+            string webRootPath = _appEnvironment.WebRootPath;
+            string filePath = "";
+            if (foldername == "Salaryslip")
+                filePath = Path.Combine(webRootPath, "Salaryslip");
+            else
+                filePath = Path.Combine(webRootPath, "BOW");
+            var files = new DirectoryInfo(@filePath).GetFiles();
+            foreach (var file in files)
+            {
+                if (DateTime.UtcNow - file.CreationTimeUtc > TimeSpan.FromDays(1))
+                {
+                    System.IO.File.Delete(file.FullName);
+                }
+            }
+        }
+        public async Task<IActionResult> NigBowpayslips(int crewId, int crewListId, DateTime signOffDate)
+        {
+            var data = _context.portageBillBows.FromSqlRaw("getBOWData @p0, @p1, @p2", crewId, crewListId, signOffDate).ToList();
+            var vesselId = data.AsEnumerable().FirstOrDefault().Vesselid;
+            var mangerId = _context.TblVessels.Where(x => x.VesselId == vesselId).FirstOrDefault().TechManager1;
+            var managernames = _context.TblManagers.Where(x => x.ManagerId == mangerId).FirstOrDefault().Managers;
+            ViewBag.managername = managernames;
+            ViewBag.crewdeatil = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", data.Select(x => x.PortageBillId).FirstOrDefault());
+            await Task.Delay(500);
+            return PartialView();
+        }
+        public JsonResult generateBowPDF(int crewId, int crewListId, string signOffDate, string currency)
+        {
+            try
+            {
+                string requesturl = HttpContext.Request.GetEncodedUrl();
+                string newurl = requesturl.Substring(0, requesturl.LastIndexOf("/"));
+                string finalurl = newurl.Substring(0, newurl.LastIndexOf("/"));
+                string localpath = finalurl + "/";
+                DeletePreviousFiles("BOW");
+                string url = "";
+                if (currency == "NGN")
+                    url = localpath + "Portagebill/NigBowpayslips?crewid=" + crewId + "&crewListId=" + crewListId + "&Signoffdate=" + signOffDate;
+                else
+                    url = localpath + "Portagebill/IndBowpayslip?crewid=" + crewId + "&crewListId=" + crewListId + "&Signoffdate=" + signOffDate;
+                var webRoot = _appEnvironment.WebRootPath;
+                string headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFEmptyHeader.htm");
+                string footerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFFooter.htm");
+                string pdf_page_size = PdfPageSize.A4.ToString();
+                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
+
+                string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation), pdf_orientation, true);
+                int webPageWidth = 1000;
+                int webPageHeight = 0;
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+                converter.Header.DisplayOnFirstPage = false;
+                converter.Header.DisplayOnOddPages = true;
+                converter.Header.DisplayOnEvenPages = true;
+                // set converter options
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfOrientation;
+                converter.Options.WebPageWidth = webPageWidth;
+                converter.Options.WebPageHeight = webPageHeight;
+                int headerHeight = 60;
+                //int footerHeight = 50;
+                // header settings
+                converter.Options.DisplayHeader = true;
+                converter.Header.DisplayOnFirstPage = false;
+                converter.Header.DisplayOnOddPages = true;
+                converter.Header.DisplayOnEvenPages = true;
+                converter.Header.Height = headerHeight;               
+                PdfDocument doc = converter.ConvertUrl(url);
+                string filename = "BOW" + crewId + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                MemoryStream ms = new System.IO.MemoryStream();
+                doc.Save(ms);
+                ms.Position = 0;
+                string folderName = "BOW";
+                string webRootPath = _appEnvironment.WebRootPath;
+                string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                string PathToShow = Path.Combine(localpath, folderName + "/" + filename);
+                FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                ms.WriteTo(file);
+                file.Close();
+                return Json(file);
+            }
+            catch (Exception ex) { throw ex; }
         }
 
+        public async Task<IActionResult> IndBowpayslip(int crewId, int crewListId, DateTime signOffDate)
+        {
+        //    var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getBOWData @p0", pid);
+            var data = _context.portageBillBows.FromSqlRaw("getBOWData @p0, @p1, @p2", crewId, crewListId, signOffDate).ToList();
+            var vesselId = data.AsEnumerable().FirstOrDefault().Vesselid;
+            var mangerId = _context.TblVessels.Where(x => x.VesselId == vesselId).FirstOrDefault().TechManager1;
+            var managernames = _context.TblManagers.Where(x => x.ManagerId == mangerId).FirstOrDefault().Managers;
+            ViewBag.managername = managernames;
+            ViewBag.crewdeatil = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spVesselPayslip @p0", data.Select(x=>x.PortageBillId).FirstOrDefault());
+            await Task.Delay(500);
+            return PartialView();
+        }
         //Convert var data to Datatable
         public DataTable LINQResultToDataTable<T>(IEnumerable<T> Linqlist)
         {
@@ -1472,7 +1576,8 @@ namespace crewlinkship.Controllers
 
         public JsonResult UpdateBillStatus(string vesselId, int month, int year)
         {
-           var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
+            Sendbackup();
+              var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
 
             foreach(var item in portUpdate)
             {
@@ -1483,5 +1588,304 @@ namespace crewlinkship.Controllers
             return Json(new { updatePortageBill = portUpdate });
         }
 
+        public void Sendbackup()
+        {
+            var currentDate = DateTime.Now;
+            var sixMonth = currentDate.AddDays(-6);           
+
+            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblActivitySignOnVM
+            {
+
+                ActivitySignOnId = x.ActivitySignOnId,
+                CrewId = x.CrewId.Value,
+                ContractId = x.ContractId.Value,
+                VesselId = x.VesselId.Value,
+                CountryId = x.CountryId.Value,
+                SeaportId = x.SeaportId.Value,
+                RankId = x.RankId.Value,
+                SignOnReasonId = x.SignOnReasonId.Value,
+                ReliveesCrewListId = x.ReliveesCrewListId.Value,
+                Contract = x.Contract,
+                ExpectedSignOnDate = x.ExpectedSignOnDate.ToString(),
+                Duration = x.Duration,
+                ReliefDate = x.ReliefDate.Value.ToString(),
+                ExpectedTravelDate = x.ExpectedTravelDate.Value.ToString(),
+                ExtraCrewOnBoard = x.ExtraCrewOnBoard,
+                ExtraCrewReasonId = x.ExtraCrewReasonId.Value,
+                ExtraApprovedBy = x.ExtraApprovedBy,
+                DocsValidityCheckPeriod = x.DocsValidityCheckPeriod,
+                AllowBeginTravel = x.AllowBeginTravel.HasValue ? x.AllowBeginTravel.Value : default,
+                PreJoiningMedicals = x.PreJoiningMedicals,
+                Appraisal = x.Appraisal.Value,
+                OwnerWage = x.OwnerWage.Value,
+                Remarks = x.Remarks,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.Value.ToString(),
+                IsDeleted = x.IsDeleted.Value,
+                IsSignon = x.IsSignon.Value,
+                RecDate = x.RecDate.Value.ToString(),
+                CreatedBy = x.CreatedBy
+            }).ToList();
+          
+            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth));
+         
+            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewDetailVM
+            {
+
+                CrewId = x.CrewId,
+                CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
+                RankId = x.RankId.HasValue ? x.RankId.Value : default,
+                PoolId = x.PoolId.HasValue ? x.PoolId.Value : default,
+                ZonalId = x.ZonalId.HasValue ? x.ZonalId.Value : default,
+                MtunionId = x.MtunionId.HasValue ? x.MtunionId.Value : default,
+                NtbrReasonId = x.NtbrReasonId.HasValue ? x.NtbrReasonId.Value : default,
+                InActiveReasonId = x.InActiveReasonId.HasValue ? x.InActiveReasonId.Value : default,
+                EmpNumber = x.EmpNumber,
+                Status = x.Status,
+                PreviousStatus = x.PreviousStatus,
+                FirstName = x.FirstName,
+                MiddleName = x.MiddleName,
+                LastName = x.LastName,
+                Dob = x.Dob.HasValue ? x.Dob.Value.ToString() : default,
+                PlaceOfBirth = x.PlaceOfBirth,
+                CivilStatus = x.CivilStatus,
+                Doa = x.Doa.HasValue ? x.Doa.Value.ToString() : default,
+                Gender = x.Gender,
+                EnglishFluency = x.EnglishFluency,
+                UserImage = x.UserImage,
+                ShipCategory = x.ShipCategory,
+                AppliedOn = x.AppliedOn.HasValue ? x.AppliedOn.Value.ToString() : default,
+                FirstJoinDate = x.FirstJoinDate.HasValue ? x.FirstJoinDate.Value.ToString() : default,
+                OtherTravelDocNo = x.OtherTravelDocNo,
+                ManningOffice = x.ManningOffice,
+                MembershipNumber = x.MembershipNumber,
+                DateOfJoining = x.DateOfJoining.HasValue ? x.DateOfJoining.Value.ToString() : default,
+                Attachment = x.Attachment,
+                Benefits = x.Benefits,
+                Height = x.Height,
+                Weight = x.Weight,
+                ShoesSize = x.ShoesSize,
+                BoilerSuitSize = x.BoilerSuitSize,
+                ShirtSize = x.ShirtSize,
+                TrouserSize = x.TrouserSize,
+                HairColor = x.HairColor,
+                EyeColor = x.EyeColor,
+                DistinguishMark = x.DistinguishMark,
+                Resume = x.Resume,
+                Remark = x.Remark,
+                ApplicantStatus = x.ApplicantStatus,
+                LastVessel = x.LastVessel.HasValue ? x.LastVessel.Value : default,
+                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+                ReliefDate = x.ReliefDate.HasValue ? x.ReliefDate.Value.ToString() : default,
+                IsNtbr = x.IsNtbr.HasValue ? x.IsNtbr.Value : default,
+                Ntbron = x.Ntbron.HasValue ? x.Ntbron.Value.ToString() : default,
+                Ntbrby = x.Ntbrby,
+                InActive = x.InActive.HasValue ? x.InActive.Value : default,
+                InActiveOn = x.InActiveOn.HasValue ? x.InActiveOn.Value.ToString() : default,
+                InActiveBy = x.InActiveBy,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
+                Signature = x.Signature,
+                PlanRankId = x.PlanRankId.HasValue ? x.PlanRankId.Value : default,
+                PlanStatus = x.PlanStatus,
+                PlanVesselId = x.PlanVesselId.HasValue ? x.PlanVesselId.Value : default,
+                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
+                ImpRemark = x.ImpRemark,
+                ApprovedBy = x.ApprovedBy.HasValue ? x.ApprovedBy.Value : default,
+                MaskRemarks = x.MaskRemarks,
+                MaskAttachment = x.MaskAttachment,
+                MaskedBy = x.MaskedBy,
+            }).ToList();
+
+            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewListVM
+            {
+                CrewListId = x.CrewListId,
+                RankId = x.RankId.HasValue ? x.RankId.Value : default,
+                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
+                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
+                SignOnDate = x.SignOnDate.HasValue ? x.SignOnDate.ToString() : default,
+                DueDate = x.DueDate.HasValue ? x.DueDate.ToString() : default,
+                Reliever1 = x.Reliever1.HasValue ? x.Reliever1.Value : default,
+                Reliever2 = x.Reliever2.HasValue ? x.Reliever2.Value : default,
+                ReptriationPort = x.ReptriationPort,
+                EngagementPort = x.EngagementPort,
+                Er = x.Er,
+                Ermonth = x.Ermonth,
+                OldDueDate = x.OldDueDate.HasValue ? x.OldDueDate.ToString() : default,
+                Status = x.Status,
+                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
+                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
+                IsSignOff = x.IsSignOff.HasValue ? x.IsSignOff.Value : default,
+                IsPromoted = x.IsPromoted.HasValue ? x.IsPromoted.Value : default,
+                ActivityCode = x.ActivityCode.HasValue ? x.ActivityCode.Value : default,
+                PlanActivityCode = x.PlanActivityCode.HasValue ? x.PlanActivityCode.Value : default,
+                ReplacedWith = x.ReplacedWith,
+                ReliverRankId = x.ReliverRankId.HasValue ? x.ReliverRankId.Value : default,
+            }).ToList();
+           
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x => new tblPBBankAllotmentVM
+            {
+                VesselPortId = x.BankAllotmentId,
+                Crew = x.Crew,
+                VesselId = x.VesselId,
+                BankId = x.BankId,
+                From = x.From,
+                To = x.To,
+                Allotments = x.Allotments,
+                IsMidMonthAllotment = x.IsMidMonthAllotment,
+                IsDeleted = x.IsDeleted,
+                Recdate = x.Recdate,
+                IsPromoted = x.IsPromoted
+            }).ToList();
+            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
+            {
+                VesselPortId = x.PortageBillId,
+                CrewId = x.CrewId,
+                CrewListId = x.CrewListId,
+                ContractId = x.ContractId,
+                From = x.From.Value.ToString(),
+                To = x.To.Value.ToString(),
+                Days = x.Days,
+                Othours = x.Othours,
+                ExtraOt = x.ExtraOt,
+                OtherEarnings = x.OtherEarnings,
+                TransitDays = x.TransitDays,
+                TransitWages = x.TransitWages,
+                TotalEarnings = x.TotalEarnings,
+                PrevMonthBal = x.PrevMonthBal,
+                Reimbursement = x.Reimbursement,
+                TotalPayable = x.TotalPayable,
+                LeaveWagesCf = x.LeaveWagesCf,
+                CashAdvance = x.CashAdvance,
+                BondedStores = x.BondedStores,
+                OtherDeductions = x.OtherDeductions,
+                Allotments = x.Allotments,
+                TotalDeductions = x.TotalDeductions,
+                LeaveWagesBf = x.LeaveWagesBf,
+                FinalBalance = x.FinalBalance,
+                SignOffDate = x.SignOffDate.Value.ToString(),
+                Remarks = x.Remarks,
+                IsDeleted = x.IsDeleted,
+                RecDate = x.RecDate.Value.ToString(),
+                CreatedBy = x.CreatedBy,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate.Value.ToString(),
+                AppliedCba = x.AppliedCba,
+                BillStatus = x.BillStatus,
+                BankId = x.BankId,
+                Vesselid = x.Vesselid,
+                Udamount = x.Udamount,
+                Wfamount = x.Wfamount,
+                Tax = x.Tax,
+                IsTransitApply = x.IsTransitApply,
+                IsPromoted = x.IsPromoted,
+                IsLeaveWagesCf = x.IsLeaveWagesCf,
+                Attachment = x.Attachment,
+                IndPfamount = x.IndPfamount,
+                Gratuity = x.Gratuity,
+                Avc = x.Avc,
+                IsAddPrevBal = x.IsAddPrevBal,
+                IsHoldWageAllotment = x.IsHoldWageAllotment
+            }).ToList();
+            var crewlistdats = _context.TblCrewLists.ToList();
+            DataTable dtcrewlistdats = new DataTable();
+            dtcrewlistdats = LINQResultToDataTable(crewlistdats);
+            DataTable dtCloned = dtcrewlistdats.Clone();
+            dtCloned.Columns["SignOnDate"].DataType = typeof(string);
+            dtCloned.Columns["DueDate"].DataType = typeof(string);
+            foreach (DataRow row in dtcrewlistdats.Rows)
+            {
+                dtCloned.ImportRow(row);
+            }
+            try
+            {
+                var TblPortageBills = _context.TblPortageBills.ToList();
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    int x = 1;
+                    if (ActivitySignOns.Count > 0)
+                    {
+                        var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(ActivitySignOns);
+                        x++;
+                    }
+                    if (CrewDetails.Count > 0)
+                    {
+                        var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewDetails);
+                        x++;
+                    }
+                    if (CrewLists.Count > 0)
+                    {
+                        var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewLists);
+                        x++;
+                    }
+                    if (PBBankAllotment.Count > 0)
+                    {
+                        var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PBBankAllotment);
+                        x++;
+                    }
+                    if (PortageBills.Count > 0)
+                    {
+                        var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PortageBills);
+                        x++;
+                    }
+                    int wbcount = wb.Worksheets.Count();
+                    if (wbcount > 0)
+                    {
+                        var getemail = _context.TblEmails.FirstOrDefault();
+                        string filename = "ShipModuleBackup_" + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
+                        MemoryStream mstream = new MemoryStream();
+                        wb.SaveAs(mstream);
+                        mstream.Position = 0;
+                        string folderName = "Salaryslip";
+                        string webRootPath = _appEnvironment.WebRootPath;
+                        string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                        FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                        mstream.WriteTo(file);
+                        file.Close();
+                        // return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                        MailMessage mail = new MailMessage();
+                        mail.From = new MailAddress(getemail.EmailId, "Crewlink Backup");
+                        mail.Subject = "Crewlink Backup";
+                        mail.IsBodyHtml = true;
+                        mail.Attachments.Add(new Attachment(PathToSave));
+                        mail.To.Add(new MailAddress("info@maziksolutions.com"));
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.UseDefaultCredentials = true;
+                        smtp.Host = getemail.Smtp;
+                        if (getemail.Port != null && getemail.Port != 0)
+                            smtp.Port = getemail.Port.Value;
+                        smtp.Credentials = new System.Net.NetworkCredential(getemail.EmailId, getemail.Password);
+                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        // smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                        Backuplogs("Backup email has been sent succesfully.");                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Backuplogs("Error : Backup email is not sent. (" + ex.InnerException + ")");
+                ViewBag.status = "backup email not sent";
+                throw ex;
+            }
         }
+        public void Backuplogs(string message)
+        {
+            _context.tblBackupLog.Add(new tblBackupLog
+            {
+                LogDescription = message
+            });
+            _context.SaveChanges();
+        }
+
+    }
 }

@@ -12,7 +12,9 @@ namespace crewlinkship.Models
             TblActivitySignOffs = new HashSet<TblActivitySignOff>();
             TblActivitySignOns = new HashSet<TblActivitySignOn>();
             TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
+            TblBowRequests = new HashSet<TblBowRequest>();
             TblCdcs = new HashSet<TblCdc>();
+            TblContracts = new HashSet<TblContract>();
             TblCrewAddresses = new HashSet<TblCrewAddress>();
             TblCrewBankDetails = new HashSet<TblCrewBankDetail>();
             TblCrewCorrespondenceAddresses = new HashSet<TblCrewCorrespondenceAddress>();
@@ -22,6 +24,7 @@ namespace crewlinkship.Models
             TblCrewLists = new HashSet<TblCrewList>();
             TblCrewOtherDocuments = new HashSet<TblCrewOtherDocument>();
             TblMidMonthAllotments = new HashSet<TblMidMonthAllotment>();
+            TblPortageBills = new HashSet<TblPortageBill>();
         }
 
         public int CrewId { get; set; }
@@ -99,7 +102,9 @@ namespace crewlinkship.Models
         public virtual ICollection<TblActivitySignOff> TblActivitySignOffs { get; set; }
         public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
         public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
+        public virtual ICollection<TblBowRequest> TblBowRequests { get; set; }
         public virtual ICollection<TblCdc> TblCdcs { get; set; }
+        public virtual ICollection<TblContract> TblContracts { get; set; }
         public virtual ICollection<TblCrewAddress> TblCrewAddresses { get; set; }
         public virtual ICollection<TblCrewBankDetail> TblCrewBankDetails { get; set; }
         public virtual ICollection<TblCrewCorrespondenceAddress> TblCrewCorrespondenceAddresses { get; set; }
@@ -109,6 +114,7 @@ namespace crewlinkship.Models
         public virtual ICollection<TblCrewList> TblCrewLists { get; set; }
         public virtual ICollection<TblCrewOtherDocument> TblCrewOtherDocuments { get; set; }
         public virtual ICollection<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
+        public virtual ICollection<TblPortageBill> TblPortageBills { get; set; }
     }
     public class TblCrewDetailVM
     {
@@ -166,14 +172,14 @@ namespace crewlinkship.Models
         public bool IsDeleted { get; set; }
         public string RecDate { get; set; }
         public string ModifiedBy { get; set; }
-        public string ModifiedDate { get; set; }      
+        public string ModifiedDate { get; set; }
         public string Signature { get; set; }
         public int PlanRankId { get; set; }
         public string PlanStatus { get; set; }
         public int PlanVesselId { get; set; }
         public int CreatedBy { get; set; }
         public string ImpRemark { get; set; }
-        public int ApprovedBy { get; set; }        
+        public int ApprovedBy { get; set; }
         public string MaskRemarks { get; set; }
         public string MaskAttachment { get; set; }
         public string MaskedBy { get; set; }

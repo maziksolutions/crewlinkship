@@ -31,6 +31,7 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public int? CreatedBy { get; set; }
 
+        public virtual TblVessel NewVessel { get; set; }
         public virtual TblVessel Vessel { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace crewlinkship.Models
         public bool? IsDeleted { get; set; }
         public DateTime? RecDate { get; set; }
 
+        public virtual TblCba Cba { get; set; }
         public virtual TblRankRegister Rank { get; set; }
     }
 }

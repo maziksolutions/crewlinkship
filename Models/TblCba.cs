@@ -10,7 +10,10 @@ namespace crewlinkship.Models
         public TblCba()
         {
             TblMidMonthAllotments = new HashSet<TblMidMonthAllotment>();
-
+            TblNigerianDeductions = new HashSet<TblNigerianDeduction>();
+            TblOverTimes = new HashSet<TblOverTime>();
+            TblPfrates = new HashSet<TblPfrate>();
+            TblPortageBills = new HashSet<TblPortageBill>();
             TblWageStructures = new HashSet<TblWageStructure>();
         }
 
@@ -35,6 +38,10 @@ namespace crewlinkship.Models
 
         public virtual TblCbaUnion Cbaunion { get; set; }
         public virtual ICollection<TblMidMonthAllotment> TblMidMonthAllotments { get; set; }
+        public virtual ICollection<TblNigerianDeduction> TblNigerianDeductions { get; set; }
+        public virtual ICollection<TblOverTime> TblOverTimes { get; set; }
+        public virtual ICollection<TblPfrate> TblPfrates { get; set; }
+        public virtual ICollection<TblPortageBill> TblPortageBills { get; set; }
         public virtual ICollection<TblWageStructure> TblWageStructures { get; set; }
     }
 }

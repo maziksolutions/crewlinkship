@@ -244,6 +244,7 @@
                                         <li><a asp-controller="Portagebill" asp-action="Index">Portage Bill</a></li>
                                         <li><a asp-controller="Home" asp-action="ImportExportPage">Import / Export</a>
                                         <li><a asp-controller="Home" asp-action="Emailconfigure">Email Configure</a>
+                                        <li><a asp-controller="Home" asp-action="BackUplog">Backup Log</a>
                                         <li>
                                     </ul>
                                 </div>
@@ -362,10 +363,9 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-    @*@RenderSection("Scripts", required: false)*@
+    @RenderSection("Scripts", required: false)
 
 
 </body>
 
 </html>
-@RenderSection("Scripts", required: false)

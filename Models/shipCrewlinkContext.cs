@@ -119,8 +119,8 @@ namespace crewlinkship.Models
         public virtual DbSet<PortageBillBowVM> portageBillBows { get; set; }
         public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
-        public virtual DbSet<tblPBBankAllotment> TblPbbankAllotments { get; set; }
-        public virtual DbSet<TblEmail> TblEmails { get; set; }
+        public virtual DbSet<tblBackupLog> tblBackupLog { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
           
@@ -129,6 +129,16 @@ namespace crewlinkship.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+            modelBuilder.Entity<tblBackupLog>(entity =>
+            {
+                entity.HasKey(e => e.BackupId);
+
+                entity.ToTable("tblBackupLog");
+
+                entity.Property(e => e.RecDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.LogDescription).HasMaxLength(1000);
+            });
 
             modelBuilder.Entity<TblActivitySignOff>(entity =>
             {
@@ -189,36 +199,7 @@ namespace crewlinkship.Models
                     .WithMany(p => p.TblActivitySignOns)
                     .HasForeignKey(d => d.SignOnReasonId);
             });
-            modelBuilder.Entity<TblEmail>(entity =>
-            {
-                entity.HasKey(e => e.Id);
 
-                entity.ToTable("tblEmail");
-
-                //entity.Property()
-                //    .HasMaxLength(255)
-                //    .IsUnicode(false)
-                //    .HasColumnName("EmailID");
-
-                entity.Property(e => e.Password)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Pop)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("POP");
-
-                entity.Property(e => e.Port)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("PORT");
-
-                entity.Property(e => e.Smtp)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("SMTP");
-            });
             modelBuilder.Entity<TblAddZonal>(entity =>
             {
                 entity.HasKey(e => e.ZonalId);
@@ -926,10 +907,10 @@ namespace crewlinkship.Models
 
                 entity.ToTable("tblEmail");
 
-                entity.Property(e => e.EmailId)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("EmailID");
+                //entity.Property()
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false)
+                //    .HasColumnName("EmailID");
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(255)

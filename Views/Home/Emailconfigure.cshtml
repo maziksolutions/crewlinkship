@@ -174,9 +174,6 @@
             alert("Please Register POP after Check POP");
             return window.location.reload(true);
         }
-
-        alert(getPort);
-        alert(getpop);
           $.ajax({
            type: "POST",
               url: '@Url.Action("POPCheck", "Home")',

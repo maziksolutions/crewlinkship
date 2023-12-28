@@ -56,7 +56,7 @@ namespace crewlinkship.Models
         public int? SignOnReasonId { get; set; }
         public int? ReliveesCrewListId { get; set; }
         public string Contract { get; set; }
-        public DateTime? ExpectedSignOnDate { get; set; }
+        public string ExpectedSignOnDate { get; set; }
         public string Duration { get; set; }
         public string ReliefDate { get; set; }
         public string ExpectedTravelDate { get; set; }

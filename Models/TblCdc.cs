@@ -29,28 +29,4 @@ namespace crewlinkship.Models
         public virtual TblCountry Country { get; set; }
         public virtual TblCrewDetail Crew { get; set; }
     }
-
-    public class TblCdcVM
-    {
-        public int Cdcid { get; set; }
-        public int CrewId { get; set; }
-        public int CountryId { get; set; }
-        public string Cdcnumber { get; set; }
-        public string Place { get; set; }
-        public string Doi { get; set; }
-        public string Doe { get; set; }
-        public string FilePath { get; set; }
-        public bool IsVerified { get; set; }
-        public string VerifiedBy { get; set; }
-        public string VerifyDate { get; set; }
-        public string VerificationPath { get; set; }
-        public bool IsDeleted { get; set; }
-        public string RecDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public string ModifiedDate { get; set; }
-        public int CreatedBy { get; set; }
-        public string EmailPath { get; set; }
-
-
-    }
 }

@@ -20,5 +20,7 @@ namespace crewlinkship.Models
         public DateTime? ModifiedDate { get; set; }
         public int VesselId { get; set; }
         public string Notification { get; set; }
+
+        public virtual TblCrewDetail Crew { get; set; }
     }
 }

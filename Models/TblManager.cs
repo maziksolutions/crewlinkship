@@ -11,6 +11,7 @@ namespace crewlinkship.Models
         {
             TblAssignmentsWithOthers = new HashSet<TblAssignmentsWithOther>();
         }
+
         public int ManagerId { get; set; }
         public int? CountryId { get; set; }
         public int? StateId { get; set; }
@@ -35,7 +36,6 @@ namespace crewlinkship.Models
         public virtual TblCity City { get; set; }
         public virtual TblCountry Country { get; set; }
         public virtual TblState State { get; set; }
-
         public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
     }
 }

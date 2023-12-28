@@ -111,7 +111,7 @@
                 if (days>0)
                     date.setDate(date.getDate() + days);
                 date.setMonth(date.getMonth() + month);
-                console.log(date.toInputFormat().toString())
+                //console.log(date.toInputFormat().toString())
                 $("#reliefDate").val(date.toInputFormat().toString());
             } else {
                 alert("Invalid Date");
@@ -139,7 +139,6 @@
             data: { 'CountryId': CountryId },
             dataType:'json',
             success: function (response) { 
-                console.log(response) 
                 //$("#ddlSeaport").empty(); // Clear the please wait
                 //$("#ddlSeaport").append($("<option></option>").val('').html('Select Seaport'));
                 //$.each(response, function (i, seaPort) {                  
@@ -147,7 +146,6 @@
                 //});
                 /*var output = [];*/
                 $.each(response, function (value, text) {
-                    alert(text)
                     /*$('#ddlSeaport').append($('<option>').val(value).text(text));*/
                     $('#ddlSeaport').append($('<option value="' + 'value' + '">' + 'text' + '</option>'));
                     /*output.push('<option value="' + value + '">' + text + '</option>');*/

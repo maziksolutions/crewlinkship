@@ -387,7 +387,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Sign-On-Date</label>
-                            <input id="exportSignOn" class="form-control input-sm" />
+                            <input type="date" id="exportSignOn" class="form-control input-sm" />
                         </div>
                     </div>
 
@@ -405,7 +405,7 @@
                         <div class="form-group">
                             <label>Relief Date</label>
                             <br />
-                            <input type="text" id="reliefDate" class="form-control input-sm" readonly />
+                            <input type="date" id="reliefDate" class="form-control input-sm" readonly />
                         </div>
                     </div>
                 </div>
@@ -429,22 +429,20 @@
     </div>
 </div>
 <link type="text/css" href="~/css/jquery-ui1.12.1.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/js/jquery-1.12.4.js"></script>
-    <script type="text/javascript" src="~/js/jquery-ui-1.12.1.js">
-    </script>
-    <script type="text/javascript" src="~/js/jquery.min.js"></script>
-@*
-<link type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
-      rel="stylesheet" />
-<script type="text/javascript"
-        src="https://code.jquery.com/jquery-1.12.4.js">
-</script>
-<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
-</script>*@
+<script type="text/javascript" src="~/js/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="~/js/jquery-ui-1.12.1.js"></script>
+@*<script type="text/javascript" src="~/js/jquery.min.js"></script>*@
+
+@*<link type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+@*<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 
 @*<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>*@
+@*<script type=”text/javascript” src=”https://code.jquery.com/jquery-1.9.1.min.js”></script>
+    <script src=”https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js”></script>*@
+
 <script type="text/javascript">
 @*@Change Country To SeaPort*@
     $(function () {
@@ -473,7 +471,7 @@
                 ActivitySignOnId: $("#activitySignOnId").val(),
                 CountryId: $("#CountryList").val(),
                 SeaportId: $("#ddlSeaport").val(),
-                ExpectedSignOnDate: $("#exportSignOn").val(),
+                ExpectedSignOnDate: $("#exportSignOn").val().toString(),
                 Duration: $("#durationDays").val(),
                 ReliefDate: $("#reliefDate").val(),
                 Remarks: $("#remarks").val(),
@@ -482,7 +480,7 @@
             $.ajax({
                 url: "/Home/TravelToVesselUpdate/",
                 type: "POST",
-                data: tblActivitySignOn,
+                data: { tblActivitySignOn, 'ExpectedSignOnDate': $("#exportSignOn").val().toString("yyyy-mm-dd"), 'ReliefDate': $("#reliefDate").val().toString("yyyy-mm-dd")},
                 dataType: 'json',
                 success: function (response) {
                     alert('Activity performed successfully');
@@ -506,27 +504,36 @@
             jQDate("#exportSignOn").on("change", function () {
                 if ($("#exportSignOn").val() != null) {
                     var datecal = $("#exportSignOn").val();
-                    var customDate = new Date(datecal.split('/')[1] + '/' + datecal.split('/')[0] + '/' + datecal.split('/')[2]);
+                    var datecaldate = new Date($("#exportSignOn").val());
+                    var dtyy = datecaldate.getFullYear();
+                    var dtmm = datecaldate.getMonth();
+                    var dtdd = datecaldate.getDate();
+                    //alert(dsfyy);
+                    //alert(dsmm);
+                    //alert(dsdd)
+                    //var customDate = new Date(datecal.split('/')[1] + '/' + datecal.split('/')[0] + '/' + datecal.split('/')[2]);
+                    var customDate = new Date(dtyy, dtmm, dtdd);                   
                     var duration = $("#durationDays").val().split('.');
                     var month = duration[0];
                     var days = 0;
-                    var time = customDate.getTime();
+                   /* var time = customDate.getTime();*/
                     if (duration[1] > 0)
                         days = 15;
-                    if (!isNaN(customDate.getTime())) {
+                    /* if (!isNaN(customDate.getTime())) {*/
+                    /*if (!isNaN()) {*/
                         if (days > 0)
-                            customDate.setDate(customDate.getDate() + Number(days));
-                        customDate.setMonth(customDate.getMonth() + Number(month));
+                        customDate.setDate(customDate.getDate() + Number(days));                    
+                    customDate.setMonth(customDate.getMonth() + Number(month));
                         var dayre = customDate.getDate();
-                        var monthre = (customDate.getMonth()) + 1;
+                        var monthre = (customDate.getMonth()) ;
                         var yearre = customDate.getFullYear();
-                        var formatre = dayre + "/" + monthre + "/" + yearre;
+                      //  var formatre = dayre + "/" + monthre + "/" + yearre;
+                    var formatre = new Date(yearre, monthre, dayre).toJSON().slice(0, 10);
                         $("#reliefDate").val(formatre);
-                    }
-
-                    else {
-                        alert("Invalid Date");
-                    }
+                    //}
+                    //else {
+                    //    alert("Invalid Date");
+                    //}
                 }
                 else {
                     alert("Invalid Date");
@@ -542,15 +549,14 @@
     });
     ;
     var jQDate = $.noConflict();
-    jQDate(function () {
-        jQDate("#exportSignOn").datepicker({
-            dateFormat: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-        });
-    });
-
-
-
+    //jQDate(function () {
+    //    jQDate("#exportSignOn").datepicker({
+    //        dateFormat: 'dd/mm/yy',
+    //        changeMonth: true,
+    //        changeYear: true,
+    //    });
+    //});
 </script>
 
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>

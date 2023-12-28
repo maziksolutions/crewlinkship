@@ -49,7 +49,6 @@ namespace crewlinkship.Models
         public virtual TblCountry Country { get; set; }
         public virtual TblSeaport Seaport { get; set; }
         public virtual TblState State { get; set; }
-
         public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }
         public virtual ICollection<TblYellowfever> TblYellowfevers { get; set; }
     }
