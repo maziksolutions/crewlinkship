@@ -117,6 +117,9 @@ namespace crewlinkship.Models
         public virtual DbSet<PortageBillPDFVM> PortageBillPDFVM { get; set; }
         public virtual DbSet<PortageBillPDFSignoffVM> PortageBillPDFSignoffVM { get; set; }
         public virtual DbSet<PortageBillBowVM> portageBillBows { get; set; }
+
+        public virtual DbSet<PortageEarningDeduction> PortageEarningDeduction { get; set; }
+
         public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
         public virtual DbSet<tblBackupLog> tblBackupLog { get; set; }
