@@ -70,7 +70,18 @@ namespace crewlinkship.Controllers
             return Json(accounts);
         }
 
+
+        [HttpGet]
+        public IActionResult PortageReimbursementDetailsbyid( int portageBillId,  string type)
+        {
+            var ReimbursementDetails = _context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
+            return Json(ReimbursementDetails);
+        }
+
+
+
         
+
 
         [HttpGet]
         public IActionResult GetAccountotherearnings()
@@ -495,9 +506,10 @@ namespace crewlinkship.Controllers
                 To=item.To,
                 RecDate=DateTime.UtcNow,
                 CreatedBy=1,
-               SubCodeId=item.SubCodeId,
-               Type=item.Type
-
+                SubCodeId=item.SubCodeId,
+               Type=item.Type,
+               Amount=item.Amount,
+               IsDeleted=false
             });          
             _context.SaveChanges();
             return Json("success");

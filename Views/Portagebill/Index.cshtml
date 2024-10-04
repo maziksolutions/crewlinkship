@@ -1259,7 +1259,7 @@
                         <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
                     </h6>
                     <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
-                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalEarn">0</span></span>
+                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalEarn"></span></span>
 
                     </div>
 
@@ -1511,9 +1511,9 @@
     var accountid = 0;
     var EarningType = null;
     function AccountCode(event, earning) {
+
         accountid = event;
         EarningType = earning;
-        alert(EarningType);
     }
 
     function loadacc() {
@@ -1653,7 +1653,7 @@
  
         const subCodeId = accountid;
         const Type = EarningType;
-        alert(Type);
+
         const amountInput = document.getElementById('amount');
         const amount = parseFloat(amountInput.value);
         if (isValidAmount(amount)) {
@@ -1664,7 +1664,7 @@
                 url: `/Portagebill/GetAccountcode?id=${subCodeId}`,
                 datatype: "Json",
                 success: function (data) {
-                    debugger;
+   
                     codename = data[0].toString();
                     accountEntries.push({ codename, amount, subCodeId, Type });
                     populateTable(accountEntries);
@@ -1724,7 +1724,7 @@
         const Type = EarningType;
         const amountInput = document.getElementById('OtherDeductionsamount');
         const amount = parseFloat(amountInput.value);
-        debugger;
+    
         if (isValidAmount(amount)) {
             updateTotalOtherDeductions(amount);
             amountInput.value = ''; // Clear input field
@@ -1750,8 +1750,7 @@
 
 
     function accountname(accountname) {
-        debugger;
-        alert("3");
+
         pp == accountname;
     }
 
@@ -1812,6 +1811,10 @@
     //}
 
     function populateTable(accountEntries) {
+        debugger;
+
+        console.log(accountEntries)
+
         const tableBody = document.getElementById('table-body');
         //const table1 = document.getElementById('example');
         //const newTbody = document.createElement('tbody');
@@ -2089,28 +2092,65 @@
     //}
 
 
-    let mm = [];
-    function updateee()
-    {
+    //let mm = [];
+    //function updateee()
+    //{
         
+    //    if (accountEntries.length > 0) {
+    //        debugger;
+    //        accountEntries.forEach(entry => {
+    //            if (accountEntries.length > 0)
+    //            {
+    //                mm.subCode = entry.subCodeId;
+    //                mm.type = entry.Type;
+    //            }
+       
+                
+    //        });
+
+    //    }
+
+    //}
+
+
+
+    let mm = [];
+
+    function updateee() {
+
         if (accountEntries.length > 0) {
             accountEntries.forEach(entry => {
-                mm.push(entry.subCodeId + entry.earning)
+                mm.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
             });
-
         }
-
     }
+
 
 
     let oo = [];
     function updateOtherearningg() {
 
+        //if (accountEntriesOtherearning.length > 0) {
+        //    accountEntriesOtherearning.forEach(entry => {
+        //        oo.push(entry.subCodeId + entry.Type)
+        //    });
+
+        //}
+
+
+
         if (accountEntriesOtherearning.length > 0) {
             accountEntriesOtherearning.forEach(entry => {
-                oo.push(entry.subCodeId + entry.earning)
+                oo.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
             });
-
         }
 
     }
@@ -2118,21 +2158,24 @@
 
     let uppOtherdeduction = [];
     function updateaccountEntriesOtherearning() {
+        //if (accountEntriesOtherDeductions.length > 0) {
+        //    accountEntriesOtherDeductions.forEach(entry => {
+        //        uppOtherdeduction.push(entry.subCodeId + entry.Type)
+        //    });
+
+        //}
+
         if (accountEntriesOtherDeductions.length > 0) {
             accountEntriesOtherDeductions.forEach(entry => {
-                uppOtherdeduction.push(entry.subCodeId + entry.earning)
+                uppOtherdeduction.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
             });
-
         }
-
     }
-
-
-
  
-
-
-
     function updateCombinedForm() {
         const specificValues = [];
         //if (allAccountData3.length > 0) {
@@ -2164,17 +2207,143 @@
         $('#premarks').val(specificValues.join(','));
     }
 
+    //function Reimbursementopenpopup()
+    //{
+    //    const preimbursementvalue = $('#preimbursement').val();
+    //    if (preimbursementvalue != 0) {
+    //        PortageBillId = PortageBillIdglobal;
+    //         Type = "Reimbursement";
+    //        $.ajax({
+    //            type: "GET",
+    //            url: "/Portagebill/PortageReimbursementDetailsbyid",
+    //            data: {
+    //                type: Type,           
+    //                portageBillId: PortageBillId 
+    //            },
+    //            datatype: "Json",
+    //            success: function (response) {
+    //                let Data = [];
+    //                Data = response;
+    //                debugger;
+    //                if (Data != null)
+    //                {
+    //                    debugger
+    //                    for (let item of response)
+    //                    {
+    //                        debugger
+    //                        let accountEntry = [];
+    //                        accountEntry.codename = "sample",
+    //                            accountEntry.amount = item.amount,
+    //                            accountEntry.Type = item.type,
+    //                        accountEntry.subCodeId = item.subCodeId
+    //                        accountEntries.push(accountEntry);
+    //                    }
+    //                    console.log(accountEntries)
+    //                    populateTable(accountEntries);
+    //                }
+                   
+
+                 
+    //            }
+                
+    //        });
+
+
+    //        $("#totalEarn").text(preimbursementvalue);
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+    //    else
+    //    {
+    //        accountEntries = [];
+    //        $("#table-body").empty();
+    //        $('#totalEarn').prop("value", "0");
+    //        $("#totalEarn").text("0");
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+      
+    //}
 
 
 
-    function Reimbursementopenpopup()
-    {
-        accountEntries = [];
-        $("#table-body").empty();
-        $('#totalEarn').prop("value", "0");
-        $("#totalEarn").text("0");
-        $("#Reimbursementmodal").modal('show');
+
+
+
+    function Reimbursementopenpopup() {
+        const preimbursementvalue = $('#preimbursement').val();
+        if (preimbursementvalue != 0) {
+            PortageBillId = PortageBillIdglobal;
+            codename = "";
+            Type = "Reimbursement";
+            $.ajax({
+                type: "GET",
+                url: "/Portagebill/PortageReimbursementDetailsbyid",
+                data: {
+                    type: Type,
+                    portageBillId: PortageBillId
+                },
+                datatype: "Json",
+                success: function (response) {
+                    let Data = [];
+                    Data = response;
+                    if (Data != null) {
+                        for (let item of response) {
+                            let accountEntry = [];
+                            debugger;
+                            $.ajax({
+                                type: "GET",
+                                url: `/Portagebill/GetAccountcode?id=${item.subCodeId}`,
+                                datatype: "Json",
+                                success: function (data) {
+                                    console.log(data);
+                                    debugger;
+                                    accountEntry.codename = data.codename;
+                                  
+/*                                    accountEntries.push({ codename, amount, subCodeId, Type });*/
+                                }
+                            })
+
+                            //accountEntry.codename = "sample",
+                                accountEntry.codename = codename;
+                                accountEntry.amount = item.amount,
+                                accountEntry.Type = item.type,
+                                accountEntry.subCodeId = item.subCodeId
+                     
+                            accountEntries.push(accountEntry);
+                            debugger;
+                        }
+                        console.log(accountEntries)
+                        populateTable(accountEntries);
+                    }
+
+
+
+                }
+
+            });
+
+
+            $("#totalEarn").text(preimbursementvalue);
+            $("#Reimbursementmodal").modal('show');
+        }
+        else {
+            accountEntries = [];
+            $("#table-body").empty();
+            $('#totalEarn').prop("value", "0");
+            $("#totalEarn").text("0");
+            $("#Reimbursementmodal").modal('show');
+        }
+
     }
+
+
+
+
+
+
+
+
+
+
 
     function OtherEarningsopenpopup() {
 
@@ -3099,12 +3268,13 @@
         $("#transitWages").val(0);
         $("#prevMonthBal").val(0);
     }
+    var PortageBillIdglobal = 0;
 
     /* portage entry pop get data */
     function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, uniformallow, pensionfund, otherallow,
         OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction)
     {
-        alert(curr);
+
         nigpfAmount= npfamount;
         $("#poratgeallotment2").hide();
         $("#pcrewrank").text(rank);
@@ -3163,6 +3333,9 @@
         });
 
         if (PortageBillId != 0 && PortageBillId != '') {
+
+            PortageBillIdglobal = PortageBillId;
+      
             $.ajax({
                 type: "GET",
                 url: "/Portagebill/GetDataByPoratgeId",
@@ -3341,7 +3514,10 @@
             $("#ptotalearncurrent").val(totalearncurrent);
             calculateportageearning();
         }
+      
     }
+
+  
 
     /* function to reset portage form values */
     function resetportageform() {
@@ -3392,6 +3568,7 @@
         $("#pallotment2").val(0);
         $("#transitWages").val(0);
         $("#pprevMonthBal").val(0);
+        location.reload();
     }
 
     /* function to get the portagebill selected bankid */
@@ -3495,10 +3672,9 @@
                 data: portageBillVM,
                 dataType: 'json',
                 success: function (response) {
-                    console.log(response);
-                    savebaksada();
-       
-                    savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.FinalBalance, portageBillVM.From, portageBillVM.To, response);
+                    savebaksada();      
+                    savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+
                     alert('Portage Bill Updated');
                     $('#portageBillPopup').modal('hide');
                     resetportageform();
@@ -3559,7 +3735,7 @@
     }
 
 
-    function savePortageEarningDeduction(CrewId, Vesselid, FinalBalance, From, To, portageBillId)
+    function savePortageEarningDeduction(CrewId, Vesselid, From, To, portageBillId)
     {
         var model = "";
         var currency = document.getElementById("pcurrency").innerText;
@@ -3568,27 +3744,60 @@
         console.log(mergedArray);
 
         debugger;
+        if (mergedArray.length > 0) {
+            mergedArray.forEach(entry => {
+                debugger;
 
-        model = { "CrewId": CrewId, "VesselId": Vesselid, "Amount": FinalBalance, "From": From,  "To": To, "PortageBillId": portageBillId, "Currency": currency }
-        $.ajax({
-            url: "/Portagebill/AddPortageEarningDeduction",
-            type: "POST",
-            dataType: 'json',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: { item: model },
-            success: function (response) {
-                if (response == "success")
-                {
+                model = { "SubCodeId": entry.subCode, "Type": entry.type, "Amount": entry.Amount,  "CrewId": CrewId, "VesselId": Vesselid,  "From": From, "To": To, "PortageBillId": portageBillId, "Currency": currency }
+                $.ajax({
+                    url: "/Portagebill/AddPortageEarningDeduction",
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: { item: model },
+                    success: function (response) {
+                        if (response == "success") {
 
-                }
-            },
-            failure: function (response) {
-                alert(response.responseText);
-            },
-            error: function (response) {
-                alert(response.responseText);
-            }
-        });
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            });
+        }
+
+
+
+
+
+
+        debugger;
+
+        //model = { "CrewId": CrewId, "VesselId": Vesselid, "Amount": FinalBalance, "From": From,  "To": To, "PortageBillId": portageBillId, "Currency": currency }
+        //$.ajax({
+        //    url: "/Portagebill/AddPortageEarningDeduction",
+        //    type: "POST",
+        //    dataType: 'json',
+        //    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        //    data: { item: model },
+        //    success: function (response) {
+        //        if (response == "success")
+        //        {
+
+        //        }
+        //    },
+        //    failure: function (response) {
+        //        alert(response.responseText);
+        //    },
+        //    error: function (response) {
+        //        alert(response.responseText);
+        //    }
+        //});
     }
 
 
@@ -3608,7 +3817,7 @@
             transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         otherEarnings = parseFloat($("#pearningother").val());
         reimbursement = parseFloat($("#preimbursement").val());
-        alert(reimbursement)
+
         totalearning = Math.round(parseFloat(otearning)+(parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(prevMonthBal) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
@@ -3623,7 +3832,6 @@
 
     /* function to calculate the earning   */
     function calculateportageearning() {
-        debugger;
         othour = $("#potHours").val();
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#pextraot").val(otearning);
