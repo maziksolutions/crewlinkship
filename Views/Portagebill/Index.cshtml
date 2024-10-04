@@ -412,7 +412,6 @@
                                                     <th>Overtime HR</th>
                                                     <th>Basic Wage</th>
                                                     <th>Fixed/<br />Guaranteed OT</th>
-                                                    <th>Security<br /> Allowance</th>
                                                     <th>Leave Pay &<br /> Subsitence Allow. </th>
                                                     <th>Uniform Allow.</th>
                                                     <th>Pension Fund</th>
@@ -621,44 +620,50 @@
                                                     <th>Currency</th>
                                                     <th>Nationality</th>
                                                     <th>Basic Wages</th>
-                                                    <th>Fixed/Guaranteed<br /> Overtime</th>
-                                                    <th>Security<br /> Allowance </th>
-                                                    <th>Leave+Subs.</th>
-                                                    <th>U.ALLOW</th>
-                                                    <th> Pension Fund </th>
-                                                    <th> Other Allowance</th>
-                                                    <th>Incentive Allow.</th>
-                                                    <th>Seniority</th>
-                                                    <th>Tanker Allow. </th>
-                                                    <th>Housing</th>
-                                                    <th>Transport</th>
-                                                    <th>Utility </th>
-                                                    <th>Bonus</th>
-                                                    <th>Seafarers PF</th>
-                                                    <th>Leave Wages-Addnl.</th>
-                                                    <th>Total Wages<br /> per month</th>
-                                                    <th> Overtime HR</th>
-                                                    <th>Basic Wage</th>
-                                                    <th>Fixed/Guaranteed OT</th>
-                                                    <th>Security<br /> Allowance</th>
-                                                    <th>Leave Pay &<br /> Subsitence Allow. </th>
-                                                    <th>Uniform Allow.</th>
-                                                    <th>Pension Fund</th>
-                                                    <th>Other Allow.</th>
-                                                    <th>Incentive Allow.</th>
-                                                    <th>Seniority</th>
-                                                    <th>Tanker Allow. </th>
-                                                    <th>Housing</th>
-                                                    <th>Transport</th>
-                                                    <th>Utility </th>
-                                                    <th>Bonus</th>
-                                                    <th>Seafarers PF</th>
-                                                    <th>Leave Wages-Addnl.</th>
-                                                    <th>Extra OT</th>
-                                                    <th>Other Earning</th>
-                                                    <th>Transit Wages</th>
-                                                    <th>Total Earnings<br /> (Current Month)</th>
-                                                    <th> Bal from<br /> Prev Month</th>
+       <th>Fixed/Guaranteed<br /> Overtime</th>                                                    
+       <th>Leave+Subs.</th>
+       <th>U.ALLOW</th>
+       <th>Pension Fund </th>       
+       <th>Special <br /> Allowance </th>
+       <th>Company <br /> Allowance </th>
+       <th>Security<br /> Allowance </th>
+       <th>Temp. Fuel Allow<br /> Allowance </th>
+       <th>Incentive Allow.</th>
+       <th>Seniority</th>
+       <th>Tanker Allow. </th>
+       <th>Housing</th>
+       <th>Transport</th>
+       <th>Utility </th>
+       <th>Bonus</th>
+       <th>Seafarers PF</th>
+       <th>Leave Wages-Addnl.</th>
+       <th>Other Allowance</th>  
+       <th>Total Wages<br /> per month</th>
+       <th>Overtime HR</th>
+       <th>Basic Wage</th>
+       <th>Fixed/<br />Guaranteed OT</th>	   
+       <th>Leave Pay &<br /> Subsitence Allow. </th>
+       <th>Uniform Allow.</th>
+       <th>Pension Fund</th>
+       <th>Special <br /> Allowance </th>
+       <th>Company <br /> Allowance </th>
+       <th>Security<br /> Allowance </th>
+       <th>Temp. Fuel Allow<br /> Allowance </th>
+       <th>Incentive Allow.</th>
+       <th>Seniority</th>
+       <th>Tanker Allow. </th>
+       <th>Housing</th>
+       <th>Transport</th>
+       <th>Utility </th>
+       <th>Bonus</th>
+       <th>Seafarers PF</th>
+       <th>Leave Wages-Addnl.</th>
+       <th>Other Allowance</th>
+       <th>Extra OT</th>
+       <th>Other Earning</th>
+       <th>Transit Wages</th>
+       <th>Total Earnings<br /> (Current Month)</th>
+       <th> Bal from<br /> Prev Month</th>
                                                     <th>Reimbursement</th>
                                                     <th>Total Payable</th>
                                                     <th>Leave Pay <br />+ Subsitence C/F (This Month)</th>
@@ -702,14 +707,16 @@
                                                         <td>@item.TotalDays</td>
                                                         <td>@item.Currency</td>
                                                         <td>@item.Nationality</td>
-                                                        <td>@item.BasicWages</td>
-                                                        <td>@item.FixedGtOT</td>
-                                                        <td>@item.SecurityAllow</td>
+                                                           <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>                                                       
                                                         <td>@item.LeavePay</td>
                                                         <td>@item.UniformAllow</td>
                                                         <td>@item.PensionFund</td>
-                                                        <td>@item.OtherAllow</td>
 
+                                                        <td>@item.SpecialAllowance</td>
+                                                        <td>@item.CompanyAllowance</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.TempFuelAllow</td>
                                                         <td>@item.IncentiveAllowance</td>
                                                         <td>@item.Seniority</td>
                                                         <td>@item.TankerAllowance</td>
@@ -720,21 +727,39 @@
                                                         <td>@item.SeafarersPF</td>
                                                         <td>@item.leavepayaddition</td>
 
+                                                        <td>@item.OtherAllow</td>
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
 
-                                                        <td>
+<td>
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.FixedGtOT / item.numberofday * @item.TotalDays))
+                                                            @string.Format("{0:n2}", (item.FixedGtOT * item.TotalDays / item.numberofday))
+                                                        </td>                                                   
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.LeavePay * item.TotalDays / item.numberofday))
                                                         </td>
-                                                        <td> @string.Format("{0:n2}", (item.SecurityAllow / item.numberofday * @item.TotalDays))</td>
-                                                        <td> @string.Format("{0:n2}", (item.LeavePay / item.numberofday * @item.TotalDays))</td>
-                                                        <td>@string.Format("{0:n2}", (item.UniformAllow / item.numberofday * @item.TotalDays))</td>
-                                                        <td>@string.Format("{0:n2}", (item.PensionFund / item.numberofday * @item.TotalDays))</td>
-                                                        <td>@string.Format("{0:n2}", (item.OtherAllow / item.numberofday * @item.TotalDays))</td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.UniformAllow * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.PensionFund * item.TotalDays / item.numberofday))
+                                                        </td>
 
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SpecialAllowance / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.CompanyAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TempFuelAllow / item.numberofday * @item.TotalDays))
+                                                        </td>
                                                         <td>
                                                             @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))
                                                         </td>
@@ -761,6 +786,9 @@
                                                         </td>
                                                         <td>
                                                             @string.Format("{0:n2}", (item.leavepayaddition * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
                                                         </td>
 
                                                         <td>@item.extraot</td>
@@ -808,39 +836,45 @@
                                                     <th>Currency</th>
                                                     <th>Nationality</th>
                                                     <th>Basic Wages</th>
-                                                    <th>Fixed/Guaranteed<br /> Overtime</th>
-                                                    <th>Security<br /> Allowance </th>
-                                                    <th>Leave+Subs.</th>
-                                                    <th>U.ALLOW</th>
-                                                    <th> Pension Fund </th>
-                                                    <th> Other Allowance</th>
-                                                    <th>Incentive Allow.</th>
-                                                    <th>Seniority</th>
-                                                    <th>Tanker Allow. </th>
-                                                    <th>Housing</th>
-                                                    <th>Transport</th>
-                                                    <th>Utility </th>
-                                                    <th>Bonus</th>
-                                                    <th>Seafarers PF</th>
-                                                    <th>Leave Wages-Addnl.</th>
+       <th>Fixed/Guaranteed<br /> Overtime</th>                                                    
+       <th>Leave+Subs.</th>
+       <th>U.ALLOW</th>
+       <th>Pension Fund </th>       
+       <th>Special <br /> Allowance </th>
+       <th>Company <br /> Allowance </th>
+       <th>Security<br /> Allowance </th>
+       <th>Temp. Fuel Allow<br /> Allowance </th>
+       <th>Incentive Allow.</th>
+       <th>Seniority</th>
+       <th>Tanker Allow. </th>
+       <th>Housing</th>
+       <th>Transport</th>
+       <th>Utility </th>
+       <th>Bonus</th>
+       <th>Seafarers PF</th>
+       <th>Leave Wages-Addnl.</th>
+       <th>Other Allowance</th>  
                                                     <th>Total Wages<br /> per month</th>
                                                     <th> Overtime HR</th>
                                                     <th>Basic Wage</th>
-                                                    <th>Fixed/<br />Guaranteed OT</th>
-                                                    <th>Security<br /> Allowance</th>
-                                                    <th>Leave Pay &<br /> Subsitence Allow. </th>
-                                                    <th>Uniform Allow.</th>
-                                                    <th>Pension Fund</th>
-                                                    <th>Other Allow.</th>
-                                                    <th>Incentive Allow.</th>
-                                                    <th>Seniority</th>
-                                                    <th>Tanker Allow. </th>
-                                                    <th>Housing</th>
-                                                    <th>Transport</th>
-                                                    <th>Utility </th>
-                                                    <th>Bonus</th>
-                                                    <th>Seafarers PF</th>
-                                                    <th>Leave Wages-Addnl.</th>
+       <th>Fixed/<br />Guaranteed OT</th>	   
+       <th>Leave Pay &<br /> Subsitence Allow. </th>
+       <th>Uniform Allow.</th>
+       <th>Pension Fund</th>
+       <th>Special <br /> Allowance </th>
+       <th>Company <br /> Allowance </th>
+       <th>Security<br /> Allowance </th>
+       <th>Temp. Fuel Allow<br /> Allowance </th>
+       <th>Incentive Allow.</th>
+       <th>Seniority</th>
+       <th>Tanker Allow. </th>
+       <th>Housing</th>
+       <th>Transport</th>
+       <th>Utility </th>
+       <th>Bonus</th>
+       <th>Seafarers PF</th>
+       <th>Leave Wages-Addnl.</th>
+       <th>Other Allowance</th>
                                                     <th>Extra OT</th>
                                                     <th>Other Earning</th>
                                                     <th>Transit Wages</th>
@@ -881,13 +915,15 @@
                                                         <td>@item.TotalDays</td>
                                                         <td>@item.Currency</td>
                                                         <td>@item.Nationality</td>
-                                                        <td>@item.BasicWages</td>
-                                                        <td>@item.FixedGtOT</td>
-                                                        <td>@item.SecurityAllow</td>
+                                                       <td>@item.BasicWages</td>
+                                                        <td>@item.FixedGtOT</td>                                                       
                                                         <td>@item.LeavePay</td>
                                                         <td>@item.UniformAllow</td>
                                                         <td>@item.PensionFund</td>
-                                                        <td>@item.OtherAllow</td>
+                                                        <td>@item.SpecialAllowance</td>
+                                                        <td>@item.CompanyAllowance</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.TempFuelAllow</td>
                                                         <td>@item.IncentiveAllowance</td>
                                                         <td>@item.Seniority</td>
                                                         <td>@item.TankerAllowance</td>
@@ -897,18 +933,15 @@
                                                         <td>@item.Bonus</td>
                                                         <td>@item.SeafarersPF</td>
                                                         <td>@item.leavepayaddition</td>
+                                                        <td>@item.OtherAllow</td>
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
                                                         <td>
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td>
-
                                                             @string.Format("{0:n2}", (item.FixedGtOT * item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
-                                                        </td>
+                                                        </td>                                                   
                                                         <td>
                                                             @string.Format("{0:n2}", (item.LeavePay * item.TotalDays / item.numberofday))
                                                         </td>
@@ -916,13 +949,20 @@
                                                             @string.Format("{0:n2}", (item.UniformAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-
                                                             @string.Format("{0:n2}", (item.PensionFund * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
+                                                            @string.Format("{0:n2}", (item.SpecialAllowance / item.numberofday * @item.TotalDays))
                                                         </td>
-
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.CompanyAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TempFuelAllow / item.numberofday * @item.TotalDays))
+                                                        </td>
                                                         <td>
                                                             @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))
                                                         </td>
@@ -950,10 +990,13 @@
                                                         <td>
                                                             @string.Format("{0:n2}", (item.leavepayaddition * item.TotalDays / item.numberofday))
                                                         </td>
-
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
+                                                        </td>
                                                         <td>@item.extraot</td>
                                                         <td>@item.OtherEarnings</td>
                                                         <td>@item.TransitWages</td>
+                                                        <td></td>
                                                         <td>@item.PrevMonthBal</td>
                                                         <td>@item.Reimbursement</td>
                                                         <td>@item.TotalPayable</td>

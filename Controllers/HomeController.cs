@@ -1252,6 +1252,26 @@ namespace crewlinkship.Controllers
                 Recdate= x.Recdate,
                 IsPromoted = x.IsPromoted
             }).ToList();
+
+            var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeduction
+            {
+                PortageEarningDeductionId = x.PortageEarningDeductionId,
+                CrewId = x.CrewId,
+                PortageBillId = x.PortageBillId,
+                Vesselid = x.Vesselid,
+                SubCodeId = x.SubCodeId,
+                Amount = x.Amount,
+                From = x.From,
+                To = x.To,
+                Type = x.Type,
+                Currency = x.Currency,
+                IsDeleted = x.IsDeleted,
+                RecDate = x.RecDate,
+                CreatedBy= x.CreatedBy,
+                ModifiedBy = x.ModifiedBy,
+                ModifiedDate = x.ModifiedDate
+            }).ToList();
+
             var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
             {
                 VesselPortId = x.PortageBillId,
@@ -1393,6 +1413,9 @@ namespace crewlinkship.Controllers
 
                     var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
                     wb.Worksheet(5).Cell(1, 1).InsertTable(PortageBills);
+
+                    var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDeduction");
+                    wb.Worksheet(6).Cell(1, 1).InsertTable(PortageEarningDeduction);
 
                     //var wsReimbursementOrDeduction = wb.Worksheets.Add("TblImportContractReimDedu");
                     //wb.Worksheet(19).Cell(1, 1).InsertTable(ReimbursementOrDeductions);
@@ -2552,10 +2575,7 @@ namespace crewlinkship.Controllers
                            ReliefDate = t.DueDate,
                            PortOfJoining = _context.TblActivitySignOns.Include(s => s.Seaport).Where(c => c.CrewId == t.CrewId).FirstOrDefault().Seaport?.SeaportName,
                            DOB = t.Crew?.Dob ?? DateTime.Parse("01-01-1900"),
-
                        });
-
-
             if (CrewList.Count() > 20)
             {
                 IMOFull = true;
@@ -2569,10 +2589,7 @@ namespace crewlinkship.Controllers
                 ViewBag.count = IMOFull;
                 ViewBag.fpd2 = FPDCrewLists;
             }
-
-
             return PartialView();
-
         }
 
 
