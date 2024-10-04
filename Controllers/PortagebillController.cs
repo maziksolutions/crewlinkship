@@ -41,7 +41,7 @@ namespace crewlinkship.Controllers
             _appEnvironment = appEnvironment; _configuration = configuration;
             vesselidtouse= _configuration.GetValue<int>("vesselinfo:checkvessel:datafor");
         }
-       // public int vesselidtouse { get => _configuration.GetValue<int>("vesselinfo:checkvessel:datafor"); }
+        // public int vesselidtouse { get => _configuration.GetValue<int>("vesselinfo:checkvessel:datafor"); }
         //public IActionResult Index()
         //{
         //    /*int vesselId = 138; int month = 2;*/
@@ -54,6 +54,113 @@ namespace crewlinkship.Controllers
         //}
 
         // [Route("Portagebill/Index/{vesselId:int}/{month:int}/{year:int}")]
+
+
+        [HttpGet]
+        public IActionResult GetAccounts()
+        {
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement").ToList();
+            return Json(accounts);
+        }
+
+        [HttpGet]
+        public IActionResult GetAccountsbyid(string id)
+        {
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.SubCodeId.ToString() == id).Select(x=>x.Earning);
+            return Json(accounts);
+        }
+
+
+        [HttpGet]
+        public IActionResult PortageReimbursementDetailsbyid( int portageBillId,  string type)
+        {
+            var ReimbursementDetails = _context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
+            return Json(ReimbursementDetails);
+        }
+
+
+
+        
+
+
+        [HttpGet]
+        public IActionResult GetAccountotherearnings()
+        {
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Earning").ToList();
+            return Json(accounts);
+        }
+
+        [HttpGet]
+        public IActionResult GetAccountOtherDeductions()
+        {
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Deduction").ToList();
+            return Json(accounts);
+        }
+
+        [HttpPost]
+        public IActionResult ReceiveData([FromBody] List<TblWageComponent> entries)
+        {
+            if (entries == null || entries.Count == 0)
+            {
+                return BadRequest("No data received.");
+            }
+
+            // Process the entries (e.g., save to database, etc.)
+            // For this example, we'll just log them to the console
+            foreach (var entry in entries)
+            {
+                // Replace this with your processing logic
+                //System.Console.WriteLine($"ID: {entry.Id}, Name: {entry.Name}, Balance: {entry.Balance}");
+            }
+
+            return Ok("Data received successfully.");
+        }
+    
+
+
+    //[HttpGet]
+    //public IActionResult GetAccountcode(int id )
+    //{
+    //    var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement" && x.SubCodeId==id ).Select(x=>x.SubCode.SubCode + " "+ x.SubCode.SubBudget);
+    //    return Json(accounts);
+    //}
+
+    [HttpGet]
+        public IActionResult GetAccountcode(int id)
+        {
+            var accounts = _context.TblWageComponents
+                .Include(x => x.SubCode)
+                .Where(x => x.Earning == "Reimbursement" && x.SubCodeId == id)
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
+                .ToList(); // Ensure to call ToList to execute the query
+
+            return Json(accounts);
+        }
+
+        [HttpGet]
+        public IActionResult GetAccountotherearningcode(int id)
+        {
+            var accounts = _context.TblWageComponents
+                .Include(x => x.SubCode)
+                .Where(x => x.Earning == "Earning" && x.SubCodeId == id)
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
+                .ToList(); // Ensure to call ToList to execute the query
+
+            return Json(accounts);
+        }
+
+        [HttpGet]
+        public IActionResult GetAccountOtherDeductionscode(int id)
+        {
+            var accounts = _context.TblWageComponents
+                .Include(x => x.SubCode)
+                .Where(x => x.Earning == "Deduction" && x.SubCodeId == id)
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
+                .ToList(); // Ensure to call ToList to execute the query
+
+            return Json(accounts);
+        }
+
         [HttpGet]
         public IActionResult Index(int? vesselId, int? month, int? year)
         {
@@ -132,14 +239,17 @@ namespace crewlinkship.Controllers
             //catch(Exception ex) { }
             return null;
         }
+
+     int portageBillId = 0;
         [HttpPost]
-        public JsonResult AddPortageBill(TblPortageBill item)
+        public int AddPortageBill(TblPortageBill item)
         {
             try
             {
                 if (item.PortageBillId == 0)
                 {
-                    _context.TblPortageBills.Add(new TblPortageBill
+                    //_context.TblPortageBills.Add(new TblPortageBill
+                    var data = new TblPortageBill
                     {
                         CrewId = item.CrewId,
                         CrewListId = item.CrewListId,
@@ -181,8 +291,11 @@ namespace crewlinkship.Controllers
                         Avc = item.Avc,
                         IndPfamount = item.IndPfamount,
                         IsAddPrevBal = item.IsAddPrevBal,
-                    }); _context.SaveChanges();
-                    return Json("success");
+                    };
+                    _context.TblPortageBills.Add(data);
+                    _context.SaveChanges();
+                    portageBillId = data.PortageBillId;
+                    return data.PortageBillId;
                 }
                 else
                 {
@@ -230,17 +343,19 @@ namespace crewlinkship.Controllers
                         data.IsAddPrevBal = item.IsAddPrevBal;
                         _context.TblPortageBills.Update(data);
                         _context.SaveChanges();
-                        return Json("success");
+                        return data.PortageBillId;
+
                     }
                 }
             }
             catch (Exception ex)
             {
-                return Json("error");
+                return 0;
                 throw ex;
             }
-            return null;
+            return 0;
         }
+   
         public JsonResult AddBankAllotment(TblPbbankAllotment item, int itemlength)
         {
             DateTime today = DateTime.Today;
@@ -377,6 +492,31 @@ namespace crewlinkship.Controllers
             }
             return null;
         }
+
+
+        public JsonResult AddPortageEarningDeduction(PortageEarningDeduction item)
+        {
+            _context.PortageEarningDeduction.Add(new PortageEarningDeduction
+            {
+                CrewId = item.CrewId,
+                Vesselid = item.Vesselid,
+                PortageBillId = item.PortageBillId,
+                Currency=item.Currency,
+                From=item.From,
+                To=item.To,
+                RecDate=DateTime.UtcNow,
+                CreatedBy=1,
+                SubCodeId=item.SubCodeId,
+               Type=item.Type,
+               Amount=item.Amount,
+               IsDeleted=false
+            });          
+            _context.SaveChanges();
+            return Json("success");
+        }
+
+
+
         public JsonResult GetBankAllotment(int vesselId, int month, int year, int crewid, string ispromoted)
         {
             bool promoted = false;

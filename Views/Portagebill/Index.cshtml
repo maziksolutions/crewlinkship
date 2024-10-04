@@ -281,7 +281,11 @@
     .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
         width: 100%;
     }
-    .setcolumnswidth{width: 50px !important}
+
+    .setcolumnswidth {
+        width: 50px !important
+    }
+
     .setcolumnswidth1 {
         width: 60px !important
     }
@@ -317,7 +321,7 @@
                             </select>
 
                         </div>
-                       
+
                         <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-10" value="search" name="action" data-toggle="tooltip" type="submit" id="abcdefghi"
                                 data-trigger="hover" data-placement="top" data-title="Show Portage Bill (Current Month)">
                             <i class="far fa-eye"></i>
@@ -605,7 +609,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th  width="50px">Sr.No.</th>
+                                                    <th width="50px">Sr.No.</th>
                                                     <th>Crew Name</th>
                                                     <th>CDC</th>
                                                     <th>Rank</th>
@@ -723,7 +727,7 @@
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td>
-                                                            @string.Format("{0:n2}", (item.FixedGtOT / item.numberofday * @item.TotalDays))                    
+                                                            @string.Format("{0:n2}", (item.FixedGtOT / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td> @string.Format("{0:n2}", (item.SecurityAllow / item.numberofday * @item.TotalDays))</td>
                                                         <td> @string.Format("{0:n2}", (item.LeavePay / item.numberofday * @item.TotalDays))</td>
@@ -1016,7 +1020,7 @@
                             <input id="Transitwages" name="Transitwages" hidden>
                             @*<input id="Tax" name="Tax" hidden>*@
                             @*<input id="Udamount" name="Udamount" hidden>
-                        <input id="Wfamount" name="Wfamount" hidden>*@
+                                <input id="Wfamount" name="Wfamount" hidden>*@
                             <input id="IsTransitApply" name="IsTransitApply" hidden>
                             <input id="IsPromoted" name="IsPromoted" hidden>
                             <input id="IsLeaveWagesCf" name="IsLeaveWagesCf" hidden>
@@ -1080,9 +1084,14 @@
                                     <label for="transitDays">Transit Days</label>
                                     <input placeholder="Transit Days" class="form-control" required onchange="calculateearning()" type="number" value="0" name="transitDays" id="transitDays">
                                 </div>
+                                @*<div class="col form-group input-container">
+                                        <label for="reimbursement">Reimbursement</label>
+                                        <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" type="number" value="0" name="reimbursement" id="reimbursementtt">
+                                    </div>*@
+
                                 <div class="col form-group input-container">
                                     <label for="reimbursement">Reimbursement</label>
-                                    <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" type="number" value="0" name="reimbursement" id="reimbursement">
+                                    <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" type="text" name="reimbursement" id="reimbursementtt">
                                 </div>
                             </div>
                             <div class="row">
@@ -1225,7 +1234,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pearningother">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onclick="OtherEarningsopenpopup()" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -1235,7 +1244,11 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="preimbursement">Reimbursement</label>
-                                    <input placeholder="Reimbursement" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="preimbursement" id="preimbursement" required>
+                                    @*<input placeholder="Reimbursement" class="form-control" onclick="tets()" type="text" name="preimbursement">*@
+                                    <input placeholder="Reimbursement" class="form-control" type="number" value="0"
+                                           onclick="Reimbursementopenpopup()" name="preimbursement"
+                                           onchange="calculateportageearning()" id="preimbursement">
+
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pleaveWagesBF">Leave Wages B/F</label>
@@ -1262,7 +1275,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="potherDeductions">Other Deductions</label>
-                                    <input placeholder="Other Deductions" class="form-control" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
+                                    <input placeholder="Other Deductions" class="form-control" onclick="OtherDeductionsopenpopup()" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -1302,6 +1315,347 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+@*<div class="modal fade" id="Reimbursementmodal" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <b>Reimbursements</b>
+                    </h4>
+                    <button type="button"  class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body ">
+                    <div class="bg-light border p-2 mb-2">
+                            <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
+                                <span style="color: #c73f16; float: right; font-size: 14px;"></span><br>
+                                <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                            </h6>
+                            <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
+                                <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : 0</span>
+                            </div>
+
+                            <div class=" row ">
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        @Html.DropDownList("SelectAccountCode", new SelectList(string.Empty, "wageId", "subCode.subCode+ ' '+subCode.subBudget"), new { @class = "form-select form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        <input type="number" placeholder="Amount(USD)" id="Amount" class="form-control" name="Amount">
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary" data-original-title="" data-placement="top" data-title="Add" data-toggle="tooltip" data-trigger="hover" title="" type="button"><i aria-hidden="true" class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" table id="example" data-resizable="true">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Account Code</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="font-small-2">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+    </div>
+     </div>
+      </div>*@
+
+
+<!--<div class="modal fade" id="Reimbursementmodal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <b>Reimbursements</b>
+                </h4>
+                <button type="button" onclick="resetportageform()" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="bg-light border p-2 mb-2">
+                    <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h6>
+                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
+                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalEarn">0</span></span>
+                        <span style="background-color: rgba(242, 244, 248, 1);"> testingspan : <span id="testingspan"></span></span>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="form-group">-->
+@*@Html.DropDownList("SelectAccountCode", new SelectList(string.Empty, "wageId", "subCode.subCode + ' ' + subCode.subBudget"), new { @class = "form-select form-control", id = "accountCode" })*@
+
+<!--@Html.DropDownList("SelectAccountCode", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control" , onchange = "AccountCode(this.value)" })
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <input type="number" placeholder="Amount (USD)" id="amount" class="form-control" name="amount">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="addButton" type="button">
+                                <i aria-hidden="true" class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="example">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Account Code</th>
+                                    <th>Amount (USD)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-small-2" id="table-body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div class="modal fade" id="Reimbursementmodal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <b>Reimbursements</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="bg-light border p-2 mb-2">
+                    <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h6>
+                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
+                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalEarn"></span></span>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="form-group">
+                                @Html.DropDownList("SelectAccountCode", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control", onchange = "AccountCode(this.value, this.options[this.selectedIndex].dataset.earning)" })
+                            </div>
+
+
+                            @*<div class="form-group">
+                                @Html.DropDownList("SelectAccountCode", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), new
+                                {
+                                    @class = "form-select form-control",
+                                    onchange = "AccountCode(this.value, this.options[this.selectedIndex].dataset.earning)"
+                                })
+                            </div>*@
+
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <input type="number" placeholder="Amount (USD)" id="amount" class="form-control" name="amount">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="addButton" type="button" onclick="submitForm()">
+                                <i aria-hidden="true" class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="example">
+                            <thead>
+                                <tr>
+
+                                    <th>Account Code</th>
+                                    <th>Amount (USD)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-small-2" id="table-body">
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary" type="button" onclick="updateForm()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="OtherEarningsmodal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <b>Other Earnings</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="bg-light border p-2 mb-2">
+                    <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h6>
+                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
+                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalotherEarn">0</span></span>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="form-group">
+                                @*@Html.DropDownList("Selectotherearning", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control", onchange = "AccountCode(this.value)" })*@
+
+                                @Html.DropDownList("Selectotherearning", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control", onchange = "AccountCode(this.value, this.options[this.selectedIndex].dataset.earning)" })
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <input type="number" placeholder="Amount (USD)" id="otherearningamount" class="form-control" name="amount">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="addotherearningButton" type="button" onclick="submitotherearningForm()">
+                                <i aria-hidden="true" class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="example">
+                            <thead>
+                                <tr>
+
+                                    <th>Account Code</th>
+                                    <th>Amount (USD)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-small-2" id="table-bodyotherearning">
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary" type="button" onclick="updateotherearningForm()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="OtherDeductionsmodal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <b>Other Deductions</b>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="bg-light border p-2 mb-2">
+                    <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h6>
+                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
+                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalOtherDeductions">0</span></span>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="form-group">
+                                @*@Html.DropDownList("SelectOtherDeductions", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control", onchange = "AccountCode(this.value)" })*@
+
+                                @Html.DropDownList("SelectOtherDeductions", new SelectList(string.Empty, "budgetCodeId", "subCode.subCode + ' '+ subCode.subBudget"), new { @class = "form-select form-control", onchange = "AccountCode(this.value, this.options[this.selectedIndex].dataset.earning)" })
+
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <input type="number" placeholder="Amount (USD)" id="OtherDeductionsamount" class="form-control" name="amount">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="addOtherDeductionsButton" type="button" onclick="submitOtherDeductionsForm()">
+                                <i aria-hidden="true" class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="example">
+                            <thead>
+                                <tr>
+
+                                    <th>Account Code</th>
+                                    <th>Amount (USD)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-small-2" id="table-bodyOtherDeductions">
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary" type="button" onclick="updateOtherDeductionsForm()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <!--Portage entry end-->
 <div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-xl">
@@ -1348,8 +1702,14 @@
             }
         }
     </script>*@
+
 <script type="text/javascript">
     $(document).ready(function () {
+        loadacc();
+/*        loadAccounts();*/
+        loadOtherEarning();
+        loadOtherDeductions();
+        populateTable(accountEntries);
         $(".tabs-list li a").click(function (e) {
             e.preventDefault();
         });
@@ -1360,7 +1720,870 @@
             $(tabid).show();    // show tab
             $(this).addClass("active"); //  adding active class to clicked tab
         });
+
+
+
+        //$("#Reimbursementpopup").click(function tets() {
+
+
+        //    $("#Reimbursementmodal").modal('show');
+        //})
     });
+
+    var accountid = 0;
+    var EarningType = null;
+    function AccountCode(event, earning) {
+
+        accountid = event;
+        EarningType = earning;
+    }
+
+    function loadacc() {
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetAccounts",
+            datatype: "Json",
+            success: function (data) {                
+                $('#SelectAccountCode').append('<option value="">Account Code / Name</option>');
+                $.each(data, function (index, value) {
+                    console.log(value)
+                    /*  $('#SelectAccountCode').append('<option value="' + value.subCodeId + '">' + value.subCode.subCode + + ' ' + value.subCode.subBudget + '</option>');*/
+
+                    $('#SelectAccountCode').append(
+                        `<option value="${value.subCodeId}" data-earning="${value.earning}">${value.subCode.subCode} ${value.subCode.subBudget}</option>`
+                    );
+
+                })
+            }
+        });
+    }
+
+
+    //function loadAccounts() {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/Portagebill/GetAccounts",
+    //        dataType: "json",
+    //        success: function (data) {
+    //            // Clear previous options
+    //            $('#SelectAccountCode').empty().append('<option value="">Account Code / Name</option>');
+    //            $.each(data, function (index, value) {
+    //                // Append each account to the dropdown
+    //                $('#SelectAccountCode').append(
+    //                    `<option value="${value.subCodeId}" data-earning="${value.earning}">${value.subCode.subCode} ${value.subCode.subBudget}</option>`
+    //                );
+    //            });
+    //        },
+    //        error: function (xhr, status, error) {
+    //            console.error("Error loading accounts: ", error);
+    //            alert("Failed to load accounts. Please try again.");
+    //        }
+    //    });
+    //}
+
+
+
+    function loadOtherEarning() {
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetAccountotherearnings",
+            datatype: "Json",
+            success: function (data) {
+
+                $('#Selectotherearning').append('<option value="">Account Code / Name</option>');
+                $.each(data, function (index, value) {
+                   /* $('#Selectotherearning').append('<option value="' + value.subCodeId + '">' + value.subCode.subCode + + ' ' + value.subCode.subBudget + '</option>');*/
+
+                    $('#Selectotherearning').append(
+                        `<option value="${value.subCodeId}" data-earning="${value.earning}">${value.subCode.subCode} ${value.subCode.subBudget}</option>`
+                    );
+
+
+
+                })
+            }
+        });
+    }
+
+    function loadOtherDeductions() {
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetAccountOtherDeductions",
+            datatype: "Json",
+            success: function (data) {
+
+                $('#SelectOtherDeductions').append('<option value="">Account Code / Name</option>');
+                $.each(data, function (index, value) {
+                    $('#SelectOtherDeductions').append(
+                        `<option value="${value.subCodeId}" data-earning="${value.earning}">${value.subCode.subCode} ${value.subCode.subBudget}</option>`
+                    );
+
+                  /*  $('#SelectOtherDeductions').append('<option value="' + value.subCodeId + '">' + value.subCode.subCode + + ' ' + value.subCode.subBudget + '</option>');*/
+                })
+            }
+        });
+    }
+
+    //var codename= "";
+    //function getvalueaccountCode(id) {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/Portagebill/GetAccountcode?id=" + id,
+    //        datatype: "String",
+    //        success: function (data) {
+    //            codename = data;
+    //            console.log(codename);
+    //        },
+    //        error: function (xhr, status, error) {
+    //            console.error("AJAX error:", status, error);
+    //        }
+    //    });
+    //}
+
+
+
+    //// Initialize an array to store account entries
+    //const accountEntries = [];
+    //// Add event listener to the button
+    //document.getElementById('addButton').addEventListener('click', function () {
+
+    //    const accountCode = accountid; // Assuming accountid is defined elsewhere
+    //    const amount = parseFloat(document.getElementById('amount').value);
+    //    if (!isNaN(amount) && amount > 0) {
+    //        const totalEarnElement = document.getElementById('totalEarn');
+    //        const currentTotal = parseFloat(totalEarnElement.innerText);
+    //        const newTotal = currentTotal + amount;
+    //        totalEarnElement.innerText = newTotal.toFixed(2);
+    //        document.getElementById('amount').value = '';
+    //        getvalueaccountCode(accountCode);
+    //        accountEntries.push({ codename, amount });
+
+
+    //        populateTable(accountEntries);
+    //    } else {
+    //        alert('Please enter a valid amount.');
+    //    }
+    //});
+
+
+    var codename = ""; // Initialize global variable for codename
+    let accountEntries = []; // Array to store account entries
+
+
+
+    function submitForm() {
+ 
+        const subCodeId = accountid;
+        const Type = EarningType;
+
+        const amountInput = document.getElementById('amount');
+        const amount = parseFloat(amountInput.value);
+        if (isValidAmount(amount)) {
+            updateTotalEarn(amount);
+            amountInput.value = ''; // Clear input field
+            $.ajax({
+                type: "GET",
+                url: `/Portagebill/GetAccountcode?id=${subCodeId}`,
+                datatype: "Json",
+                success: function (data) {
+   
+                    codename = data[0].toString();
+                    accountEntries.push({ codename, amount, subCodeId, Type });
+                    populateTable(accountEntries);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                }
+            });
+
+        } else {
+            alert('Please enter a valid amount.');
+        }
+    }
+
+
+    var codenameOtherearning = ""; // Initialize global variable for codename
+    let accountEntriesOtherearning = []; // Array to store account entries
+
+
+
+    function submitotherearningForm() {
+
+        const subCodeId = accountid;
+        const Type = EarningType;
+        const amountInput = document.getElementById('otherearningamount');
+        const amount = parseFloat(amountInput.value);
+
+        if (isValidAmount(amount)) {
+            updateTotalotherEarn(amount);
+            amountInput.value = ''; // Clear input field
+            $.ajax({
+                type: "GET",
+                url: `/Portagebill/GetAccountotherearningcode?id=${subCodeId}`,
+                datatype: "Json",
+                success: function (data) {
+                    codenameOtherearning = data[0].toString();
+                    accountEntriesOtherearning.push({ codenameOtherearning, amount, subCodeId, Type});
+                    populateTableotherearning(accountEntriesOtherearning);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                }
+            });
+
+        } else {
+            alert('Please enter a valid amount.');
+        }
+    }
+
+
+    var codenameOtherDeductions = ""; // Initialize global variable for codename
+    let accountEntriesOtherDeductions = []; // Array to store account entries
+
+    function submitOtherDeductionsForm()
+    {
+        const subCodeId = accountid;
+        const Type = EarningType;
+        const amountInput = document.getElementById('OtherDeductionsamount');
+        const amount = parseFloat(amountInput.value);
+    
+        if (isValidAmount(amount)) {
+            updateTotalOtherDeductions(amount);
+            amountInput.value = ''; // Clear input field
+            $.ajax({
+                type: "GET",
+                url: `/Portagebill/GetAccountOtherDeductionscode?id=${subCodeId}`,
+                datatype: "Json",
+                success: function (data) {
+                    codenameOtherDeductions = data[0].toString();
+                    accountEntriesOtherDeductions.push({ codenameOtherDeductions, amount, subCodeId, Type });
+                    populateTableOtherDeductions(accountEntriesOtherDeductions);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                }
+            });
+
+        } else {
+            alert('Please enter a valid amount.');
+        }
+    }
+
+
+
+    function accountname(accountname) {
+
+        pp == accountname;
+    }
+
+
+    // Helper function to validate amount
+    function isValidAmount(amount) {
+        return !isNaN(amount) && amount > 0;
+    }
+
+    // Function to update total earnings
+    function updateTotalEarn(amount) {
+        const totalEarnElement = document.getElementById('totalEarn');
+        const currentTotal = parseFloat(totalEarnElement.innerText);
+        const newTotal = currentTotal + amount;
+        totalEarnElement.innerText = newTotal.toFixed(2);
+    }
+
+    function updateTotalotherEarn(amount) {
+        const totalEarnElement = document.getElementById('totalotherEarn');
+        const currentTotal = parseFloat(totalEarnElement.innerText);
+        const newTotal = currentTotal + amount;
+        totalEarnElement.innerText = newTotal.toFixed(2);
+        alert(totalEarnElement.innerText);
+    }
+
+    function updateTotalOtherDeductions(amount) {
+        const totalEarnElement = document.getElementById('totalOtherDeductions');
+        const currentTotal = parseFloat(totalEarnElement.innerText);
+        const newTotal = currentTotal + amount;
+        totalEarnElement.innerText = newTotal.toFixed(2);
+        alert(totalEarnElement.innerText);
+    }
+
+
+    //function populateTable(accountEntries) {
+    //    const tableBody = document.getElementById('table-body');
+    //    // Clear existing table rows
+    //    tableBody.innerHTML = '';
+    //    // Iterate through the data array and create rows
+    //        accountEntries.forEach((item, index) => {
+    //            getvalueaccountCode(item.accountCode);
+    //        const row = document.createElement('tr');
+    //        // Create the cells
+    //        const cellCheckbox = document.createElement('td');
+    //        cellCheckbox.innerHTML = `<input type="checkbox" />`; // Optional checkbox
+    //        const cellAccountCode = document.createElement('td');
+    //            /*    cellAccountCode.textContent = item.accountCode;*/
+    //            cellAccountCode.textContent = codename;
+    //        const cellAmount = document.createElement('td');
+    //        cellAmount.textContent = item.amount.toFixed(2); // Format to 2 decimal places
+    //        // Append cells to the row
+    //        row.appendChild(cellCheckbox);
+    //        row.appendChild(cellAccountCode);
+    //        row.appendChild(cellAmount);
+    //        // Append the row to the table body
+    //        tableBody.appendChild(row);
+    //    });
+    //}
+
+    function populateTable(accountEntries) {
+        debugger;
+
+        console.log(accountEntries)
+
+        const tableBody = document.getElementById('table-body');
+        //const table1 = document.getElementById('example');
+        //const newTbody = document.createElement('tbody');
+        //table1.createElement('tbody');
+        tableBody.innerHTML = '';
+        accountEntries.forEach(item => {
+            const row = document.createElement('tr');
+            const cellActions = document.createElement('td');
+
+            // Create edit icon
+            // Create edit icon
+            const editIcon = document.createElement('i');
+        
+            editIcon.className = 'fa fa-edit';
+            editIcon.style.cursor = 'pointer';
+            editIcon.onclick = () => {
+                console.log('Edit:', item.subCodeId);
+            };
+
+            // Add a spacer
+            const spacer = document.createElement('span');
+            spacer.style.marginRight = '18px'; // Adjust the spacing as needed
+            cellActions.appendChild(spacer);
+
+            // Create delete icon
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fa fa-trash-o';
+            deleteIcon.style.cursor = 'pointer';
+
+            deleteIcon.onclick = () => {
+
+                const index = accountEntries.findIndex(entry => entry.subCodeId === item.subCodeId);
+                if (index !== -1) {
+                    accountEntries.splice(index, 1);
+                    const amount = parseFloat(item.amount);
+                    if (isValidAmount(amount)) {
+
+                        const totalEarnElement = document.getElementById('totalEarn');
+                        const currentTotal = parseFloat(totalEarnElement.innerText);
+                        const newTotal = currentTotal - amount;
+                        totalEarnElement.innerText = newTotal.toFixed(2);
+
+                    }
+                    populateTable(accountEntries);
+                } else {
+                    console.log('Entry not found');
+                }
+            };
+
+            const cellAccountCode = document.createElement('td');
+            cellAccountCode.textContent = item.codename;
+            row.appendChild(cellAccountCode);
+            const cellAmount = document.createElement('td');
+            cellAmount.textContent = item.amount.toFixed(2);
+            row.appendChild(cellAmount);
+            cellActions.appendChild(editIcon);
+            cellActions.appendChild(deleteIcon);
+            row.appendChild(cellActions);           
+            tableBody.appendChild(row);
+        });
+
+        $('#SelectAccountCode').val("");
+
+    }
+
+    function populateTableotherearning(accountEntriesOtherearning) {
+
+        const tableBody = document.getElementById('table-bodyotherearning');
+        tableBody.innerHTML = '';
+        accountEntriesOtherearning.forEach(item => {
+            const row = document.createElement('tr');
+            const cellActions = document.createElement('td');
+
+            const editIcon = document.createElement('i');
+            editIcon.className = 'fa fa-edit';
+            editIcon.style.cursor = 'pointer';
+            editIcon.onclick = () => {
+                console.log('Edit:', item.subCodeId);
+            };
+
+            const spacer = document.createElement('span');
+            spacer.style.marginRight = '18px'; // Adjust the spacing as needed
+            cellActions.appendChild(spacer);
+
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fa fa-trash-o';
+            deleteIcon.style.cursor = 'pointer';
+
+            deleteIcon.onclick = () => {
+
+                const index = accountEntriesOtherearning.findIndex(entry => entry.subCodeId === item.subCodeId);
+                if (index !== -1) {
+                    accountEntriesOtherearning.splice(index, 1);
+                    const amount = parseFloat(item.amount);
+                    if (isValidAmount(amount)) {
+                        const totalEarnElement = document.getElementById('totalotherEarn');
+                        const currentTotal = parseFloat(totalEarnElement.innerText);
+                        const newTotal = currentTotal - amount;
+                        totalEarnElement.innerText = newTotal.toFixed(2);
+
+                    }
+                    populateTableotherearning(accountEntriesOtherearning);
+                } else {
+                    console.log('Entry not found');
+                }
+            };
+            const cellAccountCode = document.createElement('td');
+            cellAccountCode.textContent = item.codenameOtherearning;
+            row.appendChild(cellAccountCode);
+            const cellAmount = document.createElement('td');
+            cellAmount.textContent = item.amount.toFixed(2);
+            row.appendChild(cellAmount);
+            cellActions.appendChild(editIcon);
+            cellActions.appendChild(deleteIcon);
+            row.appendChild(cellActions);
+            tableBody.appendChild(row);
+        });
+
+        $('#Selectotherearning').val("");
+
+    }
+
+    function populateTableOtherDeductions(accountEntriesOtherDeductions) {
+
+        const tableBody = document.getElementById('table-bodyOtherDeductions');
+        tableBody.innerHTML = '';
+        accountEntriesOtherDeductions.forEach(item => {
+            const row = document.createElement('tr');
+            const cellActions = document.createElement('td');
+
+            const editIcon = document.createElement('i');
+            editIcon.className = 'fa fa-edit';
+            editIcon.style.cursor = 'pointer';
+            editIcon.onclick = () => {
+                console.log('Edit:', item.subCodeId);
+            };
+
+            const spacer = document.createElement('span');
+            spacer.style.marginRight = '18px'; // Adjust the spacing as needed
+            cellActions.appendChild(spacer);
+
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fa fa-trash-o';
+            deleteIcon.style.cursor = 'pointer';
+
+            deleteIcon.onclick = () => {
+
+                const index = accountEntriesOtherDeductions.findIndex(entry => entry.subCodeId === item.subCodeId);
+      
+                if (index !== -1) {
+                    accountEntriesOtherDeductions.splice(index, 1);
+                    alert(item.amount)
+                    const amount = parseFloat(item.amount);
+                    if (isValidAmount(amount)) {
+                        const totalEarnElement = document.getElementById('totalOtherDeductions');
+                        const currentTotal = parseFloat(totalEarnElement.innerText);
+                        const newTotal = currentTotal - amount;
+                        totalEarnElement.innerText = newTotal.toFixed(2);
+
+                    }
+                    populateTableOtherDeductions(accountEntriesOtherDeductions);
+                } else {
+                    console.log('Entry not found');
+                }
+            };
+            const cellAccountCode = document.createElement('td');
+            cellAccountCode.textContent = item.codenameOtherDeductions;
+            row.appendChild(cellAccountCode);
+            const cellAmount = document.createElement('td');
+            cellAmount.textContent = item.amount.toFixed(2);
+            row.appendChild(cellAmount);
+            cellActions.appendChild(editIcon);
+            cellActions.appendChild(deleteIcon);
+            row.appendChild(cellActions);
+            tableBody.appendChild(row);
+        });
+
+        $('#SelectOtherDeductions').val("");
+
+    }
+
+    function updateForm() {
+
+        //const specificValues = [];
+        //console.log(accountEntries);
+        //accountEntries.forEach(entry => {
+        //    specificValues.push(`${entry.codename} (USD): ${entry.amount}`);
+        //});
+        //$('#premarks').prop("value", specificValues.join(','));
+        updateCombinedForm();
+        updateee();
+        var totalEarnElement = document.getElementById('totalEarn');
+        var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
+        var numericValue = parseFloat(pp);
+        $('#preimbursement').prop("value", numericValue);
+        calculateportageearning();
+        $("#Reimbursementmodal").modal('hide');
+    }
+
+    function updateotherearningForm() {
+        updateCombinedForm();
+        updateOtherearningg();
+        var totalEarnElement = document.getElementById('totalotherEarn');
+        var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
+        var numericValue = parseFloat(pp);
+        alert(numericValue);
+        $('#pearningother').prop("value", numericValue);
+
+        calculateportageearning();
+        $("#OtherEarningsmodal").modal('hide');
+
+    }
+
+    function updateOtherDeductionsForm()
+    {
+        updateCombinedForm();
+        updateaccountEntriesOtherearning();
+        var totalEarnElement = document.getElementById('totalOtherDeductions');
+        var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
+        var numericValue = parseFloat(pp);
+        $('#potherDeductions').prop("value", numericValue);
+        calculateportageearning();
+        $("#OtherDeductionsmodal").modal('hide');
+
+    }
+
+    //const allaccountdata = [];
+    //const allaccountdata2 = [];
+    //let allaccountdata3 = [];
+
+    //function updateCombinedForm() {
+   
+    //    const specificValues = [];
+     
+    //    // Process the first array
+    //    console.log(accountEntriesOtherearning)
+    //    if (accountEntriesOtherearning != 0) {
+    //        // Process the second array
+    //        accountEntriesOtherearning.forEach(entry => {
+    //            specificValues.push(`${entry.codenameOtherearning} (USD): ${entry.amount}`);
+    //            allaccountdata.push(entry.subCodeId);
+    //        });
+    //        if (allaccountdata != 0) {
+    //            allaccountdata = allaccountdata;
+    //        }
+    //    }
+        
+
+    //    console.log(accountEntriesOtherDeductions)
+    //    if (accountEntriesOtherDeductions != 0) {
+    //        console.log(accountEntriesOtherDeductions);
+    //        accountEntriesOtherDeductions.forEach(entry => {
+    //            specificValues.push(`${entry.codenameOtherDeductions} (USD): ${entry.amount}`);
+    //            allaccountdata2.push(entry.subCodeId);
+    //        });
+    //        if (allaccountdata2 != 0) {
+    //            allaccountdata = allaccountdata2;
+    //        }
+    //    }
+        
+
+    //    if (accountEntries != 0) {
+    //        console.log(accountEntries)
+    //        accountEntries.forEach(entry => {
+    //            specificValues.push(`${entry.codename} (USD): ${entry.amount}`);
+    //            allaccountdata3.push(entry.subCodeId);
+    //        });
+    //        if (allaccountdata3 != 0) {
+    //            allaccountdata = allaccountdata3;
+    //        }
+    //    }
+    //    console.log(allaccountdata)
+    //    $('#premarks').prop("value", specificValues.join(',')); 
+
+    //}
+
+
+    //let mm = [];
+    //function updateee()
+    //{
+        
+    //    if (accountEntries.length > 0) {
+    //        debugger;
+    //        accountEntries.forEach(entry => {
+    //            if (accountEntries.length > 0)
+    //            {
+    //                mm.subCode = entry.subCodeId;
+    //                mm.type = entry.Type;
+    //            }
+       
+                
+    //        });
+
+    //    }
+
+    //}
+
+
+
+    let mm = [];
+
+    function updateee() {
+
+        if (accountEntries.length > 0) {
+            accountEntries.forEach(entry => {
+                mm.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
+            });
+        }
+    }
+
+
+
+    let oo = [];
+    function updateOtherearningg() {
+
+        //if (accountEntriesOtherearning.length > 0) {
+        //    accountEntriesOtherearning.forEach(entry => {
+        //        oo.push(entry.subCodeId + entry.Type)
+        //    });
+
+        //}
+
+
+
+        if (accountEntriesOtherearning.length > 0) {
+            accountEntriesOtherearning.forEach(entry => {
+                oo.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
+            });
+        }
+
+    }
+
+
+    let uppOtherdeduction = [];
+    function updateaccountEntriesOtherearning() {
+        //if (accountEntriesOtherDeductions.length > 0) {
+        //    accountEntriesOtherDeductions.forEach(entry => {
+        //        uppOtherdeduction.push(entry.subCodeId + entry.Type)
+        //    });
+
+        //}
+
+        if (accountEntriesOtherDeductions.length > 0) {
+            accountEntriesOtherDeductions.forEach(entry => {
+                uppOtherdeduction.push({
+                    subCode: entry.subCodeId,
+                    type: entry.Type,
+                    Amount: entry.amount
+                });
+            });
+        }
+    }
+ 
+    function updateCombinedForm() {
+        const specificValues = [];
+        //if (allAccountData3.length > 0) {
+        //    allAccountData = allAccountData3;
+        //}
+
+        if (accountEntriesOtherearning.length > 0) {
+            // Process the second array
+            accountEntriesOtherearning.forEach(entry => {
+                specificValues.push(`${entry.codenameOtherearning} (USD): ${entry.amount}`);
+            });
+        }
+
+
+
+        if (accountEntriesOtherDeductions.length > 0) {
+            accountEntriesOtherDeductions.forEach(entry => {
+                specificValues.push(`${entry.codenameOtherDeductions} (USD): ${entry.amount}`);
+            });
+  
+        }
+
+        if (accountEntries.length > 0) {
+            accountEntries.forEach(entry => {
+                specificValues.push(`${entry.codename} (USD): ${entry.amount}`);
+            });
+        }
+
+        $('#premarks').val(specificValues.join(','));
+    }
+
+    //function Reimbursementopenpopup()
+    //{
+    //    const preimbursementvalue = $('#preimbursement').val();
+    //    if (preimbursementvalue != 0) {
+    //        PortageBillId = PortageBillIdglobal;
+    //         Type = "Reimbursement";
+    //        $.ajax({
+    //            type: "GET",
+    //            url: "/Portagebill/PortageReimbursementDetailsbyid",
+    //            data: {
+    //                type: Type,           
+    //                portageBillId: PortageBillId 
+    //            },
+    //            datatype: "Json",
+    //            success: function (response) {
+    //                let Data = [];
+    //                Data = response;
+    //                debugger;
+    //                if (Data != null)
+    //                {
+    //                    debugger
+    //                    for (let item of response)
+    //                    {
+    //                        debugger
+    //                        let accountEntry = [];
+    //                        accountEntry.codename = "sample",
+    //                            accountEntry.amount = item.amount,
+    //                            accountEntry.Type = item.type,
+    //                        accountEntry.subCodeId = item.subCodeId
+    //                        accountEntries.push(accountEntry);
+    //                    }
+    //                    console.log(accountEntries)
+    //                    populateTable(accountEntries);
+    //                }
+                   
+
+                 
+    //            }
+                
+    //        });
+
+
+    //        $("#totalEarn").text(preimbursementvalue);
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+    //    else
+    //    {
+    //        accountEntries = [];
+    //        $("#table-body").empty();
+    //        $('#totalEarn').prop("value", "0");
+    //        $("#totalEarn").text("0");
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+      
+    //}
+
+
+
+
+
+
+    function Reimbursementopenpopup() {
+        const preimbursementvalue = $('#preimbursement').val();
+        if (preimbursementvalue != 0) {
+            PortageBillId = PortageBillIdglobal;
+            codename = "";
+            Type = "Reimbursement";
+            $.ajax({
+                type: "GET",
+                url: "/Portagebill/PortageReimbursementDetailsbyid",
+                data: {
+                    type: Type,
+                    portageBillId: PortageBillId
+                },
+                datatype: "Json",
+                success: function (response) {
+                    let Data = [];
+                    Data = response;
+                    if (Data != null) {
+                        for (let item of response) {
+                            let accountEntry = [];
+                            debugger;
+                            $.ajax({
+                                type: "GET",
+                                url: `/Portagebill/GetAccountcode?id=${item.subCodeId}`,
+                                datatype: "Json",
+                                success: function (data) {
+                                    console.log(data);
+                                    debugger;
+                                    accountEntry.codename = data.codename;
+                                  
+/*                                    accountEntries.push({ codename, amount, subCodeId, Type });*/
+                                }
+                            })
+
+                            //accountEntry.codename = "sample",
+                                accountEntry.codename = codename;
+                                accountEntry.amount = item.amount,
+                                accountEntry.Type = item.type,
+                                accountEntry.subCodeId = item.subCodeId
+                     
+                            accountEntries.push(accountEntry);
+                            debugger;
+                        }
+                        console.log(accountEntries)
+                        populateTable(accountEntries);
+                    }
+
+
+
+                }
+
+            });
+
+
+            $("#totalEarn").text(preimbursementvalue);
+            $("#Reimbursementmodal").modal('show');
+        }
+        else {
+            accountEntries = [];
+            $("#table-body").empty();
+            $('#totalEarn').prop("value", "0");
+            $("#totalEarn").text("0");
+            $("#Reimbursementmodal").modal('show');
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    function OtherEarningsopenpopup() {
+
+        accountEntriesOtherearning = [];
+        $("#table-bodyotherearning").empty();
+        $('#totalotherEarn').prop("value", "0");
+        $("#totalotherEarn").text("0");     
+        $("#OtherEarningsmodal").modal('show');
+    }
+    function OtherDeductionsopenpopup()
+    {
+        accountEntriesOtherDeductions = [];
+        $("#table-bodyOtherDeductions").empty();
+        $('#totalOtherDeductions').prop("value", "0");
+        $("#totalOtherDeductions").text("0");       
+        $("#OtherDeductionsmodal").modal('show');
+    }
+
 </script>
 
 @*@Particulars*@
@@ -1441,7 +2664,7 @@
         years = $("#year").val();
         months = $("#month").val();
                                $.ajax({
-                                   type: "POST",                                   
+                                   type: "POST",
                                    url: '@Url.Action("Genneratexcel", "Portagebill")',
                                    data: { 'vesselId': vesselids, 'month': months, 'year': years, 'currency': "", 'checkpbtilldate': "" },
                                // contentType: "application/json; charset=utf-8",
@@ -2229,7 +3452,7 @@
                     $("#TotalPayable").val(totalearning);
                     $("#TotalDeductions").val(totaldeduction);
                     $("#FinalBalance").val(finalbal);
-                    console.log(totalearning);
+
                     //var crewlistid = $("#CrewListId").val();
                     //$.ajax({
                     //    type: "GET",
@@ -2311,6 +3534,7 @@
         $("#transitWages").val(0);
         $("#prevMonthBal").val(0);
     }
+    var PortageBillIdglobal = 0;
 
     /* portage entry pop get data */
     function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, LeavePay, uniformallow, pensionfund,
@@ -2318,6 +3542,7 @@
         Reimbursement, Contractreimbrusment, Contractbonus, Contractdedu,
         OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction)
     {
+
         nigpfAmount= npfamount;
         $("#poratgeallotment2").hide();
         $("#pcrewrank").text(rank);
@@ -2376,6 +3601,9 @@
         });
 
         if (PortageBillId != 0 && PortageBillId != '') {
+
+            PortageBillIdglobal = PortageBillId;
+      
             $.ajax({
                 type: "GET",
                 url: "/Portagebill/GetDataByPoratgeId",
@@ -2592,7 +3820,10 @@
             $("#ptotalearncurrent").val(totalearncurrent);
             calculateportageearning();
         }
+      
     }
+
+  
 
     /* function to reset portage form values */
     function resetportageform() {
@@ -2643,6 +3874,7 @@
         $("#pallotment2").val(0);
         $("#transitWages").val(0);
         $("#pprevMonthBal").val(0);
+        location.reload();
     }
 
     /* function to get the portagebill selected bankid */
@@ -2673,6 +3905,7 @@
     /* Add and update the monthly portage allotment */
     $("#saveportagedata").click(function () {
         var rmark = $("#premarks").val();
+
        // console.log(selectbankids, selectbankids.length);
         if (selectbankids.length == 0) {
             alert("Please select the bank account for allotment")
@@ -2694,6 +3927,7 @@
                 PortageBillId: $("#pPortageBillId").val(),
                 From: $("#pFrom").val(),
                 To: $("#pTo").val(),
+               
                 Vesselid: $("#pVesselid").val(),
                 Othours: $("#pOTHours").val(),
                 Days: $("#pDays").val(),
@@ -2737,15 +3971,19 @@
                 LeaveWagesBF: $("#pleaveWagesBF").val(),
                 Allotment2: $("#pallotment2").val(),
             };
+
             $.ajax({
                 url: "/Portagebill/AddPortageBill",
                 type: "POST",
                 data: portageBillVM,
                 dataType: 'json',
                 success: function (response) {
-                    savebaksada();
+                    savebaksada();      
+                    savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+
                     alert('Portage Bill Updated');
-                    $('#portageBillPopup').modal('hide'); resetportageform();
+                    $('#portageBillPopup').modal('hide');
+                    resetportageform();
                     var url = window.location.href;
                     location.reload(true);
                 }
@@ -2801,6 +4039,78 @@
             });
         });
     }
+
+
+    function savePortageEarningDeduction(CrewId, Vesselid, From, To, portageBillId)
+    {
+        var model = "";
+        var currency = document.getElementById("pcurrency").innerText;
+
+        const mergedArray = mm.concat(oo, uppOtherdeduction);
+        console.log(mergedArray);
+
+        debugger;
+        if (mergedArray.length > 0) {
+            mergedArray.forEach(entry => {
+                debugger;
+
+                model = { "SubCodeId": entry.subCode, "Type": entry.type, "Amount": entry.Amount,  "CrewId": CrewId, "VesselId": Vesselid,  "From": From, "To": To, "PortageBillId": portageBillId, "Currency": currency }
+                $.ajax({
+                    url: "/Portagebill/AddPortageEarningDeduction",
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: { item: model },
+                    success: function (response) {
+                        if (response == "success") {
+
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            });
+        }
+
+
+
+
+
+
+        debugger;
+
+        //model = { "CrewId": CrewId, "VesselId": Vesselid, "Amount": FinalBalance, "From": From,  "To": To, "PortageBillId": portageBillId, "Currency": currency }
+        //$.ajax({
+        //    url: "/Portagebill/AddPortageEarningDeduction",
+        //    type: "POST",
+        //    dataType: 'json',
+        //    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        //    data: { item: model },
+        //    success: function (response) {
+        //        if (response == "success")
+        //        {
+
+        //        }
+        //    },
+        //    failure: function (response) {
+        //        alert(response.responseText);
+        //    },
+        //    error: function (response) {
+        //        alert(response.responseText);
+        //    }
+        //});
+    }
+
+
+
+
+
+
     /* function to calculate ot with earning */
     function calculateportageot() {
         othour = $("#potHours").val();
@@ -2813,6 +4123,7 @@
             transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         otherEarnings = parseFloat($("#pearningother").val());
         reimbursement = parseFloat($("#preimbursement").val());
+
         totalearning = Math.round(parseFloat(otearning)+(parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) 
             + (parseInt(SpecialAllowance) * days / numberofdays) + (parseInt(CompanyAllowance) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
@@ -2925,7 +4236,7 @@
     }
 
 
-    function downloadbow() {      
+    function downloadbow() {
           $.ajax({
            type: "POST",
               url: '@Url.Action("generateBowPDF", "Portagebill")',
@@ -2982,8 +4293,8 @@
         var currentYear = new Date().getFullYear();
         var currentMonth = new Date().getMonth();
         var cascadedDropDownMonthId = "#month";
-       
-  
+
+
         if (currentMonth >= 3) {
             for (var i = currentYear; i > currentYear - 1; i--) {
                 $("#year").append('<option value="' + i.toString() + '">' + i.toString() + '</option>');
@@ -2993,14 +4304,14 @@
             for (var i = currentYear; i > currentYear - 1; i--) {
                 $("#year").append('<option value="' + i.toString() + '">' + i.toString() + '</option>');
             }
-        }      
+        }
 
         var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-        
+
         if (sessionStorage.getItem('selectedYear') != null) {
-            var currentSelectedYear = sessionStorage.getItem('selectedYear');            
-            $('select[name^="year"] option[value=' + currentSelectedYear+']').attr("selected", "selected");
+            var currentSelectedYear = sessionStorage.getItem('selectedYear');
+            $('select[name^="year"] option[value=' + currentSelectedYear + ']').attr("selected", "selected");
             if (currentMonth >= 3) {
                 for (var month = currentMonth; month > currentMonth - 3; month--) {
                     $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
@@ -3009,7 +4320,7 @@
             else if (currentMonth <= 2) {
                 if (currentSelectedYear == currentYear) {
                     for (var month = currentMonth; month > -1; month--) {
-                     $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
+                        $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
                     }
                 }
                 else {
@@ -3022,16 +4333,16 @@
             }
             //sessionStorage.setItem('selectedYear');
         }
-        
+
         if (sessionStorage.getItem('selectedMonth') != null) {
             var CurrentSelectedMonth = sessionStorage.getItem('selectedMonth');
-            $('select[name^="month"] option[value=' + CurrentSelectedMonth+']').attr("selected", "selected");
+            $('select[name^="month"] option[value=' + CurrentSelectedMonth + ']').attr("selected", "selected");
             //sessionStorage.setItem('selectedMonth');
-          
+
         }
 
         $("#year").on('change', function () {
-            sessionStorage.setItem('selectedYear', parseInt($(this).val()));           
+            sessionStorage.setItem('selectedYear', parseInt($(this).val()));
             if (currentMonth >= 3) {
                 for (var month = currentMonth; month > currentMonth - 3; month--) {
                     $(cascadedDropDownMonthId).append('<option value="' + (month + 1) + '">' + monthNames[month] + '</option>');
@@ -3055,7 +4366,7 @@
         });
         $("#month").on('change', function () {
             sessionStorage.setItem('selectedMonth', parseInt($(this).val()));
-        });       
+        });
     });
     //$(document).ready(function () {
     //    debugger
@@ -3072,23 +4383,23 @@
 </script>
 @*<script>
 
-    function showMon(val) {
-        sessionStorage.setItem('SelectedItem', val);
-        var selMovType = document.getElementById('#month');
-        var selectedItem = sessionStorage.getItem('SelectedItem');
-        var selectedItem = sessionStorage.getItem('month');
-        if (selectedItem) {
-            selMovType.value = selectedItem;
+        function showMon(val) {
+            sessionStorage.setItem('SelectedItem', val);
+            var selMovType = document.getElementById('#month');
+            var selectedItem = sessionStorage.getItem('SelectedItem');
+            var selectedItem = sessionStorage.getItem('month');
+            if (selectedItem) {
+                selMovType.value = selectedItem;
+            }
         }
-    }
 
-    function showYer(val) {
-        sessionStorage.setItem('SelectedItem', val);
-        var selMovType = document.getElementById('#year');
-        var selectedItem = sessionStorage.getItem('SelectedItem');
-        var selectedItem = sessionStorage.getItem('year');
-        if (selectedItem) {
-            selMovType.value = selectedItem;
+        function showYer(val) {
+            sessionStorage.setItem('SelectedItem', val);
+            var selMovType = document.getElementById('#year');
+            var selectedItem = sessionStorage.getItem('SelectedItem');
+            var selectedItem = sessionStorage.getItem('year');
+            if (selectedItem) {
+                selMovType.value = selectedItem;
+            }
         }
-    }
-</script>*@
+    </script>*@
