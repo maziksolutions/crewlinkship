@@ -1919,7 +1919,6 @@
  
         const subCodeId = accountid;
         const Type = EarningType;
-
         const amountInput = document.getElementById('amount');
         const amount = parseFloat(amountInput.value);
         if (isValidAmount(amount)) {
@@ -1930,8 +1929,8 @@
                 url: `/Portagebill/GetAccountcode?id=${subCodeId}`,
                 datatype: "Json",
                 success: function (data) {
-   
                     codename = data[0].toString();
+                    
                     accountEntries.push({ codename, amount, subCodeId, Type });
                     populateTable(accountEntries);
                 },
@@ -2080,7 +2079,6 @@
         debugger;
 
         console.log(accountEntries)
-
         const tableBody = document.getElementById('table-body');
         //const table1 = document.getElementById('example');
         //const newTbody = document.createElement('tbody');
@@ -2089,11 +2087,9 @@
         accountEntries.forEach(item => {
             const row = document.createElement('tr');
             const cellActions = document.createElement('td');
-
             // Create edit icon
             // Create edit icon
-            const editIcon = document.createElement('i');
-        
+            const editIcon = document.createElement('i');    
             editIcon.className = 'fa fa-edit';
             editIcon.style.cursor = 'pointer';
             editIcon.onclick = () => {
@@ -2381,9 +2377,7 @@
 
 
     let mm = [];
-
     function updateee() {
-
         if (accountEntries.length > 0) {
             accountEntries.forEach(entry => {
                 mm.push({
@@ -2406,9 +2400,6 @@
         //    });
 
         //}
-
-
-
         if (accountEntriesOtherearning.length > 0) {
             accountEntriesOtherearning.forEach(entry => {
                 oo.push({
@@ -2496,7 +2487,7 @@
     //                    debugger
     //                    for (let item of response)
     //                    {
-    //                        debugger
+                          
     //                        let accountEntry = [];
     //                        accountEntry.codename = "sample",
     //                            accountEntry.amount = item.amount,
@@ -2504,7 +2495,7 @@
     //                        accountEntry.subCodeId = item.subCodeId
     //                        accountEntries.push(accountEntry);
     //                    }
-    //                    console.log(accountEntries)
+    //                    console.log(   )
     //                    populateTable(accountEntries);
     //                }
                    
@@ -2531,85 +2522,131 @@
 
 
 
+    //function Reimbursementopenpopup() {
+    //    const preimbursementvalue = $('#preimbursement').val();
+    //    if (preimbursementvalue != 0) {
+    //        debugger;
+    //        PortageBillId = PortageBillIdglobal;
+    //        codename = "";
+    //        Type = "Reimbursement";
+    //        $.ajax({
+    //            type: "GET",
+    //            url: "/Portagebill/PortageReimbursementDetailsbyid",
+    //            data: {
+    //                type: Type,
+    //                portageBillId: PortageBillId
+    //            },
+    //            datatype: "Json",
+    //            success: function (response) {
+    //                let Data = [];
+    //                Data = response;
+    //                if (Data != null) {
+    //                    for (let item of response) {
+    //                        let accountEntry = [];
+    //                        $.ajax({
+    //                            type: "GET",
+    //                            url: `/Portagebill/GetAccountcode?id=${item.subCodeId}`,
+    //                            datatype: "Json",
+    //                            success: function (data) {                      
+    //                                codename = data[0].toString();
+    //                                alert(codename);
+    //                                accountEntry.codename = codename;
+    //                            }
+    //                        })
+                          
+    //                            accountEntry.amount = item.amount,
+    //                            accountEntry.Type = item.type,
+    //                            accountEntry.subCodeId = item.subCodeId
+                     
+    //                        accountEntries.push(accountEntry);
+                            
+    //                    }
+    //                    console.log(accountEntries)
+    //                    populateTable(accountEntries);
+    //                    accountEntries = [];
 
+    //                }
+
+
+
+    //            }
+
+    //        });
+
+
+    //        $("#totalEarn").text(preimbursementvalue);
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+    //    else {
+    //        accountEntries = [];
+    //        $("#table-body").empty();
+    //        $('#totalEarn').prop("value", "0");
+    //        $("#totalEarn").text("0");
+    //        $("#Reimbursementmodal").modal('show');
+    //    }
+
+    //}
 
 
     function Reimbursementopenpopup() {
         this.loadacc();
         const preimbursementvalue = $('#preimbursement').val();
-        if (preimbursementvalue != 0) {
-            PortageBillId = PortageBillIdglobal;
-            codename = "";
-            Type = "Reimbursement";
-            $.ajax({
-                type: "GET",
-                url: "/Portagebill/PortageReimbursementDetailsbyid",
-                data: {
-                    type: Type,
-                    portageBillId: PortageBillId
-                },
-                datatype: "Json",
-                success: function (response) {
-                    let Data = [];
-                    Data = response;
-                    if (Data != null) {
-                        for (let item of response) {
-                            let accountEntry = [];
-                            debugger;
-                            $.ajax({
-                                type: "GET",
-                                url: `/Portagebill/GetAccountcode?id=${item.subCodeId}`,
-                                datatype: "Json",
-                                success: function (data) {
-                                    console.log(data);
-                                    debugger;
-                                    accountEntry.codename = data.codename;
-                                  
-/*                                    accountEntries.push({ codename, amount, subCodeId, Type });*/
-                                }
-                            })
 
-                            //accountEntry.codename = "sample",
-                                accountEntry.codename = codename;
-                                accountEntry.amount = item.amount,
-                                accountEntry.Type = item.type,
-                                accountEntry.subCodeId = item.subCodeId
-                     
-                            accountEntries.push(accountEntry);
-                            debugger;
-                        }
-                        console.log(accountEntries)
-                        populateTable(accountEntries);
-                    }
-
-
-
-                }
-
-            });
-
-
-            $("#totalEarn").text(preimbursementvalue);
-            $("#Reimbursementmodal").modal('show');
-        }
-        else {
-            accountEntries = [];
+        // Show modal with zero values if preimbursementvalue is 0
+        if (preimbursementvalue == 0) {
             $("#table-body").empty();
-            $('#totalEarn').prop("value", "0");
-            $("#totalEarn").text("0");
+            $('#totalEarn').text("0");
             $("#Reimbursementmodal").modal('show');
+            return;
         }
+        const PortageBillId = PortageBillIdglobal;
+        const Type = "Reimbursement";
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/PortageReimbursementDetailsbyid",
+            data: { type: Type, portageBillId: PortageBillId },
+            dataType: "json",
+            success: function (response) {
+                if (!response || response.length === 0) {
+                    console.warn("No reimbursement details found.");
+                    return;
+                }
+                const accountEntries = [];
+                // Use Promise.all to handle nested asynchronous calls
+                const accountCodePromises = response.map(item => {
+                    return $.ajax({
+                        type: "GET",
+                        url: `/Portagebill/GetAccountcode?id=${item.subCodeId}`,
+                        dataType: "json"
+                    }).then(data => {
+                        if (data && data.length > 0) {
+                            accountEntries.push({
+                                codename: data[0].toString(),
+                                amount: item.amount,
+                                Type: item.type,
+                                subCodeId: item.subCodeId
+                            });
+                        }
+                    });
+                });
 
+                Promise.all(accountCodePromises)
+                    .then(() => {
+                        console.log(accountEntries);
+                        populateTable(accountEntries);
+                    })
+                    .catch(err => {
+                        console.error("Error fetching account codes:", err);
+                    });
+            },
+            error: function (err) {
+                console.error("Error fetching reimbursement details:", err);
+            }
+        });
+
+        $("#totalEarn").text(preimbursementvalue);
+        $("#Reimbursementmodal").modal('show');
     }
-
-
-
-
-
-
-
-
-
 
 
     function OtherEarningsopenpopup() {

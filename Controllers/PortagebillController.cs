@@ -128,6 +128,15 @@ namespace crewlinkship.Controllers
     [HttpGet]
         public IActionResult GetAccountcode(int id)
         {
+
+            //var account = from wage in _context.TblWageComponents.Include(i=> i.SubCode).Where(x => x.IsDeleted == false)
+            //              join
+            //            deduction in _context.PortageEarningDeduction.Where(x => x.Type == "Reimbursement") on wage.SubCodeId equals deduction.SubCodeId
+            //              select new
+            //              {
+            //                  SubCode = wage.SubCode.SubCode + " " + wage.SubCode.SubBudget,
+            //                  DecuctionId = deduction.PortageEarningDeductionId
+            //              };
             var accounts = _context.TblWageComponents
                 .Include(x => x.SubCode)
                 .Where(x => x.Earning == "Reimbursement" && x.SubCodeId == id)
