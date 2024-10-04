@@ -131,9 +131,42 @@
                                                     <td style="text-align:right"> @string.Format("{0:n2}", item.PensionFund / item.numberofday * @item.TotalDays)</td>
                                                 </tr>
                                                 <tr>
+                                                    <td>Special Allowance</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", item.SpecialAllowance / item.numberofday * @item.TotalDays)</td>
+                                                </tr>
+                                                <tr>
                                                     <td>Other Allow.</td>
                                                     <td style="text-align:right"> @string.Format("{0:n2}", (item.OtherAllow / item.numberofday * @item.TotalDays))</td>
                                                 </tr>
+
+                                                <tr>
+                                                    <td>Incentive Allow.</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Seniority</td>
+                                                    <td style="text-align:right">  @string.Format("{0:n2}", (item.Seniority / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>TankerAllowance</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.TankerAllowance / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Bonus</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.Bonus / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Seafarers PF</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.SeafarersPF / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Leave Wages-Addnl.</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.leavepayaddition / item.numberofday * @item.TotalDays))</td>
+                                                </tr>
+                                               @*  <tr>
+                                                    <td>Other Allow.</td>
+                                                    <td style="text-align:right"> @string.Format("{0:n2}", (item.OtherAllow / item.numberofday * @item.TotalDays))</td>
+                                                </tr> *@
                                                 <tr>
                                                     <td>Extra OT<br></td>
                                                     <td style="text-align:right">@string.Format("{0:n2}", item.extraot)</td>
@@ -152,7 +185,13 @@
                                                 </tr>
                                                 <tr style="border: 1px solid #000000; background: #D9D9D9">
                                                     <td><strong>a. Total Wages this month</strong></td>
-                                                    <td style="text-align:right"><strong>@string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays) + (item.FixedGtOT / item.numberofday * @item.TotalDays) + (item.LeavePay / item.numberofday * @item.TotalDays) + (item.UniformAllow / item.numberofday * @item.TotalDays) + (item.PensionFund / item.numberofday * @item.TotalDays) + (item.OtherAllow / item.numberofday * @item.TotalDays) + item.extraot + item.OtherEarnings + item.TransitWages)</strong></td>
+                                                    <td style="text-align:right"><strong>@string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays) + (item.FixedGtOT / item.numberofday * @item.TotalDays) + (item.LeavePay / item.numberofday * @item.TotalDays) + (item.UniformAllow / item.numberofday * @item.TotalDays) + (item.PensionFund / item.numberofday * @item.TotalDays)
+                                                                     + (item.SpecialAllowance / item.numberofday * @item.TotalDays)
+                                                                     //+ (item.CompanyAllowance / item.numberofday * @item.TotalDays) + (item.SecurityAllow / item.numberofday * @item.TotalDays) + (item.TempFuelAllow / item.numberofday * @item.TotalDays)
+                                                                     + (item.IncentiveAllowance / item.numberofday * @item.TotalDays) + (item.Seniority / item.numberofday * @item.TotalDays) + (item.TankerAllowance / item.numberofday * @item.TotalDays) + (item.Housing / item.numberofday * @item.TotalDays)
+                                                                     + (item.Transport / item.numberofday * @item.TotalDays) + (item.Utility / item.numberofday * @item.TotalDays) + (item.Bonus / item.numberofday * @item.TotalDays) + (item.SeafarersPF / item.numberofday * @item.TotalDays)
+                                                                     + (item.leavepayaddition / item.numberofday * @item.TotalDays)
+                                                    + (item.OtherAllow / item.numberofday * @item.TotalDays) + item.extraot + item.OtherEarnings + item.TransitWages)</strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>

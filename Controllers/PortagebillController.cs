@@ -629,42 +629,81 @@ namespace crewlinkship.Controllers
                     dt.Columns[9].ColumnName = "Total Days";
                     dt.Columns[11].ColumnName = "Basic Wages ";
                     dt.Columns[12].ColumnName = "Fixed / Guaranteed OT ";
-                    dt.Columns[13].ColumnName = "Security Allow";
+                    dt.Columns[13].ColumnName = "Leave Pay & Subsitence Allow ";
+                    dt.Columns[14].ColumnName = "Uniform Allow. ";
+                    dt.Columns[15].ColumnName = "Pension Fund ";
+                    dt.Columns[16].ColumnName = "Special Allowance ";
+                    dt.Columns[17].ColumnName = "Company Allowance";
 
-                    dt.Columns[14].ColumnName = "Leave Pay & Subsitence Allow ";
-                    dt.Columns[15].ColumnName = "Uniform Allow. ";
-                    dt.Columns[16].ColumnName = "Pension Fund ";
-                    dt.Columns[17].ColumnName = "Other Allow. ";
-                    dt.Columns[18].ColumnName = "Total Wages per month ";
-                    dt.Columns[20].ColumnName = "Overtime Hr";
-                    dt.Columns[21].ColumnName = "Basic Wages";
-                    dt.Columns[22].ColumnName = "Fixed / Guaranteed OT";
-                    dt.Columns[23].ColumnName = "Security Allow ";
-                    dt.Columns[24].ColumnName = "Leave Pay & Subsitence Allow.";
-                    dt.Columns[25].ColumnName = "Uniform Allow.";
-                    dt.Columns[26].ColumnName = "Pension Fund";
-                    dt.Columns[27].ColumnName = "Other Allow.";
-                    dt.Columns[28].ColumnName = "Extra OT";
-                    dt.Columns[29].ColumnName = "Other Earning";
-                    dt.Columns[30].ColumnName = "Transit Wages";
-                    dt.Columns[31].ColumnName = "Total Earnings (Current Month)";
-                    dt.Columns[32].ColumnName = "Bal from Prev Month";
-                    dt.Columns[34].ColumnName = "Net Allotment payable";
-                    dt.Columns[35].ColumnName = "Leave Pay + Subsitence  C/F (This Month)";
-                    dt.Columns[36].ColumnName = "Cash Advance";
-                    dt.Columns[37].ColumnName = "Bonded Stores";
-                    dt.Columns[38].ColumnName = "Other Deduction";
-                    dt.Columns[39].ColumnName = "8 % PF Employee Contribution  (On Basic)";
-                    dt.Columns[40].ColumnName = "2.0 % Union Dues (On Gross)";
-                    dt.Columns[41].ColumnName = "1.0 % Welfare fund (On Gross)";
-                    dt.Columns[42].ColumnName = "WHT@5 % ";
-                    dt.Columns[44].ColumnName = "PF Deduction(Indian)";
-                    dt.Columns[45].ColumnName = "Total Deductions";
-                    dt.Columns[46].ColumnName = "Leave wages B/F";
-                    dt.Columns[47].ColumnName = "Leave wages C/F";
-                    dt.Columns[48].ColumnName = "Final Balance";
+                    dt.Columns[18].ColumnName = "Incentive Allowance";
+                    dt.Columns[19].ColumnName = "Seniority  ";
+                    dt.Columns[20].ColumnName = "Tanker Allowance";
+                    dt.Columns[21].ColumnName = "Housing  ";
+                    dt.Columns[22].ColumnName = "Transport  ";
+                    dt.Columns[23].ColumnName = "Utility  ";
+                    dt.Columns[24].ColumnName = "Bonus  ";
+                    dt.Columns[25].ColumnName = "Seafarers PF";
+                    dt.Columns[26].ColumnName = "Leave Pay Add.";
+
+                    dt.Columns[27].ColumnName = "Security Allow";
+                    dt.Columns[28].ColumnName = "Temp. Fuel Allow.";
+                    dt.Columns[29].ColumnName = "Other Allow. ";
+                    dt.Columns[30].ColumnName = "Total Wages per month ";
+                    dt.Columns[31].ColumnName = "OT Rate";
+                    dt.Columns[32].ColumnName = "Overtime Hr";
+                    dt.Columns[33].ColumnName = "Basic Wages";
+                    dt.Columns[34].ColumnName = "Fixed / Guaranteed OT";
+                    dt.Columns[35].ColumnName = "Leave Pay & Subsitence Allow.";
+                    dt.Columns[36].ColumnName = "Uniform Allow.";
+                    dt.Columns[37].ColumnName = "Pension Fund";
+                    dt.Columns[38].ColumnName = "Special Allowance";
+                    dt.Columns[39].ColumnName = "Company Allowance ";                    
+                    dt.Columns[40].ColumnName = "Incentive Allowance ";
+                    dt.Columns[41].ColumnName = "Seniority ";
+                    dt.Columns[42].ColumnName = "Tanker Allowance ";
+                    dt.Columns[43].ColumnName = "Housing ";
+                    dt.Columns[44].ColumnName = "Transport ";
+                    dt.Columns[45].ColumnName = "Utility ";
+                    dt.Columns[46].ColumnName = "Bonus ";
+                    dt.Columns[47].ColumnName = "Seafarers PF ";
+                    dt.Columns[48].ColumnName = "Leave Pay Add. ";
+                    dt.Columns[49].ColumnName = "Security Allow ";
+                    dt.Columns[50].ColumnName = "Temp. Fuel Allow. ";
+                    dt.Columns[51].ColumnName = "Other Allow.";
+                    dt.Columns[52].ColumnName = "Extra OT";
+                    dt.Columns[53].ColumnName = "Other Earning";
+                    dt.Columns[54].ColumnName = "Transit Wages";
+                    dt.Columns[55].ColumnName = "Total Earnings (Current Month)";
+                    dt.Columns[56].ColumnName = "Bal from Prev Month";
+                    dt.Columns[58].ColumnName = "Net Allotment payable";
+                    dt.Columns[59].ColumnName = "Leave Pay + Subsitence  C/F (This Month)";
+                    dt.Columns[60].ColumnName = "Cash Advance";
+                    dt.Columns[61].ColumnName = "Bonded Stores";
+                    dt.Columns[62].ColumnName = "Other Deduction";
+                    dt.Columns[63].ColumnName = "8 % PF Employee Contribution  (On Basic)";
+                    dt.Columns[64].ColumnName = "2.0 % Union Dues (On Gross)";
+                    DateTime value = new DateTime(2023, 12, 1);
+                    if (dt.Rows.Count > 0)
+                    {
+                        if (DateTime.Parse(dt.Rows[0]["from"].ToString()) >= value)
+                            dt.Columns[65].ColumnName = "Welfare fund 1% Officers & 2% Ratings (On Gross)";
+                        else
+                            dt.Columns[65].ColumnName = "1.0 % Welfare fund (On Gross)";
+                    }
+                    else
+                    {
+                        if (DateTime.Parse(dtsignoff.Rows[0]["from"].ToString()) >= value)
+                            dt.Columns[65].ColumnName = "Welfare fund 1% Officers & 2% Ratings (On Gross)";
+                        else
+                            dt.Columns[65].ColumnName = "1.0 % Welfare fund (On Gross)";
+                    }
+                    dt.Columns[66].ColumnName = "WHT@5 % ";
+                    dt.Columns[68].ColumnName = "PF Deduction(Indian)";
+                    dt.Columns[69].ColumnName = "Total Deductions";
+                    dt.Columns[70].ColumnName = "Leave wages B/F";
+                    dt.Columns[71].ColumnName = "Leave wages C/F";
+                    dt.Columns[72].ColumnName = "Final Balance";
                     dt.Columns.Remove("EPF");
-
                     wb.Worksheet(1).Cell(3, 1).InsertTable(dt);
                     rownumbs = ws.RowsUsed().Count();
                     var totalRows = 0;
@@ -903,6 +942,156 @@ namespace crewlinkship.Controllers
                     ws.Cell(colrowlastAV).FormulaA1 = "=sum(" + colrowgAV + ")";
                     ws.Cell(colrowlastAV).Style.NumberFormat.NumberFormatId = 1;
                     ws.Range(colrowlastAV).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAW = "AW" + (totalRows + 1).ToString();
+                    string colrowgAW = "AW4:AW" + rownumbs;
+                    ws.Cell(colrowlastAW).FormulaA1 = "=sum(" + colrowgAW + ")";
+                    ws.Cell(colrowlastAW).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgAW).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAX = "AX" + (totalRows + 1).ToString();
+                    string colrowgAX = "AX4:AX" + rownumbs;
+                    ws.Cell(colrowlastAX).FormulaA1 = "=sum(" + colrowgAX + ")";
+                    ws.Cell(colrowlastAX).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgAX).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAY = "AY" + (totalRows + 1).ToString();
+                    string colrowgAY = "AY4:AY" + rownumbs;
+                    ws.Cell(colrowlastAY).FormulaA1 = "=sum(" + colrowgAY + ")";
+                    ws.Cell(colrowlastAY).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgAY).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAZ = "AZ" + (totalRows + 1).ToString();
+                    string colrowgAZ = "AZ4:AZ" + rownumbs;
+                    ws.Cell(colrowlastAZ).FormulaA1 = "=sum(" + colrowgAZ + ")";
+                    ws.Cell(colrowlastAZ).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgAZ).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBA = "BA" + (totalRows + 1).ToString();
+                    string colrowgBA = "BA4:BA" + rownumbs;
+                    ws.Cell(colrowlastBA).FormulaA1 = "=sum(" + colrowgBA + ")";
+                    ws.Cell(colrowlastBA).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBA).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBB = "BB" + (totalRows + 1).ToString();
+                    string colrowgBB = "BB4:BB" + rownumbs;
+                    ws.Cell(colrowlastBB).FormulaA1 = "=sum(" + colrowgBB + ")";
+                    ws.Cell(colrowlastBB).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBB).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBC = "BC" + (totalRows + 1).ToString();
+                    string colrowgBC = "BC4:BC" + rownumbs;
+                    ws.Cell(colrowlastBC).FormulaA1 = "=sum(" + colrowgBC + ")";
+                    ws.Cell(colrowlastBC).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBC).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBD = "BD" + (totalRows + 1).ToString();
+                    string colrowgBD = "BD4:BD" + rownumbs;
+                    ws.Cell(colrowlastBD).FormulaA1 = "=sum(" + colrowgBD + ")";
+                    ws.Cell(colrowlastBD).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBD).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBE = "BE" + (totalRows + 1).ToString();
+                    string colrowgBE = "BE4:BE" + rownumbs;
+                    ws.Cell(colrowlastBE).FormulaA1 = "=sum(" + colrowgBE + ")";
+                    ws.Cell(colrowlastBE).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBE).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBF = "BF" + (totalRows + 1).ToString();
+                    string colrowgBF = "BF4:BF" + rownumbs;
+                    ws.Cell(colrowlastBF).FormulaA1 = "=sum(" + colrowgBF + ")";
+                    ws.Cell(colrowlastBF).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBF).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBG = "BG" + (totalRows + 1).ToString();
+                    string colrowgBG = "BG4:BG" + rownumbs;
+                    ws.Cell(colrowlastBG).FormulaA1 = "=sum(" + colrowgBG + ")";
+                    ws.Cell(colrowlastBG).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBG).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBH = "BH" + (totalRows + 1).ToString();
+                    string colrowgBH = "BH4:BH" + rownumbs;
+                    ws.Cell(colrowlastBH).FormulaA1 = "=sum(" + colrowgBH + ")";
+                    ws.Cell(colrowlastBH).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBH).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBI = "BI" + (totalRows + 1).ToString();
+                    string colrowgBI = "BI4:BI" + rownumbs;
+                    ws.Cell(colrowlastBI).FormulaA1 = "=sum(" + colrowgBI + ")";
+                    ws.Cell(colrowlastBI).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBI).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBJ = "BJ" + (totalRows + 1).ToString();
+                    string colrowgBJ = "BJ4:BJ" + rownumbs;
+                    ws.Cell(colrowlastBJ).FormulaA1 = "=sum(" + colrowgBJ + ")";
+                    ws.Cell(colrowlastBJ).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBJ).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBK = "BK" + (totalRows + 1).ToString();
+                    string colrowgBK = "BK4:BK" + rownumbs;
+                    ws.Cell(colrowlastBK).FormulaA1 = "=sum(" + colrowgBK + ")";
+                    ws.Cell(colrowlastBK).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBK).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBL = "BL" + (totalRows + 1).ToString();
+                    string colrowgBL = "BL4:BL" + rownumbs;
+                    ws.Cell(colrowlastBL).FormulaA1 = "=sum(" + colrowgBL + ")";
+                    ws.Cell(colrowlastBL).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBL).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBM = "BM" + (totalRows + 1).ToString();
+                    string colrowgBM = "BM4:BM" + rownumbs;
+                    ws.Cell(colrowlastBM).FormulaA1 = "=sum(" + colrowgBM + ")";
+                    ws.Cell(colrowlastBM).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBM).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBN = "BN" + (totalRows + 1).ToString();
+                    string colrowgBN = "BN4:BN" + rownumbs;
+                    ws.Cell(colrowlastBN).FormulaA1 = "=sum(" + colrowgBN + ")";
+                    ws.Cell(colrowlastBN).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBN).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBO = "BO" + (totalRows + 1).ToString();
+                    string colrowgBO = "BO4:BO" + rownumbs;
+                    ws.Cell(colrowlastBO).FormulaA1 = "=sum(" + colrowgBO + ")";
+                    ws.Cell(colrowlastBO).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBO).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBP = "BP" + (totalRows + 1).ToString();
+                    string colrowgBP = "BP4:BP" + rownumbs;
+                    ws.Cell(colrowlastBP).FormulaA1 = "=sum(" + colrowgBP + ")";
+                    ws.Cell(colrowlastBP).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBP).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBQ = "BQ" + (totalRows + 1).ToString();
+                    string colrowgBQ = "BQ4:BQ" + rownumbs;
+                    ws.Cell(colrowlastBQ).FormulaA1 = "=sum(" + colrowgBQ + ")";
+                    ws.Cell(colrowlastBQ).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBQ).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBR = "BR" + (totalRows + 1).ToString();
+                    string colrowgBR = "BR4:BR" + rownumbs;
+                    ws.Cell(colrowlastBR).FormulaA1 = "=sum(" + colrowgBR + ")";
+                    ws.Cell(colrowlastBR).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBR).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBS = "BS" + (totalRows + 1).ToString();
+                    string colrowgBS = "BS4:BS" + rownumbs;
+                    ws.Cell(colrowlastBS).FormulaA1 = "=sum(" + colrowgBS + ")";
+                    ws.Cell(colrowlastBS).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBS).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBT = "BT" + (totalRows + 1).ToString();
+                    string colrowgBT = "BT4:BT" + rownumbs;
+                    ws.Cell(colrowlastBT).FormulaA1 = "=sum(" + colrowgBT + ")";
+                    ws.Cell(colrowlastBT).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBU = "BU" + (totalRows + 1).ToString();
+                    string colrowgBU = "BU4:BU" + rownumbs;
+                    ws.Cell(colrowlastBU).FormulaA1 = "=sum(" + colrowgBU + ")";
+                    ws.Cell(colrowlastBU).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range(colrowgBU).Style.NumberFormat.NumberFormatId = 1;
                 }
                 int ROWNO = ws.RowsUsed().Count() + 2;
                 //Delete unwanted column
@@ -938,41 +1127,72 @@ namespace crewlinkship.Controllers
                     dtsignoff.Columns[9].ColumnName = "Total Days";
                     dtsignoff.Columns[11].ColumnName = "Basic Wages ";
                     dtsignoff.Columns[12].ColumnName = "Fixed / Guaranteed OT ";
-                    dtsignoff.Columns[13].ColumnName = "Security Allow ";
+                    dtsignoff.Columns[13].ColumnName = "Leave Pay & Subsitence Allow ";
+                    dtsignoff.Columns[14].ColumnName = "Uniform Allow. ";
+                    dtsignoff.Columns[15].ColumnName = "Pension Fund ";
+                    dtsignoff.Columns[16].ColumnName = "Special Allowance ";
+                    dtsignoff.Columns[17].ColumnName = "Company Allowance";
 
-                    dtsignoff.Columns[14].ColumnName = "Leave Pay & Subsitence Allow ";
-                    dtsignoff.Columns[15].ColumnName = "Uniform Allow. ";
-                    dtsignoff.Columns[16].ColumnName = "Pension Fund ";
-                    dtsignoff.Columns[17].ColumnName = "Other Allow. ";
-                    dtsignoff.Columns[18].ColumnName = "Total Wages per month";
-                    dtsignoff.Columns[20].ColumnName = "Overtime Hr";
-                    dtsignoff.Columns[21].ColumnName = "Basic Wages";
-                    dtsignoff.Columns[22].ColumnName = "Fixed / Guaranteed OT";
-                    dtsignoff.Columns[23].ColumnName = "Security Allow";
+                    dtsignoff.Columns[18].ColumnName = "Incentive Allowance";
+                    dtsignoff.Columns[19].ColumnName = "Seniority   ";
+                    dtsignoff.Columns[20].ColumnName = "Tanker Allowance";
+                    dtsignoff.Columns[21].ColumnName = "Housing  ";
+                    dtsignoff.Columns[22].ColumnName = "Transport  ";
+                    dtsignoff.Columns[23].ColumnName = "Utility  ";
+                    dtsignoff.Columns[24].ColumnName = "Bonus  ";
+                    dtsignoff.Columns[25].ColumnName = "Seafarers PF";
+                    dtsignoff.Columns[26].ColumnName = "Leave Pay Add.";
 
-                    dtsignoff.Columns[24].ColumnName = "Leave Pay & Subsitence Allow.";
-                    dtsignoff.Columns[25].ColumnName = "Uniform Allow.";
-                    dtsignoff.Columns[26].ColumnName = "Pension Fund";
-                    dtsignoff.Columns[27].ColumnName = "Other Allow.";
-                    dtsignoff.Columns[28].ColumnName = "Extra OT";
-                    dtsignoff.Columns[29].ColumnName = "Other Earning";
-                    dtsignoff.Columns[30].ColumnName = "Transit Wages";
-                    dtsignoff.Columns[31].ColumnName = "Total Earnings (Current Month)";
-                    dtsignoff.Columns[32].ColumnName = "Bal from Prev Month";
-                    dtsignoff.Columns[34].ColumnName = "Net Allotment payable";
-                    dtsignoff.Columns[35].ColumnName = "Leave Pay + Subsitence  C/F (This Month)";
-                    dtsignoff.Columns[36].ColumnName = "Cash Advance";
-                    dtsignoff.Columns[37].ColumnName = "Bonded Stores";
-                    dtsignoff.Columns[38].ColumnName = "Other Deduction";
-                    dtsignoff.Columns[39].ColumnName = "8 % PF Employee Contribution  (On Basic)";
-                    dtsignoff.Columns[40].ColumnName = "2.0 % Union Dues (On Gross)";
-                    dtsignoff.Columns[41].ColumnName = "1.0 % Welfare fund (On Gross)";
-                    dtsignoff.Columns[42].ColumnName = "WHT@5 % ";
-                    dtsignoff.Columns[44].ColumnName = "PF Deduction(Indian)";
-                    dtsignoff.Columns[45].ColumnName = "Total Deductions";
-                    dtsignoff.Columns[46].ColumnName = "Leave wages B/F";
-                    dtsignoff.Columns[47].ColumnName = "Leave wages C/F";
-                    dtsignoff.Columns[48].ColumnName = "Final Balance";
+                    dtsignoff.Columns[27].ColumnName = "Security Allow";
+                    dtsignoff.Columns[28].ColumnName = "Temp. Fuel Allow.";
+                    dtsignoff.Columns[29].ColumnName = "Other Allow. ";
+                    dtsignoff.Columns[30].ColumnName = "Total Wages per month ";
+                    dtsignoff.Columns[31].ColumnName = "OT Rate";
+                    dtsignoff.Columns[32].ColumnName = "Overtime Hr";
+                    dtsignoff.Columns[33].ColumnName = "Basic Wages";
+                    dtsignoff.Columns[34].ColumnName = "Fixed / Guaranteed OT";
+                    dtsignoff.Columns[35].ColumnName = "Leave Pay & Subsitence Allow.";
+                    dtsignoff.Columns[36].ColumnName = "Uniform Allow.";
+                    dtsignoff.Columns[37].ColumnName = "Pension Fund";
+                    dtsignoff.Columns[38].ColumnName = "Special Allowance";
+                    dtsignoff.Columns[39].ColumnName = "Company Allowance ";
+
+                    dtsignoff.Columns[40].ColumnName = "Incentive Allowance ";
+                    dtsignoff.Columns[41].ColumnName = "Seniority ";
+                    dtsignoff.Columns[42].ColumnName = "Tanker Allowance ";
+                    dtsignoff.Columns[43].ColumnName = "Housing ";
+                    dtsignoff.Columns[44].ColumnName = "Transport ";
+                    dtsignoff.Columns[45].ColumnName = "Utility ";
+                    dtsignoff.Columns[46].ColumnName = "Bonus ";
+                    dtsignoff.Columns[47].ColumnName = "Seafarers PF ";
+                    dtsignoff.Columns[48].ColumnName = "Leave Pay Add. ";
+                    dtsignoff.Columns[49].ColumnName = "Security Allow ";//
+                    dtsignoff.Columns[50].ColumnName = "Temp. Fuel Allow. ";
+                    dtsignoff.Columns[51].ColumnName = "Other Allow.";
+                    dtsignoff.Columns[52].ColumnName = "Extra OT";
+                    dtsignoff.Columns[53].ColumnName = "Other Earning";
+                    dtsignoff.Columns[54].ColumnName = "Transit Wages";
+                    dtsignoff.Columns[55].ColumnName = "Total Earnings (Current Month)";
+                    dtsignoff.Columns[56].ColumnName = "Bal from Prev Month";//
+
+                    dtsignoff.Columns[58].ColumnName = "Net Allotment payable";
+                    dtsignoff.Columns[59].ColumnName = "Leave Pay + Subsitence  C/F (This Month)";
+                    dtsignoff.Columns[60].ColumnName = "Cash Advance";
+                    dtsignoff.Columns[61].ColumnName = "Bonded Stores";
+                    dtsignoff.Columns[62].ColumnName = "Other Deduction";
+                    dtsignoff.Columns[63].ColumnName = "8 % PF Employee Contribution  (On Basic)";
+                    dtsignoff.Columns[64].ColumnName = "2.0 % Union Dues (On Gross)";
+                    DateTime value = new DateTime(2023, 12, 1);
+                    if (DateTime.Parse(dtsignoff.Rows[0]["from"].ToString()) >= value)
+                        dtsignoff.Columns[65].ColumnName = "Welfare fund 1% Officers & 2% Ratings (On Gross)";
+                    else
+                        dtsignoff.Columns[65].ColumnName = "1.0 % Welfare fund (On Gross)";
+                    dtsignoff.Columns[66].ColumnName = "WHT@5 % ";
+                    dtsignoff.Columns[68].ColumnName = "PF Deduction(Indian)";
+                    dtsignoff.Columns[69].ColumnName = "Total Deductions";
+                    dtsignoff.Columns[70].ColumnName = "Leave wages B/F";
+                    dtsignoff.Columns[71].ColumnName = "Leave wages C/F";
+                    dtsignoff.Columns[72].ColumnName = "Final Balance";
                     wb.Worksheet(1).Cell(ROWNO, 1).InsertTable(dtsignoff);
                     var rowsignoff = ws.RowsUsed().Count();
                     var signRows = 0;
@@ -1222,6 +1442,156 @@ namespace crewlinkship.Controllers
                     ws.Cell(colrowlastAVs).FormulaA1 = "=sum(" + colrowgAVs + ")";
                     ws.Cell(colrowlastAVs).Style.NumberFormat.NumberFormatId = 1;
                     ws.Range("AV" + ROWNO + ":" + "AV" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAWs = "AW" + (signRows + 1).ToString();
+                    string colrowgAWs = "AW" + ROWNO + ":AW" + rowsignoff + ":" + "AW" + firstrowtable;
+                    ws.Cell(colrowlastAWs).FormulaA1 = "=sum(" + colrowgAWs + ")";
+                    ws.Cell(colrowlastAWs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("AW" + ROWNO + ":" + "AW" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAXs = "AX" + (signRows + 1).ToString();
+                    string colrowgAXs = "AX" + ROWNO + ":AX" + rowsignoff + ":" + "AX" + firstrowtable;
+                    ws.Cell(colrowlastAXs).FormulaA1 = "=sum(" + colrowgAXs + ")";
+                    ws.Cell(colrowlastAXs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("AX" + ROWNO + ":" + "AX" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAYs = "AY" + (signRows + 1).ToString();
+                    string colrowgAYs = "AY" + ROWNO + ":AY" + rowsignoff + ":" + "AY" + firstrowtable;
+                    ws.Cell(colrowlastAYs).FormulaA1 = "=sum(" + colrowgAYs + ")";
+                    ws.Cell(colrowlastAYs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("AY" + ROWNO + ":" + "AY" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAZs = "AZ" + (signRows + 1).ToString();
+                    string colrowgAZs = "AZ" + ROWNO + ":AZ" + rowsignoff + ":" + "AZ" + firstrowtable;
+                    ws.Cell(colrowlastAZs).FormulaA1 = "=sum(" + colrowgAZs + ")";
+                    ws.Cell(colrowlastAZs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("AZ" + ROWNO + ":" + "AZ" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBAs = "BA" + (signRows + 1).ToString();
+                    string colrowgBAs = "BA" + ROWNO + ":BA" + rowsignoff + ":" + "BA" + firstrowtable;
+                    ws.Cell(colrowlastBAs).FormulaA1 = "=sum(" + colrowgBAs + ")";
+                    ws.Cell(colrowlastBAs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BA" + ROWNO + ":" + "BA" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBBs = "BB" + (signRows + 1).ToString();
+                    string colrowgBBs = "BB" + ROWNO + ":BB" + rowsignoff + ":" + "BB" + firstrowtable;
+                    ws.Cell(colrowlastBBs).FormulaA1 = "=sum(" + colrowgBBs + ")";
+                    ws.Cell(colrowlastBBs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BB" + ROWNO + ":" + "BB" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBCs = "BC" + (signRows + 1).ToString();
+                    string colrowgBCs = "BC" + ROWNO + ":BC" + rowsignoff + ":" + "BC" + firstrowtable;
+                    ws.Cell(colrowlastBCs).FormulaA1 = "=sum(" + colrowgBCs + ")";
+                    ws.Cell(colrowlastBCs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BC" + ROWNO + ":" + "BC" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBDs = "BD" + (signRows + 1).ToString();
+                    string colrowgBDs = "BD" + ROWNO + ":BD" + rowsignoff + ":" + "BD" + firstrowtable;
+                    ws.Cell(colrowlastBDs).FormulaA1 = "=sum(" + colrowgBDs + ")";
+                    ws.Cell(colrowlastBDs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BD" + ROWNO + ":" + "BD" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBEs = "BE" + (signRows + 1).ToString();
+                    string colrowgBEs = "BE" + ROWNO + ":BE" + rowsignoff + ":" + "BE" + firstrowtable;
+                    ws.Cell(colrowlastBEs).FormulaA1 = "=sum(" + colrowgBEs + ")";
+                    ws.Cell(colrowlastBEs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BE" + ROWNO + ":" + "BE" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBFs = "BF" + (signRows + 1).ToString();
+                    string colrowgBFs = "BF" + ROWNO + ":BF" + rowsignoff + ":" + "BF" + firstrowtable;
+                    ws.Cell(colrowlastBFs).FormulaA1 = "=sum(" + colrowgBFs + ")";
+                    ws.Cell(colrowlastBFs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BF" + ROWNO + ":" + "BF" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBGs = "BG" + (signRows + 1).ToString();
+                    string colrowgBGs = "BG" + ROWNO + ":BG" + rowsignoff + ":" + "BG" + firstrowtable;
+                    ws.Cell(colrowlastBGs).FormulaA1 = "=sum(" + colrowgBGs + ")";
+                    ws.Cell(colrowlastBGs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BG" + ROWNO + ":" + "BG" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBHs = "BH" + (signRows + 1).ToString();
+                    string colrowgBHs = "BH" + ROWNO + ":BH" + rowsignoff + ":" + "BH" + firstrowtable;
+                    ws.Cell(colrowlastBHs).FormulaA1 = "=sum(" + colrowgBHs + ")";
+                    ws.Cell(colrowlastBHs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BH" + ROWNO + ":" + "BH" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBIs = "BI" + (signRows + 1).ToString();
+                    string colrowgBIs = "BI" + ROWNO + ":BI" + rowsignoff + ":" + "BI" + firstrowtable;
+                    ws.Cell(colrowlastBIs).FormulaA1 = "=sum(" + colrowgBIs + ")";
+                    ws.Cell(colrowlastBIs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BI" + ROWNO + ":" + "BI" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBJs = "BJ" + (signRows + 1).ToString();
+                    string colrowgBJs = "BJ" + ROWNO + ":BJ" + rowsignoff + ":" + "BJ" + firstrowtable;
+                    ws.Cell(colrowlastBJs).FormulaA1 = "=sum(" + colrowgBJs + ")";
+                    ws.Cell(colrowlastBJs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BJ" + ROWNO + ":" + "BJ" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBKs = "BK" + (signRows + 1).ToString();
+                    string colrowgBKs = "BK" + ROWNO + ":BK" + rowsignoff + ":" + "BK" + firstrowtable;
+                    ws.Cell(colrowlastBKs).FormulaA1 = "=sum(" + colrowgBKs + ")";
+                    ws.Cell(colrowlastBKs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BK" + ROWNO + ":" + "BK" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBLs = "BL" + (signRows + 1).ToString();
+                    string colrowgBLs = "BL" + ROWNO + ":BL" + rowsignoff + ":" + "BL" + firstrowtable;
+                    ws.Cell(colrowlastBLs).FormulaA1 = "=sum(" + colrowgBLs + ")";
+                    ws.Cell(colrowlastBLs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BL" + ROWNO + ":" + "BL" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBMs = "BM" + (signRows + 1).ToString();
+                    string colrowgBMs = "BM" + ROWNO + ":BM" + rowsignoff + ":" + "BM" + firstrowtable;
+                    ws.Cell(colrowlastBMs).FormulaA1 = "=sum(" + colrowgBMs + ")";
+                    ws.Cell(colrowlastBMs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BM" + ROWNO + ":" + "BM" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBNs = "BN" + (signRows + 1).ToString();
+                    string colrowgBNs = "BN" + ROWNO + ":BN" + rowsignoff + ":" + "BN" + firstrowtable;
+                    ws.Cell(colrowlastBNs).FormulaA1 = "=sum(" + colrowgBNs + ")";
+                    ws.Cell(colrowlastBNs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BN" + ROWNO + ":" + "BN" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBOs = "BO" + (signRows + 1).ToString();
+                    string colrowgBOs = "BO" + ROWNO + ":BO" + rowsignoff + ":" + "BO" + firstrowtable;
+                    ws.Cell(colrowlastBOs).FormulaA1 = "=sum(" + colrowgBOs + ")";
+                    ws.Cell(colrowlastBOs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BO" + ROWNO + ":" + "BO" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBPs = "BP" + (signRows + 1).ToString();
+                    string colrowgBPs = "BP" + ROWNO + ":BP" + rowsignoff + ":" + "BP" + firstrowtable;
+                    ws.Cell(colrowlastBPs).FormulaA1 = "=sum(" + colrowgBPs + ")";
+                    ws.Cell(colrowlastBPs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BP" + ROWNO + ":" + "BP" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBQs = "BQ" + (signRows + 1).ToString();
+                    string colrowgBQs = "BQ" + ROWNO + ":BQ" + rowsignoff + ":" + "BQ" + firstrowtable;
+                    ws.Cell(colrowlastBQs).FormulaA1 = "=sum(" + colrowgBQs + ")";
+                    ws.Cell(colrowlastBQs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BQ" + ROWNO + ":" + "BQ" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBRs = "BR" + (signRows + 1).ToString();
+                    string colrowgBRs = "BR" + ROWNO + ":BR" + rowsignoff + ":" + "BR" + firstrowtable;
+                    ws.Cell(colrowlastBRs).FormulaA1 = "=sum(" + colrowgBRs + ")";
+                    ws.Cell(colrowlastBRs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BR" + ROWNO + ":" + "BR" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBSs = "BS" + (signRows + 1).ToString();
+                    string colrowgBSs = "BS" + ROWNO + ":BS" + rowsignoff + ":" + "BS" + firstrowtable;
+                    ws.Cell(colrowlastBSs).FormulaA1 = "=sum(" + colrowgBSs + ")";
+                    ws.Cell(colrowlastBSs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BS" + ROWNO + ":" + "BS" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBTs = "BT" + (signRows + 1).ToString();
+                    string colrowgBTs = "BT" + ROWNO + ":BT" + rowsignoff + ":" + "BT" + firstrowtable;
+                    ws.Cell(colrowlastBTs).FormulaA1 = "=sum(" + colrowgBTs + ")";
+                    ws.Cell(colrowlastBTs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BT" + ROWNO + ":" + "BT" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBUs = "BU" + (signRows + 1).ToString();
+                    string colrowgBUs = "BU" + ROWNO + ":BU" + rowsignoff + ":" + "BU" + firstrowtable;
+                    ws.Cell(colrowlastBUs).FormulaA1 = "=sum(" + colrowgBUs + ")";
+                    ws.Cell(colrowlastBUs).Style.NumberFormat.NumberFormatId = 1;
+                    ws.Range("BU" + ROWNO + ":" + "BU" + firstrowtable).Style.NumberFormat.NumberFormatId = 1;
                     //TOtal calculation
                     ws.Cell(signRows + 2, 1).Value = "Grand Total";
                     ws.Row(signRows + 2).Style.Font.Bold = true;
@@ -1416,14 +1786,139 @@ namespace crewlinkship.Controllers
                     string colrowgAVT = "AV" + (rownumbs + 1) + "+AV" + (signRows + 1);
                     ws.Cell(colrowlastAVT).FormulaA1 = "=sum(" + colrowgAVT + ")";
                     ws.Cell(colrowlastAVT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAWT = "AW" + (signRows + 2).ToString();
+                    string colrowgAWT = "AW" + (rownumbs + 1) + "+AW" + (signRows + 1);
+                    ws.Cell(colrowlastAWT).FormulaA1 = "=sum(" + colrowgAWT + ")";
+                    ws.Cell(colrowlastAWT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAXT = "AX" + (signRows + 2).ToString();
+                    string colrowgAXT = "AX" + (rownumbs + 1) + "+AX" + (signRows + 1);
+                    ws.Cell(colrowlastAXT).FormulaA1 = "=sum(" + colrowgAXT + ")";
+                    ws.Cell(colrowlastAXT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAYT = "AY" + (signRows + 2).ToString();
+                    string colrowgAYT = "AY" + (rownumbs + 1) + "+AY" + (signRows + 1);
+                    ws.Cell(colrowlastAYT).FormulaA1 = "=sum(" + colrowgAYT + ")";
+                    ws.Cell(colrowlastAYT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastAZT = "AZ" + (signRows + 2).ToString();
+                    string colrowgAZT = "AZ" + (rownumbs + 1) + "+AZ" + (signRows + 1);
+                    ws.Cell(colrowlastAZT).FormulaA1 = "=sum(" + colrowgAZT + ")";
+                    ws.Cell(colrowlastAZT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBAT = "BA" + (signRows + 2).ToString();
+                    string colrowgBAT = "BA" + (rownumbs + 1) + "+BA" + (signRows + 1);
+                    ws.Cell(colrowlastBAT).FormulaA1 = "=sum(" + colrowgBAT + ")";
+                    ws.Cell(colrowlastBAT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBBT = "BB" + (signRows + 2).ToString();
+                    string colrowgBBT = "BB" + (rownumbs + 1) + "+BB" + (signRows + 1);
+                    ws.Cell(colrowlastBBT).FormulaA1 = "=sum(" + colrowgBBT + ")";
+                    ws.Cell(colrowlastBBT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBCT = "BC" + (signRows + 2).ToString();
+                    string colrowgBCT = "BC" + (rownumbs + 1) + "+BC" + (signRows + 1);
+                    ws.Cell(colrowlastBCT).FormulaA1 = "=sum(" + colrowgBCT + ")";
+                    ws.Cell(colrowlastBCT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBDT = "BD" + (signRows + 2).ToString();
+                    string colrowgBDT = "BD" + (rownumbs + 1) + "+BD" + (signRows + 1);
+                    ws.Cell(colrowlastBDT).FormulaA1 = "=sum(" + colrowgBDT + ")";
+                    ws.Cell(colrowlastBDT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBET = "BE" + (signRows + 2).ToString();
+                    string colrowgBET = "BE" + (rownumbs + 1) + "+BE" + (signRows + 1);
+                    ws.Cell(colrowlastBET).FormulaA1 = "=sum(" + colrowgBET + ")";
+                    ws.Cell(colrowlastBET).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBFT = "BF" + (signRows + 2).ToString();
+                    string colrowgBFT = "BF" + (rownumbs + 1) + "+BF" + (signRows + 1);
+                    ws.Cell(colrowlastBFT).FormulaA1 = "=sum(" + colrowgBFT + ")";
+                    ws.Cell(colrowlastBFT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBGT = "BG" + (signRows + 2).ToString();
+                    string colrowgBGT = "BG" + (rownumbs + 1) + "+BG" + (signRows + 1);
+                    ws.Cell(colrowlastBGT).FormulaA1 = "=sum(" + colrowgBGT + ")";
+                    ws.Cell(colrowlastBGT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBHT = "BH" + (signRows + 2).ToString();
+                    string colrowgBHT = "BH" + (rownumbs + 1) + "+BH" + (signRows + 1);
+                    ws.Cell(colrowlastBHT).FormulaA1 = "=sum(" + colrowgBHT + ")";
+                    ws.Cell(colrowlastBHT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBIT = "BI" + (signRows + 2).ToString();
+                    string colrowgBIT = "BI" + (rownumbs + 1) + "+BI" + (signRows + 1);
+                    ws.Cell(colrowlastBIT).FormulaA1 = "=sum(" + colrowgBIT + ")";
+                    ws.Cell(colrowlastBIT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBJT = "BJ" + (signRows + 2).ToString();
+                    string colrowgBJT = "BJ" + (rownumbs + 1) + "+BJ" + (signRows + 1);
+                    ws.Cell(colrowlastBJT).FormulaA1 = "=sum(" + colrowgBJT + ")";
+                    ws.Cell(colrowlastBJT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBKT = "BK" + (signRows + 2).ToString();
+                    string colrowgBKT = "BK" + (rownumbs + 1) + "+BK" + (signRows + 1);
+                    ws.Cell(colrowlastBKT).FormulaA1 = "=sum(" + colrowgBKT + ")";
+                    ws.Cell(colrowlastBKT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBLT = "BL" + (signRows + 2).ToString();
+                    string colrowgBLT = "BL" + (rownumbs + 1) + "+BL" + (signRows + 1);
+                    ws.Cell(colrowlastBLT).FormulaA1 = "=sum(" + colrowgBLT + ")";
+                    ws.Cell(colrowlastBLT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBMT = "BM" + (signRows + 2).ToString();
+                    string colrowgBMT = "BM" + (rownumbs + 1) + "+BM" + (signRows + 1);
+                    ws.Cell(colrowlastBMT).FormulaA1 = "=sum(" + colrowgBMT + ")";
+                    ws.Cell(colrowlastBMT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBNT = "BN" + (signRows + 2).ToString();
+                    string colrowgBNT = "BN" + (rownumbs + 1) + "+BN" + (signRows + 1);
+                    ws.Cell(colrowlastBNT).FormulaA1 = "=sum(" + colrowgBNT + ")";
+                    ws.Cell(colrowlastBNT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBOT = "BO" + (signRows + 2).ToString();
+                    string colrowgBOT = "BO" + (rownumbs + 1) + "+BO" + (signRows + 1);
+                    ws.Cell(colrowlastBOT).FormulaA1 = "=sum(" + colrowgBOT + ")";
+                    ws.Cell(colrowlastBOT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBPT = "BP" + (signRows + 2).ToString();
+                    string colrowgBPT = "BP" + (rownumbs + 1) + "+BP" + (signRows + 1);
+                    ws.Cell(colrowlastBPT).FormulaA1 = "=sum(" + colrowgBPT + ")";
+                    ws.Cell(colrowlastBPT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBQT = "BQ" + (signRows + 2).ToString();
+                    string colrowgBQT = "BQ" + (rownumbs + 1) + "+BQ" + (signRows + 1);
+                    ws.Cell(colrowlastBQT).FormulaA1 = "=sum(" + colrowgBQT + ")";
+                    ws.Cell(colrowlastBQT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBRT = "BR" + (signRows + 2).ToString();
+                    string colrowgBRT = "BR" + (rownumbs + 1) + "+BR" + (signRows + 1);
+                    ws.Cell(colrowlastBRT).FormulaA1 = "=sum(" + colrowgBRT + ")";
+                    ws.Cell(colrowlastBRT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBST = "BS" + (signRows + 2).ToString();
+                    string colrowgBST = "BS" + (rownumbs + 1) + "+BS" + (signRows + 1);
+                    ws.Cell(colrowlastBST).FormulaA1 = "=sum(" + colrowgBST + ")";
+                    ws.Cell(colrowlastBST).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBTT = "BT" + (signRows + 2).ToString();
+                    string colrowgBTT = "BT" + (rownumbs + 1) + "+BT" + (signRows + 1);
+                    ws.Cell(colrowlastBTT).FormulaA1 = "=sum(" + colrowgBTT + ")";
+                    ws.Cell(colrowlastBTT).Style.NumberFormat.NumberFormatId = 1;
+
+                    string colrowlastBUT = "BU" + (signRows + 2).ToString();
+                    string colrowgBUT = "BU" + (rownumbs + 1) + "+BU" + (signRows + 1);
+                    ws.Cell(colrowlastBUT).FormulaA1 = "=sum(" + colrowgBUT + ")";
+                    ws.Cell(colrowlastBUT).Style.NumberFormat.NumberFormatId = 1;
                 }
-                ws.Range("A3:AZ3").Style.Alignment.TextRotation = 90;
+                ws.Range("A3:BU3").Style.Alignment.TextRotation = 90;
                 if (query.Count() > 0)
                 {
-                    ws.Range("V3:AI3").Style.Fill.BackgroundColor = XLColor.GreenPigment;
-                    ws.Range("AJ3:AT3").Style.Fill.BackgroundColor = XLColor.Brown;
+                    ws.Range("AH3:BG3").Style.Fill.BackgroundColor = XLColor.GreenPigment;
+                    ws.Range("BH3:BR3").Style.Fill.BackgroundColor = XLColor.Brown;
                 }
-                ws.Range("A3:AZ3").Style.Alignment.WrapText = true;
+                ws.Range("A3:BU3").Style.Alignment.WrapText = true;
                 ws.Row(3).Height = 55;
                 //  ws.Style.Font.FontSize = 7;
                 ws.Column(1).Width = 2; ws.Column(2).Width = 25;
