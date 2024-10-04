@@ -306,10 +306,10 @@
                     <div class="row">
 
                         <div class="col">
-                            @*@Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control input-sm", id = "vesselid" })*@
-                            <select hidden id="vesselid" name="vesselid" class="form-control input-sm">     
+                            @Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), new { @class = "form-control input-sm", @style = "display:none", id = "vesselid" })
+                         @*    <select hidden id="vesselid" name="vesselid" class="form-control input-sm">     
                                 <option value="181">Watson</option>
-                            </select>
+                            </select> *@
 
                             <select id="year" name="year" class="form-control input-sm">
                                 <option value="">select year</option>
@@ -1440,6 +1440,7 @@
         </div>
     </div>
 </div>-->
+
 <div class="modal fade" id="Reimbursementmodal" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1705,10 +1706,10 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        loadacc();
+       // loadacc();
 /*        loadAccounts();*/
-        loadOtherEarning();
-        loadOtherDeductions();
+        //loadOtherEarning();
+       // loadOtherDeductions();
         populateTable(accountEntries);
         $(".tabs-list li a").click(function (e) {
             e.preventDefault();
@@ -2491,6 +2492,7 @@
 
 
     function Reimbursementopenpopup() {
+        this.loadacc();
         const preimbursementvalue = $('#preimbursement').val();
         if (preimbursementvalue != 0) {
             PortageBillId = PortageBillIdglobal;
@@ -2568,15 +2570,15 @@
 
 
     function OtherEarningsopenpopup() {
-
+        this.loadOtherEarning();
         accountEntriesOtherearning = [];
         $("#table-bodyotherearning").empty();
         $('#totalotherEarn').prop("value", "0");
         $("#totalotherEarn").text("0");     
         $("#OtherEarningsmodal").modal('show');
     }
-    function OtherDeductionsopenpopup()
-    {
+    function OtherDeductionsopenpopup() {
+        this.loadOtherDeductions();
         accountEntriesOtherDeductions = [];
         $("#table-bodyOtherDeductions").empty();
         $('#totalOtherDeductions').prop("value", "0");
