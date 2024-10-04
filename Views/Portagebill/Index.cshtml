@@ -304,7 +304,7 @@
                         <div class="col">
                             @*@Html.DropDownList("vesselid", new SelectList(ViewBag.vessel, "Value", "Text"), "select Vessel", new { @class = "form-control input-sm", id = "vesselid" })*@
                             <select hidden id="vesselid" name="vesselid" class="form-control input-sm">     
-                                <option value="144">Chapel</option>
+                                <option value="181">Watson</option>
                             </select>
 
                             <select id="year" name="year" class="form-control input-sm">
@@ -384,12 +384,26 @@
                                                     <th>Currency</th>
                                                     <th>Nationality</th>
                                                     <th>Basic Wages</th>
-                                                    <th>Fixed/Guaranteed<br /> Overtime</th>
-                                                    <th>Security<br /> Allowance </th>
+                                                    <th>Fixed/Guaranteed<br /> Overtime</th>                                                    
                                                     <th>Leave+Subs.</th>
                                                     <th>U.ALLOW</th>
                                                     <th>Pension Fund </th>
-                                                    <th>Other Allowance</th>
+                                                    
+                                                    <th>Special <br /> Allowance </th>
+                                                    <th>Company <br /> Allowance </th>
+                                                    <th>Security<br /> Allowance </th>
+                                                    <th>Temp. Fuel Allow<br /> Allowance </th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
+                                                    <th>Other Allowance</th>                                                   
+
                                                     <th>Total Wages<br /> per month</th>
                                                     <th>Overtime HR</th>
                                                     <th>Basic Wage</th>
@@ -398,7 +412,22 @@
                                                     <th>Leave Pay &<br /> Subsitence Allow. </th>
                                                     <th>Uniform Allow.</th>
                                                     <th>Pension Fund</th>
-                                                    <th>Other Allow.</th>
+
+                                                    <th>Special <br /> Allowance </th>
+                                                    <th>Company <br /> Allowance </th>
+                                                    <th>Security<br /> Allowance </th>
+                                                    <th>Temp. Fuel Allow<br /> Allowance </th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
+                                                    <th>Other Allowance</th>
+
                                                     <th>Extra OT</th>
                                                     <th>Other Earning</th>
                                                     <th>Transit Wages</th>
@@ -436,7 +465,10 @@
                                                                 </a>
                                                             }
                                                             <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,
-    @item.SecurityAllow,@item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.OtherAllow,@item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
+  @item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
+@item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,
+@item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,
+'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
                                                                 <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
                                                             </a>
                                                         </td>
@@ -452,11 +484,25 @@
                                                         <td>@item.Currency</td>
                                                         <td>@item.Nationality</td>
                                                         <td>@item.BasicWages</td>
-                                                        <td>@item.FixedGtOT</td>
-                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.FixedGtOT</td>                                                       
                                                         <td>@item.LeavePay</td>
                                                         <td>@item.UniformAllow</td>
                                                         <td>@item.PensionFund</td>
+
+                                                        <td>@item.SpecialAllowance</td>
+                                                        <td>@item.CompanyAllowance</td>
+                                                        <td>@item.SecurityAllow</td>
+                                                        <td>@item.TempFuelAllow</td>
+                                                        <td>@item.IncentiveAllowance</td>
+                                                        <td>@item.Seniority</td>
+                                                        <td>@item.TankerAllowance</td>
+                                                        <td>@item.Housing</td>
+                                                        <td>@item.Transport</td>
+                                                        <td>@item.Utility</td>
+                                                        <td>@item.Bonus</td>
+                                                        <td>@item.SeafarersPF</td>
+                                                        <td>@item.leavepayaddition</td>
+
                                                         <td>@item.OtherAllow</td>
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
@@ -464,12 +510,8 @@
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
                                                         <td>
-
                                                             @string.Format("{0:n2}", (item.FixedGtOT * item.TotalDays / item.numberofday))
-                                                        </td>
-                                                        <td>
-                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
-                                                        </td>
+                                                        </td>                                                   
                                                         <td>
                                                             @string.Format("{0:n2}", (item.LeavePay * item.TotalDays / item.numberofday))
                                                         </td>
@@ -477,18 +519,61 @@
                                                             @string.Format("{0:n2}", (item.UniformAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
-
                                                             @string.Format("{0:n2}", (item.PensionFund * item.TotalDays / item.numberofday))
+                                                        </td>
+
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SpecialAllowance / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.CompanyAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SecurityAllow * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TempFuelAllow / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Seniority * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TankerAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Housing * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Transport * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Utility * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Bonus * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SeafarersPF * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.leavepayaddition * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>
                                                             @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
                                                         </td>
                                                         <td>@item.extraot</td>
                                                         <td>@item.OtherEarnings</td>
-
                                                         <td>@item.TransitWages</td>
-
-                                                        <td>@string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays) + (item.FixedGtOT * item.TotalDays / item.numberofday) + (item.SecurityAllow * item.TotalDays / item.numberofday) + (item.LeavePay * item.TotalDays / item.numberofday) + (item.UniformAllow * item.TotalDays / item.numberofday) + (item.PensionFund * item.TotalDays / item.numberofday) + (item.OtherAllow * item.TotalDays / item.numberofday))</td>
+                                                        <td>@string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays) + (item.FixedGtOT * item.TotalDays / item.numberofday) + (item.LeavePay * item.TotalDays / item.numberofday) + (item.UniformAllow * item.TotalDays / item.numberofday) + (item.PensionFund * item.TotalDays / item.numberofday)
+                                                                     + (item.SpecialAllowance * item.TotalDays / item.numberofday) + (item.CompanyAllowance * item.TotalDays / item.numberofday) + (item.SecurityAllow * item.TotalDays / item.numberofday) + (item.TempFuelAllow * item.TotalDays / item.numberofday)
+                                                         + (item.IncentiveAllowance * item.TotalDays / item.numberofday) + (item.Seniority * item.TotalDays / item.numberofday) + (item.TankerAllowance * item.TotalDays / item.numberofday)
+                                                                     + (item.Housing * item.TotalDays / item.numberofday) + (item.Transport * item.TotalDays / item.numberofday) + (item.Utility * item.TotalDays / item.numberofday)
+                                                                     + (item.Bonus * item.TotalDays / item.numberofday) + (item.SeafarersPF * item.TotalDays / item.numberofday) + (item.leavepayaddition * item.TotalDays / item.numberofday) + (item.OtherAllow * item.TotalDays / item.numberofday))
+                                                        </td>
                                                         <td>@item.PrevMonthBal</td>
                                                         <td>@item.Reimbursement</td>
                                                         <td>@item.TotalPayable</td>
@@ -538,6 +623,15 @@
                                                     <th>U.ALLOW</th>
                                                     <th> Pension Fund </th>
                                                     <th> Other Allowance</th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
                                                     <th>Total Wages<br /> per month</th>
                                                     <th> Overtime HR</th>
                                                     <th>Basic Wage</th>
@@ -547,6 +641,15 @@
                                                     <th>Uniform Allow.</th>
                                                     <th>Pension Fund</th>
                                                     <th>Other Allow.</th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
                                                     <th>Extra OT</th>
                                                     <th>Other Earning</th>
                                                     <th>Transit Wages</th>
@@ -577,7 +680,10 @@
                                                 {
                                                     <tr>
                                                         <td>
-                                                            <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,    @item.SecurityAllow,@item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.OtherAllow,@item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
+                                                            <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,@item.LeavePay,@item.UniformAllow,@item.PensionFund,
+@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
+@item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,@item.OTHours,@item.otrate,
+@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
                                                         </td>
@@ -599,6 +705,17 @@
                                                         <td>@item.UniformAllow</td>
                                                         <td>@item.PensionFund</td>
                                                         <td>@item.OtherAllow</td>
+
+                                                        <td>@item.IncentiveAllowance</td>
+                                                        <td>@item.Seniority</td>
+                                                        <td>@item.TankerAllowance</td>
+                                                        <td>@item.Housing</td>
+                                                        <td>@item.Transport</td>
+                                                        <td>@item.Utility</td>
+                                                        <td>@item.Bonus</td>
+                                                        <td>@item.SeafarersPF</td>
+                                                        <td>@item.leavepayaddition</td>
+
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
 
@@ -613,11 +730,38 @@
                                                         <td>@string.Format("{0:n2}", (item.UniformAllow / item.numberofday * @item.TotalDays))</td>
                                                         <td>@string.Format("{0:n2}", (item.PensionFund / item.numberofday * @item.TotalDays))</td>
                                                         <td>@string.Format("{0:n2}", (item.OtherAllow / item.numberofday * @item.TotalDays))</td>
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Seniority * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TankerAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Housing * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Transport * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Utility * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Bonus * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SeafarersPF * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.leavepayaddition * item.TotalDays / item.numberofday))
+                                                        </td>
+
                                                         <td>@item.extraot</td>
                                                         <td>@item.OtherEarnings</td>
-
                                                         <td>@item.TransitWages</td>
-
                                                         <td>@item.PrevMonthBal</td>
                                                         <td>@item.Reimbursement</td>
                                                         <td>@item.TotalPayable</td>
@@ -666,6 +810,15 @@
                                                     <th>U.ALLOW</th>
                                                     <th> Pension Fund </th>
                                                     <th> Other Allowance</th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
                                                     <th>Total Wages<br /> per month</th>
                                                     <th> Overtime HR</th>
                                                     <th>Basic Wage</th>
@@ -675,6 +828,15 @@
                                                     <th>Uniform Allow.</th>
                                                     <th>Pension Fund</th>
                                                     <th>Other Allow.</th>
+                                                    <th>Incentive Allow.</th>
+                                                    <th>Seniority</th>
+                                                    <th>Tanker Allow. </th>
+                                                    <th>Housing</th>
+                                                    <th>Transport</th>
+                                                    <th>Utility </th>
+                                                    <th>Bonus</th>
+                                                    <th>Seafarers PF</th>
+                                                    <th>Leave Wages-Addnl.</th>
                                                     <th>Extra OT</th>
                                                     <th>Other Earning</th>
                                                     <th>Transit Wages</th>
@@ -722,9 +884,17 @@
                                                         <td>@item.UniformAllow</td>
                                                         <td>@item.PensionFund</td>
                                                         <td>@item.OtherAllow</td>
+                                                        <td>@item.IncentiveAllowance</td>
+                                                        <td>@item.Seniority</td>
+                                                        <td>@item.TankerAllowance</td>
+                                                        <td>@item.Housing</td>
+                                                        <td>@item.Transport</td>
+                                                        <td>@item.Utility</td>
+                                                        <td>@item.Bonus</td>
+                                                        <td>@item.SeafarersPF</td>
+                                                        <td>@item.leavepayaddition</td>
                                                         <td>@item.TotalWages</td>
                                                         <td>@item.OTHours</td>
-
                                                         <td>
                                                             @string.Format("{0:n2}", (item.BasicWages / item.numberofday * @item.TotalDays))
                                                         </td>
@@ -748,11 +918,38 @@
                                                         <td>
                                                             @string.Format("{0:n2}", (item.OtherAllow * item.TotalDays / item.numberofday))
                                                         </td>
+
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.IncentiveAllowance / item.numberofday * @item.TotalDays))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Seniority * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.TankerAllowance * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Housing * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Transport * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Utility * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.Bonus * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.SeafarersPF * item.TotalDays / item.numberofday))
+                                                        </td>
+                                                        <td>
+                                                            @string.Format("{0:n2}", (item.leavepayaddition * item.TotalDays / item.numberofday))
+                                                        </td>
+
                                                         <td>@item.extraot</td>
                                                         <td>@item.OtherEarnings</td>
-
                                                         <td>@item.TransitWages</td>
-
                                                         <td>@item.PrevMonthBal</td>
                                                         <td>@item.Reimbursement</td>
                                                         <td>@item.TotalPayable</td>
@@ -1106,6 +1303,31 @@
     </div>
 </div>
 <!--Portage entry end-->
+<div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Generate Bow</h4> <button type="button" onclick="resetbowform()" class="close" data-dismiss="modal">&times;</button>
+            </div> <form id="bowform">
+                <div class="modal-body">
+                    <div style="Color:red; padding-bottom:10px; font-size: 12px !important;"> </div>
+                    <h4 style="font-weight: bold; color: #233855; " class="m-b-15">
+                        <span style="color: #c73f16; float: right; font-size: 14px;">
+                            <span id="crewname"></span><span class="p-l-5 p-r-5">|</span>  <span id="crewrank"></span>
+                            <span class="p-l-5 p-r-5">|</span> Currency: <span id="currency"></span>
+                        </span><br>
+                        <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
+                    </h4>
+              
+                </div>
+                <div class="modal-footer">
+                    <Button type="submit" name="submit" id="savebowdata" class="btn btn-success">Submit</Button>
+                    <Button type="button" onclick="resetbowform()" class="btn btn-default" data-dismiss="modal">Close</Button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @*<script>
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
@@ -1314,8 +1536,22 @@
     var leavePay = 0;
     var UniformAllow = 0;
     var PensionFund = 0;
+    var specialAllow = 0;
+    var companyAllow = 0;  
     var securityAllow = 0;
+    var tempFuelAllow = 0; 
+    var incentiveallow = 0;
+    var seniority = 0;
+    var tankerallow = 0;
+    var housing = 0;
+    var transport = 0;
+    var utility = 0; var bonus = 0;
+    var seafarerspf = 0;
+    var leavepayaddition = 0;
     var OtherAllow = 0;
+
+    var contractbonus = 0; var contractreimbrusment = 0; var contractdedu = 0;
+
     var totalWages = 0;
     var reimbursement = 0;
     var otrate = 0;
@@ -1730,10 +1966,16 @@
     }
 
     /* function to calculate on load of signoffdate slection */
-    function calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, totaldays, numberofdays, transitwage, otherEarnings) {
+    function calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, SpecialAllowance, CompanyAllowance, SecurityAllow, TempFuelAllow,OtherAllow, totaldays, numberofdays, transitwage, otherEarnings,
+        IncentiveAllowance, Seniority, TankerAllowance, Housing, Transport, Utility, Bonus, SeafarersPF, leavepayaddition) {
         var total = (parseInt(basicwage) * totaldays / numberofdays) + (parseInt(FixedGtOT) * totaldays / numberofdays) + (parseInt(leavePay) * totaldays / numberofdays)
-            + (parseInt(UniformAllow) * totaldays / numberofdays) + (parseInt(PensionFund) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays)
-            + (parseInt(OtherAllow) * totaldays / numberofdays) + parseInt(transitwage) + parseInt(otherEarnings) + parseFloat(leaveWagesBF);
+            + (parseInt(UniformAllow) * totaldays / numberofdays) + (parseInt(PensionFund) * totaldays / numberofdays) + (parseInt(specialAllow) * totaldays / numberofdays)
+            + (parseInt(companyAllow) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays) + (parseInt(tempFuelAllow) * totaldays / numberofdays)
+            + (parseInt(OtherAllow) * totaldays / numberofdays) + parseInt(transitwage) +
+            + (parseInt(incentiveallow) * totaldays / numberofdays) + (parseInt(seniority) * totaldays / numberofdays) + (parseInt(tankerallow) * totaldays / numberofdays)
+            + (parseInt(housing) * totaldays / numberofdays) + (parseInt(transport) * totaldays / numberofdays) + (parseInt(utility) * totaldays / numberofdays)
+            + (parseInt(bonus) * totaldays / numberofdays) + (parseInt(seafarerspf) * totaldays / numberofdays) + (parseInt(leavepayaddition) * totaldays / numberofdays)
+            + parseInt(otherEarnings) + parseFloat(leaveWagesBF);
         return Math.round(total);
     }
 
@@ -1749,7 +1991,11 @@
         reimbursement = parseFloat($("#reimbursement").val());
         leaveWagesBF = parseFloat($("#leaveWagesBF").val());
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
-            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays) + (parseInt(specialAllow) * totaldays / numberofdays)
+            + (parseInt(companyAllow) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays) + (parseInt(tempFuelAllow) * totaldays / numberofdays)
+            + (parseInt(incentiveallow) * totaldays / numberofdays) + (parseInt(seniority) * totaldays / numberofdays) + (parseInt(tankerallow) * totaldays / numberofdays)
+            + (parseInt(housing) * totaldays / numberofdays) + (parseInt(transport) * totaldays / numberofdays) + (parseInt(utility) * totaldays / numberofdays)
+            + (parseInt(bonus) * totaldays / numberofdays) + (parseInt(seafarerspf) * totaldays / numberofdays) + (parseInt(leavepayaddition) * totaldays / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement) + parseFloat(leaveWagesBF));
         finalbal = Math.round(totalearning - totaldeduction);
         $("#totalpay").text(totalearning);
@@ -1773,7 +2019,11 @@
         reimbursement = parseFloat($("#reimbursement").val());
         leaveWagesBF = parseFloat($("#leaveWagesBF").val());
         totalearning = Math.round( parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
-            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(specialAllow) * days / numberofdays)
+            + (parseInt(companyAllow) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays) + (parseInt(tempFuelAllow) * totaldays / numberofdays)
+            + (parseInt(incentiveallow) * totaldays / numberofdays) + (parseInt(seniority) * totaldays / numberofdays) + (parseInt(tankerallow) * totaldays / numberofdays)
+            + (parseInt(housing) * totaldays / numberofdays) + (parseInt(transport) * totaldays / numberofdays) + (parseInt(utility) * totaldays / numberofdays)
+            + (parseInt(bonus) * totaldays / numberofdays) + (parseInt(seafarerspf) * totaldays / numberofdays) + (parseInt(leavepayaddition) * totaldays / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
         //console.log((otearning || 0),(parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
         //    , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
@@ -1879,7 +2129,22 @@
                     leavePay = (response[0].leavePay || 0);
                     UniformAllow = (response[0].uniformAllow || 0);
                     PensionFund = (response[0].pensionFund || 0);
-                    securityAllow = (response[0].securityAllow || 0);
+
+                    specialAllow = (response[0].SpecialAllowance || 0);
+                    companyAllow = (response[0].CompanyAllowance || 0);
+                    securityAllow = (response[0].SecurityAllow || 0);
+                    tempFuelAllow = (response[0].TempFuelAllow || 0);
+                    
+                    incentiveallow = (response[0].IncentiveAllowance || 0);
+                    seniority = (response[0].Seniority || 0);
+                    tankerallow = (response[0].TankerAllowance || 0);
+                    housing = (response[0].Housing || 0);
+                    transport = (response[0].Transport || 0);
+                    utility = (response[0].Utility || 0);
+                    bonus = seafarerspf = (response[0].Bonus || 0);
+                    seafarerspf = seafarerspf = (response[0].SeafarersPF || 0);
+                    leavepayaddition = (response[0].leavepayaddition || 0);
+
                     OtherAllow = (response[0].otherAllow || 0);
                     numberofdays = (response[0].numberofday || 0);
                     otherEarnings = (response[0].otherEarnings || 0);
@@ -1955,7 +2220,8 @@
                     $("#leaveWagesBF").val(leaveWagesBF);
                     /*console.log(basicwage, ca, bs, od, allotment);*/
                     /*console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);*/
-                    totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings)
+                    totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, specialAllow, companyAllow, securityAllow, tempFuelAllow, OtherAllow, days, numberofdays,
+                        transitwage, otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf, leavepayaddition);
                     totaldeduction = (ca + bs + od + allotment);
                     $("#totalpay").text(totalearning);
                     $("#totaldeduc").text(totaldeduction);
@@ -2047,7 +2313,9 @@
     }
 
     /* portage entry pop get data */
-    function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, SecurityAllow, LeavePay, uniformallow, pensionfund, otherallow,
+    function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, LeavePay, uniformallow, pensionfund,
+        SpecialAllowance, CompanyAllowance, SecurityAllow, TempFuelAllow, IncentiveAllowance, Seniority, TankerAllowance, Housing, Transport, Utility, Bonus, SeafarersPF, leavepayaddition, otherallow,
+        Reimbursement, Contractreimbrusment, Contractbonus, Contractdedu,
         OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction)
     {
         nigpfAmount= npfamount;
@@ -2122,7 +2390,24 @@
                     leavePay = (LeavePay || 0);
                     UniformAllow = (uniformallow || 0);
                     PensionFund = (pensionfund || 0);
+                    specialAllow = (SpecialAllowance || 0);
+                    companyAllow = (CompanyAllowance || 0);
                     securityAllow = (SecurityAllow || 0);
+                    tempFuelAllow = (TempFuelAllow || 0);
+
+                    incentiveallow = (IncentiveAllowance || 0);
+                    seniority = (Seniority || 0);
+                    tankerallow = (TankerAllowance || 0);
+                    housing = (Housing || 0);
+                    transport = (Transport || 0);
+                    utility = (Utility || 0);
+                    bonus = (Bonus || 0);
+                    seafarerspf = (SeafarersPF || 0);
+                    leavepayaddition = (leavepayaddition || 0);
+                    contractreimbrusment = (Contractreimbrusment || 0);
+                    contractbonus = (Contractbonus || 0);
+                    contractdedu = (Contractdedu || 0);
+
                     OtherAllow = (otherallow || 0);
                     numberofdays = (numberofday || 0);
                     otherEarnings = (response.otherEarnings || 0);
@@ -2193,7 +2478,8 @@
                     authorityDeduction = AuthorityDeduction;
                     leaveWagesBF = (response.leaveWagesBf || 0);
                     $("#pleaveWagesBF").val(leaveWagesBF);
-                    totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
+                    totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund,specialAllow,companyAllow, securityAllow,tempFuelAllow, OtherAllow, days, numberofdays, transitwage, 
+                        otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf,leavepayaddition);
                     totalearning = (response.totalPayable || 0);
                     totaldeduction = (response.totalDeductions || 0);
                     finalbal = (response.finalBalance || 0);
@@ -2247,6 +2533,24 @@
             leavePay = LeavePay;
             UniformAllow = uniformallow;
             PensionFund = pensionfund;
+
+            specialAllow = (SpecialAllowance || 0);
+            companyAllow = (CompanyAllowance || 0);
+            securityAllow = (SecurityAllow || 0);
+            tempFuelAllow = (TempFuelAllow || 0);
+            reimbursement = (Reimbursement || 0);
+            incentiveallow = (IncentiveAllowance || 0);
+            seniority = (Seniority || 0);
+            tankerallow = (TankerAllowance || 0);
+            housing = (Housing || 0);
+            transport = (Transport || 0);
+            utility = (Utility || 0);
+            bonus = (Bonus || 0);
+            seafarerspf = (SeafarersPF || 0);
+            leavepayaddition = (leavepayaddition || 0);
+            contractreimbrusment = (Contractreimbrusment || 0);
+            contractbonus = (Contractbonus || 0);
+            contractdedu = (Contractdedu || 0);
             OtherAllow = otherallow;
             authorityDeduction = AuthorityDeduction;
            // numberofdays = OTHours;
@@ -2263,9 +2567,11 @@
             appliedCBA = cbaid;
             otherEarnings = OtherEarnings;
             leaveWagesBF = leaveWagesbf;
-            totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
-            totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, securityAllow, OtherAllow, days, numberofdays, transitwage, otherEarnings);
-
+            totalearning = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund,specialAllow,companyAllow, securityAllow,tempFuelAllow, OtherAllow, days, numberofdays, transitwage,
+                otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf, leavepayaddition);
+            totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, specialAllow, companyAllow, securityAllow, tempFuelAllow, OtherAllow, days, numberofdays, transitwage,
+                otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf, leavepayaddition);
+            $("#preimbursement").val(reimbursement);
             $("#pleaveWagesBF").val(leaveWagesBF);
             $("#pCrewListId").val(CrewListId);
             $("#pmidmonthallotment").val(midmonthallotment);
@@ -2508,7 +2814,12 @@
         otherEarnings = parseFloat($("#pearningother").val());
         reimbursement = parseFloat($("#preimbursement").val());
         totalearning = Math.round(parseFloat(otearning)+(parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
-            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) 
+            + (parseInt(SpecialAllowance) * days / numberofdays) + (parseInt(CompanyAllowance) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(TempFuelAllow) * days / numberofdays)
+            + (parseInt(IncentiveAllowance) * days / numberofdays) + (parseInt(Seniority) * days / numberofdays) + (parseInt(TankerAllowance) * days / numberofdays)
+            + (parseInt(Housing) * days / numberofdays) + (parseInt(Transport) * days / numberofdays) + (parseInt(Utility) * days / numberofdays)
+            + (parseInt(Bonus) * days / numberofdays) + (parseInt(SeafarersPF) * days / numberofdays) + (parseInt(leavepayaddition) * days / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(prevMonthBal) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
         finalbal = Math.round(totalearning - totaldeduction);
         $("#ptotalpay").text(totalearning);
@@ -2532,16 +2843,17 @@
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         reimbursement = parseFloat($("#preimbursement").val());
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
-            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays)
+            + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(specialAllow) * days / numberofdays)
+            + (parseInt(companyAllow) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays) + (parseInt(tempFuelAllow) * days / numberofdays)
+            + (parseInt(incentiveallow) * days / numberofdays) + (parseInt(seniority) * days / numberofdays) + (parseInt(tankerallow) * days / numberofdays)
+            + (parseInt(housing) * days / numberofdays) + (parseInt(transport) * days / numberofdays) + (parseInt(utility) * days / numberofdays)
+            + (parseInt(bonus) * days / numberofdays) + (parseInt(seafarerspf) * days / numberofdays) + (parseInt(leavepayaddition) * days / numberofdays)
             + parseFloat(prevMonthBal)   + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
         //console.log((otearning || 0) ,(parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
         //    , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
         //    , (parseInt(OtherAllow) * days / numberofdays), parseFloat(transitwage), parseFloat(otherEarnings), parseFloat(reimbursement));
-
-
-
         finalbal = Math.round(totalearning - totaldeduction);
-        var leavewagescf = ((leaveWagesBF || 0) + (parseInt(leavePay) * days / numberofdays)).toFixed(2);
+        var leavewagescf = ((parseInt(leaveWagesBF) || 0) + (parseInt(leavePay) * days / numberofdays)).toFixed(2);
         $("#pLeaveWagesCf").val(leavewagescf);
         $("#ptotalpay").text(totalearning);
         $("#ptotaldeduc").text(totaldeduction);
