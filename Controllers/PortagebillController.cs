@@ -74,13 +74,80 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult PortageReimbursementDetailsbyid( int portageBillId,  string type)
         {
-            var ReimbursementDetails = _context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
+            var ReimbursementDetails = from earning in _context.PortageEarningDeduction where earning.PortageBillId == portageBillId && earning.Type == type && earning.IsDeleted==false
+                                       join accountCode in _context.TblBudgetSubCodes.Where(x => x.IsDeleted == false) on earning.SubCodeId equals accountCode.SubCodeId
+                                       select new PortageEarningDeductionDTO
+                                       {
+                                           PortageEarningDeductionId = earning.PortageEarningDeductionId,
+                                           SubCodeId = earning.SubCodeId,
+                                           Amount = earning.Amount,
+                                           CrewId = earning.CrewId,
+                                           Type = earning.Type,
+                                           SubCode = accountCode.SubCode,
+                                           SubBudget = accountCode.SubBudget
+                                       };
+
+
+                //_context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
+            return Json(ReimbursementDetails);
+        }
+
+
+        [HttpGet]
+        public IActionResult EditPortageReimbursementDetails(int PortageEarningDeductionId)
+        {
+            var ReimbursementDetails = _context.PortageEarningDeduction.Where(x => x.PortageEarningDeductionId == PortageEarningDeductionId).ToList();
             return Json(ReimbursementDetails);
         }
 
 
 
-        
+        [HttpGet]
+        public IActionResult PortageReimbursementdelete(int PortageEarningDeductionId)
+        {
+            var data = _context.PortageEarningDeduction.Where(x => x.PortageEarningDeductionId== PortageEarningDeductionId && x.IsDeleted==false).FirstOrDefault();
+            if(data!=null)
+            {
+                data.IsDeleted = true;
+                _context.PortageEarningDeduction.Update(data);
+                _context.SaveChanges();
+            }
+
+            return Json(data);
+        }
+
+        [HttpGet]
+        public IActionResult PortageOtherEarningdelete(int OtherEarningIddeleteId)
+        {
+            var data = _context.PortageEarningDeduction.Where(x => x.PortageEarningDeductionId == OtherEarningIddeleteId && x.IsDeleted == false).FirstOrDefault();
+            if (data != null)
+            {
+                data.IsDeleted = true;
+                _context.PortageEarningDeduction.Update(data);
+                _context.SaveChanges();
+            }
+
+            return Json(data);
+        }
+
+
+        [HttpGet]
+        public IActionResult PortageOtherDeductionsdelete(int OtherEarningIddeleteId)
+        {
+            var data = _context.PortageEarningDeduction.Where(x => x.PortageEarningDeductionId == OtherEarningIddeleteId && x.IsDeleted == false).FirstOrDefault();
+            if (data != null)
+            {
+                data.IsDeleted = true;
+                _context.PortageEarningDeduction.Update(data);
+                _context.SaveChanges();
+            }
+
+            return Json(data);
+        }
+
+
+
+
 
 
         [HttpGet]
@@ -128,20 +195,12 @@ namespace crewlinkship.Controllers
     [HttpGet]
         public IActionResult GetAccountcode(int id)
         {
-
-            //var account = from wage in _context.TblWageComponents.Include(i=> i.SubCode).Where(x => x.IsDeleted == false)
-            //              join
-            //            deduction in _context.PortageEarningDeduction.Where(x => x.Type == "Reimbursement") on wage.SubCodeId equals deduction.SubCodeId
-            //              select new
-            //              {
-            //                  SubCode = wage.SubCode.SubCode + " " + wage.SubCode.SubBudget,
-            //                  DecuctionId = deduction.PortageEarningDeductionId
-            //              };
+      
             var accounts = _context.TblWageComponents
                 .Include(x => x.SubCode)
                 .Where(x => x.Earning == "Reimbursement" && x.SubCodeId == id)
-                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
-                .ToList(); // Ensure to call ToList to execute the query
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget).FirstOrDefault();
+                 
 
             return Json(accounts);
         }
@@ -152,8 +211,7 @@ namespace crewlinkship.Controllers
             var accounts = _context.TblWageComponents
                 .Include(x => x.SubCode)
                 .Where(x => x.Earning == "Earning" && x.SubCodeId == id)
-                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
-                .ToList(); // Ensure to call ToList to execute the query
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget).FirstOrDefault(); // Ensure to call ToList to execute the query
 
             return Json(accounts);
         }
@@ -164,8 +222,8 @@ namespace crewlinkship.Controllers
             var accounts = _context.TblWageComponents
                 .Include(x => x.SubCode)
                 .Where(x => x.Earning == "Deduction" && x.SubCodeId == id)
-                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget)
-                .ToList(); // Ensure to call ToList to execute the query
+                .Select(x => x.SubCode.SubCode + " " + x.SubCode.SubBudget).
+                FirstOrDefault(); // Ensure to call ToList to execute the query
 
             return Json(accounts);
         }
@@ -185,15 +243,15 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
 
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate);
+            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 181, month, year, "no", checkpbtilldate);
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == vesselidtouse), "VesselId", "VesselName");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselId).ToList();
-                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes");
-                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year);
+            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 181), "VesselId", "VesselName");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 181).FirstOrDefault();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 181).ToList();
+                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 181, month, year, "yes");
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 181, month, year);
 
-                    ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselId).ToList().FirstOrDefault()?.BillStatus;
+                    ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == 181).ToList().FirstOrDefault()?.BillStatus;
 
 
                     var tables = new PortageViewModel
@@ -503,27 +561,137 @@ namespace crewlinkship.Controllers
         }
 
 
+        //public JsonResult AddPortageEarningDeduction(PortageEarningDeduction item)
+        //{
+
+        //   if(item.PortageEarningDeductionId==0)
+
+        //    {
+        //        _context.PortageEarningDeduction.Add(new PortageEarningDeduction
+        //        {
+        //            CrewId = item.CrewId,
+        //            Vesselid = item.Vesselid,
+        //            PortageBillId = item.PortageBillId,
+        //            Currency = item.Currency,
+        //            From = item.From,
+        //            To = item.To,
+        //            RecDate = DateTime.UtcNow,
+        //            CreatedBy = 1,
+        //            SubCodeId = item.SubCodeId,
+        //            Type = item.Type,
+        //            Amount = item.Amount,
+        //            IsDeleted = false
+        //        });
+        //        _context.SaveChanges();
+        //        return Json("success");
+
+
+        //    }
+        //   else
+        //    {
+        //        var data = _context.PortageEarningDeduction.FirstOrDefault(c => c.PortageEarningDeductionId == item.PortageBillId);
+        //        if (data != null)
+
+        //        {
+
+        //            _context.PortageEarningDeduction.Update(new PortageEarningDeduction
+        //            {
+        //               data.CrewId = item.CrewId,AddPortageEarningDeduction
+        //                Vesselid = item.Vesselid,
+        //                PortageBillId = item.PortageBillId,
+        //                Currency = item.Currency,
+        //                From = item.From,
+        //                To = item.To,
+        //                RecDate = DateTime.UtcNow,
+        //                CreatedBy = 1,
+        //                SubCodeId = item.SubCodeId,
+        //                Type = item.Type,
+        //                Amount = item.Amount,
+        //                IsDeleted = false
+        //            });
+        //            _context.SaveChanges();
+        //            return Json("success");
+
+        //        }
+
+
+
+
+        //    }
+
+        //    return null;
+
+
+        //}
+
         public JsonResult AddPortageEarningDeduction(PortageEarningDeduction item)
         {
-            _context.PortageEarningDeduction.Add(new PortageEarningDeduction
+            if (item == null)
             {
-                CrewId = item.CrewId,
-                Vesselid = item.Vesselid,
-                PortageBillId = item.PortageBillId,
-                Currency=item.Currency,
-                From=item.From,
-                To=item.To,
-                RecDate=DateTime.UtcNow,
-                CreatedBy=1,
-                SubCodeId=item.SubCodeId,
-               Type=item.Type,
-               Amount=item.Amount,
-               IsDeleted=false
-            });          
-            _context.SaveChanges();
-            return Json("success");
-        }
+                return Json("Invalid input");
+            }
 
+            // Add new Portage Earning Deduction
+            if (item.PortageEarningDeductionId == 0)
+            {
+                var newDeduction = new PortageEarningDeduction
+                {
+                    CrewId = item.CrewId,
+                    Vesselid = item.Vesselid,
+                    PortageBillId = item.PortageBillId,
+                    Currency = item.Currency,
+                    From = item.From,
+                    To = item.To,
+                    RecDate = DateTime.UtcNow,
+                    CreatedBy = 1, // Ideally, use the actual user ID
+                    SubCodeId = item.SubCodeId,
+                    Type = item.Type,
+                    Amount = item.Amount,
+                    
+                };
+
+                _context.PortageEarningDeduction.Add(newDeduction);
+            }
+            else // Update existing Portage Earning Deduction
+            {
+                var existingDeduction = _context.PortageEarningDeduction
+                    .FirstOrDefault(c => c.PortageEarningDeductionId == item.PortageEarningDeductionId);
+
+                if (existingDeduction != null)
+                {
+                    existingDeduction.CrewId = item.CrewId;
+                    existingDeduction.Vesselid = item.Vesselid;
+                    existingDeduction.PortageBillId = item.PortageBillId;
+                    existingDeduction.Currency = item.Currency;
+                    existingDeduction.From = item.From;
+                    existingDeduction.To = item.To;
+                    existingDeduction.ModifiedDate = DateTime.UtcNow;
+                    existingDeduction.ModifiedBy = 1; // Ideally, use the actual user ID
+                    existingDeduction.SubCodeId = item.SubCodeId;
+                    existingDeduction.Type = item.Type;
+                    existingDeduction.Amount = item.Amount;
+                    //existingDeduction.IsDeleted = false;
+
+                    _context.PortageEarningDeduction.Update(existingDeduction);
+                }
+                else
+                {
+                    return Json("Portage Earning Deduction not found");
+                }
+            }
+
+            // Save changes to the context
+            try
+            {
+                _context.SaveChanges();
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here (ex)
+                return Json("An error occurred while saving data");
+            }
+        }
 
 
         public JsonResult GetBankAllotment(int vesselId, int month, int year, int crewid, string ispromoted)
