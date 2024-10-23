@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -32,6 +33,7 @@ namespace crewlinkship.Models
         public double? LeaveWagesBf { get; set; }
         public double? FinalBalance { get; set; }
         public DateTime? SignOffDate { get; set; }
+        [MaxLength(10000)]
         public string Remarks { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? RecDate { get; set; }
