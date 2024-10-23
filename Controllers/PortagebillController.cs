@@ -59,7 +59,7 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult GetAccounts()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement").ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement"&& x.IsDeleted==false ).ToList();
             return Json(accounts);
         }
 
@@ -153,14 +153,14 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult GetAccountotherearnings()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Earning").ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Earning" && x.IsDeleted==false).ToList();
             return Json(accounts);
         }
 
         [HttpGet]
         public IActionResult GetAccountOtherDeductions()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Deduction").ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Deduction" && x.IsDeleted == false).ToList();
             return Json(accounts);
         }
 
@@ -2698,6 +2698,28 @@ namespace crewlinkship.Controllers
             });
             _context.SaveChanges();
         }
+        [HttpGet]
+        public IActionResult PortageReimbursementDetailsbyidWithoutType(int portageBillId)
+        {
+            var ReimbursementDetails = from earning in _context.PortageEarningDeduction
+                                       where earning.PortageBillId == portageBillId && earning.IsDeleted == false
+                                       join accountCode in _context.TblBudgetSubCodes.Where(x => x.IsDeleted == false) on earning.SubCodeId equals accountCode.SubCodeId
+                                       select new PortageEarningDeductionDTO
+                                       {
+                                           PortageEarningDeductionId = earning.PortageEarningDeductionId,
+                                           SubCodeId = earning.SubCodeId,
+                                           Amount = earning.Amount,
+                                           CrewId = earning.CrewId,
+                                           Type = earning.Type,
+                                           SubCode = accountCode.SubCode,
+                                           SubBudget = accountCode.SubBudget
+                                       };
 
+
+            //_context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
+            return Json(ReimbursementDetails);
+        }
     }
+
+    
 }
