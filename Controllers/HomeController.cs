@@ -1253,9 +1253,9 @@ namespace crewlinkship.Controllers
                 IsPromoted = x.IsPromoted
             }).ToList();
 
-            var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeduction
+            var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeductionVM
             {
-                PortageEarningDeductionId = x.PortageEarningDeductionId,
+				VesselPortId = x.PortageEarningDeductionId,
                 CrewId = x.CrewId,
                 PortageBillId = x.PortageBillId,
                 Vesselid = x.Vesselid,

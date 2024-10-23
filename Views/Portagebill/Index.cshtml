@@ -1720,7 +1720,8 @@
             url: "/Portagebill/GetAccounts",
             datatype: "Json",
             success: function (data) {
-                debugger;
+
+                console.log(data);
                 $('#SelectAccountCode').append('<option value="">Account Code / Name</option>');
                 $.each(data, function (index, value) {
                     /*  $('#SelectAccountCode').append('<option value="' + value.subCodeId + '">' + value.subCode.subCode + + ' ' + value.subCode.subBudget + '</option>');*/
@@ -4553,7 +4554,7 @@
         var model = "";
         var currency = document.getElementById("pcurrency").innerText;
 
-      
+       debugger;
 
         const mergedArray = mm.concat(oo, uppOtherdeduction);
         debugger;
