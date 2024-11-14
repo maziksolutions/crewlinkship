@@ -59,7 +59,7 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult GetAccounts()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement"&& x.IsDeleted==false ).ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Reimbursement" && x.IsCba == "0" && x.IsDeleted==false ).ToList();
             return Json(accounts);
         }
 
@@ -153,14 +153,14 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult GetAccountotherearnings()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Earning" && x.IsDeleted==false).ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Earning" && x.IsCba== "0" && x.IsDeleted==false).ToList();
             return Json(accounts);
         }
 
         [HttpGet]
         public IActionResult GetAccountOtherDeductions()
         {
-            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Deduction" && x.IsDeleted == false).ToList();
+            var accounts = _context.TblWageComponents.Include(x => x.SubCode).Where(x => x.Earning == "Deduction" && x.IsCba == "0" && x.IsDeleted == false).ToList();
             return Json(accounts);
         }
 
@@ -243,15 +243,15 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
 
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", 181, month, year, "no", checkpbtilldate);
+            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselidtouse, month, year, "no", checkpbtilldate);
 
-            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == 181), "VesselId", "VesselName");
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 181).FirstOrDefault();
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 181).ToList();
-                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", 181, month, year, "yes");
-                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", 181, month, year);
+            ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == vesselidtouse), "VesselId", "VesselName");
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselidtouse).ToList();
+                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes");
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year);
 
-                    ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == 181).ToList().FirstOrDefault()?.BillStatus;
+                    ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselidtouse).ToList().FirstOrDefault()?.BillStatus;
 
 
                     var tables = new PortageViewModel
@@ -283,11 +283,11 @@ namespace crewlinkship.Controllers
             var bowreq = _context.TblBowRequests.FirstOrDefault(t => t.CrewListId == crewListId && t.IsDeleted == false);
             return Json(bowreq);
         }
-        public JsonResult getBOWData(int crewId, int crewListId, DateTime signOffDate)
+        public JsonResult getBOWData(int crewId, int crewListId, string signOffDate)
         {
             try
             {
-                var data = _context.portageBillBows.FromSqlRaw("getBOWData @p0, @p1, @p2", crewId, crewListId, signOffDate).ToList();
+                var data = _context.portageBillBows.FromSqlRaw("getBOWData @p0, @p1, @p2", crewId, crewListId, DateTime.Parse(signOffDate)).ToList();
                 return Json(data);
             }
             catch (DbUpdateException dbEx)
@@ -313,56 +313,114 @@ namespace crewlinkship.Controllers
         {
             try
             {
-                if (item.PortageBillId == 0)
+                var checkdata = _context.TblPortageBills.Where(x => x.CrewId == item.CrewId && x.CrewListId == item.CrewListId && x.From == item.From && x.IsDeleted == false && x.Vesselid == item.Vesselid).FirstOrDefault();
+                if(checkdata == null)
                 {
-                    //_context.TblPortageBills.Add(new TblPortageBill
-                    var data = new TblPortageBill
+                    if (item.IsPromoted == null)
                     {
-                        CrewId = item.CrewId,
-                        CrewListId = item.CrewListId,
-                        ContractId = item.ContractId,
-                        From = item.From,
-                        To = item.To,
-                        Days = item.Days,
-                        Othours = item.Othours,
-                        ExtraOt = item.ExtraOt,
-                        OtherEarnings = item.OtherEarnings,
-                        TransitDays = item.TransitDays,
-                        TransitWages = item.TransitWages,
-                        TotalEarnings = item.TotalEarnings,
-                        PrevMonthBal = item.PrevMonthBal,
-                        // PrevMonthBal = item.FinalBalance,
-                        Reimbursement = item.Reimbursement,
-                        TotalPayable = item.TotalPayable,
-                        LeaveWagesCf = item.LeaveWagesCf,
-                        CashAdvance = item.CashAdvance,
-                        BondedStores = item.BondedStores,
-                        OtherDeductions = item.OtherDeductions,
-                        Allotments = item.Allotments,
-                        TotalDeductions = item.TotalDeductions,
-                        SignOffDate = item.SignOffDate,
-                        Remarks = item.Remarks,
-                        LeaveWagesBf = item.LeaveWagesBf,
-                        FinalBalance = item.FinalBalance,
-                        AppliedCba = item.AppliedCba,
-                      //  CreatedBy = crewid,
-                        BankId = item.BankId,
-                        Vesselid = item.Vesselid,
-                        Udamount = item.Udamount,
-                        Tax = item.Tax,
-                        Wfamount = item.Wfamount,
-                        IsPromoted = item.IsPromoted,
-                        IsLeaveWagesCf = item.IsLeaveWagesCf,
-                        Attachment = item.Attachment,
-                        Gratuity = item.Gratuity,
-                        Avc = item.Avc,
-                        IndPfamount = item.IndPfamount,
-                        IsAddPrevBal = item.IsAddPrevBal,
-                    };
-                    _context.TblPortageBills.Add(data);
-                    _context.SaveChanges();
-                    portageBillId = data.PortageBillId;
-                    return data.PortageBillId;
+                        item.IsPromoted = false;
+                    }
+                    if (item.PortageBillId == 0)
+                    {
+                        //_context.TblPortageBills.Add(new TblPortageBill
+                        var data = new TblPortageBill
+                        {
+                            CrewId = item.CrewId,
+                            CrewListId = item.CrewListId,
+                            ContractId = item.ContractId,
+                            From = item.From,
+                            To = item.To,
+                            Days = item.Days,
+                            Othours = item.Othours,
+                            ExtraOt = item.ExtraOt,
+                            OtherEarnings = item.OtherEarnings,
+                            TransitDays = item.TransitDays,
+                            TransitWages = item.TransitWages,
+                            TotalEarnings = item.TotalEarnings,
+                            PrevMonthBal = item.PrevMonthBal,
+                            // PrevMonthBal = item.FinalBalance,
+                            Reimbursement = item.Reimbursement,
+                            TotalPayable = item.TotalPayable,
+                            LeaveWagesCf = item.LeaveWagesCf,
+                            CashAdvance = item.CashAdvance,
+                            BondedStores = item.BondedStores,
+                            OtherDeductions = item.OtherDeductions,
+                            Allotments = item.Allotments,
+                            TotalDeductions = item.TotalDeductions,
+                            SignOffDate = item.SignOffDate,
+                            Remarks = item.Remarks,
+                            LeaveWagesBf = item.LeaveWagesBf,
+                            FinalBalance = item.FinalBalance,
+                            AppliedCba = item.AppliedCba,
+                            //  CreatedBy = crewid,
+                            BankId = item.BankId,
+                            Vesselid = item.Vesselid,
+                            Udamount = item.Udamount,
+                            Tax = item.Tax,
+                            Wfamount = item.Wfamount,
+                            IsPromoted = item.IsPromoted,
+                            IsLeaveWagesCf = item.IsLeaveWagesCf,
+                            Attachment = item.Attachment,
+                            Gratuity = item.Gratuity,
+                            Avc = item.Avc,
+                            IndPfamount = item.IndPfamount,
+                            IsAddPrevBal = item.IsAddPrevBal,
+                        };
+                        _context.TblPortageBills.Add(data);
+                        _context.SaveChanges();
+                        portageBillId = data.PortageBillId;
+                        return data.PortageBillId;
+                    }
+                    else
+                    {
+                        var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == item.PortageBillId);
+                        if (data != null)
+                        {
+                            data.CrewId = item.CrewId;
+                            data.CrewListId = item.CrewListId;
+                            data.ContractId = item.ContractId;
+                            data.From = item.From;
+                            data.To = item.To;
+                            data.Days = item.Days;
+                            data.Othours = item.Othours;
+                            data.ExtraOt = item.ExtraOt;
+                            data.OtherEarnings = item.OtherEarnings;
+                            data.TransitDays = item.TransitDays;
+                            data.TransitWages = item.TransitWages;
+                            data.TotalEarnings = item.TotalEarnings;
+                            data.PrevMonthBal = item.PrevMonthBal;
+                            data.Reimbursement = item.Reimbursement;
+                            data.TotalPayable = item.TotalPayable;
+                            data.LeaveWagesCf = item.LeaveWagesCf;
+                            data.CashAdvance = item.CashAdvance;
+                            data.BondedStores = item.BondedStores;
+                            data.OtherDeductions = item.OtherDeductions;
+                            data.Allotments = item.Allotments;
+                            data.TotalDeductions = item.TotalDeductions;
+                            data.LeaveWagesBf = item.LeaveWagesBf;
+                            data.FinalBalance = item.FinalBalance;
+                            // data.SignOffDate = item.SignOffDate;
+                            data.Remarks = item.Remarks;
+                            //  data.ModifiedBy = crewid;
+                            data.ModifiedDate = DateTime.Now;
+                            data.AppliedCba = item.AppliedCba;
+                            data.BankId = item.BankId;
+                            data.Vesselid = item.Vesselid;
+                            data.Udamount = item.Udamount;
+                            data.Tax = item.Tax;
+                            data.Wfamount = item.Wfamount;
+                            data.IsLeaveWagesCf = item.IsLeaveWagesCf;
+                            data.Attachment = item.Attachment;
+                            data.Gratuity = item.Gratuity;
+                            data.Avc = item.Avc;
+                            data.IndPfamount = item.IndPfamount;
+                            data.IsAddPrevBal = item.IsAddPrevBal;
+                            _context.TblPortageBills.Update(data);
+                            _context.SaveChanges();
+                            return data.PortageBillId;
+
+                        }
+                    }
                 }
                 else
                 {
@@ -394,7 +452,7 @@ namespace crewlinkship.Controllers
                         data.FinalBalance = item.FinalBalance;
                         // data.SignOffDate = item.SignOffDate;
                         data.Remarks = item.Remarks;
-                      //  data.ModifiedBy = crewid;
+                        //  data.ModifiedBy = crewid;
                         data.ModifiedDate = DateTime.Now;
                         data.AppliedCba = item.AppliedCba;
                         data.BankId = item.BankId;
@@ -630,7 +688,6 @@ namespace crewlinkship.Controllers
             {
                 return Json("Invalid input");
             }
-
             // Add new Portage Earning Deduction
             if (item.PortageEarningDeductionId == 0)
             {
@@ -646,17 +703,14 @@ namespace crewlinkship.Controllers
                     CreatedBy = 1, // Ideally, use the actual user ID
                     SubCodeId = item.SubCodeId,
                     Type = item.Type,
-                    Amount = item.Amount,
-                    
+                    Amount = item.Amount,                    
                 };
-
                 _context.PortageEarningDeduction.Add(newDeduction);
             }
             else // Update existing Portage Earning Deduction
             {
                 var existingDeduction = _context.PortageEarningDeduction
                     .FirstOrDefault(c => c.PortageEarningDeductionId == item.PortageEarningDeductionId);
-
                 if (existingDeduction != null)
                 {
                     existingDeduction.CrewId = item.CrewId;
@@ -671,7 +725,6 @@ namespace crewlinkship.Controllers
                     existingDeduction.Type = item.Type;
                     existingDeduction.Amount = item.Amount;
                     //existingDeduction.IsDeleted = false;
-
                     _context.PortageEarningDeduction.Update(existingDeduction);
                 }
                 else
@@ -679,7 +732,6 @@ namespace crewlinkship.Controllers
                     return Json("Portage Earning Deduction not found");
                 }
             }
-
             // Save changes to the context
             try
             {

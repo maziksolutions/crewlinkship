@@ -42,6 +42,10 @@ using Limilabs.Mail;
 using Limilabs.Mail.MIME;
 using System.Net.Security;
 using System.Net.Sockets;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Intersoft.Crosslight;
 
 namespace crewlinkship.Controllers
 {
@@ -564,6 +568,28 @@ namespace crewlinkship.Controllers
                 Recdate = x.Recdate,
                 IsPromoted = x.IsPromoted
             }).ToList();
+            var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
+                                           where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+                                           select new
+                                           {
+                                               PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
+                                               VesselPortId = pbearn.VesselPortId,
+                                               OfficePBId = pbearn.OfficePBId,
+                                               CrewId = pbearn.CrewId,
+                                               PortageBillId = pbearn.PortageBillId,
+                                               Vesselid = pbearn.Vesselid,
+                                               SubCodeId = pbearn.SubCodeId,
+                                               Amount = pbearn.Amount,
+                                               From = pbearn.From,
+                                               To = pbearn.To,
+                                               Type = pbearn.Type,
+                                               Currency = pbearn.Currency,
+                                               IsDeleted = pbearn.IsDeleted,
+                                               RecDate = pbearn.RecDate,
+                                               CreatedBy = pbearn.CreatedBy,
+                                               ModifiedBy = pbearn.ModifiedBy,
+                                               ModifiedDate = pbearn.ModifiedDate
+                                           }).ToList();
             var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
             {
                 VesselPortId = x.PortageBillId,
@@ -658,6 +684,12 @@ namespace crewlinkship.Controllers
                     {
                         var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
                         wb.Worksheet(x).Cell(1, 1).InsertTable(PortageBills);
+                        x++;
+                    }
+                    if (PortageEarningDeduction.Count > 0)
+                    {
+                        var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PortageEarningDeduction);
                         x++;
                     }
                     int wbcount = wb.Worksheets.Count();
@@ -1253,24 +1285,46 @@ namespace crewlinkship.Controllers
                 IsPromoted = x.IsPromoted
             }).ToList();
 
-            var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeductionVM
-            {
-				VesselPortId = x.PortageEarningDeductionId,
-                CrewId = x.CrewId,
-                PortageBillId = x.PortageBillId,
-                Vesselid = x.Vesselid,
-                SubCodeId = x.SubCodeId,
-                Amount = x.Amount,
-                From = x.From,
-                To = x.To,
-                Type = x.Type,
-                Currency = x.Currency,
-                IsDeleted = x.IsDeleted,
-                RecDate = x.RecDate,
-                CreatedBy= x.CreatedBy,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate
-            }).ToList();
+            //var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeductionVM
+            //{
+            //    VesselPortId = x.PortageEarningDeductionId,
+            //    CrewId = x.CrewId,
+            //    PortageBillId = x.PortageBillId,
+            //    Vesselid = x.Vesselid,
+            //    SubCodeId = x.SubCodeId,
+            //    Amount = x.Amount,
+            //    From = x.From,
+            //    To = x.To,
+            //    Type = x.Type,
+            //    Currency = x.Currency,
+            //    IsDeleted = x.IsDeleted,
+            //    RecDate = x.RecDate,
+            //    CreatedBy = x.CreatedBy,
+            //    ModifiedBy = x.ModifiedBy,
+            //    ModifiedDate = x.ModifiedDate
+            //}).ToList();
+            var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction  where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+             select new
+             {
+                 PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
+                 VesselPortId = pbearn.VesselPortId,
+                 OfficePBId = pbearn.OfficePBId,
+                 CrewId = pbearn.CrewId,
+                 PortageBillId = pbearn.PortageBillId,
+                 Vesselid = pbearn.Vesselid,
+                 SubCodeId = pbearn.SubCodeId,
+                 Amount = pbearn.Amount,
+                 From = pbearn.From,
+                 To = pbearn.To,
+                 Type = pbearn.Type,
+                 Currency = pbearn.Currency,
+                 IsDeleted = pbearn.IsDeleted,
+                 RecDate = pbearn.RecDate,
+                 CreatedBy = pbearn.CreatedBy,
+                 ModifiedBy = pbearn.ModifiedBy,
+                 ModifiedDate = pbearn.ModifiedDate
+             }).ToList();
+           
 
             var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
             {
@@ -1414,7 +1468,7 @@ namespace crewlinkship.Controllers
                     var wsPortageBill = wb.Worksheets.Add("tblImportPortageBill");
                     wb.Worksheet(5).Cell(1, 1).InsertTable(PortageBills);
 
-                    var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDeduction");
+                    var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
                     wb.Worksheet(6).Cell(1, 1).InsertTable(PortageEarningDeduction);
 
                     //var wsReimbursementOrDeduction = wb.Worksheets.Add("TblImportContractReimDedu");
@@ -1617,23 +1671,23 @@ namespace crewlinkship.Controllers
             var accessToken = HttpContext.Session.GetString("token");
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            crewId = 181;
+            crewId = vesselidtouse;
             if (accessToken != null)
             {
 
                 //ViewBag.name = TempData["name"] as string;
                 ViewBag.name = HttpContext.Session.GetString("name");
 
-                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == 181).FirstOrDefault();
+                ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
 
-                var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == 181 && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
+                var crewlist = _context.TblCrewLists.Include(x => x.Crew).Include(x => x.Reliever).Include(x => x.Rank).Include(x => x.Crew.Country).Include(x => x.ReliverRank).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse && x.IsSignOff != true && x.IsDeleted == false).ToList().OrderBy(x => x.Rank.CrewSort).ToList();
 
                 ViewBag.crewDetails = _context.TblActivitySignOns.Include(x => x.Rank).Include(x => x.Seaport).Include(x => x.SignOnReason).Include(x => x.Crew).Include(c => c.Country).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
-                ViewBag.bowRequestCount = _context.TblBowRequests.Where(x => x.VesselId == 181 && x.Status == "Requested").Count();
+                ViewBag.bowRequestCount = _context.TblBowRequests.Where(x => x.VesselId == vesselidtouse && x.Status == "Requested").Count();
                 //ViewBag.imo = vesselDetails.Imo;
                 //ViewBag.shipType = vesselDetails.Ship.ShipCategory;
                 //ViewBag.flag = vesselDetails.Flag.CountryName;
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == 181).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselidtouse).ToList();
                 return View(crewlist);
             }
             return RedirectToAction("UserLogin", "Login");

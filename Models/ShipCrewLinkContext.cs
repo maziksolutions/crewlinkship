@@ -123,7 +123,7 @@ namespace crewlinkship.Models
         public virtual DbSet<PortageBillVM> PortageBillVM { get; set; }
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
         public virtual DbSet<tblBackupLog> tblBackupLog { get; set; }
-
+        public virtual DbSet<tblimportPortageEarningDedu> tblimportPortageEarningDeduction { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
           

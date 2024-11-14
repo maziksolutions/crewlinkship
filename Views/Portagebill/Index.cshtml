@@ -1080,6 +1080,8 @@
                             <input id="tax" name="tax" hidden>
                             <input id="udAmount" name="udAmount" hidden>
                             <input id="wfAmount" name="wfAmount" hidden>
+                              <input id="BankAllotmentId1" name="BankAllotmentId1" value="0" hidden>
+                            <input id="BankAllotmentId2" name="BankAllotmentId2" value="0" hidden>
                             <button onclick="downloadbow()" class="btn btn-success form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip"
                                     data-trigger="hover" data-placement="top" data-title="Download BOW" title="Download BOW">
                                 <i class="fas fa-download" aria-hidden="true"></i>Download BOW
@@ -1122,7 +1124,7 @@
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="OtherEarnings">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onchange="calculateearning()" name="OtherEarnings" id="OtherEarnings">
+                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onclick="OtherEarningsopenpopup('bow')" onchange="calculateearning()" name="OtherEarnings" id="OtherEarnings">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="transitDays">Transit Days</label>
@@ -1135,7 +1137,7 @@
 
                                 <div class="col form-group input-container">
                                     <label for="reimbursement">Reimbursement</label>
-                                    <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" type="text" name="reimbursement" id="reimbursementtt">
+                                    <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" onclick="Reimbursementopenpopup('bow')" type="number" value="0" name="reimbursement" id="reimbursement">
                                 </div>
                             </div>
                             <div class="row">
@@ -1158,7 +1160,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="otherDeductions">Other Deductions</label>
-                                    <input placeholder="Other Deductions" class="form-control" required onchange="calculateearning()" value="0" type="number" name="otherDeductions" id="otherDeductions">
+                                    <input placeholder="Other Deductions" class="form-control" required onchange="calculateearning()" onclick="OtherDeductionsopenpopup('bow')" value="0" type="number" name="otherDeductions" id="otherDeductions">
                                 </div>
                             </div>
                             <div class="row">
@@ -1278,7 +1280,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pearningother">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onclick="OtherEarningsopenpopup()" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onclick="OtherEarningsopenpopup('portage')" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -1290,7 +1292,7 @@
                                     <label for="preimbursement">Reimbursement</label>
                                     @*<input placeholder="Reimbursement" class="form-control" onclick="tets()" type="text" name="preimbursement">*@
                                     <input placeholder="Reimbursement" class="form-control" type="number" value="0"
-                                           onclick="Reimbursementopenpopup()" name="preimbursement"
+                                           onclick="Reimbursementopenpopup('portage')" name="preimbursement"
                                            onchange="calculateportageearning()" id="preimbursement">
 
                                 </div>
@@ -1319,7 +1321,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="potherDeductions">Other Deductions</label>
-                                    <input placeholder="Other Deductions" class="form-control" onclick="OtherDeductionsopenpopup()" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
+                                    <input placeholder="Other Deductions" class="form-control" onclick="OtherDeductionsopenpopup('portage')" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -1423,9 +1425,6 @@
     </div>
 </div>
 
-
-
-
 <div class="modal fade" id="OtherEarningsmodal" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1494,10 +1493,6 @@
     </div>
 </div>
 
-
-
-
-
 <div class="modal fade" id="OtherDeductionsmodal" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1562,11 +1557,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 <!--Portage entry end-->
 <div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-xl">
@@ -1663,7 +1653,7 @@
     var stateotherEarnings;
     var otherEarningsArray = [];
     var deleteidotherEarning = 0;
-
+    var allotmenttype = '';
        // otherEarnings variable end 
 
     // otherdeduction variable
@@ -1867,7 +1857,7 @@
 
             else if (state == 'Delete') {
                 commonArrayotherEarnings.splice(arrayIndexotherEarnings, 1);
-                alert(deleteidotherEarning)
+               // alert(deleteidotherEarning)
                 OtherEarningIddelete = deleteidotherEarning;
                 $.ajax({
                     type: "GET",
@@ -1920,7 +1910,7 @@
             else if (state == 'Delete') {
                 commonArrayotherDeductions.splice(arrayIndexotherDeductions, 1);
 
-                alert(deleteidotherdeduction)
+                //alert(deleteidotherdeduction)
                 OtherEarningIddelete = deleteidotherdeduction;
                 $.ajax({
                     type: "GET",
@@ -2220,15 +2210,21 @@
     }
 
     function updateForm() {
+        debugger;
         otherdeductionremark()
-
         updateCombinedForm();
         updateee();
         var totalEarnElement = document.getElementById('totalEarn');
         var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
-        var numericValue = parseFloat(pp);
-        $('#preimbursement').prop("value", numericValue);
-        calculateportageearning();
+        var numericValue = parseFloat(pp);        
+        if (allotmenttype == 'bow') {
+            $('#reimbursement').prop("value", numericValue);
+            calculateearning();
+        }
+        else {
+            $('#preimbursement').prop("value", numericValue);
+             calculateportageearning();
+        }       
         $("#Reimbursementmodal").modal('hide');
     }
 
@@ -2238,11 +2234,15 @@
         var totalEarnElement = document.getElementById('totalotherEarn');
         var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
         var numericValue = parseFloat(pp);
-        $('#pearningother').prop("value", numericValue);
-
-        calculateportageearning();
+        if (allotmenttype == 'bow') {
+            $('#OtherEarnings').prop("value", numericValue);
+            calculateearning();
+        }
+        else {
+            $('#pearningother').prop("value", numericValue);
+            calculateportageearning();
+        }        
         $("#OtherEarningsmodal").modal('hide');
-
     }
 
     function updateOtherDeductionsForm()
@@ -2252,8 +2252,14 @@
         var totalEarnElement = document.getElementById('totalOtherDeductions');
         var pp = totalEarnElement ? totalEarnElement.textContent.replace(/[^0-9.-]+/g, '') : '';
         var numericValue = parseFloat(pp);
-        $('#potherDeductions').prop("value", numericValue);
-        calculateportageearning();
+        if (allotmenttype == 'bow') {
+            $('#otherDeductions').prop("value", numericValue);
+            calculateearning();
+        }
+        else {
+            $('#potherDeductions').prop("value", numericValue);
+             calculateportageearning();
+        }       
         $("#OtherDeductionsmodal").modal('hide');
 
     }
@@ -2336,21 +2342,17 @@
                     specificValuesids.push(entry.SubCodeId);
                 });
             }
+        if (allotmenttype == 'bow') {
+            $('#remarks').val(specificValues.join(','));
+        }
+        else {
             $('#premarks').val(specificValues.join(','));
-
+        }   
             pp = specificValuesids.join(',');
-        
-        
-        
-
-        
-
-
     }
 
     function otherdeductionremark()
-    {
-       
+    {       
         const PortageBillId = PortageBillIdglobal;
         const Type = "Deduction";
         if (DeductionsArray.length == 0) {
@@ -2485,9 +2487,15 @@
 </script>
 
 <script>
-        function Reimbursementopenpopup() {
-
-            const preimbursementvalue = $('#preimbursement').val();
+    function Reimbursementopenpopup(type) {
+            var preimbursementvalue = 0;
+        this.allotmenttype = type;
+              if (type == 'bow') {
+            preimbursementvalue = $('#reimbursement').val();
+        }
+        else {
+            preimbursementvalue = $('#preimbursement').val();
+        }
             if (preimbursementvalue == 0) {
                 commonArray = [];
                 $("#table-body").empty();
@@ -2536,10 +2544,17 @@
             $("#totalEarn").text(preimbursementvalue);
             $("#Reimbursementmodal").modal('show');
         }
-        function OtherEarningsopenpopup() {
+        function OtherEarningsopenpopup(type) {           
             debugger
             /*       this.loadOtherEarning();*/
-            const pearningothervalue = $('#pearningother').val();
+        this.allotmenttype = type;
+            var pearningothervalue = 0;
+       if (type == 'bow') {
+            pearningothervalue = $('#OtherEarnings').val();
+        }
+        else {
+            pearningothervalue = $('#pearningother').val();
+        }
             if (pearningothervalue == 0) {
                 commonArrayotherEarnings = [];
                 $("#table-bodyotherearning").empty();
@@ -2593,8 +2608,16 @@
             $("#OtherEarningsmodal").modal('show');
         }
 
-        function OtherDeductionsopenpopup() {
-            const potherDeductions = $('#potherDeductions').val();
+        function OtherDeductionsopenpopup(type) {
+            debugger;
+        this.allotmenttype = type;
+            var potherDeductions = 0;
+            if (type == 'bow') {
+                potherDeductions = $('#otherDeductions').val();
+            }
+            else {
+                potherDeductions = $('#potherDeductions').val();
+            }
             if (potherDeductions == 0) {
                 commonArrayotherDeductions = [];
                 $("#table-bodyOtherDeductions").empty();
@@ -2641,12 +2664,8 @@
                     }
                 });
             }
-
-
             $("#totalotherEarn").text(potherDeductions);
             $("#OtherDeductionsmodal").modal('show');
-
-
             //this.loadOtherDeductions();
             //accountEntriesOtherDeductions = [];
             //$("#table-bodyOtherDeductions").empty();
@@ -2671,54 +2690,58 @@
                 const deduction = response.filter(x => x.type == "Deduction");
                 const reimbursement = response.filter(x => x.type == "Reimbursement");
                 const earning = response.filter(x => x.type == "Earning");
-                const accountEntriesOtherDeductions = [];
-                for (let i = 0; i < deduction.length; i++) {
-                    var accountOtherEarning = [];
-                    accountOtherEarning.Index = i;
-                    accountOtherEarning.PortageEarningDeductionId = response[i].portageEarningDeductionId;
-                    accountOtherEarning.Codename = `${response[i].subCode} ${response[i].subBudget}`;
-                    accountOtherEarning.Amount = response[i].amount;
-                    accountOtherEarning.Type = response[i].type;
-                    accountOtherEarning.SubCodeId = response[i].subCodeId;
-                    accountEntriesOtherDeductions.push(accountOtherEarning);
+                if (deduction.length != 0) {
+                    const accountEntriesOtherDeductions = [];
+                    for (let i = 0; i < deduction.length; i++) {
+                        var accountOtherEarning = [];
+                        accountOtherEarning.Index = i;
+                        accountOtherEarning.PortageEarningDeductionId = deduction[i].portageEarningDeductionId;
+                        accountOtherEarning.Codename = `${deduction[i].subCode} ${deduction[i].subBudget}`;
+                        accountOtherEarning.Amount = deduction[i].amount;
+                        accountOtherEarning.Type = deduction[i].type;
+                        accountOtherEarning.SubCodeId = deduction[i].subCodeId;
+                        accountEntriesOtherDeductions.push(accountOtherEarning);
+                    }
+
+                    DeductionsArray = accountEntriesOtherDeductions;
+                    commonArrayotherDeductions = accountEntriesOtherDeductions;
+                    populateTableOtherDeductions(DeductionsArray);
+                }
+                if (reimbursement.length != 0) {
+                    const accountEntries = [];
+                    for (let i = 0; i < reimbursement.length; i++) {
+                        var account = [];
+                        account.Index = i;
+                        account.PortageEarningDeductionId = reimbursement[i].portageEarningDeductionId;
+                        account.Codename = `${reimbursement[i].subCode} ${reimbursement[i].subBudget}`;
+                        account.Amount = reimbursement[i].amount;
+                        account.Type = reimbursement[i].type;
+                        account.SubCodeId = reimbursement[i].subCodeId;
+                        accountEntries.push(account);
+                    }
+                    reimbursementArray = accountEntries;
+                    commonArray = accountEntries;
+                    populateTable(reimbursementArray);
                 }
 
-                DeductionsArray = accountEntriesOtherDeductions;
-                commonArrayotherDeductions = accountEntriesOtherDeductions;
-                populateTableOtherDeductions(DeductionsArray);
-                const accountEntries = [];
-                for (let i = 0; i < reimbursement.length; i++) {
-                    var account = [];
-                    account.Index = i;
-                    account.PortageEarningDeductionId = response[i].portageEarningDeductionId;
-                    account.Codename = `${response[i].subCode} ${response[i].subBudget}`;
-                    account.Amount = response[i].amount;
-                    account.Type = response[i].type;
-                    account.SubCodeId = response[i].subCodeId;
-                    accountEntries.push(account);
+                if (earning.length != 0) {
+                    const accountEntriesOtherearning = [];
+                    for (let i = 0; i < earning.length; i++) {
+                        var accountOtherEarning = [];
+                        accountOtherEarning.Index = i;
+                        accountOtherEarning.PortageEarningDeductionId = earning[i].portageEarningDeductionId;
+                        accountOtherEarning.Codename = `${earning[i].subCode} ${earning[i].subBudget}`;
+                        accountOtherEarning.Amount = earning[i].amount;
+                        accountOtherEarning.Type = earning[i].type;
+                        accountOtherEarning.SubCodeId = earning[i].subCodeId;
+                        accountEntriesOtherearning.push(accountOtherEarning);
+
+                    }
+
+                    otherEarningsArray = accountEntriesOtherearning;
+                    commonArrayotherEarnings = accountEntriesOtherearning;
+                    populateTableotherearning(otherEarningsArray);
                 }
-                reimbursementArray = accountEntries;
-                commonArray = accountEntries;
-                populateTable(reimbursementArray);
-
-
-                const accountEntriesOtherearning = [];
-                for (let i = 0; i < earning.length; i++) {
-                    var accountOtherEarning = [];
-                    accountOtherEarning.Index = i;
-                    accountOtherEarning.PortageEarningDeductionId = response[i].portageEarningDeductionId;
-                    accountOtherEarning.Codename = `${response[i].subCode} ${response[i].subBudget}`;
-                    accountOtherEarning.Amount = response[i].amount;
-                    accountOtherEarning.Type = response[i].type;
-                    accountOtherEarning.SubCodeId = response[i].subCodeId;
-                    accountEntriesOtherearning.push(accountOtherEarning);
-
-                }
-
-                otherEarningsArray = accountEntriesOtherearning;
-                commonArrayotherEarnings = accountEntriesOtherearning;
-               populateTableotherearning(otherEarningsArray);
-
 
 
 
@@ -2939,6 +2962,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     currency = (response[0].currency || 0);
                     from = response[0].from;
                     to = response[0].to;
@@ -2953,6 +2977,7 @@
                     otherEarnings = (response[0].otherEarnings || 0);
                     reimbursement = (response[0].reimbursement || 0);
                     portageBillId = (response[0].portageBillId || 0);
+                    PortageBillIdglobal = (response[0].portageBillId || 0);
                     ca = (response[0].cashAdvance || 0);
                     bs = (response[0].bondedStores || 0);
                     od = (response[0].otherDeductions || 0);
@@ -2991,17 +3016,18 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (bankallormentdetail) {
+                            debugger;
                             if (bankallormentdetail.length == 1) {
-                                selectbankids = [bankallormentdetail[0].bankAllotmentId];
+                                selectbankids = [bankallormentdetail[0].bankId];
                                 $("#allotments").val(bankallormentdetail[0].allotments);
                                 $('input[name=bankid][value="' + bankallormentdetail[0].bankId + '"]').prop('checked', true);
-                                $("#pBankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
+                                $("#BankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
                             }
                             else if (bankallormentdetail.length >= 2) {
-                                selectbankids = [bankallormentdetail[0].bankAllotmentId, bankallormentdetail[1].bankId];
+                                selectbankids = [bankallormentdetail[0].bankId, bankallormentdetail[1].bankId];
                                 $("#allotments").val(bankallormentdetail[0].allotments);
                                 $('input[name=bankid][value="' + bankallormentdetail[0].bankId + '"]').prop('checked', true);
-                                $("#pBankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
+                                $("#BankAllotmentId1").val(bankallormentdetail[0].bankAllotmentId);
                                 $("#allotment2").val(bankallormentdetail[1].allotments);
                                 $("#bowallotment2").show();
                                 $('input[name=bankid][value="' + bankallormentdetail[1].bankId + '"]').prop('checked', true);
@@ -3106,107 +3132,184 @@
     });
 
     function savebowdata() {
+        debugger;
         var valdata = $("#bowform").serialize();
+       console.log(valdata)
+        var portageBillVM = {
+            PortageBillId: $("#PortageBillId").val(),
+            From: $("#From").val(),
+            To: $("#To").val(),
+            Vesselid: $("#Vesselid").val(),
+            Othours: $("#OTHours").val(),
+            Days: $("#Days").val(),
+            PrevMonthBal: prevMonthBal,
+            ExtraOt: $("#extraot").val(),
+            BankId: $("#Bankid").val(),
+            AppliedCba: $("#AppliedCba").val(),
+            CrewId: $("#CrewId").val(),
+            CrewListId: $("#CrewListId").val(),
+            ContractId: $("#ContractId").val(),
+            TotalDeductions: $("#TotalDeductions").val(),
+            FinalBalance: $("#FinalBalance").val(),
+            OtherEarnings: $("#earningother").val(),
+            Reimbursement: $("#reimbursement").val(),
+            CashAdvance: $("#cashAdvance").val(),
+            BondedStores: $("#bondedStores").val(),
+            OtherDeductions: $("#otherDeductions").val(),
+            Allotments: parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val()),
+            LeaveWagesBf: $("#LeaveWagesBf").val(),
+            TotalEarnings: $("#totalearncurrent").val(),
+            Remarks: $("#remarks").val(),
+            TransitDays: $("#transitDays").val(),
+            OTHours: $("#otHours").val(),
+            TransitWages: $("#Transitwages").val(),
+            TotalPayable: $("#TotalPayable").val(),
+            LeaveWagesCf: $("#LeaveWagesCf").val(),
+            AVC: $("#Avc").val(),
+            IsLeaveWagesCf: 0,
+            IsTransitApply: $("#IsTransitApply").val(),
+            IsPromoted: $("#IsPromoted").val(),
+            Gratuity: $("#Gratuity").val(),
+            IndPfamount: $("#IndPfamount").val(),
+            IsAddPrevBal: $("#IsAddPrevBal").val(),
+            IsHoldWageAllotment: $("#IsHoldWageAllotment").val(),
+            WHTdeduction: $("#whTdeduction").val(),
+            UDdeduction: $("#UDdeduction").val(),
+            WFdeduction: $("#wFdeduction").val(),
+            Tax: $("#tax").val(),
+            UDAmount: $("#udAmount").val(),
+            WFAmount: $("#wfAmount").val(),
+            LeaveWagesBF: $("#leaveWagesBF").val(),
+            Allotment2: $("#allotment2").val(),
+            SignOffDate: $("#signOffdate").val(),
+        };
+        console.log(portageBillVM)
+
         $.ajax({
             url: "/Portagebill/AddPortageBill",
             type: "POST",
+            data: portageBillVM,
             dataType: 'json',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: valdata,
             success: function (response) {
-                if (response == "success") {
-                    $.each(selectbankids, function (k, v) {
-                        var selectedbankid = v;
-                        var model = "";
-                        if (k == 0) {
-                            model = {
-                                "BankAllotmentId": $('#pBankAllotmentId1').val(),
-                                "Crew": $('#CrewId').val(),
-                                "VesselId": $('#Vesselid').val(),
-                                'BankId': selectedbankid,
-                                "From": $('#From').val(),
-                                "To": $('#To').val(),
-                                'Allotments': $('#allotments').val(),
-                                "IsMidMonthAllotment": 0
-                            }
-                        }
-                        else {
-                            model = {
-                                "BankAllotmentId": $('#pBankAllotmentId2').val(),
-                                "Crew": $('#CrewId').val(),
-                                "VesselId": $('#Vesselid').val(),
-                                'BankId': selectedbankid,
-                                "From": $('#From').val(),
-                                "To": $('#To').val(),
-                                'Allotments': $('#allotment2').val(),
-                                "IsMidMonthAllotment": 0
-                            }
-                        }
-                        $.ajax({
-                            url: "/Portagebill/AddBankAllotment",
-                            type: "POST",
-                            dataType: 'json',
-                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                            data: { item: model, 'itemlength': selectbankids },
-                            success: function (response) {
-                                if (response == "success") {
-                                    $("#bowform").get(0).reset;
-                                    $('#bowmodel').modal('hide');
+                savebowbaksada();
+                savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
 
-                                }
-                            },
-                            failure: function (response) {
-                                alert(response.responseText);
-                            },
-                            error: function (response) {
-                                alert(response.responseText);
-                            }
-                        });
-                    });
-                    //for (var i = 0; i < selectbankids; i++) {
-                    //    var selectedbankid = selectbankids[i];
-
-                    //    console.log(selectedbankid)
-                    //    var formData = new FormData();
-                    //    formData.append('CrewId', '1300');
-                    //    formData.append('Vesselid', $('#Vesselid').val());
-                    //    formData.append('BankId', selectedbankid);
-                    //    console.log(formData)
-                    //    $.ajax({
-                    //        url: "/Portagebill/AddBankAllotment",
-                    //        type: "POST",
-                    //        dataType: 'json',
-                    //        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                    //        data: { formData, 'itemlength': selectbankids },
-                    //        success: function (response) {
-                    //            if (response == "success") {
-                    //                $("#bowform").get(0).reset;
-                    //                $('#bowmodel').modal('hide');
-                    //            }
-                    //        },
-                    //        failure: function (response) {
-                    //            alert(response.responseText);
-                    //        },
-                    //        error: function (response) {
-                    //            alert(response.responseText);
-                    //        }
-                    //    });
-                    //}
-                    alert("Bow data has been saved.")
-                    $('#bowmodel').modal('hide');
-                    resetbowform();
-                    var url = window.location.href;
-                    location.reload(true);
-                }
-
-            },
-            failure: function (response) {
-                alert(response.responseText);
-            },
-            error: function (response) {
-                alert(response.responseText);
+                alert("Bow data has been saved.");
+                            $('#bowmodel').modal('hide');
+                        resetbowform();
+                var url = window.location.href;
+                location.reload(true);
             }
-        });
+        })
+        // $.ajax({
+        //     url: "/Portagebill/AddPortageBill",
+        //     type: "POST", 
+        //     data: portageBillVM,
+        //     dataType: 'json',
+        //    // contentType: 'application/x-www-form-urlencoded; charset=UTF-8',           
+        //     success: function (response) {
+        //         debugger;
+        //         console.log(response);
+        //        // if (response == "success") {
+        //             // $.each(selectbankids, function (k, v) {
+        //             //     var selectedbankid = v;
+        //             //     var model = "";
+        //             //     if (k == 0) {
+        //             //         model = {
+        //             //             "BankAllotmentId": $('#pBankAllotmentId1').val(),
+        //             //             "Crew": $('#CrewId').val(),
+        //             //             "VesselId": $('#Vesselid').val(),
+        //             //             'BankId': selectedbankid,
+        //             //             "From": $('#From').val(),
+        //             //             "To": $('#To').val(),
+        //             //             'Allotments': $('#allotments').val(),
+        //             //             "IsMidMonthAllotment": 0
+        //             //         }
+        //             //     }
+        //             //     else {
+        //             //         model = {
+        //             //             "BankAllotmentId": $('#pBankAllotmentId2').val(),
+        //             //             "Crew": $('#CrewId').val(),
+        //             //             "VesselId": $('#Vesselid').val(),
+        //             //             'BankId': selectedbankid,
+        //             //             "From": $('#From').val(),
+        //             //             "To": $('#To').val(),
+        //             //             'Allotments': $('#allotment2').val(),
+        //             //             "IsMidMonthAllotment": 0
+        //             //         }
+        //             //     }
+        //             //     $.ajax({
+        //             //         url: "/Portagebill/AddBankAllotment",
+        //             //         type: "POST",
+        //             //         dataType: 'json',
+        //             //         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        //             //         data: { item: model, 'itemlength': selectbankids },
+        //             //         success: function (resbankallotment) {
+        //             //             //if (resbankallotment == "success") {
+        //             //             debugger;
+        //             //                savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+        //             //                 $("#bowform").get(0).reset;
+        //             //                 $('#bowmodel').modal('hide');
+
+        //             //            // }
+        //             //         },
+        //             //         failure: function (resbankallotment) {
+        //             //             alert(resbankallotment.responseText);
+        //             //         },
+        //             //         error: function (resbankallotment) {
+        //             //             alert(resbankallotment.responseText);
+        //             //         }
+        //             //     });
+        //             // });
+
+        //         savebaksada();
+        //         savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+
+
+        //             //for (var i = 0; i < selectbankids; i++) {
+        //             //    var selectedbankid = selectbankids[i];
+
+        //             //    console.log(selectedbankid)
+        //             //    var formData = new FormData();
+        //             //    formData.append('CrewId', '1300');
+        //             //    formData.append('Vesselid', $('#Vesselid').val());
+        //             //    formData.append('BankId', selectedbankid);
+        //             //    console.log(formData)
+        //             //    $.ajax({
+        //             //        url: "/Portagebill/AddBankAllotment",
+        //             //        type: "POST",
+        //             //        dataType: 'json',
+        //             //        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        //             //        data: { formData, 'itemlength': selectbankids },
+        //             //        success: function (response) {
+        //             //            if (response == "success") {
+        //             //                $("#bowform").get(0).reset;
+        //             //                $('#bowmodel').modal('hide');
+        //             //            }
+        //             //        },
+        //             //        failure: function (response) {
+        //             //            alert(response.responseText);
+        //             //        },
+        //             //        error: function (response) {
+        //             //            alert(response.responseText);
+        //             //        }
+        //             //    });
+        //             //}
+        //             alert("Bow data has been saved.")
+        //             $('#bowmodel').modal('hide');
+        //             resetbowform();
+        //             var url = window.location.href;
+        //             location.reload(true);
+        //         //}
+
+        //     },
+        //     failure: function (response) {
+        //         alert(response.responseText);
+        //     },
+        //     error: function (response) {
+        //         alert(response.responseText);
+        //     }
+        // });
     }
 
     function BankallotmentSubmit() {
@@ -3255,15 +3358,15 @@
 
     /* function to calculate ot with earning */
     function calculateot() {
-        othour = $("#otHours").val();
+        othour = $("#otHours").val() || 0;
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#extraot").val(otearning);
-        transitDays = $("#transitDays").val();
+        transitDays = $("#transitDays").val() || 0;
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         $("#Transitwages").val(transitwage);
-        otherEarnings = parseFloat($("#OtherEarnings").val());
-        reimbursement = parseFloat($("#reimbursement").val());
-        leaveWagesBF = parseFloat($("#leaveWagesBF").val());
+        otherEarnings = parseFloat($("#OtherEarnings").val() || 0);
+        reimbursement = parseFloat($("#reimbursement").val() || 0);
+        leaveWagesBF = parseFloat($("#leaveWagesBF").val() || 0);
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays) + (parseInt(specialAllow) * totaldays / numberofdays)
             + (parseInt(companyAllow) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays) + (parseInt(tempFuelAllow) * totaldays / numberofdays)
@@ -3283,21 +3386,22 @@
 
     /* function to calculate the earning   */
     function calculateearning() {
-        othour = $("#otHours").val();
+        debugger;
+        othour = $("#otHours").val() || 0;
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#extraot").val(otearning);
-        otherEarnings = parseFloat($("#OtherEarnings").val());
-        transitDays = $("#transitDays").val();
+        otherEarnings = parseFloat($("#OtherEarnings").val() || 0);
+        transitDays = $("#transitDays").val() || 0;
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
         $("#Transitwages").val(transitwage);
-        reimbursement = parseFloat($("#reimbursement").val());
-        leaveWagesBF = parseFloat($("#leaveWagesBF").val());
+        reimbursement = parseFloat($("#reimbursement").val() || 0);
+        leaveWagesBF = parseFloat($("#leaveWagesBF").val() || 0);
         totalearning = Math.round( parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(specialAllow) * days / numberofdays)
-            + (parseInt(companyAllow) * totaldays / numberofdays) + (parseInt(securityAllow) * totaldays / numberofdays) + (parseInt(tempFuelAllow) * totaldays / numberofdays)
-            + (parseInt(incentiveallow) * totaldays / numberofdays) + (parseInt(seniority) * totaldays / numberofdays) + (parseInt(tankerallow) * totaldays / numberofdays)
-            + (parseInt(housing) * totaldays / numberofdays) + (parseInt(transport) * totaldays / numberofdays) + (parseInt(utility) * totaldays / numberofdays)
-            + (parseInt(bonus) * totaldays / numberofdays) + (parseInt(seafarerspf) * totaldays / numberofdays) + (parseInt(leavepayaddition) * totaldays / numberofdays)
+            + (parseInt(companyAllow) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays) + (parseInt(tempFuelAllow) * days / numberofdays)
+            + (parseInt(incentiveallow) * days / numberofdays) + (parseInt(seniority) * days / numberofdays) + (parseInt(tankerallow) * days / numberofdays)
+            + (parseInt(housing) * days / numberofdays) + (parseInt(transport) * days / numberofdays) + (parseInt(utility) * days / numberofdays)
+            + (parseInt(bonus) * days / numberofdays) + (parseInt(seafarerspf) * days / numberofdays) + (parseInt(leavepayaddition) * days / numberofdays)
             + (parseInt(OtherAllow) * days / numberofdays) + parseFloat(transitwage) + parseFloat(otherEarnings) + parseFloat(reimbursement));
         //console.log((otearning || 0),(parseInt(basicwage) * days / numberofdays), (parseInt(FixedGtOT) * days / numberofdays), (parseInt(leavePay) * days / numberofdays)
         //    , (parseInt(UniformAllow) * days / numberofdays), (parseInt(PensionFund) * days / numberofdays), (parseInt(securityAllow) * days / numberofdays)
@@ -3334,6 +3438,7 @@
 
     /* Its function to calculate the deduction  */
     function calculatededuction() {
+        debugger;
         if (leavewagesforward  == true) {
             $('#LeaveWagesCf').val((parseFloat($('#leaveWagesBF').val()) + (parseInt(leavePay) * days / numberofdays)).toFixed(2));
         }
@@ -3341,10 +3446,10 @@
             $('#LeaveWagesCf').val(0);
         }
         if (currency == "NGN") {
-            ca = $("#cashAdvance").val();
-            bs = $("#bondedStores").val();
-            od = $("#otherDeductions").val();
-            allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());
+            ca = $("#cashAdvance").val() || 0;
+            bs = $("#bondedStores").val() || 0;
+            od = $("#otherDeductions").val() || 0;
+            allotment = parseFloat($("#allotments").val() || 0) + parseFloat($("#allotment2").val() || 0);
             /* console.log(parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment))*/
             totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + parseFloat(allotment) + (parseFloat(bowtotalearning) * UDdeduction / 100) + (parseFloat(bowtotalearning) * WFdeduction / 100) + (parseFloat(leavePay) * days / numberofdays) + (parseFloat(bowtotalearning) * WHTdeduction / 100)));
             udAmount = (parseFloat(bowtotalearning) * UDdeduction / 100);
@@ -3355,11 +3460,16 @@
             $("#tax").val(tax);
         }
         else {
-            ca = $("#cashAdvance").val();
-            bs = $("#bondedStores").val();
-            od = $("#otherDeductions").val();
-            allotment = parseFloat($("#allotments").val()) + parseFloat($("#allotment2").val());//$('#LeaveWagesCf').val()
+            ca = $("#cashAdvance").val() || 0;
+            bs = $("#bondedStores").val() || 0;
+            od = $("#otherDeductions").val() || 0;
+            allotment = parseFloat($("#allotments").val() || 0) + parseFloat($("#allotment2").val() || 0);//$('#LeaveWagesCf').val()
+             if (leavewagesforward  == true) {
             totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + (parseFloat(leavePay) * days / numberofdays) + parseFloat(authorityDeduction)));
+        }
+        else {
+             totaldeduction = Math.round((parseFloat(ca) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat(authorityDeduction)));
+        }          
            // console.log((parseFloat(ca), parseFloat(bs), parseFloat(od), parseFloat(allotment), parseFloat($('#LeaveWagesCf').val()), parseFloat(authorityDeduction)));
         }
         finalbal = Math.round(totalearning - totaldeduction);
@@ -3375,17 +3485,20 @@
     var jQDate = $.noConflict();
     jQDate(function () {
         jQDate("#signOffdate").datepicker({
-            dateFormat: 'dd-MM-yyyy',
+        dateFormat: 'dd-mm-yy',
             changeMonth: true,
             changeYear: true,
         });
-    });
+   });
 
     /* Bow generate pop
    on sifoof date slection fill the data
    */
     jQDate('#signOffdate').datepicker({
+        dateFormat: 'dd-mm-yy',
         onSelect: function (dateText) {
+
+            console.log(dateText);
             var CrewId = sessionStorage.getItem("crewid")
             var crewListId = sessionStorage.getItem("CrewListId");
             $.ajax({
@@ -3531,7 +3644,7 @@
                     alert(response.responseText);
                 }
             });
-        }
+        }         
     });
 
     /* reset bow form data
@@ -4098,7 +4211,13 @@
 
     function savePortageEarningDeduction(CrewId, Vesselid, From, To, portageBillId) {
         var model = "";
-        var currency = document.getElementById("pcurrency").innerText;
+            var currency = '';
+        if (allotmenttype == 'bow') {
+             currency = document.getElementById("currency").innerText;
+        }
+        else {
+             currency = document.getElementById("pcurrency").innerText;
+        }
         const mergedArray = mm.concat(oo, uppOtherdeduction);
         if (mergedArray.length > 0) {
             mergedArray.forEach(entry => {
@@ -4154,26 +4273,66 @@
 
 
 
-     
+    function savebowbaksada() {
+        $.each(selectbankids, function (k, v) {
+            var selectedbankid = v;
+            var model = "";
+            if (k == 0) {
+                model = {
+                    "BankAllotmentId": $('#BankAllotmentId1').val(),
+                    "Crew": $('#CrewId').val(),
+                    "VesselId": $('#Vesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#From').val(),
+                    "To": $('#To').val(),
+                    'Allotments': $('#allotments').val(),
+                    "IsMidMonthAllotment": 0
+                }
+            }
+            else {
+                model = {
+                    "BankAllotmentId": $('#BankAllotmentId2').val(),
+                    "Crew": $('#CrewId').val(),
+                    "VesselId": $('#Vesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#From').val(),
+                    "To": $('#To').val(),
+                    'Allotments': $('#allotment2').val(),
+                    "IsMidMonthAllotment": 0
+                }
+            }
+            $.ajax({
+                url: "/Portagebill/AddBankAllotment",
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: { item: model, 'itemlength': selectbankids },
+                success: function (resbankallotment) {
 
-
-
-
-
+                },
+                failure: function (resbankallotment) {
+                    alert(resbankallotment.responseText);
+                },
+                error: function (resbankallotment) {
+                    alert(resbankallotment.responseText);
+                }
+            });
+        });   
+    }
 
 
     /* function to calculate ot with earning */
     function calculateportageot() {
-        othour = $("#potHours").val();
+        othour = $("#potHours").val() || 0;
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#pextraot").val(otearning);
-        transitDays = $("#ptransitDays").val();
+        transitDays = $("#ptransitDays").val() || 0;
         if (crewstatus =="onboard")
             transitwage = transitwage
         else
             transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
-        otherEarnings = parseFloat($("#pearningother").val());
-        reimbursement = parseFloat($("#preimbursement").val());
+        otherEarnings = parseFloat($("#pearningother").val() || 0);
+        reimbursement = parseFloat($("#preimbursement").val() || 0);
 
         totalearning = Math.round(parseFloat(otearning)+(parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) 
@@ -4194,16 +4353,16 @@
 
     /* function to calculate the earning   */
     function calculateportageearning() {
-        othour = $("#potHours").val();
+        othour = $("#potHours").val() || 0;
         otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
         $("#pextraot").val(otearning);
-        otherEarnings = parseFloat($("#pearningother").val());
-        transitDays = $("#ptransitDays").val();
+        otherEarnings = parseFloat($("#pearningother").val() || 0);
+        transitDays = $("#ptransitDays").val() || 0;
         if (crewstatus == "onboard")
             transitwage = transitwage
         else
         transitwage = (parseInt(basicwage) / numberofdays * transitDays).toFixed(2);
-        reimbursement = parseFloat($("#preimbursement").val());
+        reimbursement = parseFloat($("#preimbursement").val() || 0);
         totalearning = Math.round(parseFloat(otearning) + (parseInt(basicwage) * days / numberofdays) + (parseInt(FixedGtOT) * days / numberofdays) + (parseInt(leavePay) * days / numberofdays)
             + (parseInt(UniformAllow) * days / numberofdays) + (parseInt(PensionFund) * days / numberofdays) + (parseInt(specialAllow) * days / numberofdays)
             + (parseInt(companyAllow) * days / numberofdays) + (parseInt(securityAllow) * days / numberofdays) + (parseInt(tempFuelAllow) * days / numberofdays)
@@ -4230,11 +4389,11 @@
     function calculateportagededuction() {
         var leavewagesdeuction = (parseInt(leavePay) * days / numberofdays);
         if (currency == "NGN") {
-            ca = $("#pcashAdvance").val();
-            bs = $("#pbondedStores").val();
-            od = $("#potherDeductions").val();
-            midmonthallotment = $("#pmidmonthallotment").val();
-            allotment = parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val());
+            ca = $("#pcashAdvance").val() || 0;
+            bs = $("#pbondedStores").val() || 0;
+            od = $("#potherDeductions").val() || 0;
+            midmonthallotment = $("#pmidmonthallotment").val() || 0;
+            allotment = parseFloat($("#pallotments").val() || 0) + parseFloat($("#pallotment2").val() || 0);
             totaldeduction = Math.round((parseFloat(ca) + parseFloat(midmonthallotment) + parseFloat(bs) + parseFloat(od) + parseFloat(nigpfAmount) + leavewagesdeuction + parseFloat(allotment) + (parseFloat(totalearning) * UDdeduction / 100) + (parseFloat(totalearning) * WFdeduction / 100) + (parseFloat(totalearning) * WHTdeduction / 100)));
           /*  console.log(parseFloat(ca), parseFloat(midmonthallotment), parseFloat(bs), parseFloat(od), parseFloat(nigpfAmount), leavewagesdeuction, parseFloat(allotment), (parseFloat(totalearning) * UDdeduction / 100), (parseFloat(totalearning) * WFdeduction / 100), (parseFloat(totalearning) * WHTdeduction / 100));*/
 
@@ -4249,11 +4408,11 @@
             $("#pwfAmount").val(0);
             $("#pudAmount").val(0);
             $("#ptax").val(0);
-            ca = $("#pcashAdvance").val();
-            bs = $("#pbondedStores").val();
-            od = $("#potherDeductions").val();
-            midmonthallotment = $("#pmidmonthallotment").val();
-            allotment = parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val());
+            ca = $("#pcashAdvance").val() || 0;
+            bs = $("#pbondedStores").val() || 0;
+            od = $("#potherDeductions").val() || 0;
+            midmonthallotment = $("#pmidmonthallotment").val() || 0;
+            allotment = parseFloat($("#pallotments").val() || 0) + parseFloat($("#pallotment2").val() || 0);
             totaldeduction = Math.round(parseFloat(ca) + parseFloat(midmonthallotment) + parseFloat(bs) + parseFloat(od) + parseFloat(allotment) + parseFloat(authorityDeduction) + leavewagesdeuction);
         }
         finalbal = Math.round(totalearning - totaldeduction);
