@@ -295,6 +295,8 @@
                                                         <tr style="color: #000; background: #E3EBF3">
                                                             <th colspan="2"><h4>Insurance</h4></th>
                                                         </tr>
+                                                        @if(item.Pi != null)
+                                                        {
                                                         <tr>
                                                             <td width="50%">P &amp; I Club</td>
                                                             <td width="50%">@item.VendorRegisterPi.VendorName</td>
@@ -306,7 +308,23 @@
                                                         <tr>
                                                             <td>Qualified Individual</td>
                                                             <td>@item.QualifiedIndividual</td>
-                                                        </tr>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td width="50%">P &amp; I Club</td>
+                                                                <td width="50%"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>H&amp;M</td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Qualified Individual</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        }
                                                     </tbody>
                                                 }
                                             </table>
@@ -354,18 +372,36 @@
                                                         <tr style="color: #000000; background: #F0F0F0">
                                                             <th colspan="4"><h4>Main Engine</h4></th>
                                                         </tr>
-                                                        <tr>
-                                                            <td width="50%">Make</td>
-                                                            <td colspan="3">@item.EngineModel.Maker</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Model</td>
-                                                            <td colspan="3">@item.EngineModel.Model</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Type</td>
-                                                            <td colspan="3">@item.EngineType?.Type</td>
-                                                        </tr>
+                                                        @if (item.EngineModel != null)
+                                                        {
+                                                            <tr>
+                                                                <td width="50%">Make</td>
+                                                                <td colspan="3">@item.EngineModel.Maker</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Model</td>
+                                                                <td colspan="3">@item.EngineModel.Model</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Type</td>
+                                                                <td colspan="3">@item.EngineType?.Type</td>
+                                                            </tr>                                                           
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td width="50%">Make</td>
+                                                                <td colspan="3"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Model</td>
+                                                                <td colspan="3"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Type</td>
+                                                                <td colspan="3"></td>
+                                                            </tr>                                                          
+                                                        }
                                                         <tr>
                                                             <td>M.C.R. KW</td>
                                                             <td colspan="3">@item.Kw</td>

@@ -245,6 +245,7 @@ namespace crewlinkship.Controllers
         [AllowAnonymous]
         public IActionResult SendAutoBackup()
         {
+            var vesseldata = _context.TblVessels.Where(x => x.VesselId == vesselidtouse).FirstOrDefault();
             var currentDate = DateTime.Now;
             var sixMonth = currentDate.AddDays(-6);
             //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
@@ -652,7 +653,7 @@ namespace crewlinkship.Controllers
             }
             try
             {
-                var TblPortageBills = _context.TblPortageBills.ToList();
+               // var TblPortageBills = _context.TblPortageBills.ToList();
                 using (XLWorkbook wb = new XLWorkbook())
                 {
                     int x = 1;
@@ -696,8 +697,8 @@ namespace crewlinkship.Controllers
                     if (wbcount > 0)
                     {                  
                      var getemail = _context.TblEmails.FirstOrDefault();
-                    string filename = "ShipModuleBackup_" + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
-                        MemoryStream mstream = new MemoryStream();                     
+                    string filename = vesseldata.Imo+ "_" + vesselidtouse + "_ShipModuleBackup_" + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
+                            MemoryStream mstream = new MemoryStream();                     
                             wb.SaveAs(mstream);
                             mstream.Position = 0;
                             string folderName = "Salaryslip";
@@ -954,7 +955,6 @@ namespace crewlinkship.Controllers
                         _context.Database.ExecuteSqlRaw("EXEC ImportCrewlinkdata");
                     }
                 }
-
             }
             catch (Exception ex) { throw ex; };
             return RedirectToAction("ImportExportPage", "home");
@@ -1410,7 +1410,7 @@ namespace crewlinkship.Controllers
             }
             try
             {
-                var TblPortageBills = _context.TblPortageBills.ToList();
+               // var TblPortageBills = _context.TblPortageBills.ToList();
                 using (XLWorkbook wb = new XLWorkbook())
                 {
                     //var wsActivitySignOffs = wb.Worksheets.Add("tblImportActivitySignOff");
@@ -1660,7 +1660,7 @@ namespace crewlinkship.Controllers
                     .Include(x => x.Classification).Include(t => t.PortOfTakeovers).Include(p => p.VendorRegisterPi)
                     .Include(h => h.VendorRegisterHm).Include(e => e.EngineModel).Include(T => T.EngineType).Include(b => b.Builder)
                     .Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).ToList();
-                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselidtouse).ToList();
+                ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == true && x.VesselId == vesselidtouse).ToList();
                 return View(vesselName);
             }
             return RedirectToAction("UserLogin", "Login");

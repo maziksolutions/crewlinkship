@@ -2605,6 +2605,29 @@ namespace crewlinkship.Controllers
                 Recdate = x.Recdate,
                 IsPromoted = x.IsPromoted
             }).ToList();
+
+            var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
+                                           where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+                                           select new
+                                           {
+                                               PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
+                                               VesselPortId = pbearn.VesselPortId,
+                                               OfficePBId = pbearn.OfficePBId,
+                                               CrewId = pbearn.CrewId,
+                                               PortageBillId = pbearn.PortageBillId,
+                                               Vesselid = pbearn.Vesselid,
+                                               SubCodeId = pbearn.SubCodeId,
+                                               Amount = pbearn.Amount,
+                                               From = pbearn.From,
+                                               To = pbearn.To,
+                                               Type = pbearn.Type,
+                                               Currency = pbearn.Currency,
+                                               IsDeleted = pbearn.IsDeleted,
+                                               RecDate = pbearn.RecDate,
+                                               CreatedBy = pbearn.CreatedBy,
+                                               ModifiedBy = pbearn.ModifiedBy,
+                                               ModifiedDate = pbearn.ModifiedDate
+                                           }).ToList();
             var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
             {
                 VesselPortId = x.PortageBillId,
@@ -2701,6 +2724,12 @@ namespace crewlinkship.Controllers
                         wb.Worksheet(x).Cell(1, 1).InsertTable(PortageBills);
                         x++;
                     }
+                    if (PortageEarningDeduction.Count > 0)
+                    {
+                        var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PortageEarningDeduction);
+                        x++;
+                    }
                     int wbcount = wb.Worksheets.Count();
                     if (wbcount > 0)
                     {
@@ -2766,12 +2795,8 @@ namespace crewlinkship.Controllers
                                            SubCode = accountCode.SubCode,
                                            SubBudget = accountCode.SubBudget
                                        };
-
-
             //_context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
             return Json(ReimbursementDetails);
         }
-    }
-
-    
+    }    
 }

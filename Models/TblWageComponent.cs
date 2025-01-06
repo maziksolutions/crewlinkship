@@ -20,6 +20,7 @@ namespace crewlinkship.Models
         public string IncludedOnboard { get; set; }
         public string Earning { get; set; }
         public string IsCba { get; set; }
+        public bool? IsShowAll { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? RecDate { get; set; }
         public string ModifiedBy { get; set; }
