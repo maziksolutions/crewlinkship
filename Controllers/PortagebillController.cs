@@ -2359,17 +2359,22 @@ namespace crewlinkship.Controllers
                 converter.Header.Height = headerHeight;               
                 PdfDocument doc = converter.ConvertUrl(url);
                 string filename = "BOW" + crewId + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
-                MemoryStream ms = new System.IO.MemoryStream();
-                doc.Save(ms);
-                ms.Position = 0;
-                string folderName = "BOW";
-                string webRootPath = _appEnvironment.WebRootPath;
-                string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
-                string PathToShow = Path.Combine(localpath, folderName + "/" + filename);
-                FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
-                ms.WriteTo(file);
-                file.Close();
-                return Json(file);
+                string fileName = filename;
+
+                doc.Save(fileName);
+
+                return Json(new { fileName = fileName });
+                //MemoryStream ms = new System.IO.MemoryStream();
+                //doc.Save(ms);
+                //ms.Position = 0;
+                //string folderName = "BOW";
+                //string webRootPath = _appEnvironment.WebRootPath;
+                //string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                //string PathToShow = Path.Combine(localpath, folderName + "/" + filename);
+                //FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                //ms.WriteTo(file);
+                //file.Close();
+                //return Json(file);
             }
             catch (Exception ex) { throw ex; }
         }
