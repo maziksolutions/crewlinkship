@@ -5,7 +5,7 @@ NOTE:
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 @font-face {
-    font-family: 'Lato Regular';
+    font-family: 'Lato';
     font-style: normal;
     font-weight: normal;
     src: local('Lato Regular'), url('/fonts/Lato-Regular.woff') format('woff');
@@ -84,7 +84,7 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 }
 
 @font-face {
-    font-family: 'Montserrat Regular';
+    font-family: 'Montserrat';
     font-style: normal;
     font-weight: normal;
     src: local('Montserrat Regular'), url('/fonts/Montserrat-Regular.woff') format('woff');
