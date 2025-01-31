@@ -963,7 +963,7 @@ namespace crewlinkship.Controllers
         public IActionResult Takebackup()
         {
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddDays(-30);
+            var sixMonth = currentDate.AddDays(-6);
             //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
             //{
             //    ActivitySignOffId = x.ActivitySignOffId,

@@ -1391,7 +1391,7 @@
                         </div>
                         <div class="col-md">
                             <div class="form-group">
-                                <input type="number" placeholder="Amount (USD)" id="amount" class="form-control" name="amount">
+                                <input type="number" placeholder="Amount" id="amount" class="form-control" name="amount">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -1408,7 +1408,7 @@
                                 <tr>
 
                                     <th>Account Code</th>
-                                    <th>Amount (USD)</th>
+                                    <th>Amount</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1459,7 +1459,7 @@
                         </div>
                         <div class="col-md">
                             <div class="form-group">
-                                <input type="number" placeholder="Amount (USD)" id="otherearningamount" class="form-control" name="amount">
+                                <input type="number" placeholder="Amount" id="otherearningamount" class="form-control" name="amount">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -1476,7 +1476,7 @@
                                 <tr>
 
                                     <th>Account Code</th>
-                                    <th>Amount (USD)</th>
+                                    <th>Amount</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1524,7 +1524,7 @@
                         </div>
                         <div class="col-md">
                             <div class="form-group">
-                                <input type="number" placeholder="Amount (USD)" id="OtherDeductionsamount" class="form-control" name="amount">
+                                <input type="number" placeholder="Amount" id="OtherDeductionsamount" class="form-control" name="amount">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -1541,7 +1541,7 @@
                                 <tr>
 
                                     <th>Account Code</th>
-                                    <th>Amount (USD)</th>
+                                    <th>Amount</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1558,7 +1558,7 @@
     </div>
 </div>
 <!--Portage entry end-->
-<div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
+@* <div class="modal fade" id="bowmodel" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -1582,7 +1582,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> *@
 @*<script>
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
@@ -2325,20 +2325,20 @@
             if (commonArrayotherEarnings.length > 0) {
                 // Process the second array
                 commonArrayotherEarnings.forEach(entry => {
-                    specificValues.push(`${entry.Codename} (USD): ${entry.Amount}`);
+                    specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
                 });
             }
 
             if (commonArrayotherDeductions.length > 0) {
                 commonArrayotherDeductions.forEach(entry => {
-                    specificValues.push(`${entry.Codename} (USD): ${entry.Amount}`);
+                    specificValues.push(`${entry.Codename} (${(currency)}) : ${entry.Amount}`);
                 });
 
             }
 
             if (commonArray.length > 0) {
                 commonArray.forEach(entry => {
-                    specificValues.push(`${entry.Codename} (USD): ${entry.Amount}`);
+                specificValues.push(`${entry.Codename} (${(currency)}) : ${entry.Amount}`);
                     specificValuesids.push(entry.SubCodeId);
                 });
             }
@@ -2962,6 +2962,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    console.log(response)
                     debugger;
                     currency = (response[0].currency || 0);
                     from = response[0].from;
@@ -2972,6 +2973,18 @@
                     UniformAllow = (response[0].uniformAllow || 0);
                     PensionFund = (response[0].pensionFund || 0);
                     securityAllow = (response[0].securityAllow || 0);
+                    specialAllow = (response[0].specialAllowance || 0);
+                    companyAllow = (response[0].companyAllowance || 0);
+                    tempFuelAllow = (response[0].tempFuelAllow || 0);
+                    incentiveallow = (response[0].incentiveAllowance || 0);
+                    seniority = (response[0].seniority || 0);
+                    tankerallow = (response[0].tankerAllowance || 0);
+                    housing = (response[0].housing || 0);
+                    transport = (response[0].transport || 0);
+                    utility = (response[0].utility || 0);
+                    bonus = (response[0].bonus || 0);
+                    seafarerspf = (response[0].seafarersPF || 0);
+
                     OtherAllow = (response[0].otherAllow || 0);
                     numberofdays = (response[0].numberofday || 0);
                     otherEarnings = (response[0].otherEarnings || 0);
@@ -3151,7 +3164,7 @@
             ContractId: $("#ContractId").val(),
             TotalDeductions: $("#TotalDeductions").val(),
             FinalBalance: $("#FinalBalance").val(),
-            OtherEarnings: $("#earningother").val(),
+            OtherEarnings: $("#OtherEarnings").val(),
             Reimbursement: $("#reimbursement").val(),
             CashAdvance: $("#cashAdvance").val(),
             BondedStores: $("#bondedStores").val(),
@@ -3496,15 +3509,17 @@
    */
     jQDate('#signOffdate').datepicker({
         dateFormat: 'dd-mm-yy',
-        onSelect: function (dateText) {
-
-            console.log(dateText);
+        onSelect: function (dateText) {  
+            var dateParts = dateText.split('-');
+           // console.log(Date.parseExact(dateText, 'yyyy-MM-dd'));
+            var signoffnewdate = dateParts[2] +'-'+ dateParts[1] +'-'+ dateParts[0];
+            console.log(signoffnewdate);
             var CrewId = sessionStorage.getItem("crewid")
             var crewListId = sessionStorage.getItem("CrewListId");
             $.ajax({
                 type: "GET",
                 url: "/Portagebill/getBOWData",
-                data: { 'crewId': CrewId, 'crewListId': crewListId, 'signOffDate': dateText },
+                data: { 'crewId': CrewId, 'crewListId': crewListId, 'signOffDate': signoffnewdate },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -3650,6 +3665,8 @@
     /* reset bow form data
   */
     function resetbowform() {
+        $("#bowform").trigger("reset");
+        debugger;
         $("#signOffdate").val("");
         $("#PortageBillId").val(0);
         $("#From").val(0);
@@ -3697,6 +3714,9 @@
         $("#allotment2").val(0);
         $("#transitWages").val(0);
         $("#prevMonthBal").val(0);
+        $("#totalpay").text(0);
+        $("#totaldeduc").text(0);
+        $("#finalbal").text(0);
     }
     var PortageBillIdglobal = 0;
 
@@ -4479,30 +4499,25 @@
               dataType: "json",
           }).done(function (data) {
               if (data.portageBillData == 0) {
-
                   alert("Selected Month PortageBill Null")
               }
-              if (data.portageBillVM.length != data.portageBillData.length && data.portageBillData != 0 && data.portageBillVM.length >= data.portageBillData.length) {
-                  alert("PortageBill is Not a Selected Month")
-              }
-              if (data.portageBillVM.length <= data.portageBillData.length) {
+              // else if (data.portageBillVM.length != data.portageBillData.length && data.portageBillData != 0 && data.portageBillVM.length >= data.portageBillData.length) {
+              //     alert("Portage Bill is not for selected a Selected Month")
+              // }
+              //else if (data.portageBillVM.length <= data.portageBillData.length) {
+            else if (data.portageBillData.length > 0) {
                   $.ajax({
                       type: "POST",
                       url: '@Url.Action("UpdateBillStatus", "Portagebill")',
                       data: { 'vesselId': vesselids, 'month': months, 'year': years },
-
                   })
                   if (data.updatePortageBill != 0) {
                       alert("PortageBill Status Sucessfuly Locked");
                       location.reload(true);
                   }
-
               }
-
-                                 });
-
+          });
     }
-
 </script>
 
 <script>

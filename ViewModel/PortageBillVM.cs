@@ -368,8 +368,22 @@ namespace crewlinkship.ViewModel
         public decimal? FixedGtOT { get; set; }
         public decimal? SecurityAllow { get; set; }
         public decimal? LeavePay { get; set; }
+        //public decimal? SubsitenceAllow { get; set; }
         public decimal? UniformAllow { get; set; }
+        public decimal? TempFuelAllow { get; set; }
         public decimal? PensionFund { get; set; }
+        public decimal? SpecialAllowance { get; set; }
+        public decimal? CompanyAllowance { get; set; }
+
+        public decimal? IncentiveAllowance { get; set; }
+        public decimal? Seniority { get; set; }
+        public decimal? TankerAllowance { get; set; }
+        public decimal? Housing { get; set; }
+        public decimal? Transport { get; set; }
+        public decimal? Utility { get; set; }
+        public decimal? Bonus { get; set; }
+        public decimal? SeafarersPF { get; set; }
+        public decimal? leavepayaddition { get; set; }
         public decimal? OtherAllow { get; set; }
         public decimal? TotalWages { get; set; }
         public int? CrewListId { get; set; }

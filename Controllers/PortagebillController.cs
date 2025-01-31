@@ -2434,12 +2434,9 @@ namespace crewlinkship.Controllers
 
         public JsonResult LockPortageBill(string vesselId, int month, int year)
         {
-            var Portdata = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
-
+            var Portdata = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId) && x.BillStatus == 0).ToList();
             string checkpbtilldate = "";
-
-            var PortdataVM = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate).ToList();     
-
+            var PortdataVM = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate).ToList();
             return Json(new { portageBillData = Portdata , portageBillVM = PortdataVM });
         }
 
@@ -2447,7 +2444,6 @@ namespace crewlinkship.Controllers
         {
             Sendbackup();
               var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
-
             foreach(var item in portUpdate)
             {
                  item.BillStatus = 1;
@@ -2460,8 +2456,7 @@ namespace crewlinkship.Controllers
         public void Sendbackup()
         {
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddDays(-6);           
-
+            var sixMonth = currentDate.AddDays(-6);  
             var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblActivitySignOnVM
             {
 
