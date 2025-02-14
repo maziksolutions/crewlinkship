@@ -472,7 +472,7 @@
   @item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
 @item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,
 @item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,
-@item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
+@item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction','@item.Paydate','@item.SignOnDate')">
                                                                 <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
                                                             </a>
                                                         </td>
@@ -693,7 +693,7 @@
                                                             <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,@item.LeavePay,@item.UniformAllow,@item.PensionFund,
 @item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
 @item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,@item.OTHours,@item.otrate,
-@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction')">
+@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,'@item.TransitWages',@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction','@item.Paydate','@item.SignOnDate')">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
                                                         </td>
@@ -1273,6 +1273,9 @@
                                     <input id="pTo" name="pTo" hidden>
                                     <input id="pDays" name="pDays" hidden>
                                     <input id="pVesselid" name="pVesselid" hidden>
+                                    <input id="psignondate" name="psignondate" hidden>
+                                    <input id="ppaycommence" name="ppaycommence" hidden>
+                                    <input id="pfrommonthyear" name="pfrommonthyear" hidden>
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pextraot">OT Earning</label>
@@ -1437,14 +1440,20 @@
 
             <div class="modal-body">
                 <div class="bg-light border p-2 mb-2">
+                    <div class="row">
+                        <div class="col-md">
                     <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
                         <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
                     </h6>
-                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
-                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalotherEarn">0</span></span>
-
+                    <div class="form-group" style="padding: 5px 0; border-right: none;">
+                        <span> Total Earn : <span id="totalotherEarn">0</span></span>
+                            </div>
                     </div>
-
+                    <div class="col-md">
+                        <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="contractearning">
+                        </table>
+                    </div>
+                    </div>
                     <div class="row">
                         <div class="col-md">
                             <div class="form-group">
@@ -1505,14 +1514,21 @@
 
             <div class="modal-body">
                 <div class="bg-light border p-2 mb-2">
+                    <div class="row">
+                        <div class="col-md">
                     <h6 style="font-weight: bold; color: #233855;" class="m-b-15">
                         <span class="mandatory-fields"> (Mandatory Fields are sign with asterisk(*)) </span>
                     </h6>
-                    <div class="form-group" style="padding: 5px 20px; background: rgb(242, 244, 248); border: 1px solid rgb(224, 224, 224); border-right: none;">
-                        <span style="background-color: rgba(242, 244, 248, 1);"> Total Earn : <span id="totalOtherDeductions">0</span></span>
-
+                    <div class="form-group" style="padding: 5px 0; border-right: none;">
+                        <span> Total Earn : <span id="totalOtherDeductions">0</span></span>
+                            </div>
                     </div>
-
+                        <div class="col-md">
+                            <table class="table table-bordered table-sm border-300 display nowrap" style="width:100%" id="contractdeduction">
+                               
+                            </table>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md">
                             <div class="form-group">
@@ -1603,7 +1619,7 @@
             }
         }
     </script>*@
-
+<script src=”https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js”></script>
 <script>
     $(document).ready(function () {
         loadacc();
@@ -1655,7 +1671,7 @@
     var deleteidotherEarning = 0;
     var allotmenttype = '';
        // otherEarnings variable end 
-
+    var commonContractwages = [];
     // otherdeduction variable
 
 
@@ -1865,8 +1881,6 @@
                     datatype: "Json",
                     success: function (data) {
                     }
-
-
                 });
                 updateTotalotherEarn();
                 updateotherearningForm();
@@ -2131,7 +2145,7 @@
                 cellAccountCode.textContent = accountEntriesOtherearning[i].Codename;
                 row.appendChild(cellAccountCode);
                 const cellAmount = document.createElement('td');
-                cellAmount.textContent = accountEntriesOtherearning[i].Amount.toFixed(2);
+                cellAmount.textContent = parseFloat(accountEntriesOtherearning[i].Amount).toFixed(2);
                 row.appendChild(cellAmount);
                 cellActions.appendChild(editIcon);
                 cellActions.appendChild(deleteIcon);
@@ -2261,7 +2275,6 @@
              calculateportageearning();
         }       
         $("#OtherDeductionsmodal").modal('hide');
-
     }
 
     let mm = [];
@@ -2318,9 +2331,14 @@
         debugger
         
             const specificValues = [];
-            //if (allAccountData3.length > 0) {
-            //    allAccountData = allAccountData3;
-            //}
+            if (allAccountData3.length > 0) {
+               allAccountData = allAccountData3;
+            }
+        if (commonContractwages.length > 0) {
+            commonContractwages.forEach(entry => {
+                specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
+            });
+        }
 
             if (commonArrayotherEarnings.length > 0) {
                 // Process the second array
@@ -2487,6 +2505,20 @@
 </script>
 
 <script>
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
     function Reimbursementopenpopup(type) {
             var preimbursementvalue = 0;
         this.allotmenttype = type;
@@ -2496,6 +2528,27 @@
         else {
             preimbursementvalue = $('#preimbursement').val();
         }
+        var crewid = $("#pCrewId").val();
+        var ContractId = $("#pContractId").val();
+        var signondate = formatDate($("#psignondate").val());
+        var paycommence = formatDate($("#ppaycommence").val());
+        var frommonthyear = formatDate($("#pFrom").val());
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetContractData",
+            data: { 'crewid': crewid, 'contractid': ContractId, 'signondate': signondate, 'type': 'Reimbursement', 'paycommence': paycommence, 'frommonthyear': frommonthyear },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
             if (preimbursementvalue == 0) {
                 commonArray = [];
                 $("#table-body").empty();
@@ -2543,10 +2596,11 @@
 
             $("#totalEarn").text(preimbursementvalue);
             $("#Reimbursementmodal").modal('show');
-        }
+        }    
+
         function OtherEarningsopenpopup(type) {           
             debugger
-            /*       this.loadOtherEarning();*/
+                  // this.loadOtherEarning();
         this.allotmenttype = type;
             var pearningothervalue = 0;
        if (type == 'bow') {
@@ -2555,6 +2609,43 @@
         else {
             pearningothervalue = $('#pearningother').val();
         }
+        debugger;
+        var crewid = $("#pCrewId").val();
+        var ContractId = $("#pContractId").val();
+        var signondate = formatDate($("#psignondate").val());
+        var paycommence = formatDate($("#ppaycommence").val());
+        var frommonthyear = formatDate($("#pFrom").val());
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetContractData",
+            data: { 'crewid': crewid, 'contractid': ContractId, 'signondate': signondate, 'type': 'Earning', 'paycommence': paycommence, 'frommonthyear': frommonthyear },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) { 
+                $("#contractearning").empty();
+                var rows = '';
+                rows += "<tr><td>S. No.</td><td>Component Code</td><td>Amount</td></tr>";
+                $(response).each(function (index, item) {
+                    var i = parseInt(index) + 1;
+                    rows += "<tr><td>" + i + "</td><td>" + item.accountName + "</td><td>" + item.amount + "</td></tr>";
+                        var accountEntriesotherEarnings = [];
+                        accountEntriesotherEarnings.Codename = item.accountName;
+                        accountEntriesotherEarnings.Amount = item.amount;
+                        accountEntriesotherEarnings.SubCodeId = item.accountCode;
+                        accountEntriesotherEarnings.Type = 'Earning';
+                        commonContractwages.push(accountEntriesotherEarnings);
+                });
+                $('#contractearning').append(rows);                    
+                }
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
             if (pearningothervalue == 0) {
                 commonArrayotherEarnings = [];
                 $("#table-bodyotherearning").empty();
@@ -2575,7 +2666,6 @@
                             console.warn("No reimbursement details found.");
                             return;
                         }
-
                         const accountEntriesOtherearning = [];
                         for (let i = 0; i < response.length; i++) {
                             var accountOtherEarning = [];
@@ -2586,24 +2676,18 @@
                             accountOtherEarning.Type = response[i].type;
                             accountOtherEarning.SubCodeId = response[i].subCodeId;
                             accountEntriesOtherearning.push(accountOtherEarning);
-
                         }
-
                         otherEarningsArray = accountEntriesOtherearning;
                         if (commonArrayotherEarnings.length == 0) {
                             commonArrayotherEarnings = accountEntriesOtherearning;
                             populateTableotherearning(commonArrayotherEarnings);
-                        }
-                        
-
+                        } 
                     },
                     error: function (err) {
                         console.error("Error fetching reimbursement details:", err);
                     }
                 });
             }
-
-
             $("#totalotherEarn").text(pearningothervalue);
             $("#OtherEarningsmodal").modal('show');
         }
@@ -2618,6 +2702,27 @@
             else {
                 potherDeductions = $('#potherDeductions').val();
             }
+        var crewid = $("#pCrewId").val();
+        var ContractId = $("#pContractId").val();
+        var signondate = formatDate($("#psignondate").val());
+        var paycommence = formatDate($("#ppaycommence").val());
+        var frommonthyear = formatDate($("#pFrom").val());
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetContractData",
+            data: { 'crewid': crewid, 'contractid': ContractId, 'signondate': signondate, 'type': 'Deduction', 'paycommence': paycommence, 'frommonthyear': frommonthyear },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
             if (potherDeductions == 0) {
                 commonArrayotherDeductions = [];
                 $("#table-bodyOtherDeductions").empty();
@@ -2665,6 +2770,8 @@
                 });
             }
             $("#totalotherEarn").text(potherDeductions);
+        
+
             $("#OtherDeductionsmodal").modal('show');
             //this.loadOtherDeductions();
             //accountEntriesOtherDeductions = [];
@@ -3724,8 +3831,7 @@
     function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, LeavePay, uniformallow, pensionfund,
         SpecialAllowance, CompanyAllowance, SecurityAllow, TempFuelAllow, IncentiveAllowance, Seniority, TankerAllowance, Housing, Transport, Utility, Bonus, SeafarersPF, leavepayaddition, otherallow,
         Reimbursement, Contractreimbrusment, Contractbonus, Contractdedu,
-        OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction)
-    {
+        OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction, paycommence, signondate) {
 
         nigpfAmount= npfamount;
         $("#poratgeallotment2").hide();
@@ -3744,6 +3850,8 @@
         $("#pwhTdeduction").val(WHTdeduction);
         $("#pUDdeduction").val(UDdeduction);
         $("#pwFdeduction").val(WFdeduction);
+        $("#psignondate").val(signondate);
+        $("#ppaycommence").val(paycommence);
         prevMonthBal = prevmonthbal;
         $("#pprevMonthBal").val(prevMonthBal);
         $.ajax({

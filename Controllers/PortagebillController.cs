@@ -2798,5 +2798,54 @@ namespace crewlinkship.Controllers
             //_context.PortageEarningDeduction.Where(x => x.PortageBillId== portageBillId &&  x.Type == type).ToList();
             return Json(ReimbursementDetails);
         }
+        public IEnumerable<ContractData> GetContractData(int crewid, int contractid, DateTime signondate, string type, DateTime paycommence, DateTime frommonthyear)
+        {
+            if (type == "Earning")
+            {
+                type = "Earning,Bonus"; type = "," + type + ",";
+            }
+            try
+            {
+                if (signondate.Year > paycommence.Year || (signondate.Month != paycommence.Month && signondate.Year == paycommence.Year))
+                {
+                    DateTime newdatetime = frommonthyear.AddMonths(-1);
+                    var data = (from c in _context.TblContracts
+                                join contractreim in _context.TblReimbursementOrDeductions on c.ContractId equals contractreim.ContractId
+                                where c.CrewId == crewid && c.ContractId == contractid && ((c.PayCommence.Value.Month == newdatetime.Month && c.PayCommence.Value.Year == newdatetime.Year))
+                                && c.IsDeleted == false && contractreim.IsDeleted == false && type.Contains(contractreim.Type)
+                                select new ContractData
+                                {
+                                    CrewName = c.Crew.FirstName,
+                                    RankName = c.Crew.Rank.RankName,
+                                    AccountName = contractreim.Component,
+                                    AccountCode = _context.TblBudgetSubCodes.Where(x=>x.SubBudget == contractreim.Component && x.IsDeleted== false).Select(x=>x.SubCodeId.ToString()).FirstOrDefault(),
+                                    Amount = contractreim.Amount
+                                }).ToList();
+                    return data;
+                }
+                else
+                {
+
+                    var data = (from c in _context.TblContracts
+                                join contractreim in _context.TblReimbursementOrDeductions on c.ContractId equals contractreim.ContractId
+                                where c.CrewId == crewid && c.ContractId == contractid && ((c.PayCommence.Value.Month == frommonthyear.Month && c.PayCommence.Value.Year == frommonthyear.Year))
+                                && c.IsDeleted == false && contractreim.IsDeleted == false && type.Contains(contractreim.Type)
+                                select new ContractData
+                                {
+                                    CrewName = c.Crew.FirstName,
+                                    RankName = c.Crew.Rank.RankName,
+                                    AccountName = contractreim.Component,
+                                    AccountCode = _context.TblBudgetSubCodes.Where(x => x.SubBudget == contractreim.Component && x.IsDeleted == false).Select(x => x.SubCodeId.ToString()).FirstOrDefault(),
+                                    Amount = contractreim.Amount
+                                }).ToList();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
     }    
 }

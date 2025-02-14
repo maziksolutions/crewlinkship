@@ -430,4 +430,17 @@ namespace crewlinkship.ViewModel
         public bool IsAddPrevBal { get; set; }
         public decimal? MidMonthAllotment { get; set; }
     }
+
+    [Table("tblContractDataVM")]
+    public class ContractData
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int pid { get; set; }
+        public string CrewName { get; set; }
+        public string RankName { get; set; }
+        public string AccountName { get; set; }
+        public string AccountCode { get; set; }
+        public string Amount { get; set; }
+    }
 }
