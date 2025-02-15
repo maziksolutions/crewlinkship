@@ -1634,7 +1634,7 @@
             loadOtherEarning();
             loadOtherDeductions();
             populateTable(accountEntries);
-
+            
 
             $(".tabs-list li a").click(function (e) {
                 e.preventDefault();
@@ -1677,6 +1677,7 @@
         var otherEarningsArray = [];
         var deleteidotherEarning = 0;
         var allotmenttype = '';
+        var accountEntriesotherEarnings = [];
            // otherEarnings variable end
         var commonContractwages = [];
         // otherdeduction variable
@@ -1690,6 +1691,8 @@
         var stateotherDeductions;
         var DeductionsArray = [];
         var deleteidotherdeduction = 0;
+        var codenameOtherDeductions = ""; // Initialize global variable for codename
+        let accountEntriesOtherDeductions = []; // Array to store account entries
 
            // otherEarnings variable end
 
@@ -1719,7 +1722,6 @@
                 }
             });
         }
-
 
 
         function AccountCodeOtherDeduction(event, earning) {
@@ -1866,7 +1868,7 @@
 
 
         function submitotherearningForm() {
-
+            debugger
             const subCodeId = accountid;
             const Type = EarningType;
             const amountInput = document.getElementById('otherearningamount');
@@ -1893,13 +1895,17 @@
                     updateotherearningForm();
                 }
                 else {
-                    var accountEntriesotherEarnings = [];
-                    accountEntriesotherEarnings.Codename = accountCodeotherEarning;
-                    accountEntriesotherEarnings.Amount = amount;
-                    accountEntriesotherEarnings.SubCodeId = subCodeId;
-                    accountEntriesotherEarnings.Type = Type;
-                    commonArrayotherEarnings.push(accountEntriesotherEarnings);
+                    debugger
+                    let otherEarningAccountEntry =[];
+                    //commonArrayotherEarnings = [];
+                    otherEarningAccountEntry.Codename = accountCodeotherEarning;
+                    otherEarningAccountEntry.Amount = amount;
+                    otherEarningAccountEntry.SubCodeId = subCodeId;
+                    otherEarningAccountEntry.Type = Type;
+                    //accountEntriesotherEarnings.push(otherEarningAccountEntry);
+                    commonArrayotherEarnings.push(otherEarningAccountEntry);
                 }
+                
                 populateTableotherearning(commonArrayotherEarnings);
 
             } else {
@@ -1907,13 +1913,6 @@
             }
 
         }
-
-
-
-
-        var codenameOtherDeductions = ""; // Initialize global variable for codename
-        let accountEntriesOtherDeductions = []; // Array to store account entries
-
 
         function submitOtherDeductionsForm() {
 
@@ -1974,7 +1973,7 @@
 
         // Function to update total earnings
         function updateTotalEarn() {
-
+            debugger
             if (commonArray.length != 0) {
                 var amount = 0;
                 for (let item of commonArray) {
@@ -1994,9 +1993,15 @@
         }
 
         function updateTotalotherEarn(amount) {
+            debugger
+            
             if (commonArrayotherEarnings .length != 0) {
                 var amount = 0;
                 for (let item of commonArrayotherEarnings ) {
+                    amount += item.Amount;
+                }
+
+                for (let item of accountEntriesotherEarnings ) {
                     amount += item.Amount;
                 }
 
@@ -2103,6 +2108,7 @@
 
 
         function populateTableotherearning(accountEntriesOtherearning) {
+            debugger
                 const tableBody = document.getElementById('table-bodyotherearning');
                 tableBody.innerHTML = '';
                 let index;
@@ -2250,6 +2256,7 @@
         }
 
         function updateotherearningForm() {
+            debugger
             updateCombinedForm();
             updateOtherearningg();
             var totalEarnElement = document.getElementById('totalotherEarn');
@@ -2338,32 +2345,48 @@
             debugger
 
                 const specificValues = [];
-                if (allAccountData3.length > 0) {
-                   allAccountData = allAccountData3;
-                }
+                // if (allAccountData3.length > 0) {
+                //    allAccountData = allAccountData3;
+                // }
+
+               
+
+                if (accountEntriesotherEarnings.length > 0) {
+                accountEntriesotherEarnings.forEach(entry => {
+                    specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
+                });
+            }
+
+
+                if (accountEntriesOtherDeductions.length > 0) {
+                accountEntriesOtherDeductions.forEach(entry => {
+                    specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
+                });
+            }
+
             if (commonContractwages.length > 0) {
                 commonContractwages.forEach(entry => {
-                    specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
+                    specificValues.push(` ${entry.Codename} (${currency}) : ${entry.Amount}`);
                 });
             }
 
                 if (commonArrayotherEarnings.length > 0) {
                     // Process the second array
                     commonArrayotherEarnings.forEach(entry => {
-                        specificValues.push(`${entry.Codename} (${currency}) : ${entry.Amount}`);
+                        specificValues.push(` ${entry.Codename} (${currency}) : ${entry.Amount}`);
                     });
                 }
 
                 if (commonArrayotherDeductions.length > 0) {
                     commonArrayotherDeductions.forEach(entry => {
-                        specificValues.push(`${entry.Codename} (${(currency)}) : ${entry.Amount}`);
+                        specificValues.push(` ${entry.Codename} (${(currency)}) : ${entry.Amount}`);
                     });
 
                 }
 
                 if (commonArray.length > 0) {
                     commonArray.forEach(entry => {
-                    specificValues.push(`${entry.Codename} (${(currency)}) : ${entry.Amount}`);
+                    specificValues.push(` ${entry.Codename} (${(currency)}) : ${entry.Amount}`);
                         specificValuesids.push(entry.SubCodeId);
                     });
                 }
@@ -2418,105 +2441,12 @@
             }
         }
 
-</script>
-
-@*@Particulars*@
-<script>
-    $(function () {
-        $("#CustomerGrid .details").click(function () {
-            var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
-            $.ajax({
-                type: "GET",
-                url: "/Home/Details",
-                data: { 'crewId': crewId },
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    $("#partialModal").find(".modal-body").html(response);
-                    $("#partialModal").modal('show');
-                    $('#partialModal').on('hidden.bs.modal', function () {
-                        location.reload();
-                    })
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-        });
-    });
-</script>
-
-
-@*ExcelFile*@
-
-<script>
-    function exported(e) {
-                                   var value = $("#myselection option:selected");
-                                   var name = value.val();
-                                   if (name == "Atlantic") {
-
-                                           url = '@Url.Action("AtlanticExcelFile", "Home")';
-                                       }
-                                   if (name == "OCIMF") {
-                                           url = '@Url.Action("GetOCIMFExcelFile", "Home")';
-                                   }
-                                   if (name == "OLP") {
-                                       url = '@Url.Action("OLPExcelFile", "Home")';
-                                   }
-                                   if (name == "IMO") {
-                                       url =('@Url.Action("GenerateIMOPDF", "Home")');
-
-    @*var url = '@Url.Action("GenerateIMOPDF", "Home", new {target="_blank"})';
-                                              window.location.href = url;*@
-                                       }
-                                   if (name == "FPD01") {
-                                       url =('@Url.Action("generateFPD01", "Home")');
-
-                                       }
-                                  $.ajax({
-                                      type: "POST",
-                                      url: url,
-                                   contentType: "application/json; charset=utf-8",
-                                   dataType: "json",
-                                    }).done(function (data) {
-
-
-                                        if (data.fileName != "") {
-                                            window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
-                                        }
-                                    });
-                                 }
-</script>
-
-
-<script>
-    function exportToExcel(e) {
-        vesselids = $("#vesselid").text();
-        years = $("#year").val();
-        months = $("#month").val();
-                               $.ajax({
-                                   type: "POST",
-                                   url: '@Url.Action("Genneratexcel", "Portagebill")',
-                                   data: { 'vesselId': vesselids, 'month': months, 'year': years, 'currency': "", 'checkpbtilldate': "" },
-                               // contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                 }).done(function (data) {
-                                     if (data.fileName != "") {
-                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
-                                     }
-                                 });
-                              }
-</script>
-
-<script>
-    function formatDate(date) {
-        debugger
+         function formatDate(date) {
+        
 
         //let dateString = convertDateToUTC(date);
-        const d = parseDate(date);
+        //const d = parseDate(date);
+         const d = new Date(date);
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
@@ -2528,7 +2458,8 @@
 
         return [year, month, day].join('-');
     }
-           function parseDate(dateString) {
+
+         function parseDate(dateString) {
         const parts = dateString.split('/');
 
         const day = parseInt(parts[0], 10);
@@ -2539,7 +2470,7 @@
         return new Date(year, month, day);
     }
 
-    function Reimbursementopenpopup(type) {
+        function Reimbursementopenpopup(type) {
             var preimbursementvalue = 0;
         this.allotmenttype = type;
               if (type == 'bow') {
@@ -2618,6 +2549,97 @@
             $("#Reimbursementmodal").modal('show');
         }
 
+        function GetContractDataOfEarnings()
+        {
+            debugger
+        var crewid = $("#pCrewId").val();
+        var ContractId = $("#pContractId").val();
+        var signondate = formatDate($("#psignondate").val());
+        var paycommence = formatDate($("#ppaycommence").val());
+        var frommonthyear = formatDate($("#pFrom").val());
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetContractData",
+            data: { 'crewid': crewid, 'contractid': ContractId, 'signondate': signondate, 'type': 'Earning', 'paycommence': paycommence, 'frommonthyear': frommonthyear },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                $("#contractearning").empty();
+                var rows = '';
+                rows += "<tr><td>S. No.</td><td>Component Code</td><td>Amount</td></tr>";
+                $(response).each(function (index, item) {
+                    var i = parseInt(index) + 1;
+                    rows += "<tr><td>" + i + "</td><td>" + item.accountName + "</td><td>" + item.amount + "</td></tr>";
+                    debugger
+                        let otherEarningAccountEntry =[];
+                        accountEntriesotherEarnings =[];
+                        otherEarningAccountEntry.Codename = item.accountName;
+                        otherEarningAccountEntry.Amount = parseFloat(item.amount);
+                        otherEarningAccountEntry.SubCodeId = item.accountCode;
+                        otherEarningAccountEntry.Type = 'Earning';
+                        accountEntriesotherEarnings.push(otherEarningAccountEntry);
+                        updateCombinedForm();
+                       // commonContractwages.push(accountEntriesotherEarnings);
+                });
+                $('#contractearning').append(rows);
+                }
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+        }
+
+        function GetContractDataOfDeductions()
+        {
+            debugger
+        var crewid = $("#pCrewId").val();
+        var ContractId = $("#pContractId").val();
+        var signondate = formatDate($("#psignondate").val());
+        var paycommence = formatDate($("#ppaycommence").val());
+        var frommonthyear = formatDate($("#pFrom").val());
+        $.ajax({
+            type: "GET",
+            url: "/Portagebill/GetContractData",
+            data: { 'crewid': crewid, 'contractid': ContractId, 'signondate': signondate, 'type': 'Deduction', 'paycommence': paycommence, 'frommonthyear': frommonthyear },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                $("#contractdeduction").empty();
+                var rows = '';
+                rows += "<tr><td>S. No.</td><td>Component Code</td><td>Amount</td></tr>";
+                $(response).each(function (index, item) {
+                    var i = parseInt(index) + 1;
+                    rows += "<tr><td>" + i + "</td><td>" + item.accountName + "</td><td>" + item.amount + "</td></tr>";
+                    debugger
+                        let otherDeductionAccountEntry =[];
+                        accountEntriesOtherDeductions =[];
+                        otherDeductionAccountEntry.Codename = item.accountName;
+                        otherDeductionAccountEntry.Amount = parseFloat(item.amount);
+                        otherDeductionAccountEntry.SubCodeId = item.accountCode;
+                        otherDeductionAccountEntry.Type = 'Deduction';
+                        accountEntriesOtherDeductions.push(otherDeductionAccountEntry);
+                        updateCombinedForm();
+                       // commonContractwages.push(accountEntriesotherEarnings);
+                });
+                $('#contractdeduction').append(rows);
+                }
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+        }        
+
+
         function OtherEarningsopenpopup(type) {
             debugger
                   // this.loadOtherEarning();
@@ -2649,12 +2671,15 @@
                 $(response).each(function (index, item) {
                     var i = parseInt(index) + 1;
                     rows += "<tr><td>" + i + "</td><td>" + item.accountName + "</td><td>" + item.amount + "</td></tr>";
-                        var accountEntriesotherEarnings = [];
-                        accountEntriesotherEarnings.Codename = item.accountName;
-                        accountEntriesotherEarnings.Amount = item.amount;
-                        accountEntriesotherEarnings.SubCodeId = item.accountCode;
-                        accountEntriesotherEarnings.Type = 'Earning';
-                        commonContractwages.push(accountEntriesotherEarnings);
+                    debugger
+                        let otherEarningAccountEntry =[];
+                        accountEntriesotherEarnings =[];
+                        otherEarningAccountEntry.Codename = item.accountName;
+                        otherEarningAccountEntry.Amount = parseFloat(item.amount);
+                        otherEarningAccountEntry.SubCodeId = item.accountCode;
+                        otherEarningAccountEntry.Type = 'Earning';
+                        accountEntriesotherEarnings.push(otherEarningAccountEntry);
+                       // commonContractwages.push(accountEntriesotherEarnings);
                 });
                 $('#contractearning').append(rows);
                 }
@@ -2734,7 +2759,25 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-
+                if (response.length > 0) {
+         $("#contractdeduction").empty();
+         var rows = '';
+         rows += "<tr><td>S. No.</td><td>Component Code</td><td>Amount</td></tr>";
+         $(response).each(function (index, item) {
+             var i = parseInt(index) + 1;
+             rows += "<tr><td>" + i + "</td><td>" + item.accountName + "</td><td>" + item.amount + "</td></tr>";
+             debugger
+                 let otherDeductionAccountEntry =[];
+                 accountEntriesOtherDeductions =[];
+                 otherDeductionAccountEntry.Codename = item.accountName;
+                 otherDeductionAccountEntry.Amount = parseFloat(item.amount);
+                 otherDeductionAccountEntry.SubCodeId = item.accountCode;
+                 otherDeductionAccountEntry.Type = 'Deduction';
+                 otherDeductionAccountEntry.push(otherDeductionAccountEntry);
+                // commonContractwages.push(accountEntriesotherEarnings);
+         });
+         $('#contractdeduction').append(rows);
+         }
             },
             failure: function (response) {
                 alert(response.responseText);
@@ -2883,6 +2926,102 @@
 
 </script>
 
+@*@Particulars*@
+<script>
+    $(function () {
+        $("#CustomerGrid .details").click(function () {
+            var crewId = $(this).closest("tr").find("td").find("#crewIdcrewList").html();
+            $.ajax({
+                type: "GET",
+                url: "/Home/Details",
+                data: { 'crewId': crewId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                    $('#partialModal').on('hidden.bs.modal', function () {
+                        location.reload();
+                    })
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+
+@*ExcelFile*@
+
+<script>
+    function exported(e) {
+                                   var value = $("#myselection option:selected");
+                                   var name = value.val();
+                                   if (name == "Atlantic") {
+
+                                           url = '@Url.Action("AtlanticExcelFile", "Home")';
+                                       }
+                                   if (name == "OCIMF") {
+                                           url = '@Url.Action("GetOCIMFExcelFile", "Home")';
+                                   }
+                                   if (name == "OLP") {
+                                       url = '@Url.Action("OLPExcelFile", "Home")';
+                                   }
+                                   if (name == "IMO") {
+                                       url =('@Url.Action("GenerateIMOPDF", "Home")');
+
+    @*var url = '@Url.Action("GenerateIMOPDF", "Home", new {target="_blank"})';
+                                              window.location.href = url;*@
+                                       }
+                                   if (name == "FPD01") {
+                                       url =('@Url.Action("generateFPD01", "Home")');
+
+                                       }
+                                  $.ajax({
+                                      type: "POST",
+                                      url: url,
+                                   contentType: "application/json; charset=utf-8",
+                                   dataType: "json",
+                                    }).done(function (data) {
+
+
+                                        if (data.fileName != "") {
+                                            window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                        }
+                                    });
+                                 }
+</script>
+
+
+<script>
+    function exportToExcel(e) {
+        vesselids = $("#vesselid").text();
+        years = $("#year").val();
+        months = $("#month").val();
+                               $.ajax({
+                                   type: "POST",
+                                   url: '@Url.Action("Genneratexcel", "Portagebill")',
+                                   data: { 'vesselId': vesselids, 'month': months, 'year': years, 'currency': "", 'checkpbtilldate': "" },
+                               // contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                 }).done(function (data) {
+                                     if (data.fileName != "") {
+                                         window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "DownloadXL" })/?fileName=" + data.fileName;
+                                     }
+                                 });
+                              }
+</script>
+
+<script>
+   
+
+</script>
+
 <style>
     .show {
         display: block;
@@ -3023,6 +3162,7 @@
 
       /* function to open the bow modal popup */
       function getdataforbow(From, To, CrewId, CrewListId, ContractId, CrewName, Currency, RankName, signOffDate) {
+          debugger
           sessionStorage.setItem('crewid', CrewId);
           sessionStorage.setItem('CrewListId', CrewListId);
           selectbankids = [];
@@ -3852,7 +3992,7 @@
           SpecialAllowance, CompanyAllowance, SecurityAllow, TempFuelAllow, IncentiveAllowance, Seniority, TankerAllowance, Housing, Transport, Utility, Bonus, SeafarersPF, leavepayaddition, otherallow,
           Reimbursement, Contractreimbrusment, Contractbonus, Contractdedu,
           OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction, paycommence, signondate) {
-
+              debugger
           nigpfAmount= npfamount;
           $("#poratgeallotment2").hide();
           $("#pcrewrank").text(rank);
@@ -3902,8 +4042,10 @@
 
                   });
                   $('#pcrewbank').append(table);
+                  GetContractDataOfEarnings();
+                  GetContractDataOfDeductions();
 
-              },
+                  },
               failure: function (response) {
                   alert(response.responseText);
               },
@@ -3911,7 +4053,7 @@
                   alert(response.responseText);
               }
           });
-
+          debugger
           if (PortageBillId != 0 && PortageBillId != '') {
 
               PortageBillIdglobal = PortageBillId;
@@ -4069,7 +4211,8 @@
                   }
               });
           }
-          else {
+          
+else {
               numberofdays = numberofday;
               basicwage = BasicWages;
               FixedGtOT = fixott;
@@ -4508,6 +4651,7 @@
 
       /* function to calculate the earning   */
       function calculateportageearning() {
+          debugger
           othour = $("#potHours").val() || 0;
           otearning = ((parseFloat(otrate)) * (parseFloat(othour)) || 0).toFixed(2);
           $("#pextraot").val(otearning);
