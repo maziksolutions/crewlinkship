@@ -61,6 +61,7 @@ namespace crewlinkship
 
                 };
             });
+            services.AddMvc().AddRazorRuntimeCompilation();
 
         }
 
