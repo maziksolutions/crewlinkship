@@ -28,7 +28,7 @@
 
                                         <fieldset class="form-group mb-1">
 
-                                            <input type="text" id="emailId" name="emailId" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.EmailId)" placeholder="Your Email Address">
+                                            <input type="email" id="emailId" name="emailId" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.EmailId)" placeholder="Your Email Address">
 
                                         </fieldset>
                                         <fieldset class="form-group mb-1">
@@ -43,7 +43,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <fieldset class="form-group mb-1">
-                                                    <input type="text" id="Port" name="port" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Port)" placeholder="PORT">
+                                                    <input type="number" id="Port" name="port" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.Port)" placeholder="PORT">
                                                 </fieldset>
                                             </div>
                                         </div>
@@ -55,7 +55,19 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <fieldset class="form-group mb-1">
-                                                    <input type="text" id="PopPort" name="PopPort" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.PopPort)" placeholder="PopPort">
+                                                    <input type="number" id="PopPort" name="PopPort" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.PopPort)" placeholder="PopPort">
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <fieldset class="form-group mb-1">
+                                                    <input type="email" id="EmailSentTo" name="EmailSentTo" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.EmailSentTo)" placeholder="Email Sent To">
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <fieldset class="form-group mb-1">
+                                                    <input type="email" id="NotificationEmailSentTo" name="NotificationEmailSentTo" class="form-control" value="@(ViewBag.Email == null ? "": ViewBag.Email.NotificationEmailSentTo)" placeholder="Notification Email Sent To">
                                                 </fieldset>
                                             </div>
                                         </div>

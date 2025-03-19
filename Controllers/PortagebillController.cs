@@ -25,6 +25,12 @@ using System.Web;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using Syncfusion.XlsIO;
 
 namespace crewlinkship.Controllers
 {
@@ -74,8 +80,9 @@ namespace crewlinkship.Controllers
         [HttpGet]
         public IActionResult PortageReimbursementDetailsbyid( int portageBillId,  string type)
         {
-            var ReimbursementDetails = from earning in _context.PortageEarningDeduction where earning.PortageBillId == portageBillId && earning.Type == type && earning.IsDeleted==false
+            var ReimbursementDetails = from earning in _context.PortageEarningDeduction 
                                        join accountCode in _context.TblBudgetSubCodes.Where(x => x.IsDeleted == false) on earning.SubCodeId equals accountCode.SubCodeId
+                                       where earning.PortageBillId == portageBillId && earning.Type == type && earning.IsDeleted == false
                                        select new PortageEarningDeductionDTO
                                        {
                                            PortageEarningDeductionId = earning.PortageEarningDeductionId,
@@ -399,7 +406,8 @@ namespace crewlinkship.Controllers
                             data.TotalDeductions = item.TotalDeductions;
                             data.LeaveWagesBf = item.LeaveWagesBf;
                             data.FinalBalance = item.FinalBalance;
-                            // data.SignOffDate = item.SignOffDate;
+                            if (item.SignOffDate != null)
+                                data.SignOffDate = item.SignOffDate;
                             data.Remarks = item.Remarks;
                             //  data.ModifiedBy = crewid;
                             data.ModifiedDate = DateTime.Now;
@@ -450,7 +458,8 @@ namespace crewlinkship.Controllers
                         data.TotalDeductions = item.TotalDeductions;
                         data.LeaveWagesBf = item.LeaveWagesBf;
                         data.FinalBalance = item.FinalBalance;
-                        // data.SignOffDate = item.SignOffDate;
+                        if(item.SignOffDate != null)
+                         data.SignOffDate = item.SignOffDate;
                         data.Remarks = item.Remarks;
                         //  data.ModifiedBy = crewid;
                         data.ModifiedDate = DateTime.Now;
@@ -481,139 +490,143 @@ namespace crewlinkship.Controllers
             return 0;
         }
    
-        public JsonResult AddBankAllotment(TblPbbankAllotment item, int itemlength)
+        public JsonResult AddBankAllotment(List<TblPbbankAllotment> bankallotments, int itemlength,int pbid)
         {
             DateTime today = DateTime.Today;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             DateTime endOfMonth = new DateTime(today.Year, today.Month, DateTime.DaysInMonth(today.Year, today.Month));
-            if (item.From == DateTime.MinValue)
+            foreach (var item in bankallotments)
             {
-                item.From = firstDayOfMonth;
-                item.To = endOfMonth;
-            }
-            try
-            {
-                if (item.BankAllotmentId == 0)
+                if (item.From == DateTime.MinValue)
                 {
-                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
-                    {
-                        Crew = item.Crew,
-                        VesselId = item.VesselId,
-                        BankId = item.BankId,
-                        From = item.From,
-                        To = item.To,
-                        Allotments = item.Allotments,
-                        IsPromoted = item.IsPromoted,
-                        IsMidMonthAllotment = item.IsMidMonthAllotment,
-                    }); _context.SaveChanges();
-                    return Json("success");
+                    item.From = firstDayOfMonth;
+                    item.To = endOfMonth;
                 }
-                else
+                try
                 {
-                    if (item.IsMidMonthAllotment == false)
+                    var checkportagebillid = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.BankId == item.BankId && x.IsDeleted == false).FirstOrDefault();
+                    if (item.BankAllotmentId == 0 && checkportagebillid == null)
                     {
-                        var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == false && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
-                        var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
-                        var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
-                        if (checkdata.Count() == itemlength)
+                        _context.TblPbbankAllotments.Add(new TblPbbankAllotment
                         {
-                            if (data != null)
-                            {
-                                data.Crew = item.Crew;
-                                data.VesselId = item.VesselId;
-                                data.BankId = item.BankId;
-                                data.From = item.From;
-                                data.To = item.To;
-                                data.Allotments = item.Allotments;
-                                _context.TblPbbankAllotments.Update(data);
-                                _context.SaveChanges();
-                                return Json("success");
-                            }
-                        }
-                        else
-                        {
-                            if (data != null)
-                            {
-                                foreach (var b in checkdata)
-                                {
-                                    if (data.BankAllotmentId == b.BankAllotmentId)
-                                    {
-                                        data.Crew = item.Crew;
-                                        data.VesselId = item.VesselId;
-                                        data.BankId = item.BankId;
-                                        data.From = item.From;
-                                        data.To = item.To;
-                                        data.Allotments = item.Allotments;
-                                        _context.TblPbbankAllotments.Update(data);
-                                        _context.SaveChanges();
-                                    }
-                                    else
-                                    {
-                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
-                                        datanew.IsDeleted = true;
-                                        _context.TblPbbankAllotments.Update(datanew);
-                                        _context.SaveChanges();
-                                    }
-                                }
-                                return Json("success");
-                            }
-                        }
+                            Crew = item.Crew,
+                            VesselId = item.VesselId,
+                            BankId = item.BankId,
+                            From = item.From,
+                            To = item.To,
+                            Allotments = item.Allotments,
+                            IsPromoted = item.IsPromoted,
+                            IsMidMonthAllotment = item.IsMidMonthAllotment,
+                            PortageBillId = pbid
+                        }); _context.SaveChanges();
                     }
                     else
                     {
-                        var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == true && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
-                        var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
-                        var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
-                        if (checkdata.Count() == itemlength)
+                        if (item.IsMidMonthAllotment == false)
                         {
-                            if (data != null)
+                            //var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == false && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                            var checkdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == false && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                            //var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
+                            var checkpbdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsDeleted == false).FirstOrDefault();
+                            var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
+                            if (checkdata.Count() == itemlength)
                             {
-                                data.Crew = item.Crew;
-                                data.VesselId = item.VesselId;
-                                data.BankId = item.BankId;
-                                data.From = item.From;
-                                data.To = item.To;
-                                data.Allotments = item.Allotments;
-                                _context.TblPbbankAllotments.Update(data);
-                                _context.SaveChanges();
-                                return Json("success");
+                                if (data != null)
+                                {
+                                    data.Crew = item.Crew;
+                                    data.VesselId = item.VesselId;
+                                    data.BankId = item.BankId;
+                                    data.From = item.From;
+                                    data.To = item.To;
+                                    data.Allotments = item.Allotments;
+                                    data.PortageBillId = pbid;
+                                    _context.TblPbbankAllotments.Update(data);
+                                    _context.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                if (data != null)
+                                {
+                                    foreach (var b in checkdata)
+                                    {
+                                        if (data.BankAllotmentId == b.BankAllotmentId)
+                                        {
+                                            data.Crew = item.Crew;
+                                            data.VesselId = item.VesselId;
+                                            data.BankId = item.BankId;
+                                            data.From = item.From;
+                                            data.To = item.To;
+                                            data.Allotments = item.Allotments; data.PortageBillId = pbid;
+                                            _context.TblPbbankAllotments.Update(data);
+                                            _context.SaveChanges();
+                                        }
+                                        else
+                                        {
+                                            var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                            datanew.IsDeleted = true;
+                                            _context.TblPbbankAllotments.Update(datanew);
+                                            _context.SaveChanges();
+                                        }
+                                    }
+                                }
                             }
                         }
                         else
                         {
-                            if (data != null)
+                            //var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == item.From.Month && x.From.Year == item.From.Year && x.IsMidMonthAllotment == true && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                            //var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == item.From.Month && x.From.Value.Year == item.From.Year && x.CrewId == item.Crew).FirstOrDefault();
+                            var checkdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == true && x.Crew == item.Crew && x.VesselId == item.VesselId).ToList();
+                            var checkpbdata = _context.TblPortageBills.Where(x => x.PortageBillId == pbid && x.CrewId == item.Crew && x.IsDeleted == false).FirstOrDefault();
+                            var data = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == item.BankAllotmentId);
+                            if (checkdata.Count() == itemlength)
                             {
-                                foreach (var b in checkdata)
+                                if (data != null)
                                 {
-                                    if (data.BankAllotmentId == b.BankAllotmentId)
+                                    data.Crew = item.Crew;
+                                    data.VesselId = item.VesselId;
+                                    data.BankId = item.BankId;
+                                    data.From = item.From;
+                                    data.To = item.To;
+                                    data.Allotments = item.Allotments; data.PortageBillId = pbid;
+                                    _context.TblPbbankAllotments.Update(data);
+                                    _context.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                if (data != null)
+                                {
+                                    foreach (var b in checkdata)
                                     {
-                                        data.Crew = item.Crew;
-                                        data.VesselId = item.VesselId;
-                                        data.BankId = item.BankId;
-                                        data.From = item.From;
-                                        data.To = item.To;
-                                        data.Allotments = item.Allotments;
-                                        _context.TblPbbankAllotments.Update(data);
-                                        _context.SaveChanges();
-                                        return Json("success");
-                                    }
-                                    else
-                                    {
-                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
-                                        datanew.IsDeleted = true;
-                                        _context.TblPbbankAllotments.Update(datanew);
-                                        _context.SaveChanges();
+                                        if (data.BankAllotmentId == b.BankAllotmentId)
+                                        {
+                                            data.Crew = item.Crew;
+                                            data.VesselId = item.VesselId;
+                                            data.BankId = item.BankId;
+                                            data.From = item.From;
+                                            data.To = item.To;
+                                            data.Allotments = item.Allotments; data.PortageBillId = pbid;
+                                            _context.TblPbbankAllotments.Update(data);
+                                            _context.SaveChanges();
+                                        }
+                                        else
+                                        {
+                                            var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                            datanew.IsDeleted = true;
+                                            _context.TblPbbankAllotments.Update(datanew);
+                                            _context.SaveChanges();
+                                        }
                                     }
                                 }
                             }
-                            return Json("success");
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
             return null;
         }
@@ -746,7 +759,7 @@ namespace crewlinkship.Controllers
         }
 
 
-        public JsonResult GetBankAllotment(int vesselId, int month, int year, int crewid, string ispromoted)
+        public JsonResult GetBankAllotment(int vesselId, int month, int year, int crewid, string ispromoted,int portagebillid)
         {
             bool promoted = false;
             if (ispromoted == "no")
@@ -755,7 +768,7 @@ namespace crewlinkship.Controllers
                 promoted = false;
             else
                 promoted = true;
-            var data = _context.TblPbbankAllotments.Where(x => x.VesselId == vesselId && x.From.Month == month && x.From.Year == year && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false).ToList();
+            var data = _context.TblPbbankAllotments.Where(x => x.VesselId == vesselId && x.PortageBillId== portagebillid && x.Crew == crewid && x.IsPromoted == promoted && x.IsMidMonthAllotment == false && x.IsDeleted == false).ToList();
             return Json(data);
         }
         public JsonResult deletebow(int id)
@@ -2432,187 +2445,77 @@ namespace crewlinkship.Controllers
             return dt;
         }
 
-        public JsonResult LockPortageBill(string vesselId, int month, int year)
+        public JsonResult LockPortageBill(string vesselId, int month, int year, List<string> crewsids)
         {
-            var Portdata = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId) && x.BillStatus == 0).ToList();
+            var Portdata = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId) && x.BillStatus == 0 && crewsids.Contains(x.CrewId.ToString())).ToList();
             string checkpbtilldate = "";
             var PortdataVM = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselId, month, year, "no", checkpbtilldate).ToList();
             return Json(new { portageBillData = Portdata , portageBillVM = PortdataVM });
         }
 
-        public JsonResult UpdateBillStatus(string vesselId, int month, int year)
+        public JsonResult UpdateBillStatus(string vesselId, int month, int year,List<string> crewsids,string type)
         {
-            Sendbackup();
-              var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId)).ToList();
+              var portUpdate = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId) && crewsids.Contains(x.CrewId.ToString())).ToList();
             foreach(var item in portUpdate)
             {
                  item.BillStatus = 1;
+                item.IsPortagelocked = true;
                 _context.TblPortageBills.Update(item);
                 _context.SaveChanges();
             }
+            var pbbankallotment = _context.TblPbbankAllotments.Where(x =>  x.From.Month == month && x.From.Year == year && x.VesselId == int.Parse(vesselId) && crewsids.Contains(x.Crew.ToString())).ToList();
+            foreach (var item in pbbankallotment)
+            {
+                item.IsPortagelocked = true;
+                _context.TblPbbankAllotments.Update(item);
+                _context.SaveChanges();
+            }
+            var portagePortageEarningDeduction = _context.PortageEarningDeduction.Where(x =>  x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == int.Parse(vesselId) && crewsids.Contains(x.CrewId.ToString())).ToList();
+            foreach (var item in portagePortageEarningDeduction)
+            {
+                item.IsPortagelocked = true;
+                _context.PortageEarningDeduction.Update(item);
+                _context.SaveChanges();
+            }
+            LockPortageBill lockpb = new LockPortageBill();
+            lockpb.Vesselid = vesselidtouse;           
+            lockpb.LockedDate = DateTime.UtcNow;
+            lockpb.month = month ;
+            lockpb.year = year;
+            _context.LockPortageBill.Add(lockpb);
+            _context.SaveChanges();
+            Sendbackup(month, year, crewsids, type);
             return Json(new { updatePortageBill = portUpdate });
         }
 
-        public void Sendbackup()
+        public void Sendbackup(int month, int year, List<string> crewsids, string type)
         {
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddDays(-6);  
-            var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblActivitySignOnVM
-            {
-
-                ActivitySignOnId = x.ActivitySignOnId,
-                CrewId = x.CrewId.Value,
-                ContractId = x.ContractId.Value,
-                VesselId = x.VesselId.Value,
-                CountryId = x.CountryId.Value,
-                SeaportId = x.SeaportId.Value,
-                RankId = x.RankId.Value,
-                SignOnReasonId = x.SignOnReasonId.Value,
-                ReliveesCrewListId = x.ReliveesCrewListId.Value,
-                Contract = x.Contract,
-                ExpectedSignOnDate = x.ExpectedSignOnDate.ToString(),
-                Duration = x.Duration,
-                ReliefDate = x.ReliefDate.Value.ToString(),
-                ExpectedTravelDate = x.ExpectedTravelDate.Value.ToString(),
-                ExtraCrewOnBoard = x.ExtraCrewOnBoard,
-                ExtraCrewReasonId = x.ExtraCrewReasonId.Value,
-                ExtraApprovedBy = x.ExtraApprovedBy,
-                DocsValidityCheckPeriod = x.DocsValidityCheckPeriod,
-                AllowBeginTravel = x.AllowBeginTravel.HasValue ? x.AllowBeginTravel.Value : default,
-                PreJoiningMedicals = x.PreJoiningMedicals,
-                Appraisal = x.Appraisal.Value,
-                OwnerWage = x.OwnerWage.Value,
-                Remarks = x.Remarks,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.Value.ToString(),
-                IsDeleted = x.IsDeleted.Value,
-                IsSignon = x.IsSignon.Value,
-                RecDate = x.RecDate.Value.ToString(),
-                CreatedBy = x.CreatedBy
-            }).ToList();
-          
-            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth));
-         
-            var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewDetailVM
-            {
-
-                CrewId = x.CrewId,
-                CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
-                RankId = x.RankId.HasValue ? x.RankId.Value : default,
-                PoolId = x.PoolId.HasValue ? x.PoolId.Value : default,
-                ZonalId = x.ZonalId.HasValue ? x.ZonalId.Value : default,
-                MtunionId = x.MtunionId.HasValue ? x.MtunionId.Value : default,
-                NtbrReasonId = x.NtbrReasonId.HasValue ? x.NtbrReasonId.Value : default,
-                InActiveReasonId = x.InActiveReasonId.HasValue ? x.InActiveReasonId.Value : default,
-                EmpNumber = x.EmpNumber,
-                Status = x.Status,
-                PreviousStatus = x.PreviousStatus,
-                FirstName = x.FirstName,
-                MiddleName = x.MiddleName,
-                LastName = x.LastName,
-                Dob = x.Dob.HasValue ? x.Dob.Value.ToString() : default,
-                PlaceOfBirth = x.PlaceOfBirth,
-                CivilStatus = x.CivilStatus,
-                Doa = x.Doa.HasValue ? x.Doa.Value.ToString() : default,
-                Gender = x.Gender,
-                EnglishFluency = x.EnglishFluency,
-                UserImage = x.UserImage,
-                ShipCategory = x.ShipCategory,
-                AppliedOn = x.AppliedOn.HasValue ? x.AppliedOn.Value.ToString() : default,
-                FirstJoinDate = x.FirstJoinDate.HasValue ? x.FirstJoinDate.Value.ToString() : default,
-                OtherTravelDocNo = x.OtherTravelDocNo,
-                ManningOffice = x.ManningOffice,
-                MembershipNumber = x.MembershipNumber,
-                DateOfJoining = x.DateOfJoining.HasValue ? x.DateOfJoining.Value.ToString() : default,
-                Attachment = x.Attachment,
-                Benefits = x.Benefits,
-                Height = x.Height,
-                Weight = x.Weight,
-                ShoesSize = x.ShoesSize,
-                BoilerSuitSize = x.BoilerSuitSize,
-                ShirtSize = x.ShirtSize,
-                TrouserSize = x.TrouserSize,
-                HairColor = x.HairColor,
-                EyeColor = x.EyeColor,
-                DistinguishMark = x.DistinguishMark,
-                Resume = x.Resume,
-                Remark = x.Remark,
-                ApplicantStatus = x.ApplicantStatus,
-                LastVessel = x.LastVessel.HasValue ? x.LastVessel.Value : default,
-                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
-                ReliefDate = x.ReliefDate.HasValue ? x.ReliefDate.Value.ToString() : default,
-                IsNtbr = x.IsNtbr.HasValue ? x.IsNtbr.Value : default,
-                Ntbron = x.Ntbron.HasValue ? x.Ntbron.Value.ToString() : default,
-                Ntbrby = x.Ntbrby,
-                InActive = x.InActive.HasValue ? x.InActive.Value : default,
-                InActiveOn = x.InActiveOn.HasValue ? x.InActiveOn.Value.ToString() : default,
-                InActiveBy = x.InActiveBy,
-                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-                Signature = x.Signature,
-                PlanRankId = x.PlanRankId.HasValue ? x.PlanRankId.Value : default,
-                PlanStatus = x.PlanStatus,
-                PlanVesselId = x.PlanVesselId.HasValue ? x.PlanVesselId.Value : default,
-                CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-                ImpRemark = x.ImpRemark,
-                ApprovedBy = x.ApprovedBy.HasValue ? x.ApprovedBy.Value : default,
-                MaskRemarks = x.MaskRemarks,
-                MaskAttachment = x.MaskAttachment,
-                MaskedBy = x.MaskedBy,
-            }).ToList();
-
-            var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewListVM
-            {
-                CrewListId = x.CrewListId,
-                RankId = x.RankId.HasValue ? x.RankId.Value : default,
-                VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
-                CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-                SignOnDate = x.SignOnDate.HasValue ? x.SignOnDate.ToString() : default,
-                DueDate = x.DueDate.HasValue ? x.DueDate.ToString() : default,
-                Reliever1 = x.Reliever1.HasValue ? x.Reliever1.Value : default,
-                Reliever2 = x.Reliever2.HasValue ? x.Reliever2.Value : default,
-                ReptriationPort = x.ReptriationPort,
-                EngagementPort = x.EngagementPort,
-                Er = x.Er,
-                Ermonth = x.Ermonth,
-                OldDueDate = x.OldDueDate.HasValue ? x.OldDueDate.ToString() : default,
-                Status = x.Status,
-                IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-                RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-                IsSignOff = x.IsSignOff.HasValue ? x.IsSignOff.Value : default,
-                IsPromoted = x.IsPromoted.HasValue ? x.IsPromoted.Value : default,
-                ActivityCode = x.ActivityCode.HasValue ? x.ActivityCode.Value : default,
-                PlanActivityCode = x.PlanActivityCode.HasValue ? x.PlanActivityCode.Value : default,
-                ReplacedWith = x.ReplacedWith,
-                ReliverRankId = x.ReliverRankId.HasValue ? x.ReliverRankId.Value : default,
-            }).ToList();
-           
-            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x => new tblPBBankAllotmentVM
-            {
-                VesselPortId = x.BankAllotmentId,
-                Crew = x.Crew,
-                VesselId = x.VesselId,
-                BankId = x.BankId,
-                From = x.From,
-                To = x.To,
-                Allotments = x.Allotments,
-                IsMidMonthAllotment = x.IsMidMonthAllotment,
-                IsDeleted = x.IsDeleted,
-                Recdate = x.Recdate,
-                IsPromoted = x.IsPromoted
-            }).ToList();
-
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.From.Month == month && x.From.Year == year && crewsids.Contains(x.Crew.ToString())).ToList();
+            var PBLock = _context.LockPortageBill.Where(x => x.month == month && x.year == year).ToList();
+            //var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.From.Month == month && x.From.Year == year).Select(x => new
+            //{
+            //    BankAllotmentId =x.BankAllotmentId,
+            //    Crew = x.Crew,
+            //    VesselId = x.VesselId,
+            //    BankId = x.BankId,
+            //    From = x.From,
+            //    To = x.To,
+            //    Allotments = x.Allotments,
+            //    IsMidMonthAllotment = x.IsMidMonthAllotment,
+            //    IsDeleted = x.IsDeleted,
+            //    Recdate = x.Recdate,
+            //    IsPromoted = x.IsPromoted,
+            //    PortageBillId = x.PortageBillId,
+            //    VesselPortId = x.VesselPortId,
+            //    OfficePBId = x.OfficePBId,
+            //    IsPortagelocked = x.IsPortagelocked,
+            //}).ToList();
             var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
-                                           where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+                                           where pbearn.From.Value.Month == month && pbearn.From.Value.Year == year && crewsids.Contains(pbearn.CrewId.ToString())
                                            select new
                                            {
                                                PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
-                                               VesselPortId = pbearn.VesselPortId,
-                                               OfficePBId = pbearn.OfficePBId,
                                                CrewId = pbearn.CrewId,
                                                PortageBillId = pbearn.PortageBillId,
                                                Vesselid = pbearn.Vesselid,
@@ -2626,11 +2529,14 @@ namespace crewlinkship.Controllers
                                                RecDate = pbearn.RecDate,
                                                CreatedBy = pbearn.CreatedBy,
                                                ModifiedBy = pbearn.ModifiedBy,
-                                               ModifiedDate = pbearn.ModifiedDate
+                                               ModifiedDate = pbearn.ModifiedDate,
+                                               VesselPortId = pbearn.VesselPortId,
+                                               OfficePBId = pbearn.OfficePBId,
+                                               IsPortagelocked = pbearn.IsPortagelocked
                                            }).ToList();
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
+            var PortageBills = _context.TblPortageBills.Where(x => x.From.Value.Month == month && x.From.Value.Year == year && crewsids.Contains(x.CrewId.ToString())).Select(x => new 
             {
-                VesselPortId = x.PortageBillId,
+                PortageBillId = x.PortageBillId,
                 CrewId = x.CrewId,
                 CrewListId = x.CrewListId,
                 ContractId = x.ContractId,
@@ -2676,42 +2582,17 @@ namespace crewlinkship.Controllers
                 Gratuity = x.Gratuity,
                 Avc = x.Avc,
                 IsAddPrevBal = x.IsAddPrevBal,
-                IsHoldWageAllotment = x.IsHoldWageAllotment
-            }).ToList();
-            var crewlistdats = _context.TblCrewLists.ToList();
-            DataTable dtcrewlistdats = new DataTable();
-            dtcrewlistdats = LINQResultToDataTable(crewlistdats);
-            DataTable dtCloned = dtcrewlistdats.Clone();
-            dtCloned.Columns["SignOnDate"].DataType = typeof(string);
-            dtCloned.Columns["DueDate"].DataType = typeof(string);
-            foreach (DataRow row in dtcrewlistdats.Rows)
-            {
-                dtCloned.ImportRow(row);
-            }
+                IsHoldWageAllotment = x.IsHoldWageAllotment,
+                VesselPortId = x.VesselPortId,
+                OfficePBId = x.OfficePBId,
+                IsPortagelocked = x.IsPortagelocked,
+            }).ToList();            
             try
             {
                 var TblPortageBills = _context.TblPortageBills.ToList();
                 using (XLWorkbook wb = new XLWorkbook())
                 {
-                    int x = 1;
-                    if (ActivitySignOns.Count > 0)
-                    {
-                        var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
-                        wb.Worksheet(x).Cell(1, 1).InsertTable(ActivitySignOns);
-                        x++;
-                    }
-                    if (CrewDetails.Count > 0)
-                    {
-                        var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
-                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewDetails);
-                        x++;
-                    }
-                    if (CrewLists.Count > 0)
-                    {
-                        var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
-                        wb.Worksheet(x).Cell(1, 1).InsertTable(CrewLists);
-                        x++;
-                    }
+                    int x = 1;                  
                     if (PBBankAllotment.Count > 0)
                     {
                         var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
@@ -2728,6 +2609,12 @@ namespace crewlinkship.Controllers
                     {
                         var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
                         wb.Worksheet(x).Cell(1, 1).InsertTable(PortageEarningDeduction);
+                        x++;
+                    }
+                    if (PBLock.Count > 0)
+                    {
+                        var wsPBLock = wb.Worksheets.Add("tblImportLockPortageBill");
+                        wb.Worksheet(x).Cell(1, 1).InsertTable(PBLock);
                         x++;
                     }
                     int wbcount = wb.Worksheets.Count();
@@ -2749,8 +2636,8 @@ namespace crewlinkship.Controllers
                         mail.From = new MailAddress(getemail.EmailId, "Crewlink Backup");
                         mail.Subject = "Crewlink Backup";
                         mail.IsBodyHtml = true;
-                        mail.Attachments.Add(new Attachment(PathToSave));
-                        mail.To.Add(new MailAddress("info@maziksolutions.com"));
+                        mail.Attachments.Add(new Attachment(PathToSave));                      
+                        mail.To.Add(new MailAddress(getemail.EmailSentTo));
                         SmtpClient smtp = new SmtpClient();
                         smtp.UseDefaultCredentials = true;
                         smtp.Host = getemail.Smtp;
@@ -2760,6 +2647,7 @@ namespace crewlinkship.Controllers
                         smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                         // smtp.EnableSsl = true;
                         smtp.Send(mail);
+                        SendnotificationEmail(month, year, type);
                         Backuplogs("Backup email has been sent succesfully.");                       
                     }
                 }
@@ -2771,6 +2659,42 @@ namespace crewlinkship.Controllers
                 throw ex;
             }
         }
+        public void SendnotificationEmail(int month, int year,string type)
+        {
+            try { 
+            var getvesseldetail = _context.TblVessels.Where(x => x.VesselId == vesselidtouse).FirstOrDefault();
+            var getmonthname = (new DateTime(year, month, 1)).ToString("MMM", CultureInfo.InvariantCulture);
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<b>Vessel Name : </b>" + getvesseldetail.VesselName + "<br/>");
+                if(type =="bow")
+             sb.Append("Bow bill has been locked for " + getvesseldetail.VesselName + " for month " + getmonthname + "-" + year);
+                else
+            sb.Append("Portage bill has been locked for " + getvesseldetail.VesselName + " for month " + getmonthname+"-" + year);
+            sb.Append("<br/>");   
+            var getemail = _context.TblEmails.FirstOrDefault();          
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(getemail.EmailId, "Crewlink Backup");
+                if (type == "bow")
+                    mail.Subject = getvesseldetail.VesselName + " : " + "Bow Locked";
+                else
+                    mail.Subject = getvesseldetail.VesselName + " : " + "Portage Bill Locked";
+            mail.IsBodyHtml = true;
+            mail.To.Add(new MailAddress(getemail.EmailSentTo));
+            mail.Body = sb.ToString();
+            SmtpClient smtp = new SmtpClient();
+            smtp.UseDefaultCredentials = true;
+            smtp.Host = getemail.Smtp;
+            if (getemail.Port != null && getemail.Port != 0)
+                smtp.Port = getemail.Port.Value;
+            smtp.Credentials = new System.Net.NetworkCredential(getemail.EmailId, getemail.Password);
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.Send(mail);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
         public void Backuplogs(string message)
         {
             _context.tblBackupLog.Add(new tblBackupLog
@@ -2846,6 +2770,245 @@ namespace crewlinkship.Controllers
 
             }
             return null;
+        }
+
+         public JsonResult DownloadPBPDF(string vesselId, int month, int year, string currency)
+        {           
+            try
+            {
+                string requesturl = HttpContext.Request.GetEncodedUrl();
+                string newurl = requesturl.Substring(0, requesturl.LastIndexOf("/"));
+                string finalurl = newurl.Substring(0, newurl.LastIndexOf("/"));
+                string localpath = finalurl + "/";
+                string url = "";
+                url = localpath + "Portagebill/PBPDF?vesselId=" + vesselId + "&month=" + month + "&year=" + year + "&currency=" + currency;
+                var webRoot = _appEnvironment.WebRootPath;
+                DateTime createdate = new DateTime(year, month, 1);
+                string managername = "";
+                string headerUrl = "";
+                var data = _context.TblVessels.Where(x => x.VesselName == vesselId).FirstOrDefault();
+                var manager = _context.TblManagers.Where(x => x.ManagerId == 10).FirstOrDefault();// getvessel.TechManager1.Value);
+                if (manager.RecDate.Value.Month <= month && manager.RecDate.Value.Year <= year)
+                    headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFHeader-ASMnew.htm");
+                // managername = _managers.GetManager(10).Managers;  //manager.Managers;
+                else
+                {
+                    //var managerlog = _context.tblManagerLog.Where(x => x.ManagerId == 10 && x.FromDate <= createdate && x.ChangeDate >= createdate).FirstOrDefault();//data.TechManager1.Value
+                    //if (managerlog != null)
+                    //    headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFHeader-ASM.htm");
+                    ////else if (managerlog == null && data.TechManager1.Value == 21)
+                    ////    headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFHeader-ASM.htm");
+                    //else
+                    //    headerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFHeader-ASMnew.htm");
+                }
+                string footerUrl = System.IO.Path.Combine(webRoot, "PDFHeaders/PDFFooter.htm");
+                string pdf_page_size = PdfPageSize.A4.ToString();
+                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize), pdf_page_size, true);
+                string pdf_orientation = PdfPageOrientation.Landscape.ToString();
+                PdfPageOrientation pdfOrientation = (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation), pdf_orientation, true);
+                int webPageWidth = 1300;
+                int webPageHeight = 0;
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+                // set converter options
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfOrientation;
+                converter.Options.WebPageWidth = webPageWidth;
+                converter.Options.WebPageHeight = webPageHeight;
+                int headerHeight = 40;
+                int footerHeight = 30;
+                converter.Options.DisplayHeader = true;
+                converter.Header.DisplayOnFirstPage = true;
+                converter.Header.DisplayOnOddPages = true;
+                converter.Header.DisplayOnEvenPages = true;
+                converter.Header.Height = headerHeight;
+                //PdfHtmlSection headerHtml = new PdfHtmlSection(headerUrl);
+                //headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                //converter.Header.Add(headerHtml);
+                converter.Options.DisplayFooter = true;
+                converter.Footer.DisplayOnFirstPage = true;
+                converter.Footer.DisplayOnOddPages = true;
+                converter.Footer.DisplayOnEvenPages = true;
+                converter.Footer.Height = footerHeight;
+                //PdfHtmlSection footerHtml = new PdfHtmlSection(footerUrl);
+                //footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                //converter.Footer.Add(footerHtml);
+                PdfTextSection text = new PdfTextSection(0, 0, "Page: {page_number} of {total_pages} \r\n Generated on : " + @DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss"), new System.Drawing.Font("Arial", 7));
+                text.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                converter.Footer.Add(text);
+                PdfDocument doc = converter.ConvertUrl(url);
+                string filename = "Portage" + vesselId.Trim() + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                MemoryStream ms = new System.IO.MemoryStream();
+                doc.Save(ms);
+                ms.Position = 0;
+                string folderName = "Salaryslip";
+                string webRootPath = _appEnvironment.WebRootPath;
+                string PathToSave = Path.Combine(webRootPath, folderName + "/" + filename);
+                string PathToShow = Path.Combine(localpath, folderName + "/" + filename);               
+                FileStream file = new FileStream(PathToSave, FileMode.Create, FileAccess.Write);
+                ms.WriteTo(file);
+                file.Close();
+                string filePath = filename;
+                return Json(new { fileName = filename });
+            }
+            catch (Exception ex) { throw ex; }
+        }
+        public ActionResult DownloadXL(string fileName)
+        {
+            string path_Root = _appEnvironment.WebRootPath;
+            string folderName = "Salaryslip";
+            string fullPath = Path.Combine(path_Root, folderName + "/" + fileName);
+            byte[] fileByteArray = System.IO.File.ReadAllBytes(fullPath);
+            System.IO.File.Delete(fileName);
+            return File(fileByteArray, "application/vnd.ms-excel", fileName);
+        }
+        public IActionResult PBPDF(string vesselId, int month, int year, string currency, string checkpbtilldate)
+        {
+            var getonsignersdata = _context.PortageBillPDFVM.FromSqlRaw("spPortagePDFFile @p0, @p1, @p2,@p3,@p4", vesselId.Trim(), month, year, currency, checkpbtilldate).ToList();
+            var getoffsignersdata = _context.PortageBillPDFSignoffVM.FromSqlRaw("spSignOFFPortagePDFFile @p0, @p1, @p2,@p3", vesselId.Trim(), month, year, currency).ToList();
+            ViewBag.USDonsigners = getonsignersdata.Where(x => x.Currency == "USD");
+            ViewBag.USDcrewoffsigners = getoffsignersdata.Where(x => x.Currency == "USD");
+            var USDonsigners = getonsignersdata.Where(x => x.Currency == "USD");
+            var USDcrewoffsigners = getoffsignersdata.Where(x => x.Currency == "USD");
+            //if (USDonsigners != null || USDcrewoffsigners != null)
+            //    ViewBag.monthyear = USDonsigners.Select(x => x.From).FirstOrDefault();
+            //basic wage structure
+            ViewBag.wsbasicUSDtotal = USDonsigners.Sum(x => x.WSBasicWages) + USDcrewoffsigners.Sum(x => x.WSBasicWages);
+            ViewBag.wsFixUSDtotal = USDonsigners.Sum(x => x.WSFixedGtOT) + USDcrewoffsigners.Sum(x => x.WSFixedGtOT);
+            ViewBag.wssecallowUSDtotal = USDonsigners.Sum(x => x.WSSecurityAllow) + USDcrewoffsigners.Sum(x => x.WSSecurityAllow);
+            ViewBag.wsleavesUSDtotal = USDonsigners.Sum(x => x.WSLeavePay) + USDcrewoffsigners.Sum(x => x.WSLeavePay);
+            ViewBag.wsuniformUSDtotal = USDonsigners.Sum(x => x.WSUniformAllow) + USDcrewoffsigners.Sum(x => x.WSUniformAllow);
+            ViewBag.wstempfuelallowUSDtotal = USDonsigners.Sum(x => x.WSTempFuelAllow) + USDcrewoffsigners.Sum(x => x.WSTempFuelAllow);
+            ViewBag.wspensionUSDtotal = USDonsigners.Sum(x => x.WSPensionFund) + USDcrewoffsigners.Sum(x => x.WSPensionFund);
+            ViewBag.wsSpecialAllowanceUSDtotal = USDonsigners.Sum(x => x.WSSpecialAllowance) + USDcrewoffsigners.Sum(x => x.WSSpecialAllowance);
+            ViewBag.wscompanyallowanceUSDtotal = USDonsigners.Sum(x => x.WSCompanyAllowance) + USDcrewoffsigners.Sum(x => x.WSCompanyAllowance);
+            ViewBag.WSBonusUSDtotal = USDonsigners.Sum(x => x.WSBonus) + USDcrewoffsigners.Sum(x => x.WSBonus);
+            ViewBag.WSIncentiveAllowanceUSDtotal = USDonsigners.Sum(x => x.WSIncentiveAllowance) + USDcrewoffsigners.Sum(x => x.WSIncentiveAllowance);
+            ViewBag.WSSeniorityUSDtotal = USDonsigners.Sum(x => x.WSSeniority) + USDcrewoffsigners.Sum(x => x.WSSeniority);
+            ViewBag.WSTankerAllowanceUSDtotal = USDonsigners.Sum(x => x.WSTankerAllowance) + USDcrewoffsigners.Sum(x => x.WSTankerAllowance);
+            ViewBag.WSSeafarersPFUSDtotal = USDonsigners.Sum(x => x.WSSeafarersPF) + USDcrewoffsigners.Sum(x => x.WSSeafarersPF);
+            ViewBag.WSleavepayadditionUSDtotal = USDonsigners.Sum(x => x.WSleavepayaddition) + USDcrewoffsigners.Sum(x => x.WSleavepayaddition);
+            ViewBag.wsOtherAUSDtotal = USDonsigners.Sum(x => x.WSOtherAllow) + USDcrewoffsigners.Sum(x => x.WSOtherAllow);
+            ViewBag.WSTotalWages = USDonsigners.Sum(x => x.WSTotalWages) + USDcrewoffsigners.Sum(x => x.WSTotalWages);
+            //
+            ViewBag.basicUSDtotal = USDonsigners.Sum(x => x.BasicWages) + USDcrewoffsigners.Sum(x => x.BasicWages);
+            ViewBag.FixUSDtotal = USDonsigners.Sum(x => x.FixedGtOT) + USDcrewoffsigners.Sum(x => x.FixedGtOT);
+            ViewBag.secuallowUSDtotal = USDonsigners.Sum(x => x.SecurityAllow) + USDcrewoffsigners.Sum(x => x.SecurityAllow);
+            ViewBag.leavesUSDtotal = USDonsigners.Sum(x => x.LeavePay) + USDcrewoffsigners.Sum(x => x.LeavePay);
+            ViewBag.uniformUSDtotal = USDonsigners.Sum(x => x.UniformAllow) + USDcrewoffsigners.Sum(x => x.UniformAllow);
+            ViewBag.tempfuelUSDtotal = USDonsigners.Sum(x => x.TempFuelAllow) + USDcrewoffsigners.Sum(x => x.TempFuelAllow);
+            ViewBag.pensionUSDtotal = USDonsigners.Sum(x => x.PensionFund) + USDcrewoffsigners.Sum(x => x.PensionFund);
+            ViewBag.SpecialAllowanceUSDtotal = USDonsigners.Sum(x => x.SpecialAllowance) + USDcrewoffsigners.Sum(x => x.SpecialAllowance);
+            ViewBag.companyAllowanceUSDtotal = USDonsigners.Sum(x => x.CompanyAllowance) + USDcrewoffsigners.Sum(x => x.CompanyAllowance);
+            ViewBag.BonusUSDtotal = USDonsigners.Sum(x => x.Bonus) + USDcrewoffsigners.Sum(x => x.Bonus);
+            ViewBag.IncentiveAllowanceUSDtotal = USDonsigners.Sum(x => x.IncentiveAllowance) + USDcrewoffsigners.Sum(x => x.IncentiveAllowance);
+            ViewBag.SeniorityUSDtotal = USDonsigners.Sum(x => x.Seniority) + USDcrewoffsigners.Sum(x => x.Seniority);
+            ViewBag.TankerAllowanceUSDtotal = USDonsigners.Sum(x => x.TankerAllowance) + USDcrewoffsigners.Sum(x => x.TankerAllowance);
+            ViewBag.SeafarersPFUSDtotal = USDonsigners.Sum(x => x.SeafarersPF) + USDcrewoffsigners.Sum(x => x.SeafarersPF);
+            ViewBag.leavepayadditionUSDtotal = USDonsigners.Sum(x => x.leavepayaddition) + USDcrewoffsigners.Sum(x => x.leavepayaddition);
+            ViewBag.OtherAUSDtotal = USDonsigners.Sum(x => x.OtherAllow) + USDcrewoffsigners.Sum(x => x.OtherAllow);
+            ViewBag.ExtraOTUSDtotal = USDonsigners.Sum(x => x.extraot) + USDcrewoffsigners.Sum(x => x.extraot);
+            ViewBag.OtherEUSDtotal = USDonsigners.Sum(x => x.OtherEarnings) + USDcrewoffsigners.Sum(x => x.OtherEarnings);
+            ViewBag.TransitUSDtotal = USDonsigners.Sum(x => x.TransitWages) + USDcrewoffsigners.Sum(x => x.TransitWages);
+            ViewBag.TotalearningUSD = USDonsigners.Sum(x => x.TotalWages) + USDcrewoffsigners.Sum(x => x.TotalWages);
+            ViewBag.PrevMonthBalUSD = USDonsigners.Sum(x => x.PrevMonthBal) + USDcrewoffsigners.Sum(x => x.PrevMonthBal);
+            ViewBag.ReimbursementUSD = USDonsigners.Sum(x => x.Reimbursement) + USDcrewoffsigners.Sum(x => x.Reimbursement);
+            ViewBag.TotalPayableUSD = USDonsigners.Sum(x => x.TotalPayable) + USDcrewoffsigners.Sum(x => x.TotalPayable);
+            ViewBag.leaveSUBUSD = USDonsigners.Sum(x => x.LeavePay);
+            ViewBag.cashabUSD = USDonsigners.Sum(x => x.CashAdvance) + USDcrewoffsigners.Sum(x => x.CashAdvance);
+            ViewBag.BSUSD = USDonsigners.Sum(x => x.BondedStores) + USDcrewoffsigners.Sum(x => x.BondedStores);
+            ViewBag.ODUSD = USDonsigners.Sum(x => x.OtherDeductions) + USDcrewoffsigners.Sum(x => x.OtherDeductions);
+            ViewBag.AllotmentUSD = USDonsigners.Sum(x => x.Allotments) + USDcrewoffsigners.Sum(x => x.Allotments);
+            ViewBag.authorityDeduction = USDonsigners.Sum(x => x.authorityDeduction) + USDcrewoffsigners.Sum(x => x.authorityDeduction);
+            ViewBag.TotalDeduUSD = USDonsigners.Sum(x => x.TotalDeductions) + USDcrewoffsigners.Sum(x => x.TotalDeductions);
+            ViewBag.LeavesBFUSD = USDonsigners.Sum(x => x.LeaveWagesBF) + USDcrewoffsigners.Sum(x => x.LeaveWagesBF);
+            ViewBag.LeavesCFUSD = USDonsigners.Sum(x => x.LeaveWagesCF);
+            ViewBag.FinalBalUSD = USDonsigners.Sum(x => x.FinalBalance) + USDcrewoffsigners.Sum(x => x.FinalBalance);
+            ViewBag.NGNonsigners = getonsignersdata.Where(x => x.Currency == "NGN");
+            ViewBag.NGNcrewoffsigners = getoffsignersdata.Where(x => x.Currency == "NGN");
+            var NGNonsigners = getonsignersdata.Where(x => x.Currency == "NGN");
+            var NGNcrewoffsigners = getoffsignersdata.Where(x => x.Currency == "NGN");
+            if (USDonsigners.Count() > 0)
+                ViewBag.vesselname = USDonsigners.Select(x => x.Vessel).FirstOrDefault();
+            else if (USDcrewoffsigners.Count() > 0)
+                ViewBag.vesselname = USDcrewoffsigners.Select(x => x.Vessel).FirstOrDefault();
+            else if (NGNonsigners.Count() > 0)
+                ViewBag.vesselname = NGNonsigners.Select(x => x.Vessel).FirstOrDefault();
+            else
+                ViewBag.vesselname = NGNcrewoffsigners.Select(x => x.Vessel).FirstOrDefault();
+            if (currency == "USD")
+            {
+                if (USDonsigners.Count() > 0)
+                    ViewBag.monthyear = USDonsigners.Select(x => x.From).FirstOrDefault();
+                else
+                    ViewBag.monthyear = USDcrewoffsigners.Select(x => x.From).FirstOrDefault();
+            }
+            else if (currency == "NGN")
+            {
+                if (NGNonsigners.Count() > 0)
+                    ViewBag.monthyear = NGNonsigners.Select(x => x.From).FirstOrDefault();
+                else
+                    ViewBag.monthyear = NGNcrewoffsigners.Select(x => x.From).FirstOrDefault();
+            }
+            else
+            {
+                if (USDonsigners.Count() > 0)
+                    ViewBag.monthyear = USDonsigners.Select(x => x.From).FirstOrDefault();
+                else if (USDcrewoffsigners.Count() > 0)
+                    ViewBag.monthyear = USDcrewoffsigners.Select(x => x.From).FirstOrDefault();
+                else if (NGNonsigners.Count() > 0)
+                    ViewBag.monthyear = NGNonsigners.Select(x => x.From).FirstOrDefault();
+                else
+                    ViewBag.monthyear = NGNcrewoffsigners.Select(x => x.From).FirstOrDefault();
+            }
+            //basic wage structure
+            ViewBag.wsbasicNGNtotal = NGNonsigners.Sum(x => x.WSBasicWages) + NGNcrewoffsigners.Sum(x => x.WSBasicWages);
+            ViewBag.wsFixNGNtotal = NGNonsigners.Sum(x => x.WSFixedGtOT) + NGNcrewoffsigners.Sum(x => x.WSFixedGtOT);
+            ViewBag.wssecallowNGNtotal = NGNonsigners.Sum(x => x.WSSecurityAllow) + NGNcrewoffsigners.Sum(x => x.WSSecurityAllow);
+            ViewBag.wsleavesNGNtotal = NGNonsigners.Sum(x => x.WSLeavePay) + NGNcrewoffsigners.Sum(x => x.WSLeavePay);
+            ViewBag.wsuniformNGNtotal = NGNonsigners.Sum(x => x.WSUniformAllow) + NGNcrewoffsigners.Sum(x => x.WSUniformAllow);
+            ViewBag.wstempfuelallowNGNtotal = NGNonsigners.Sum(x => x.WSTempFuelAllow) + NGNcrewoffsigners.Sum(x => x.WSTempFuelAllow);
+            ViewBag.wspensionNGNtotal = NGNonsigners.Sum(x => x.WSPensionFund) + NGNcrewoffsigners.Sum(x => x.WSPensionFund);
+            ViewBag.wsCompanyNANGNtotal = NGNonsigners.Sum(x => x.WSCompanyAllowance) + NGNcrewoffsigners.Sum(x => x.WSCompanyAllowance);
+            ViewBag.WSHousingNGNtotal = NGNonsigners.Sum(x => x.WSHousing) + NGNcrewoffsigners.Sum(x => x.WSHousing);
+            ViewBag.WSTransportNGNtotal = NGNonsigners.Sum(x => x.WSTransport) + NGNcrewoffsigners.Sum(x => x.WSTransport);
+            ViewBag.WSUtilityNGNtotal = NGNonsigners.Sum(x => x.WSUtility) + NGNcrewoffsigners.Sum(x => x.WSUtility);
+            ViewBag.wsOtherANGNtotal = NGNonsigners.Sum(x => x.WSOtherAllow) + NGNcrewoffsigners.Sum(x => x.WSOtherAllow);
+            ViewBag.WSNGNTotalWages = NGNonsigners.Sum(x => x.WSTotalWages) + NGNcrewoffsigners.Sum(x => x.WSTotalWages);
+            //  if (NGNonsigners != null || NGNcrewoffsigners != null)               
+            ViewBag.basicNGNtotal = NGNonsigners.Sum(x => x.BasicWages) + NGNcrewoffsigners.Sum(x => x.BasicWages);
+            ViewBag.FixNGNtotal = NGNonsigners.Sum(x => x.FixedGtOT) + NGNcrewoffsigners.Sum(x => x.FixedGtOT);
+            ViewBag.secNGNtotal = NGNonsigners.Sum(x => x.SecurityAllow) + NGNcrewoffsigners.Sum(x => x.SecurityAllow);
+            ViewBag.leavesNGNtotal = NGNonsigners.Sum(x => x.LeavePay) + NGNcrewoffsigners.Sum(x => x.LeavePay);
+            ViewBag.uniformNGNtotal = NGNonsigners.Sum(x => x.UniformAllow) + NGNcrewoffsigners.Sum(x => x.UniformAllow);
+            ViewBag.tempfuelallowNGNtotal = NGNonsigners.Sum(x => x.TempFuelAllow) + NGNcrewoffsigners.Sum(x => x.TempFuelAllow);
+            ViewBag.pensionNGNtotal = NGNonsigners.Sum(x => x.PensionFund) + NGNcrewoffsigners.Sum(x => x.PensionFund);
+            ViewBag.OtherANGNtotal = NGNonsigners.Sum(x => x.OtherAllow) + NGNcrewoffsigners.Sum(x => x.OtherAllow);
+            ViewBag.CompanyANGNtotal = NGNonsigners.Sum(x => x.CompanyAllowance) + NGNcrewoffsigners.Sum(x => x.CompanyAllowance);
+            ViewBag.HousingNGNtotal = NGNonsigners.Sum(x => x.Housing) + NGNcrewoffsigners.Sum(x => x.Housing);
+            ViewBag.TransportNGNtotal = NGNonsigners.Sum(x => x.Transport) + NGNcrewoffsigners.Sum(x => x.Transport);
+            ViewBag.UtilityNGNtotal = NGNonsigners.Sum(x => x.Utility) + NGNcrewoffsigners.Sum(x => x.Utility);
+            ViewBag.ExtraOTNGNtotal = NGNonsigners.Sum(x => x.extraot) + NGNcrewoffsigners.Sum(x => x.extraot);
+            ViewBag.OtherENGNtotal = NGNonsigners.Sum(x => x.OtherEarnings) + NGNcrewoffsigners.Sum(x => x.OtherEarnings);
+            ViewBag.TransitNGNtotal = NGNonsigners.Sum(x => x.TransitWages) + NGNcrewoffsigners.Sum(x => x.TransitWages);
+            ViewBag.TotalearningNGN = NGNonsigners.Sum(x => x.TotalWages) + NGNcrewoffsigners.Sum(x => x.TotalWages);
+            ViewBag.PrevMonthBalNGN = NGNonsigners.Sum(x => x.PrevMonthBal) + NGNcrewoffsigners.Sum(x => x.PrevMonthBal);
+            ViewBag.ReimbursementNGN = NGNonsigners.Sum(x => x.Reimbursement) + NGNcrewoffsigners.Sum(x => x.Reimbursement);
+            ViewBag.TotalPayableNGN = NGNonsigners.Sum(x => x.TotalPayable) + NGNcrewoffsigners.Sum(x => x.TotalPayable);
+            ViewBag.leaveSUBNGN = NGNonsigners.Sum(x => x.LeavePay);
+            ViewBag.cashabNGN = NGNonsigners.Sum(x => x.CashAdvance) + NGNcrewoffsigners.Sum(x => x.CashAdvance);
+            ViewBag.BSNGN = NGNonsigners.Sum(x => x.BondedStores) + NGNcrewoffsigners.Sum(x => x.BondedStores);
+            ViewBag.ODNGN = NGNonsigners.Sum(x => x.OtherDeductions) + NGNcrewoffsigners.Sum(x => x.OtherDeductions);
+            ViewBag.PFAmountNGNTotal = NGNonsigners.Sum(x => x.PFAmount) + NGNcrewoffsigners.Sum(x => x.PFAmount);
+            ViewBag.UDAmountNGNTotal = NGNonsigners.Sum(x => x.UDAmount) + NGNcrewoffsigners.Sum(x => x.UDAmount);
+            ViewBag.WFAmountNGNTotal = NGNonsigners.Sum(x => x.WFAmount) + NGNcrewoffsigners.Sum(x => x.WFAmount);
+            ViewBag.TaxNGNTotal = NGNonsigners.Sum(x => x.Tax) + NGNcrewoffsigners.Sum(x => x.Tax);
+            ViewBag.AllotmentNGN = NGNonsigners.Sum(x => x.Allotments) + NGNcrewoffsigners.Sum(x => x.Allotments);
+            ViewBag.TotalDeduNGN = NGNonsigners.Sum(x => x.TotalDeductions) + NGNcrewoffsigners.Sum(x => x.TotalDeductions);
+            ViewBag.LeavesBFNGN = NGNonsigners.Sum(x => x.LeaveWagesBF) + NGNcrewoffsigners.Sum(x => x.LeaveWagesBF);
+            ViewBag.LeavesCFNGN = NGNonsigners.Sum(x => x.LeaveWagesCF);
+            ViewBag.FinalBalNGN = NGNonsigners.Sum(x => x.FinalBalance) + NGNcrewoffsigners.Sum(x => x.FinalBalance);          
+            return View();
         }
     }    
 }

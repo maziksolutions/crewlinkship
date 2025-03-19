@@ -18,6 +18,9 @@ namespace crewlinkship.Models
         public DateTime? Recdate { get; set; }
         public bool? IsPromoted { get; set; }
         public bool? IsMidMonthAllotment { get; set; }
+        public int? PortageBillId { get; set; }
         public int? Vesselportid { get; set; }
+        public int? OfficePBId { get; set; }
+        public bool? IsPortagelocked { get; set; }
     }
 }

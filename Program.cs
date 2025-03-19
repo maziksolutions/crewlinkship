@@ -20,6 +20,7 @@ namespace crewlinkship
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                //serveroptions.configureHttpDefaults(configuartions: co{ const. });
                     webBuilder.UseStartup<Startup>();
                 });
     }

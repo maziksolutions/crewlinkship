@@ -1,5 +1,6 @@
 ﻿using System;
 using crewlinkship.ViewModel;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -16,6 +17,7 @@ namespace crewlinkship.Models
         public shipCrewlinkContext(DbContextOptions<shipCrewlinkContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<TblActivitySignOff> TblActivitySignOffs { get; set; }
@@ -124,6 +126,7 @@ namespace crewlinkship.Models
         public virtual DbSet<PortageBillSignoffVM> PortageBillSignoffVM { get; set; }
         public virtual DbSet<tblBackupLog> tblBackupLog { get; set; }
         public virtual DbSet<tblimportPortageEarningDedu> tblimportPortageEarningDeduction { get; set; }
+        public virtual DbSet<LockPortageBill> LockPortageBill { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
           

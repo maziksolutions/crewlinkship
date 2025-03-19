@@ -30,6 +30,7 @@ namespace crewlinkship.Models
         public DateTime? ModifiedDate { get; set; }
         public int? VesselPortId { get; set; }
         public int? OfficePBId { get; set; }
+        public bool? IsPortagelocked { get; set; }
         public virtual TblCrewDetail CrewDetails { get; set; }
     }
 	
@@ -49,7 +50,7 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public int? CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }        
         public virtual TblCrewDetail CrewDetails { get; set; }
 
         public int SubCode { get; set; }

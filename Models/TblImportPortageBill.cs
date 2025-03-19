@@ -7,8 +7,7 @@ namespace crewlinkship.Models
 {
     public partial class TblImportPortageBill
     {
-        public int? Vesselportid { get; set; }
-        public int? PortageBillId { get; set; }
+       public int? PortageBillId { get; set; }
         public int? CrewId { get; set; }
         public int? CrewListId { get; set; }
         public int? ContractId { get; set; }
@@ -55,5 +54,8 @@ namespace crewlinkship.Models
         public decimal? IndPfamount { get; set; }
         public bool? IsAddPrevBal { get; set; }
         public bool? IsHoldWageAllotment { get; set; }
+        public int? Vesselportid { get; set; }
+        public int? OfficePBId { get; set; }
+        public bool? IsPortagelocked { get; set; }
     }
 }

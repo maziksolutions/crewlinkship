@@ -17,8 +17,9 @@ namespace crewlinkship.Models
         public bool? IsDeleted { get; set; }
         public DateTime? RecDate { get; set; }
         public string ModifiedBy { get; set; }
-
         public DateTime? ModifiedDate { get; set; }
         public string CreatedBy { get; set; }
+        public string EmailSentTo { get; set; }
+        public string NotificationEmailSentTo { get; set; }
     }
 }

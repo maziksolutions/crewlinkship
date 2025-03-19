@@ -247,40 +247,9 @@ namespace crewlinkship.Controllers
         {
             var vesseldata = _context.TblVessels.Where(x => x.VesselId == vesselidtouse).FirstOrDefault();
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddDays(-6);
-            //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
-            //{
-            //    ActivitySignOffId = x.ActivitySignOffId,
-            //    CrewId = x.CrewId.Value,
-            //    CrewListId = x.CrewListId.Value,
-            //    SignOffDate = x.SignOffDate.Value.ToString(),
-            //    SeaportId = x.SeaportId.Value.ToString(),
-            //    EndTravelDate = x.EndTravelDate.Value.ToString(),
-            //    LeaveStartDate = x.LeaveStartDate.Value.ToString(),
-            //    CompletionDate = x.CompletionDate.Value.ToString(),
-            //    SignOffReasonId = x.SignOffReasonId.HasValue ? x.SignOffReasonId.Value : default,
-            //    DoagivenDate = x.DoagivenDate.Value.ToString(),
-            //    DateOfAvailability = x.DateOfAvailability.Value.ToString(),
-            //    AllowEndTravel = x.AllowEndTravel.Value,
-            //    DispensationApplied = x.DispensationApplied,
-            //    Remarks = x.Remarks,
-            //    ReasonDelayedId = x.ReasonDelayedId.HasValue ? x.ReasonDelayedId.Value : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    IsDeleted = x.IsDeleted.Value,
-            //    RecDate = x.RecDate.Value,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //    ModifiedDate = x.ModifiedDate.Value.ToString(),
-            //    Attachment = x.Attachment,
-            //    StayInHotel = x.StayInHotel.HasValue ? x.StayInHotel.Value : default,
-            //    StayOnBoard = x.StayOnBoard.HasValue ? x.StayOnBoard.Value : default,
-            //    StayStartDate = x.StayStartDate.Value.ToString(),
-            //    InjurySubTypeId = x.InjurySubTypeId.HasValue ? x.InjurySubTypeId.Value : default,
-            //    InjuryType = x.InjuryType,
-            //}).ToList();
-
+            var sixMonth = currentDate.AddDays(-1);
             var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblActivitySignOnVM
             {
-
                 ActivitySignOnId = x.ActivitySignOnId,
                 CrewId = x.CrewId.Value,
                 ContractId = x.ContractId.Value,
@@ -311,109 +280,9 @@ namespace crewlinkship.Controllers
                 RecDate = x.RecDate.Value.ToString(),
                 CreatedBy = x.CreatedBy
             }).ToList();
-            //{;
-            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth));
-            //var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-
-            //var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCdcVM
-            //{
-            //    Cdcid = x.Cdcid,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
-            //    Cdcnumber = x.Cdcnumber,
-            //    Place = x.Place,
-            //    Doi = x.Doi.HasValue ? x.Doi.Value.ToString() : default,
-            //    Doe = x.Doe.HasValue ? x.Doe.Value.ToString() : default,
-            //    FilePath = x.FilePath,
-            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifyDate = x.VerifyDate.HasValue ? x.VerifyDate.Value.ToString() : default,
-            //    VerificationPath = x.VerificationPath,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //    EmailPath = x.EmailPath,
-            //}).ToList();
-            //var Contract = _context.TblContracts.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblContractVM {
-            //    ContractId = x.ContractId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    Cbaid = x.Cbaid.HasValue ? x.Cbaid.Value : default,
-            //    SeaportId = x.SeaportId.HasValue ? x.SeaportId.Value : default,
-            //    VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
-            //    Osa = x.Osa.HasValue ? x.Osa.Value : default,
-            //    Waf = x.Waf.HasValue ? x.Waf.Value : default,
-            //    ContractPath = x.ContractPath,
-            //    TotalWage = x.TotalWage.HasValue ? x.TotalWage.Value : default,
-            //    EngagementPort = x.EngagementPort,
-            //    ReptriationPort = x.ReptriationPort,
-            //    Sca = x.Sca.HasValue ? x.Sca.Value : default,
-            //    Other = x.Other.HasValue ? x.Other.Value : default,
-            //    Seniority = x.Seniority.HasValue ? x.Seniority.Value : default,
-            //    ReviseReason = x.ReviseReason,
-            //    Duration = x.Duration,
-            //    Plus = x.Plus.HasValue ? x.Plus.Value : default,
-            //    SignonDate = x.SignonDate.HasValue ? x.SignonDate.ToString() : default,
-            //    PayCommence = x.PayCommence.HasValue ? x.PayCommence.ToString() : default,
-            //    Expirydate = x.Expirydate.HasValue ? x.Expirydate.ToString() : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-            //    Pf = x.Pf.HasValue ? x.Pf.Value : default,
-            //    Ud = x.Ud.HasValue ? x.Ud.Value : default,
-            //    Wf = x.Wf.HasValue ? x.Wf.Value : default,
-            //    Pfamount = x.Pfamount.HasValue ? x.Pfamount.Value : default,
-            //    Udamount = x.Udamount.HasValue ? x.Udamount.Value : default,
-            //    Wfamount = x.Wfamount.HasValue ? x.Wfamount.Value : default,
-            //    BasicWage = x.BasicWage.HasValue ? x.BasicWage.Value : default,
-            //    FixedOvertime = x.FixedOvertime.HasValue ? x.FixedOvertime.Value : default,
-            //    LeaveWages = x.LeaveWages.HasValue ? x.LeaveWages.Value : default,
-            //    PensionFund = x.PensionFund.HasValue ? x.PensionFund.Value : default,
-            //    SubsistenceAllowance = x.SubsistenceAllowance.HasValue ? x.SubsistenceAllowance.Value : default,
-            //    UniformAllowance = x.UniformAllowance.HasValue ? x.UniformAllowance.Value : default,
-            //    Acmapproval = x.Acmapproval.HasValue ? x.Acmapproval.Value : default,
-            //    AcmapprovedBy = x.AcmapprovedBy.HasValue ? x.AcmapprovedBy.Value : default,
-            //    GwapprovedBy = x.GwapprovedBy.HasValue ? x.GwapprovedBy.Value : default,
-            //    Gwapproval = x.Gwapproval.HasValue ? x.Gwapproval.Value : default,
-            //    IsOnlyBasic = x.IsOnlyBasic.HasValue ? x.IsOnlyBasic.Value : default,
-            //    Note = x.Note,
-            //    CrewListId = x.CrewListId.HasValue ? x.CrewListId.Value : default,
-            //    Gwpath = x.Gwpath
-            //}).ToList();
-
-            //var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewCourseVM
-            //{
-            //    CrewCoursesId = x.CrewCoursesId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    CourseId = x.CourseId.HasValue ? x.CourseId.Value : default,
-            //    InstituteId = x.InstituteId.HasValue ? x.InstituteId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-            //    Course = x.Course,
-            //    CertificateNumber = x.CertificateNumber,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-            //    LimitationRemarks = x.LimitationRemarks,
-            //    Attachment = x.Attachment,
-            //    Verification = x.Verification,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifiedDate = x.VerifiedDate.HasValue ? x.VerifiedDate.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //}).ToList();
-
+         
             var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewDetailVM
             {
-
                 CrewId = x.CrewId,
                 CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
                 RankId = x.RankId.HasValue ? x.RankId.Value : default,
@@ -479,30 +348,7 @@ namespace crewlinkship.Controllers
                 MaskRemarks = x.MaskRemarks,
                 MaskAttachment = x.MaskAttachment,
                 MaskedBy = x.MaskedBy,
-            }).ToList();
-            //var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewLicenseVM
-            //{
-            //CrewLicenseId = x.CrewLicenseId,
-            //    CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
-            //    LicenseId = x.LicenseId.HasValue? x.LicenseId.Value : default,
-            //    LicenseNumber = x.LicenseNumber,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-            //    CountryId = x.CountryId.HasValue? x.CountryId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue? x.AuthorityId.Value : default,
-            //    IsVerified = x.IsVerified.HasValue? x.IsVerified.Value : default,
-            //    LimitationRemarks = x.LimitationRemarks,
-            //    Verification = x.Verification,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifiedDate = x.VerifiedDate.HasValue? x.VerifiedDate.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-            //    IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
-
-            //}).ToList();
+            }).ToList();            
 
             var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewListVM
             {
@@ -533,49 +379,26 @@ namespace crewlinkship.Controllers
 
             }).ToList();
 
-            //var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewOtherDocumentVM
+            //var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x => new tblPBBankAllotmentVM
             //{
-            //    CrewOtherDocumentsId = x.CrewOtherDocumentsId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    DocumentId = x.DocumentId.HasValue ? x.DocumentId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-            //    DocumentNo = x.DocumentNo,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.Value.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString() : default,
-            //    ExtendedDate = x.ExtendedDate.HasValue ? x.ExtendedDate.Value.ToString() : default,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    Attachment = x.Attachment,
-            //    Remarks = x.Remarks,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-
+            //    VesselPortId = x.BankAllotmentId,
+            //    Crew = x.Crew,
+            //    VesselId = x.VesselId,
+            //    BankId = x.BankId,
+            //    From = x.From,
+            //    To = x.To,
+            //    Allotments = x.Allotments,
+            //    IsMidMonthAllotment = x.IsMidMonthAllotment,
+            //    IsDeleted = x.IsDeleted,
+            //    Recdate = x.Recdate,
+            //    IsPromoted = x.IsPromoted
             //}).ToList();
-            //var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x => new tblPBBankAllotmentVM
-            {
-                VesselPortId = x.BankAllotmentId,
-                Crew = x.Crew,
-                VesselId = x.VesselId,
-                BankId = x.BankId,
-                From = x.From,
-                To = x.To,
-                Allotments = x.Allotments,
-                IsMidMonthAllotment = x.IsMidMonthAllotment,
-                IsDeleted = x.IsDeleted,
-                Recdate = x.Recdate,
-                IsPromoted = x.IsPromoted
-            }).ToList();
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x =>  x.Recdate >= sixMonth).ToList();
             var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
-                                           where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+                                           where  (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
                                            select new
                                            {
                                                PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
-                                               VesselPortId = pbearn.VesselPortId,
-                                               OfficePBId = pbearn.OfficePBId,
                                                CrewId = pbearn.CrewId,
                                                PortageBillId = pbearn.PortageBillId,
                                                Vesselid = pbearn.Vesselid,
@@ -589,11 +412,14 @@ namespace crewlinkship.Controllers
                                                RecDate = pbearn.RecDate,
                                                CreatedBy = pbearn.CreatedBy,
                                                ModifiedBy = pbearn.ModifiedBy,
-                                               ModifiedDate = pbearn.ModifiedDate
+                                               ModifiedDate = pbearn.ModifiedDate,
+                                               VesselPortId = pbearn.VesselPortId,
+                                               OfficePBId = pbearn.OfficePBId,
+                                               IsPortagelocked = pbearn.IsPortagelocked
                                            }).ToList();
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
+            var PortageBills = _context.TblPortageBills.Where(x => (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new
             {
-                VesselPortId = x.PortageBillId,
+                PortageBillId = x.PortageBillId,
                 CrewId = x.CrewId,
                 CrewListId = x.CrewListId,
                 ContractId = x.ContractId,
@@ -639,8 +465,11 @@ namespace crewlinkship.Controllers
                 Gratuity = x.Gratuity,
                 Avc = x.Avc,
                 IsAddPrevBal = x.IsAddPrevBal,
-                IsHoldWageAllotment = x.IsHoldWageAllotment
-            }).ToList();            
+                IsHoldWageAllotment = x.IsHoldWageAllotment,
+                VesselPortId = x.VesselPortId,
+                OfficePBId = x.OfficePBId,
+                IsPortagelocked = x.IsPortagelocked,
+            }).ToList();
             var crewlistdats = _context.TblCrewLists.ToList();
             DataTable dtcrewlistdats = new DataTable();
             dtcrewlistdats = LINQResultToDataTable(crewlistdats);
@@ -713,7 +542,7 @@ namespace crewlinkship.Controllers
                             mail.Subject = "Crewlink Backup";
                             mail.IsBodyHtml = true;
                             mail.Attachments.Add(new Attachment(PathToSave));
-                            mail.To.Add(new MailAddress("info@maziksolutions.com"));
+                            mail.To.Add(new MailAddress(getemail.EmailSentTo));
                             SmtpClient smtp = new SmtpClient();
                             smtp.UseDefaultCredentials = true;
                             smtp.Host = getemail.Smtp;
@@ -963,40 +792,9 @@ namespace crewlinkship.Controllers
         public IActionResult Takebackup()
         {
             var currentDate = DateTime.Now;
-            var sixMonth = currentDate.AddDays(-6);
-            //var ActivitySignOffs = _context.TblActivitySignOffs.Where(x => x.IsDeleted == false && x.RecDate>=sixMonth).Select(x => new TblActivitySignOffVM
-            //{
-            //    ActivitySignOffId = x.ActivitySignOffId,
-            //    CrewId = x.CrewId.Value,
-            //    CrewListId = x.CrewListId.Value,
-            //    SignOffDate = x.SignOffDate.Value.ToString(),
-            //    SeaportId = x.SeaportId.Value.ToString(),
-            //    EndTravelDate = x.EndTravelDate.Value.ToString(),
-            //    LeaveStartDate = x.LeaveStartDate.Value.ToString(),
-            //    CompletionDate = x.CompletionDate.Value.ToString(),
-            //    SignOffReasonId = x.SignOffReasonId.HasValue ? x.SignOffReasonId.Value : default,
-            //    DoagivenDate = x.DoagivenDate.Value.ToString(),
-            //    DateOfAvailability = x.DateOfAvailability.Value.ToString(),
-            //    AllowEndTravel = x.AllowEndTravel.Value,
-            //    DispensationApplied = x.DispensationApplied,
-            //    Remarks = x.Remarks,
-            //    ReasonDelayedId = x.ReasonDelayedId.HasValue ? x.ReasonDelayedId.Value : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    IsDeleted = x.IsDeleted.Value,
-            //    RecDate = x.RecDate.Value,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //    ModifiedDate = x.ModifiedDate.Value.ToString(),
-            //    Attachment = x.Attachment,
-            //    StayInHotel = x.StayInHotel.HasValue ? x.StayInHotel.Value : default,
-            //    StayOnBoard = x.StayOnBoard.HasValue ? x.StayOnBoard.Value : default,
-            //    StayStartDate = x.StayStartDate.Value.ToString(),
-            //    InjurySubTypeId = x.InjurySubTypeId.HasValue ? x.InjurySubTypeId.Value : default,
-            //    InjuryType = x.InjuryType,
-            //}).ToList();
-
+            var sixMonth = currentDate.AddDays(-6);  
             var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate>= sixMonth)).Select(x => new TblActivitySignOnVM
             {
-
                 ActivitySignOnId = x.ActivitySignOnId,
                 CrewId = x.CrewId.Value,
                 ContractId = x.ContractId.Value,
@@ -1027,106 +825,7 @@ namespace crewlinkship.Controllers
                 RecDate = x.RecDate.Value.ToString(),
                 CreatedBy = x.CreatedBy
             }).ToList();
-            //{;
-            var AssignmentsWithOthers = _context.TblAssignmentsWithOthers.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth));
-            //var AssignmentsWithOur = _context.TblAssignmentsWithOurs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-
-            //var BowRequest = _context.TblBowRequests.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var Cdc = _context.TblCdcs.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCdcVM
-            //{
-            //    Cdcid = x.Cdcid,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    CountryId = x.CountryId.HasValue ? x.CountryId.Value : default,
-            //    Cdcnumber = x.Cdcnumber,
-            //    Place = x.Place,
-            //    Doi = x.Doi.HasValue ? x.Doi.Value.ToString() : default,
-            //    Doe = x.Doe.HasValue ? x.Doe.Value.ToString() : default,
-            //    FilePath = x.FilePath,
-            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifyDate = x.VerifyDate.HasValue ? x.VerifyDate.Value.ToString() : default,
-            //    VerificationPath = x.VerificationPath,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //    EmailPath = x.EmailPath,
-            //}).ToList();
-            //var Contract = _context.TblContracts.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblContractVM {
-            //    ContractId = x.ContractId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    Cbaid = x.Cbaid.HasValue ? x.Cbaid.Value : default,
-            //    SeaportId = x.SeaportId.HasValue ? x.SeaportId.Value : default,
-            //    VesselId = x.VesselId.HasValue ? x.VesselId.Value : default,
-            //    Osa = x.Osa.HasValue ? x.Osa.Value : default,
-            //    Waf = x.Waf.HasValue ? x.Waf.Value : default,
-            //    ContractPath = x.ContractPath,
-            //    TotalWage = x.TotalWage.HasValue ? x.TotalWage.Value : default,
-            //    EngagementPort = x.EngagementPort,
-            //    ReptriationPort = x.ReptriationPort,
-            //    Sca = x.Sca.HasValue ? x.Sca.Value : default,
-            //    Other = x.Other.HasValue ? x.Other.Value : default,
-            //    Seniority = x.Seniority.HasValue ? x.Seniority.Value : default,
-            //    ReviseReason = x.ReviseReason,
-            //    Duration = x.Duration,
-            //    Plus = x.Plus.HasValue ? x.Plus.Value : default,
-            //    SignonDate = x.SignonDate.HasValue ? x.SignonDate.ToString() : default,
-            //    PayCommence = x.PayCommence.HasValue ? x.PayCommence.ToString() : default,
-            //    Expirydate = x.Expirydate.HasValue ? x.Expirydate.ToString() : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-            //    Pf = x.Pf.HasValue ? x.Pf.Value : default,
-            //    Ud = x.Ud.HasValue ? x.Ud.Value : default,
-            //    Wf = x.Wf.HasValue ? x.Wf.Value : default,
-            //    Pfamount = x.Pfamount.HasValue ? x.Pfamount.Value : default,
-            //    Udamount = x.Udamount.HasValue ? x.Udamount.Value : default,
-            //    Wfamount = x.Wfamount.HasValue ? x.Wfamount.Value : default,
-            //    BasicWage = x.BasicWage.HasValue ? x.BasicWage.Value : default,
-            //    FixedOvertime = x.FixedOvertime.HasValue ? x.FixedOvertime.Value : default,
-            //    LeaveWages = x.LeaveWages.HasValue ? x.LeaveWages.Value : default,
-            //    PensionFund = x.PensionFund.HasValue ? x.PensionFund.Value : default,
-            //    SubsistenceAllowance = x.SubsistenceAllowance.HasValue ? x.SubsistenceAllowance.Value : default,
-            //    UniformAllowance = x.UniformAllowance.HasValue ? x.UniformAllowance.Value : default,
-            //    Acmapproval = x.Acmapproval.HasValue ? x.Acmapproval.Value : default,
-            //    AcmapprovedBy = x.AcmapprovedBy.HasValue ? x.AcmapprovedBy.Value : default,
-            //    GwapprovedBy = x.GwapprovedBy.HasValue ? x.GwapprovedBy.Value : default,
-            //    Gwapproval = x.Gwapproval.HasValue ? x.Gwapproval.Value : default,
-            //    IsOnlyBasic = x.IsOnlyBasic.HasValue ? x.IsOnlyBasic.Value : default,
-            //    Note = x.Note,
-            //    CrewListId = x.CrewListId.HasValue ? x.CrewListId.Value : default,
-            //    Gwpath = x.Gwpath
-            //}).ToList();
-
-            //var CrewAddresses = _context.TblCrewAddresses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var CrewBankDetails = _context.TblCrewBankDetails.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var CrewCourses = _context.TblCrewCourses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewCourseVM
-            //{
-            //    CrewCoursesId = x.CrewCoursesId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    CourseId = x.CourseId.HasValue ? x.CourseId.Value : default,
-            //    InstituteId = x.InstituteId.HasValue ? x.InstituteId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-            //    Course = x.Course,
-            //    CertificateNumber = x.CertificateNumber,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-            //    IsVerified = x.IsVerified.HasValue ? x.IsVerified.Value : default,
-            //    LimitationRemarks = x.LimitationRemarks,
-            //    Attachment = x.Attachment,
-            //    Verification = x.Verification,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.ToString() : default,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifiedDate = x.VerifiedDate.HasValue ? x.VerifiedDate.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-            //}).ToList();
-
+         
             var CrewDetails = _context.TblCrewDetails.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewDetailVM
             {
 
@@ -1195,30 +894,7 @@ namespace crewlinkship.Controllers
                 MaskRemarks = x.MaskRemarks,
                 MaskAttachment = x.MaskAttachment,
                 MaskedBy = x.MaskedBy,
-            }).ToList();
-            //var CrewLicenses = _context.TblCrewLicenses.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewLicenseVM
-            //{
-            //CrewLicenseId = x.CrewLicenseId,
-            //    CrewId = x.CrewId.HasValue? x.CrewId.Value : default,
-            //    LicenseId = x.LicenseId.HasValue? x.LicenseId.Value : default,
-            //    LicenseNumber = x.LicenseNumber,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.ToString() : default,
-            //    CountryId = x.CountryId.HasValue? x.CountryId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue? x.AuthorityId.Value : default,
-            //    IsVerified = x.IsVerified.HasValue? x.IsVerified.Value : default,
-            //    LimitationRemarks = x.LimitationRemarks,
-            //    Verification = x.Verification,
-            //    VerifiedBy = x.VerifiedBy,
-            //    VerifiedDate = x.VerifiedDate.HasValue? x.VerifiedDate.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-            //    IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
-
-            //}).ToList();
+            }).ToList();           
 
             var CrewLists = _context.TblCrewLists.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblCrewListVM
             {
@@ -1246,89 +922,52 @@ namespace crewlinkship.Controllers
                 PlanActivityCode = x.PlanActivityCode.HasValue ? x.PlanActivityCode.Value : default,
                 ReplacedWith = x.ReplacedWith,
                 ReliverRankId = x.ReliverRankId.HasValue ? x.ReliverRankId.Value : default,
-
             }).ToList();
-
-            //var CrewOtherDocuments = _context.TblCrewOtherDocuments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new TblCrewOtherDocumentVM
+            //var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
+            //                               where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+            //                               select pbearn).ToList();
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.Recdate >= sixMonth && (x.IsPortagelocked == null || x.IsPortagelocked == false)).ToList();
+            // var PortageBills = _context.TblPortageBills.AsNoTracking().Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).ToList();
+            var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
+                                           where  (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth) && (pbearn.IsPortagelocked == null || pbearn.IsPortagelocked == false)
+                                           select new
+                                           {
+                                               PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
+                                               CrewId = pbearn.CrewId,
+                                               PortageBillId = pbearn.PortageBillId,
+                                               Vesselid = pbearn.Vesselid,
+                                               SubCodeId = pbearn.SubCodeId,
+                                               Amount = pbearn.Amount,
+                                               From = pbearn.From,
+                                               To = pbearn.To,
+                                               Type = pbearn.Type,
+                                               Currency = pbearn.Currency,
+                                               IsDeleted = pbearn.IsDeleted,
+                                               RecDate = pbearn.RecDate,
+                                               CreatedBy = pbearn.CreatedBy,
+                                               ModifiedBy = pbearn.ModifiedBy,
+                                               ModifiedDate = pbearn.ModifiedDate,
+                                               VesselPortId = pbearn.VesselPortId,
+                                               OfficePBId = pbearn.OfficePBId,
+                                               IsPortagelocked = pbearn.IsPortagelocked
+                                           }).ToList();
+            //var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x => new tblPBBankAllotmentVM
             //{
-            //    CrewOtherDocumentsId = x.CrewOtherDocumentsId,
-            //    CrewId = x.CrewId.HasValue ? x.CrewId.Value : default,
-            //    DocumentId = x.DocumentId.HasValue ? x.DocumentId.Value : default,
-            //    AuthorityId = x.AuthorityId.HasValue ? x.AuthorityId.Value : default,
-            //    DocumentNo = x.DocumentNo,
-            //    IssueDate = x.IssueDate.HasValue ? x.IssueDate.Value.ToString() : default,
-            //    ExpiryDate = x.ExpiryDate.HasValue ? x.ExpiryDate.Value.ToString() : default,
-            //    ExtendedDate = x.ExtendedDate.HasValue ? x.ExtendedDate.Value.ToString() : default,
-            //    PlaceOfIssue = x.PlaceOfIssue,
-            //    Attachment = x.Attachment,
-            //    Remarks = x.Remarks,
-            //    ModifiedDate = x.ModifiedDate.HasValue ? x.ModifiedDate.Value.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    IsDeleted = x.IsDeleted.HasValue ? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue ? x.RecDate.Value.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue ? x.CreatedBy.Value : default,
-
-            //}).ToList();
-            //var MidMonthAllotments = _context.TblMidMonthAllotments.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var NigerianDeductions = _context.TblNigerianDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.IsDeleted == false && x.Recdate >= sixMonth).Select(x=> new tblPBBankAllotmentVM {
-                VesselPortId = x.BankAllotmentId,
-                Crew = x.Crew,
-                VesselId =x.VesselId,
-                BankId = x.BankId,
-                From = x.From,
-                To = x.To,
-                Allotments = x.Allotments,
-                IsMidMonthAllotment = x.IsMidMonthAllotment,
-                IsDeleted = x.IsDeleted,
-                Recdate= x.Recdate,
-                IsPromoted = x.IsPromoted
-            }).ToList();
-
-            //var PortageEarningDeduction = _context.PortageEarningDeduction.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new PortageEarningDeductionVM
-            //{
-            //    VesselPortId = x.PortageEarningDeductionId,
-            //    CrewId = x.CrewId,
-            //    PortageBillId = x.PortageBillId,
-            //    Vesselid = x.Vesselid,
-            //    SubCodeId = x.SubCodeId,
-            //    Amount = x.Amount,
+            //    VesselPortId = x.BankAllotmentId,
+            //    Crew = x.Crew,
+            //    VesselId = x.VesselId,
+            //    BankId = x.BankId,
             //    From = x.From,
             //    To = x.To,
-            //    Type = x.Type,
-            //    Currency = x.Currency,
+            //    Allotments = x.Allotments,
+            //    IsMidMonthAllotment = x.IsMidMonthAllotment,
             //    IsDeleted = x.IsDeleted,
-            //    RecDate = x.RecDate,
-            //    CreatedBy = x.CreatedBy,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate
+            //    Recdate = x.Recdate,
+            //    IsPromoted = x.IsPromoted
             //}).ToList();
-            var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction  where pbearn.IsDeleted == false && (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
-             select new
-             {
-                 PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
-                 VesselPortId = pbearn.VesselPortId,
-                 OfficePBId = pbearn.OfficePBId,
-                 CrewId = pbearn.CrewId,
-                 PortageBillId = pbearn.PortageBillId,
-                 Vesselid = pbearn.Vesselid,
-                 SubCodeId = pbearn.SubCodeId,
-                 Amount = pbearn.Amount,
-                 From = pbearn.From,
-                 To = pbearn.To,
-                 Type = pbearn.Type,
-                 Currency = pbearn.Currency,
-                 IsDeleted = pbearn.IsDeleted,
-                 RecDate = pbearn.RecDate,
-                 CreatedBy = pbearn.CreatedBy,
-                 ModifiedBy = pbearn.ModifiedBy,
-                 ModifiedDate = pbearn.ModifiedDate
-             }).ToList();
-           
-
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblPortageBillVM
+            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth) && (x.IsPortagelocked== null || x.IsPortagelocked == false)).Select(x => new
             {
-                VesselPortId = x.PortageBillId,
+                PortageBillId = x.PortageBillId,
                 CrewId = x.CrewId,
                 CrewListId = x.CrewListId,
                 ContractId = x.ContractId,
@@ -1374,30 +1013,11 @@ namespace crewlinkship.Controllers
                 Gratuity = x.Gratuity,
                 Avc = x.Avc,
                 IsAddPrevBal = x.IsAddPrevBal,
-                IsHoldWageAllotment = x.IsHoldWageAllotment
+                IsHoldWageAllotment = x.IsHoldWageAllotment,
+                VesselPortId = x.VesselPortId,
+                OfficePBId = x.OfficePBId,
+                IsPortagelocked = x.IsPortagelocked,
             }).ToList();
-            //var ReimbursementOrDeductions = _context.TblReimbursementOrDeductions.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var TransferCrews = _context.TblTransferCrews.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var Visas = _context.TblVisas.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth);
-            //var Yellowfevers = _context.TblYellowfevers.Where(x => x.IsDeleted == false && x.RecDate >= sixMonth).Select(x => new
-            // TblYellowfeverVM
-            //{
-            //    YellowFeverId = x.YellowFeverId,
-            //    CrewId = x.CrewId,
-            //    Reference = x.Reference,
-            //    Place = x.Place,
-            //    VendorRegisterId = x.VendorRegisterId.HasValue? x.VendorRegisterId.Value : default,
-            //    VaccineDate = x.VaccineDate.ToString(),
-            //    VaccineBatch = x.VaccineBatch,
-            //    Attachment = x.Attachment,
-            //    IsDeleted = x.IsDeleted.HasValue? x.IsDeleted.Value : default,
-            //    RecDate = x.RecDate.HasValue? x.RecDate.ToString() : default,
-            //    ModifiedBy = x.ModifiedBy,
-            //    ModifiedDate = x.ModifiedDate.HasValue? x.ModifiedDate.ToString() : default,
-            //    CreatedBy = x.CreatedBy.HasValue? x.CreatedBy.Value : default
-
-            //}).ToList();
-
             var crewlistdats = _context.TblCrewLists.ToList();
             DataTable dtcrewlistdats = new DataTable();
             dtcrewlistdats = LINQResultToDataTable(crewlistdats);
@@ -1413,54 +1033,15 @@ namespace crewlinkship.Controllers
                // var TblPortageBills = _context.TblPortageBills.ToList();
                 using (XLWorkbook wb = new XLWorkbook())
                 {
-                    //var wsActivitySignOffs = wb.Worksheets.Add("tblImportActivitySignOff");
-
-                    //wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOffs);
 
                     var wsActivitySignOns = wb.Worksheets.Add("tblImportActivitySignOn");
                     wb.Worksheet(1).Cell(1, 1).InsertTable(ActivitySignOns);
 
-                    //var wsAssignmentsWithOthers = wb.Worksheets.Add("tblImportAssignmentsWithOther");
-                    //wb.Worksheet(2).Cell(1, 1).InsertTable(AssignmentsWithOthers);
-
-                    //var wsAssignmentsWithOur = wb.Worksheets.Add("tblImportAssignmentsWithOur");
-                    //wb.Worksheet(4).Cell(1, 1).InsertTable(AssignmentsWithOur);
-
-                    //      var wsBowRequest = wb.Worksheets.Add("tblImportBowRequest");
-                    //      wb.Worksheet(5).Cell(1, 1).InsertTable(BowRequest);
-
-                    //      var wsCdc = wb.Worksheets.Add("tblImportCdc");
-                    //      wb.Worksheet(6).Cell(1, 1).InsertTable(Cdc);
-
-                    //var wsContract = wb.Worksheets.Add("tblImportContract");
-                    //wb.Worksheet(7).Cell(1, 1).InsertTable(Contract);
-
-                    //var wsCrewAddress = wb.Worksheets.Add("tblImportCrewAddress");
-                    //wb.Worksheet(8).Cell(1, 1).InsertTable(CrewAddresses);
-
-                    //var wsCrewBankDetails = wb.Worksheets.Add("tblImportCrewBankDetail");
-                    //wb.Worksheet(9).Cell(1, 1).InsertTable(CrewBankDetails);
-
-                    //var wsCrewCourses = wb.Worksheets.Add("tblImportCrewCourse");
-                    //wb.Worksheet(10).Cell(1, 1).InsertTable(CrewCourses);
-
                     var wsCrewDetails = wb.Worksheets.Add("tblImportCrewDetail");
                     wb.Worksheet(2).Cell(1, 1).InsertTable(CrewDetails);
 
-                    //var wsCrewLicense = wb.Worksheets.Add("tblImportCrewLicense");
-                    //wb.Worksheet(12).Cell(1, 1).InsertTable(CrewLicenses);
-
                     var wsCrewList = wb.Worksheets.Add("tblImportCrewList");
                     wb.Worksheet(3).Cell(1, 1).InsertTable(CrewLists);
-
-                    //var wsCrewOtherDocuments = wb.Worksheets.Add("tblImportCrewOtherDocument");
-                    //wb.Worksheet(14).Cell(1, 1).InsertTable(CrewOtherDocuments);
-
-                    //var wsMidMonthAllotment = wb.Worksheets.Add("tblImportMidMonthAllotment");
-                    //wb.Worksheet(15).Cell(1, 1).InsertTable(MidMonthAllotments);
-
-                    //var wsNigerianDeduction = wb.Worksheets.Add("tblImportNigerianDeduction");
-                    //wb.Worksheet(16).Cell(1, 1).InsertTable(NigerianDeductions);
 
                     var wsPBBankAllotment = wb.Worksheets.Add("tblImportPBBankAllotment");
                     wb.Worksheet(4).Cell(1, 1).InsertTable(PBBankAllotment);
@@ -1470,24 +1051,7 @@ namespace crewlinkship.Controllers
 
                     var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
                     wb.Worksheet(6).Cell(1, 1).InsertTable(PortageEarningDeduction);
-
-                    //var wsReimbursementOrDeduction = wb.Worksheets.Add("TblImportContractReimDedu");
-                    //wb.Worksheet(19).Cell(1, 1).InsertTable(ReimbursementOrDeductions);
-
-                    //var wsTransferCrew = wb.Worksheets.Add("tblImportTransferCrew");
-                    //wb.Worksheet(20).Cell(1, 1).InsertTable(TransferCrews);
-
-                    //var wsVisa = wb.Worksheets.Add("tblImportVisa");
-                    //wb.Worksheet(21).Cell(1, 1).InsertTable(Visas);
-
-                    //var wsYellowfever = wb.Worksheets.Add("tblImportYellowfever");
-                    //wb.Worksheet(22).Cell(1, 1).InsertTable(Yellowfevers);
-                    //var ws = wb.Worksheets.Add("TblCrewList");
-                    //wb.Worksheet(3).Cell(1, 1).InsertTable(Userlogins);
-                    //var ws1 = wb.Worksheets.Add("TblPortageBills");
-                    //wb.Worksheet(4).Cell(1, 1).InsertTable(TblPortageBills);
-                    //var ws2 = wb.Worksheets.Add("TblActivitySignOffs");
-                    //wb.Worksheet(5).Cell(1, 1).InsertTable(dtCloned);
+                 
                     string filename = "ShipModuleBackup_"+ DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
                     using (MemoryStream mstream = new MemoryStream())
                     {
@@ -1526,11 +1090,7 @@ namespace crewlinkship.Controllers
 
                 ViewBag.crewDetails = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Include(c => c.Country)
                   .Include(c => c.Pool).Where(x => x.CrewId == crewId).ToList();
-
-
                 return PartialView();
-
-
             }
             return RedirectToAction("UserLogin", "Login");
         }
@@ -1561,7 +1121,6 @@ namespace crewlinkship.Controllers
 
             if (accessToken != null)
             {
-
                 ViewBag.primaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Primary").ToList();
                 ViewBag.secondaryBank = _context.TblCrewBankDetails.Include(x => x.Country).Include(x => x.State).Include(x => x.City).Where(x => x.IsDeleted == false && x.CrewId == crewId && x.AccountType == "Secondary").ToList();
                 ViewBag.rankName = _context.TblCrewDetails.Include(x => x.Rank).Include(x => x.Vessel).Where(x => x.IsDeleted == false && x.CrewId == crewId).ToList();
@@ -3519,7 +3078,9 @@ namespace crewlinkship.Controllers
                 Email.Smtp = tblEmail.Smtp;
                 Email.Port = tblEmail.Port;
                 Email.Pop = tblEmail.Pop;
-                Email.PopPort = tblEmail.PopPort;                
+                Email.PopPort = tblEmail.PopPort;
+                Email.EmailSentTo = tblEmail.EmailSentTo;
+                Email.NotificationEmailSentTo = tblEmail.NotificationEmailSentTo;
                 _context.TblEmails.Update(Email);
             }
             if (Email == null) { 

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -56,7 +58,9 @@ namespace crewlinkship.Models
         public decimal? Avc { get; set; }
         public bool IsAddPrevBal { get; set; }
         public bool? IsHoldWageAllotment { get; set; }
-
+        public int? VesselPortId { get; set; }
+        public int? OfficePBId { get; set; }
+        public bool? IsPortagelocked { get; set; }
         public virtual TblCba AppliedCbaNavigation { get; set; }
         public virtual TblCrewDetail Crew { get; set; }
         public virtual TblCrewList CrewList { get; set; }
@@ -64,7 +68,7 @@ namespace crewlinkship.Models
     }
     public class TblPortageBillVM
     {
-        public int VesselPortId { get; set; }
+        public int Id { get; set; }
         public int? CrewId { get; set; }
         public int? CrewListId { get; set; }
         public int? ContractId { get; set; }
@@ -111,6 +115,21 @@ namespace crewlinkship.Models
         public decimal? Avc { get; set; }
         public bool IsAddPrevBal { get; set; }
         public bool? IsHoldWageAllotment { get; set; }
+        public int? VesselPortId { get; set; }
+        public int? OfficePBId { get; set; }
 
+    }
+
+    [Table("tblLockPortageBill")]
+    public class LockPortageBill
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int LockPBId { get; set; }       
+        public int Vesselid { get; set; }       
+        public int? PBLockBy { get; set; }
+        public DateTime? LockedDate { get; set; }      
+        public int month { get; set; }
+        public int year { get; set; }
     }
 }

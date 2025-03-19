@@ -25,5 +25,6 @@ namespace crewlinkship.Models
         public int? CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public bool? IsPortagelocked { get; set; }
     }
 }

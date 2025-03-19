@@ -22,11 +22,15 @@ namespace crewlinkship.Models
         public bool IsDeleted { get; set; }
         public DateTime Recdate { get; set; }
         public bool? IsPromoted { get; set; }
+        public int? PortageBillId { get; set; }
+        public int? VesselPortId { get; set; }
+        public int? OfficePBId { get; set; }
+        public bool? IsPortagelocked { get; set; }
     }
 
     public class tblPBBankAllotmentVM
     {
-        public int VesselPortId { get; set; }
+        public int Id { get; set; }
         public int Crew { get; set; }
         public int VesselId { get; set; }
         public int BankId { get; set; }
@@ -37,5 +41,8 @@ namespace crewlinkship.Models
         public bool IsDeleted { get; set; }
         public DateTime Recdate { get; set; }
         public bool? IsPromoted { get; set; }
+        public int? PortageBillId { get; set; }
+        public int? VesselPortId { get; set; }
+        public int? OfficePBId { get; set; }
     }
 }

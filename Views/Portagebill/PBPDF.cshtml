@@ -1,0 +1,2521 @@
+﻿@{
+    Layout = null;
+}
+@using crewlinkship.ViewModel
+<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        table, th {
+            border: 1px solid black;
+            font-size: 10px;
+            border-collapse: collapse;
+        }
+
+        tr, td {
+            border: 1px solid black;
+            padding-left: 2px;
+            line-height: 15px;
+        }
+
+        body {
+            font-family: Calibri;
+        }
+
+        .numberclass {
+            text-align: right;
+            padding-right: 2px;
+        }
+
+        body {
+            margin: 5px 15px;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <title>PBPDF</title>
+</head>
+<body>
+    <hr />
+    <!--crew basic wage structure USD-->
+    @if (Enumerable.Count(ViewBag.USDonsigners) > 0 || Enumerable.Count(ViewBag.USDcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int rowNo = 0; int rowoff = 0;
+        <h5 style=" padding: 0; margin: 0;">USD Earning</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-size: 10px;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="17">
+                    <b>Wage structure of earnings</b>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+                </th>
+                <th class="vertical">
+                    CDC
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Basic Wages
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Fixed/Guar anteed OT
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Security Allow
+                    </div>
+                </th>
+                <th class="vertical" width="50px">
+                    <div class="vertical">
+                        Leave & Sub. Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Uniform Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Temp. Fuel Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Pension Fund
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Special Allowance
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Company Allowance
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Bonus
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Incentive Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Seniority
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Tanker Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Seafarers PF
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Leave Wages Add.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Other Allow.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Total Wages per month
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        OT rate
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Overtime Hr
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.USDonsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.WSFixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSLeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSPensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSpecialAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSCompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBonus
+                    </td>
+                    <td class="numberclass">
+                        @item.WSIncentiveAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Seniority
+                    </td>
+                    <td class="numberclass">
+                        @item.TankerAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.SeafarersPF
+                    </td>
+                    <td class="numberclass">
+                        @item.leavepayaddition
+                    </td>
+                    <td class="numberclass">
+                        @item.WSOtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.otrate
+                    </td>
+                    <td class="numberclass">
+                        @item.OTHours
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="31">
+                    Offsigners
+                </td>
+            </tr>
+            @foreach (var item in ViewBag.USDcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.WSFixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSLeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSPensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSpecialAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSCompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBonus
+                    </td>
+                    <td class="numberclass">
+                        @item.WSIncentiveAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Seniority
+                    </td>
+                    <td class="numberclass">
+                        @item.TankerAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.SeafarersPF
+                    </td>
+                    <td class="numberclass">
+                        @item.leavepayaddition
+                    </td>
+                    <td class="numberclass">
+                        @item.WSOtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.otrate
+                    </td>
+                    <td class="numberclass">
+                        @item.OTHours
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="31">&nbsp;</td>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total USD Wage Structure</b></td>
+                <td class="numberclass">@ViewBag.wsbasicUSDtotal</td>
+                <td class="numberclass">@ViewBag.wsFixUSDtotal</td>
+                <td class="numberclass">@ViewBag.wssecallowUSDtotal</td>
+                <td class="numberclass">@ViewBag.wsleavesUSDtotal</td>
+                <td class="numberclass">@ViewBag.wsuniformUSDtotal</td>
+                <td class="numberclass">@ViewBag.wstempfuelallowUSDtotal</td>
+                <td class="numberclass">@ViewBag.wspensionUSDtotal</td>
+                <td class="numberclass">@ViewBag.wsSpecialAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.wscompanyallowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSBonusUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSIncentiveAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSSeniorityUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSTankerAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSSeafarersPFUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSleavepayadditionUSDtotal</td>
+                <td class="numberclass">@ViewBag.wsOtherAUSDtotal</td>
+                <td class="numberclass">@ViewBag.WSTotalWages</td>
+                <td class="numberclass"></td>
+                <td class="numberclass"></td>
+                <td></td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+    @if (Enumerable.Count(ViewBag.USDonsigners) > 0 || Enumerable.Count(ViewBag.USDcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int rowNo = 0; int rowoff = 0;
+        <h5 style=" padding: 0; margin: 0;">USD Earning</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-size: 10px;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="19">
+                    <b> Current Month Earnings</b>
+                </th>
+                <th></th>
+                <th colspan="2">
+                    Other Payable
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+                </th>
+                <th class="vertical">
+                    CDC
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Basic Wages
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Fixed/Guar anteed OT
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Security Allow
+                    </div>
+                </th>
+                <th class="vertical" width="50px">
+                    <div class="vertical">
+                        Leave & Sub. Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Uniform Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Temp. Fuel Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Pension Fund
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Special Allowance
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Company Allowance
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Bonus
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Incentive Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Seniority
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Tanker Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Seafarers PF
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Leave Wages Add.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Other Allow.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Extra OT
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Other Earning
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Transit Wages
+                    </div>
+                </th>
+                <th class="vertical" width="70px">
+                    <div class="vertical">
+                        Total Earnings (Current Month)
+                    </div>
+                </th>
+                <th class="vertical" width="55px">
+                    <div class="vertical">
+                        Bal from Prev Month
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Reimbu rsement
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Total Payable
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.USDonsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.BasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.FixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.SecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.UniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.TempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.PensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.SpecialAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.CompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Bonus
+                    </td>
+                    <td class="numberclass">
+                        @item.IncentiveAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Seniority
+                    </td>
+                    <td class="numberclass">
+                        @item.TankerAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.SeafarersPF
+                    </td>
+                    <td class="numberclass">
+                        @item.leavepayaddition
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.extraot
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherEarnings
+                    </td>
+                    <td class="numberclass">
+                        @*@(item.BasicWages / 30 * item.TransitDays)*@
+                        @item.TransitWages
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.PrevMonthBal
+                    </td>
+                    <td class="numberclass">
+                        @item.Reimbursement
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalPayable
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="35">
+                    Offsigners
+                </td>
+            </tr>
+            @foreach (var item in ViewBag.USDcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.BasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.FixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.SecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.UniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.TempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.PensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.SpecialAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.CompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Bonus
+                    </td>
+                    <td class="numberclass">
+                        @item.IncentiveAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.Seniority
+                    </td>
+                    <td class="numberclass">
+                        @item.TankerAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.SeafarersPF
+                    </td>
+                    <td class="numberclass">
+                        @item.leavepayaddition
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.extraot
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherEarnings
+                    </td>
+                    <td class="numberclass">
+                        @item.TransitWages
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.PrevMonthBal
+                    </td>
+                    <td class="numberclass">
+                        @item.Reimbursement
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalPayable
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="35">&nbsp;</td>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total USD Earning</b></td>
+                <td class="numberclass"> @ViewBag.basicUSDtotal</td>
+                <td class="numberclass">@ViewBag.FixUSDtotal</td>
+                <td class="numberclass">@ViewBag.secuallowUSDtotal</td>
+                <td class="numberclass">@ViewBag.leavesUSDtotal</td>
+                <td class="numberclass">@ViewBag.uniformUSDtotal</td>
+                <td class="numberclass">@ViewBag.TempFuelAllow</td>
+                <td class="numberclass">@ViewBag.pensionUSDtotal</td>
+                <td class="numberclass">@ViewBag.SpecialAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.companyAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.BonusUSDtotal</td>
+                <td class="numberclass">@ViewBag.IncentiveAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.SeniorityUSDtotal</td>
+                <td class="numberclass">@ViewBag.TankerAllowanceUSDtotal</td>
+                <td class="numberclass">@ViewBag.SeafarersPFUSDtotal</td>
+                <td class="numberclass">@ViewBag.leavepayadditionUSDtotal</td>
+                <td class="numberclass">@ViewBag.OtherAUSDtotal</td>
+                <td class="numberclass">@ViewBag.ExtraOTUSDtotal</td>
+                <td class="numberclass">@ViewBag.OtherEUSDtotal</td>
+                <td class="numberclass">@ViewBag.TransitUSDtotal</td>
+                <td class="numberclass">@ViewBag.TotalearningUSD</td>
+                <td class="numberclass">@ViewBag.PrevMonthBalUSD</td>
+                <td class="numberclass">@ViewBag.ReimbursementUSD</td>
+                <td class="numberclass">@ViewBag.TotalPayableUSD</td>
+                <td></td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+    @if (Enumerable.Count(ViewBag.USDonsigners) > 0 || Enumerable.Count(ViewBag.USDcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int USDdedsno = 0; int USDdedsnooff = 0;
+        <h5 style="padding: 0; margin: 0;"> USD Deduction</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-family: Calibri; font-size: 10px; border: 2px solid #000;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="6">
+                    <b> Deductions</b>
+                </th>
+                <th></th>
+                <th colspan="2">
+                    Accumulated leave wage
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+
+                </th>
+                <th>
+                    CDC
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical" width="100px">
+                    <div class="vertical">
+                        Leave Pay + Subsitence  C/F (This Month)
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Cash Advance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Bonded Stores
+                    </div>
+                </th>
+                <th class="vertical" width="70px">
+                    <div class="vertical">
+                        Other Deduction
+                    </div>
+                </th>
+                <th class="vertical" width="80px">
+                    <div class="vertical">
+                        PF Deduction (Indian)
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Allotment
+                    </div>
+                </th>
+                <th class="vertical" width="80px">
+                    <div class="vertical">
+                        Total Deductions
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Leave wages B/F
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Leave wages C/F
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Balance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.USDonsigners)
+            {
+                <tr>
+                    <td>
+                        @(USDdedsno += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.CashAdvance
+                    </td>
+                    <td class="numberclass">
+                        @item.BondedStores
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.authorityDeduction
+                    </td>
+                    <td class="numberclass">
+                        @item.Allotments
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesBF
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesCF
+                    </td>
+                    <td class="numberclass">
+                        @item.FinalBalance
+                    </td>
+
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="25">Offsigners</td>
+            </tr>
+            @foreach (var item in ViewBag.USDcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(USDdedsnooff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @*@item.BasicWages*@ 0
+                    </td>
+                    <td class="numberclass">
+                        @item.CashAdvance
+                    </td>
+                    <td class="numberclass">
+                        @item.BondedStores
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.authorityDeduction
+                    </td>
+                    <td class="numberclass">
+                        @item.Allotments
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesBF
+                    </td>
+                    <td class="numberclass">
+                        0
+                    </td>
+                    <td class="numberclass">
+                        @item.FinalBalance
+                    </td>
+
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <th colspan="25">&nbsp;</th>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total USD Deduction</b></td>
+                <td class="numberclass">
+                    @ViewBag.leaveSUBUSD
+                </td>
+                <td class="numberclass">@ViewBag.cashabUSD</td>
+                <td class="numberclass">@ViewBag.BSUSD</td>
+                <td class="numberclass">@ViewBag.ODUSD</td>
+                <td class="numberclass">@ViewBag.authorityDeduction</td>
+                <td class="numberclass">@ViewBag.AllotmentUSD</td>
+                <td class="numberclass">@ViewBag.TotalDeduUSD</td>
+                <td class="numberclass">@ViewBag.LeavesBFUSD</td>
+                <td class="numberclass">@ViewBag.LeavesCFUSD</td>
+                <td class="numberclass">@ViewBag.FinalBalUSD</td>
+                <td></td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+
+
+    @if (Enumerable.Count(ViewBag.USDonsigners) > 0 || Enumerable.Count(ViewBag.USDcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int rowNo = 0; int rowoff = 0;
+        <h5 style=" padding: 0; margin: 0;">USD Remarks</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-size: 10px;">
+            <tr>
+                <th colspan="4">&nbsp;</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Remark
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.USDonsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @item.Remarks
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="6">
+                    Offsigners
+                </td>
+            </tr>
+            @foreach (var item in ViewBag.USDcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @item.Remarks
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="6">&nbsp;</td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+
+
+
+    <!--crew basic wage structure NGN-->
+    @if (Enumerable.Count(ViewBag.NGNonsigners) > 0 || Enumerable.Count(ViewBag.NGNcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int rowNo = 0; int rowoff = 0;
+        <h5 style=" padding: 0; margin: 0;">NGN Earning</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-size: 10px;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="13">
+                    <b>Wage structure of earnings</b>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+                </th>
+                <th class="vertical">
+                    CDC
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Basic Wages
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Fixed/Guar anteed OT
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Security Allow
+                    </div>
+                </th>
+                <th class="vertical" width="50px">
+                    <div class="vertical">
+                        Leave & Sub. Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Uniform Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Temp. Fuel Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Pension Fund
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Company Allowance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Housing
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Transport
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Utility
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Other Allow.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Total Wages per month
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        OT rate
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Overtime Hr
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.NGNonsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.WSFixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSLeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSPensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.WSCompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSHousing
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTransport
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUtility
+                    </td>
+                    <td class="numberclass">
+                        @item.WSOtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.otrate
+                    </td>
+                    <td class="numberclass">
+                        @item.OTHours
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="27">
+                    Offsigners
+                </td>
+            </tr>
+            @foreach (var item in ViewBag.NGNcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.WSBasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.WSFixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.WSSecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSLeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSPensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.WSCompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSHousing
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTransport
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUtility
+                    </td>
+                    <td class="numberclass">
+                        @item.WSOtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.otrate
+                    </td>
+                    <td class="numberclass">
+                        @item.OTHours
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="29">&nbsp;</td>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total USD Earning</b></td>
+                <td class="numberclass"> @ViewBag.wsbasicNGNtotal</td>
+                <td class="numberclass">@ViewBag.wsFixNGNtotal</td>
+                <td class="numberclass">@ViewBag.wssecallowNGNtotal</td>
+                <td class="numberclass">@ViewBag.wsleavesNGNtotal</td>
+                <td class="numberclass">@ViewBag.wsuniformNGNtotal</td>
+                <td class="numberclass">@ViewBag.wstempfuelallowNGNtotal</td>
+                <td class="numberclass">@ViewBag.wspensionNGNtotal</td>
+                <td class="numberclass">@ViewBag.wsCompanyNANGNtotal</td>
+                <td class="numberclass">
+                    @ViewBag.WSHousingNGNtotal
+                </td>
+                <td class="numberclass">
+                    @ViewBag.WSTransportNGNtotal
+                </td>
+                <td class="numberclass">
+                    @ViewBag.WSUtilityNGNtotal
+                </td>
+                <td class="numberclass">@ViewBag.wsOtherANGNtotal</td>
+                <td class="numberclass">@ViewBag.WSNGNTotalWages</td>
+                <td class="numberclass"></td>
+                <td class="numberclass"></td>
+                <td></td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+
+    @if (Enumerable.Count(ViewBag.NGNonsigners) > 0 || Enumerable.Count(ViewBag.NGNcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname &nbsp; &nbsp; &nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int ngnsno = 0; int ngnsnooff = 0;
+        <h5 style="padding: 0; margin: 0;">  Nigerian(NGN) Earning</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-family: Calibri; font-size: 10px; border: 2px solid #000;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="16">
+                    <b> Current Month Earnings</b>
+                </th>
+                <th colspan="2">
+                    Other Payable
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Crew name
+                </th>
+                <th>
+                    CDC
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+
+                <th class="vertical">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Basic Wages
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Fixed/Guaran teed OT
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Security Allow
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Leave & Sub. Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Uniform Allow
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Temp. Fuel Allow.
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Pension Fund
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Other Allow.
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Extra OT
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Company Allowance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Housing
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Transport
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Utility
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Other Earning
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Transit Wages
+                    </div>
+                </th>
+                <th class="vertical" width="70px">
+                    <div class="vertical">
+                        Total Earnings (Current Month)
+                    </div>
+                </th>
+                <th class="vertical" width="55px">
+                    <div class="vertical">
+                        Bal from Prev Month
+                    </div>
+                </th>
+                <th class="vertical" width="40px">
+                    <div class="vertical">
+                        Reimbur sement
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Total Payable
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.NGNonsigners)
+            {
+                <tr>
+                    <td>
+                        @(ngnsno += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.BasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.FixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.SecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.UniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.TempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.PensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.extraot
+                    </td>
+                    <td class="numberclass">
+                        @item.CompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSHousing
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTransport
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUtility
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherEarnings
+                    </td>
+                    <td class="numberclass">
+                        @*@(item.BasicWages / 30 * item.TransitDays)*@
+                        @item.TransitWages
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.PrevMonthBal
+                    </td>
+                    <td class="numberclass">
+                        @item.Reimbursement
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalPayable
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="31">Offsigners</td>
+            </tr>
+            @foreach (var item in ViewBag.NGNcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(ngnsnooff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.BasicWages
+                    </td>
+                    <td class="numberclass">
+                        @item.FixedGtOT
+                    </td>
+                    <td class="numberclass">
+                        @item.SecurityAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.UniformAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.TempFuelAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.PensionFund
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherAllow
+                    </td>
+                    <td class="numberclass">
+                        @item.extraot
+                    </td>
+                    <td class="numberclass">
+                        @item.CompanyAllowance
+                    </td>
+                    <td class="numberclass">
+                        @item.WSHousing
+                    </td>
+                    <td class="numberclass">
+                        @item.WSTransport
+                    </td>
+                    <td class="numberclass">
+                        @item.WSUtility
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherEarnings
+                    </td>
+                    <td class="numberclass">
+                        @*@(item.BasicWages / 30 * item.TransitDays)*@
+                        @item.TransitWages
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalWages
+                    </td>
+                    <td class="numberclass">
+                        @item.PrevMonthBal
+                    </td>
+                    <td class="numberclass">
+                        @item.Reimbursement
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalPayable
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <th colspan="33">&nbsp;</th>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total NGN Earning</b></td>
+                <td class="numberclass">
+                    @ViewBag.basicNGNtotal
+                </td>
+                <td class="numberclass">@ViewBag.FixNGNtotal</td>
+                <td class="numberclass">@ViewBag.secNGNtotal</td>
+                <td class="numberclass">@ViewBag.leavesNGNtotal</td>
+                <td class="numberclass">@ViewBag.uniformNGNtotal</td>
+                <td class="numberclass">@ViewBag.tempfuelallowNGNtotal</td>
+                <td class="numberclass">@ViewBag.pensionNGNtotal</td>
+                <td class="numberclass">@ViewBag.OtherANGNtotal</td>
+                <td class="numberclass">@ViewBag.ExtraOTNGNtotal</td>
+                <td class="numberclass">@ViewBag.CompanyANGNtotal</td>
+                <td class="numberclass">@ViewBag.HousingNGNtotal</td>
+                <td class="numberclass">@ViewBag.TransportNGNtotal</td>
+                <td class="numberclass">@ViewBag.UtilityNGNtotal</td>
+                <td class="numberclass">@ViewBag.OtherENGNtotal</td>
+                <td class="numberclass">@ViewBag.TransitNGNtotal</td>
+                <td class="numberclass">
+                    @ViewBag.TotalearningNGN
+                </td>
+                <td class="numberclass">@ViewBag.PrevMonthBalNGN</td>
+                <td class="numberclass">@ViewBag.ReimbursementNGN</td>
+                <td class="numberclass">@ViewBag.TotalPayableNGN</td>
+                <td></td>
+            </tr>
+        </table>
+
+
+        <div style="page-break-before: always"></div>
+        <hr />
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname &nbsp; &nbsp; &nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int ngndedsno = 0; int ngndedsnoff = 0;
+        <h5 style="padding: 0; margin: 0;">Nigerian(NGN) Deduction</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-family: Calibri; font-size: 10px; border: 2px solid #000;">
+            <tr>
+                <th colspan="11">&nbsp;</th>
+                <th colspan="9">
+                    <b> Deductions</b>
+                </th>
+                <th></th>
+                <th colspan="2">
+                    Accumulated leave wage
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th width="150px">
+                    Crew name
+                </th>
+                <th width="55px">
+                    CDC
+                </th>
+                <th width="35px" class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical" width="50px">
+                    <div class="vertical">
+                        DOJ
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        PayCommence
+                    </div>
+                </th>
+                <th class="vertical" width="45px">
+                    <div class="vertical">
+                        From
+                    </div>
+                </th>
+                <th class="vertical" width="45px">
+                    <div class="vertical">
+                        To
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Days
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Currency
+                    </div>
+                </th>
+                <th class="vertical" width="60px">
+                    <div class="vertical">
+                        Leave Pay+Sub. C/F(This Month)
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Cash Advance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Bonded Stores
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Other Deduction
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        8.0% PF Employee Contribution (On Basic)
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        2.0% Union Dues (On Gross)
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        @{
+                            DateTime value = new DateTime(2023, 12, 1);
+                            @if (ViewBag.monthyear >= value)
+                            {
+                                <text>Welfare fund 1% Officers & 2% Ratings (On Gross)</text>
+                            }
+                            else
+                            {
+                                <text>1.0 % Welfare fund (On Gross)</text>
+                            }
+                        }
+                    </div>
+
+
+                </th>
+
+
+                <th class="vertical">
+                    <div class="vertical">WHT@5% </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Allotment
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Total Deductions
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Leave wages B/F
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Leave wages C/F
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Balance
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.NGNonsigners)
+            {
+                <tr>
+                    <td>
+                        @(ngndedsno += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @item.LeavePay
+                    </td>
+                    <td class="numberclass">
+                        @item.CashAdvance
+                    </td>
+                    <td class="numberclass">
+                        @item.BondedStores
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.PFAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.UDAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.WFAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.Tax
+                    </td>
+                    <td class="numberclass">
+                        @item.Allotments
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesBF
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesCF
+                    </td>
+                    <td class="numberclass">
+                        @item.FinalBalance
+                    </td>
+
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="25">Offsigners</td>
+            </tr>
+            @foreach (var item in ViewBag.NGNcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(ngndedsnoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.cdcno
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.SignOnDate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.Paydate)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.From)
+                    </td>
+                    <td>
+                        @String.Format("{0:dd-MMM-yy}", @item.To)
+                    </td>
+                    <td>
+                        @item.TotalDays
+                    </td>
+                    <td>
+                        @item.Currency
+                    </td>
+                    <td class="numberclass">
+                        @*@item.BasicWages*@0
+                    </td>
+                    <td class="numberclass">
+                        @item.CashAdvance
+                    </td>
+                    <td class="numberclass">
+                        @item.BondedStores
+                    </td>
+                    <td class="numberclass">
+                        @item.OtherDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.PFAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.UDAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.WFAmount
+                    </td>
+                    <td class="numberclass">
+                        @item.Tax
+                    </td>
+                    <td class="numberclass">
+                        @item.Allotments
+                    </td>
+                    <td class="numberclass">
+                        @item.TotalDeductions
+                    </td>
+                    <td class="numberclass">
+                        @item.LeaveWagesBF
+                    </td>
+                    <td class="numberclass"></td>
+                    <td class="numberclass">
+                        @item.FinalBalance
+                    </td>
+
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <th colspan="25">&nbsp;</th>
+            </tr>
+            <tr style="font-weight:bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="3"><b>Total NGN Deduction</b></td>
+                <td class="numberclass">
+                    @ViewBag.leaveSUBNGN
+                </td>
+                <td class="numberclass">@ViewBag.cashabNGN</td>
+                <td class="numberclass">@ViewBag.BSNGN</td>
+                <td class="numberclass">@ViewBag.ODNGN</td>
+                <td class="numberclass">@ViewBag.PFAmountNGNTotal</td>
+                <td class="numberclass">@ViewBag.UDAmountNGNTotal</td>
+                <td class="numberclass">@ViewBag.WFAmountNGNTotal</td>
+                <td class="numberclass">@ViewBag.TaxNGNTotal</td>
+                <td class="numberclass">@ViewBag.AllotmentNGN</td>
+                <td class="numberclass">@ViewBag.TotalDeduNGN</td>
+                <td class="numberclass">@ViewBag.LeavesBFNGN</td>
+                <td class="numberclass">@ViewBag.LeavesCFNGN</td>
+                <td class="numberclass">@ViewBag.FinalBalNGN</td>
+                <td></td>
+            </tr>
+        </table>
+        <div style="page-break-before: always"></div>
+        <hr />
+    }
+
+    @if (Enumerable.Count(ViewBag.NGNonsigners) > 0 || Enumerable.Count(ViewBag.NGNcrewoffsigners) > 0)
+    {
+        <div style="text-align:center">
+            Vessel Name : @ViewBag.vesselname  &nbsp;&nbsp;&nbsp; Portage bill for the Month : @String.Format("{0:MMM-yyyy}", ViewBag.monthyear)
+        </div>
+        int rowNo = 0; int rowoff = 0;
+        <h5 style=" padding: 0; margin: 0;">NGN Remarks</h5>
+        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="10" style="font-size: 10px;">
+            <tr>
+                <th colspan="4">&nbsp;</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th width="14px">
+                    Sr No
+                </th>
+                <th>
+                    Onboard Crew name
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Rank
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Nationality
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Remark
+                    </div>
+                </th>
+                <th class="vertical">
+                    <div class="vertical">
+                        Signature
+                    </div>
+                </th>
+            </tr>
+            @foreach (var item in ViewBag.NGNonsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @item.Remarks
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr style="font-weight:bold;">
+                <td colspan="23">
+                    Offsigners
+                </td>
+            </tr>
+            @foreach (var item in ViewBag.NGNcrewoffsigners)
+            {
+                <tr>
+                    <td>
+                        @(rowoff += 1)
+                    </td>
+                    <td>
+                        @item.CrewName
+                    </td>
+                    <td>
+                        @item.RankName
+                    </td>
+                    <td>
+                        @item.Nationality
+                    </td>
+                    <td>
+                        @item.Remarks
+                    </td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="6">&nbsp;</td>
+            </tr>
+        </table>
+    }
+    @*<div style="font-size:10px;float:right">
+    Generated on :  @DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss")
+    </div>*@
+</body>
+</html>
