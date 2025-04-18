@@ -246,7 +246,7 @@ namespace crewlinkship.Controllers
         public IActionResult SendAutoBackup()
         {
             var vesseldata = _context.TblVessels.Where(x => x.VesselId == vesselidtouse).FirstOrDefault();
-            var currentDate = DateTime.Now;
+            var currentDate = DateTime.UtcNow;
             var sixMonth = currentDate.AddDays(-1);
             var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new TblActivitySignOnVM
             {
@@ -526,7 +526,7 @@ namespace crewlinkship.Controllers
                     if (wbcount > 0)
                     {                  
                      var getemail = _context.TblEmails.FirstOrDefault();
-                    string filename = vesseldata.Imo+ "_" + vesselidtouse + "_ShipModuleBackup_" + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
+                    string filename = vesseldata.Imo+ "_" + vesselidtouse + "_ShipModuleBackup_" + DateTime.UtcNow.ToString("ddmmyyyyhhmmss") + ".xlsx";
                             MemoryStream mstream = new MemoryStream();                     
                             wb.SaveAs(mstream);
                             mstream.Position = 0;
@@ -791,7 +791,7 @@ namespace crewlinkship.Controllers
 
         public IActionResult Takebackup()
         {
-            var currentDate = DateTime.Now;
+            var currentDate = DateTime.UtcNow;
             var sixMonth = currentDate.AddDays(-6);  
             var ActivitySignOns = _context.TblActivitySignOns.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate>= sixMonth)).Select(x => new TblActivitySignOnVM
             {
@@ -1052,7 +1052,7 @@ namespace crewlinkship.Controllers
                     var wsPortageEarningDeduction = wb.Worksheets.Add("tblimportPortageEarningDedu");
                     wb.Worksheet(6).Cell(1, 1).InsertTable(PortageEarningDeduction);
                  
-                    string filename = "ShipModuleBackup_"+ DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
+                    string filename = "ShipModuleBackup_"+ DateTime.UtcNow.ToString("dd-MMM-yyyy hh:mm:ss") + ".xlsx";
                     using (MemoryStream mstream = new MemoryStream())
                     {
                         wb.SaveAs(mstream);
@@ -1326,7 +1326,7 @@ namespace crewlinkship.Controllers
                 updateCrewDetails.PlanStatus = "Travel To Vessel"; // Travel to vessel
                 updateCrewDetails.Status = "Travel To Vessel"; // Travel to vessel
                 updateCrewDetails.ModifiedBy = "Master";
-                updateCrewDetails.ModifiedDate = DateTime.Now;
+                updateCrewDetails.ModifiedDate = DateTime.UtcNow;
                 _context.TblCrewDetails.Update(updateCrewDetails);
                 _context.SaveChanges();
             }
@@ -1348,7 +1348,7 @@ namespace crewlinkship.Controllers
                     crew.ExpectedSignOnDate = DateTime.Parse(ExpectedSignOnDate);
                     crew.ReliefDate = DateTime.Parse(ReliefDate);
                     crew.Remarks = tblActivitySignOn.Remarks;
-                    crew.ModifiedDate = DateTime.Now;
+                    crew.ModifiedDate = DateTime.UtcNow;
                     _context.TblActivitySignOns.Update(crew);
                     _context.SaveChanges();
                     //update status in crewdetails 
@@ -1361,7 +1361,7 @@ namespace crewlinkship.Controllers
                         updateCrewDetails.Status = "Sign In Transit"; // Travel to vessel
                         updateCrewDetails.PoolId = vesselPooId.PoolId;
                         updateCrewDetails.ModifiedBy = "Master";
-                        updateCrewDetails.ModifiedDate = DateTime.Now;
+                        updateCrewDetails.ModifiedDate = DateTime.UtcNow;
                         _context.TblCrewDetails.Update(updateCrewDetails);
                         _context.SaveChanges();
                     }
@@ -1475,7 +1475,7 @@ namespace crewlinkship.Controllers
 
                     worksheet.Cell("I2").Value = applicant.Vessel.Capacity;
                     worksheet.Cell("I3").Value = applicant.Vessel.AccommodationBerth;
-                    worksheet.Cell("I4").Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                    worksheet.Cell("I4").Value = DateTime.UtcNow.ToString("dd-MMM-yyyy");
                     worksheet.Cell("I3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
 
@@ -1625,7 +1625,7 @@ namespace crewlinkship.Controllers
 
                     worksheet.Cell("G2").Value = "Report Date:";
                     worksheet.Range("G2:G3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    worksheet.Cell("G3").Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                    worksheet.Cell("G3").Value = DateTime.UtcNow.ToString("dd-MMM-yyyy");
                     worksheet.Cell("G2").Style.Font.Bold = true;
 
                     currentRow++;
@@ -2156,7 +2156,7 @@ namespace crewlinkship.Controllers
         //        PdfDocument doc2 = converter2.ConvertUrl(url2);
         //        doc.Append(doc2);
         //    }
-        //    string fileName = "IMOCrewList" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
+        //    string fileName = "IMOCrewList" + DateTime.UtcNow.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
 
         //    doc.Save(fileName);
 
@@ -2276,7 +2276,7 @@ namespace crewlinkship.Controllers
             //    doc.Append(doc2);
             //}
 
-            string fileName = "FPD01Crewlist" + DateTime.Now.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
+            string fileName = "FPD01Crewlist" + DateTime.UtcNow.ToString("dd-MMM-yyyy.hhmmss") + ".pdf";
 
 
             doc.Save(fileName);
@@ -2306,7 +2306,7 @@ namespace crewlinkship.Controllers
             if (User != null && newpwd == crfmpwd)
             {
                 User.Password = newpwd;
-                User.ModifiedDate = DateTime.Now;
+                User.ModifiedDate = DateTime.UtcNow;
                 _context.Userlogins.Update(User);
                 _context.SaveChanges();
                 return Json("success");

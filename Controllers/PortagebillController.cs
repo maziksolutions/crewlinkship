@@ -410,7 +410,7 @@ namespace crewlinkship.Controllers
                                 data.SignOffDate = item.SignOffDate;
                             data.Remarks = item.Remarks;
                             //  data.ModifiedBy = crewid;
-                            data.ModifiedDate = DateTime.Now;
+                            data.ModifiedDate = DateTime.UtcNow;
                             data.AppliedCba = item.AppliedCba;
                             data.BankId = item.BankId;
                             data.Vesselid = item.Vesselid;
@@ -462,7 +462,7 @@ namespace crewlinkship.Controllers
                          data.SignOffDate = item.SignOffDate;
                         data.Remarks = item.Remarks;
                         //  data.ModifiedBy = crewid;
-                        data.ModifiedDate = DateTime.Now;
+                        data.ModifiedDate = DateTime.UtcNow;
                         data.AppliedCba = item.AppliedCba;
                         data.BankId = item.BankId;
                         data.Vesselid = item.Vesselid;
@@ -622,6 +622,7 @@ namespace crewlinkship.Controllers
                             }
                         }
                     }
+                    return Json("success");
                 }
                 catch (Exception ex)
                 {
@@ -818,7 +819,7 @@ namespace crewlinkship.Controllers
                 vesselname = dtsignoff.Rows[0]["vessel"].ToString();
 
             
-            fileName = "PortageBill" + "_" + vesselname + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
+            fileName = "PortageBill" + "_" + vesselname + DateTime.UtcNow.ToString("ddmmyyyyhhmmss") + ".xlsx";
             string path_Root = _appEnvironment.WebRootPath;
 
             using (XLWorkbook wb = new XLWorkbook())
@@ -2202,7 +2203,7 @@ namespace crewlinkship.Controllers
                         string functionreturn = RetunFileName(int.Parse(pitem));
                         cu = functionreturn.Substring(0, functionreturn.IndexOf("-"));
                         crewpayslipname = functionreturn.Substring(functionreturn.IndexOf("-") + 1);
-                        string filename = crewpayslipname + "_" + "Salaryslip" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                        string filename = crewpayslipname + "_" + "Salaryslip" + DateTime.UtcNow.ToString("yyyyMMddhhmmss") + ".pdf";
                         if (attachment == null || attachment == "")
                         {
                             if (cu != null)
@@ -2268,7 +2269,7 @@ namespace crewlinkship.Controllers
                     //}
                 }
                 string vesselnames = ViewBag.vesselname;
-                string zipName = vesselnames + "_" + DateTime.Now.ToString("yyyy-MMM-dd") + ".zip";
+                string zipName = vesselnames + "_" + DateTime.UtcNow.ToString("yyyy-MMM-dd") + ".zip";
                 zip.Save(zipName);
                 return Json(new { fileName = zipName });
                 
@@ -2371,7 +2372,7 @@ namespace crewlinkship.Controllers
                 converter.Header.DisplayOnEvenPages = true;
                 converter.Header.Height = headerHeight;               
                 PdfDocument doc = converter.ConvertUrl(url);
-                string filename = "BOW" + crewId + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                string filename = "BOW" + crewId + DateTime.UtcNow.ToString("yyyyMMddhhmmss") + ".pdf";
                 string fileName = filename;
 
                 doc.Save(fileName);
@@ -2490,7 +2491,8 @@ namespace crewlinkship.Controllers
 
         public void Sendbackup(int month, int year, List<string> crewsids, string type)
         {
-            var currentDate = DateTime.Now;
+            var vesseldata = _context.TblVessels.Where(x => x.VesselId == vesselidtouse).FirstOrDefault();
+            var currentDate = DateTime.UtcNow;
             var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.From.Month == month && x.From.Year == year && crewsids.Contains(x.Crew.ToString())).ToList();
             var PBLock = _context.LockPortageBill.Where(x => x.month == month && x.year == year).ToList();
             //var PBBankAllotment = _context.TblPbbankAllotments.Where(x => x.From.Month == month && x.From.Year == year).Select(x => new
@@ -2621,7 +2623,7 @@ namespace crewlinkship.Controllers
                     if (wbcount > 0)
                     {
                         var getemail = _context.TblEmails.FirstOrDefault();
-                        string filename = "ShipModuleBackup_" + DateTime.Now.ToString("ddmmyyyyhhmmss") + ".xlsx";
+                        string filename = vesseldata.Imo + "_" + vesselidtouse + "_ShipModuleBackup_" + DateTime.UtcNow.ToString("ddmmyyyyhhmmss") + ".xlsx";
                         MemoryStream mstream = new MemoryStream();
                         wb.SaveAs(mstream);
                         mstream.Position = 0;
@@ -2679,7 +2681,7 @@ namespace crewlinkship.Controllers
                 else
                     mail.Subject = getvesseldetail.VesselName + " : " + "Portage Bill Locked";
             mail.IsBodyHtml = true;
-            mail.To.Add(new MailAddress(getemail.EmailSentTo));
+            mail.To.Add(new MailAddress(getemail.NotificationEmailSentTo));
             mail.Body = sb.ToString();
             SmtpClient smtp = new SmtpClient();
             smtp.UseDefaultCredentials = true;
@@ -2833,11 +2835,11 @@ namespace crewlinkship.Controllers
                 //PdfHtmlSection footerHtml = new PdfHtmlSection(footerUrl);
                 //footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
                 //converter.Footer.Add(footerHtml);
-                PdfTextSection text = new PdfTextSection(0, 0, "Page: {page_number} of {total_pages} \r\n Generated on : " + @DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss"), new System.Drawing.Font("Arial", 7));
+                PdfTextSection text = new PdfTextSection(0, 0, "Page: {page_number} of {total_pages} \r\n Generated on : " + @DateTime.UtcNow.ToString("dd-MMM-yyyy hh:mm:ss"), new System.Drawing.Font("Arial", 7));
                 text.HorizontalAlign = PdfTextHorizontalAlign.Right;
                 converter.Footer.Add(text);
                 PdfDocument doc = converter.ConvertUrl(url);
-                string filename = "Portage" + vesselId.Trim() + DateTime.Now.ToString("yyyyMMddhhmmss") + ".pdf";
+                string filename = "Portage" + vesselId.Trim() + DateTime.UtcNow.ToString("yyyyMMddhhmmss") + ".pdf";
                 MemoryStream ms = new System.IO.MemoryStream();
                 doc.Save(ms);
                 ms.Position = 0;
@@ -3010,5 +3012,6 @@ namespace crewlinkship.Controllers
             ViewBag.FinalBalNGN = NGNonsigners.Sum(x => x.FinalBalance) + NGNcrewoffsigners.Sum(x => x.FinalBalance);          
             return View();
         }
+
     }    
 }
