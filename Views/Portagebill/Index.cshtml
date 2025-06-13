@@ -413,7 +413,7 @@
                                         <table mat-table id="tblonbaord" class="tbl table table-hover table-bordered mb-0 crew-table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th class="setcolumnswidth"><input type="checkbox" id="checkAll"></th>
+                                                    <th class="setcolumnswidth"><input type="checkbox" id="checkAll" data-toggle="tooltip" data-title="After select the checkbox(s), click on lock/bow button."></th>
                                                     <th class="setcolumnswidth"></th>
                                                     <th class="setcolumnswidth">Sr.No.</th>
                                                     <th width="150px">Crew Name</th>
@@ -499,14 +499,15 @@
                                                     <tr>
                                                         <td>
                                                             @if(item.Islocked == 0){
-                                                            <input type="checkbox" name="id_' + @item.CrewId + '" value="@item.CrewId">}
+                                                                <input type="checkbox" name="id_' + @item.CrewId + '" value="@item.CrewId" data-toggle="tooltip" data-title="After select the checkbox(s), click on lock/bow button.">
+                                                            }
                                                             else{
                                                             <input type="checkbox" disabled>}
                                                     </td>
                                                         <td>
                                                             @if (item.bowRequest == "yes")
                                                             {
-                                                                <a onclick="getdataforbow('@item.From','@item.To',@item.CrewId,@item.CrewListId,@item.ContractId,'@item.CrewName','@item.Currency','@item.RankName','@item.SignOffDate')" class="openbow">
+                                                                <a onclick="getdataforbow('@item.From','@item.To',@item.CrewId,@item.CrewListId,@item.ContractId,'@item.CrewName','@item.Currency','@item.RankName','@item.SignOffDate')" class="openbow" data-toggle="tooltip" data-title="Click here to complete the bow">
                                                                     <i class="fa fa-info-circle" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
                                                                 </a>
                                                             }
@@ -515,9 +516,9 @@
   @item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
 @item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,
 @item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,
-@item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction','@item.Paydate','@item.SignOnDate')">
-                                                                <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>                                                                
-                                                            </a>
+@item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction','@item.Paydate','@item.SignOnDate')" data-toggle="tooltip" data-title="Click here to complete the allotment">
+                                                                    <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
+                                                                </a>
                                                             }
                                                         </td>
                                                         <td> @sno</td>
@@ -1163,7 +1164,7 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="otHours">OT Hours</label>
-                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="otHours" onchange="calculateot()" required id="otHours">
+                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="otHours" onchange="calculateot();CallBowCalculatefn();" required id="otHours">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="extraot">OT Earning</label>
@@ -1173,11 +1174,11 @@
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="OtherEarnings">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" onclick="OtherEarningsopenpopup('bow')" onchange="calculateearning()" name="OtherEarnings" id="OtherEarnings">
+                                    <input placeholder="Other Earnings" class="form-control" type="number" required value="0" readonly onclick="OtherEarningsopenpopup('bow');CallBowCalculatefn();" onchange="CallBowCalculatefn()" name="OtherEarnings" id="OtherEarnings">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="transitDays">Transit Days</label>
-                                    <input placeholder="Transit Days" class="form-control" required onchange="calculateearning()" type="number" value="0" name="transitDays" id="transitDays">
+                                    <input placeholder="Transit Days" class="form-control" required onchange="CallBowCalculatefn()" type="number" value="0" name="transitDays" id="transitDays">
                                 </div>
                                 @*<div class="col form-group input-container">
                                         <label for="reimbursement">Reimbursement</label>
@@ -1186,7 +1187,7 @@
 
                                 <div class="col form-group input-container">
                                     <label for="reimbursement">Reimbursement</label>
-                                    <input placeholder="Reimbursement" class="form-control" required onchange="calculateearning()" onclick="Reimbursementopenpopup('bow')" type="number" value="0" name="reimbursement" id="reimbursement">
+                                    <input placeholder="Reimbursement" class="form-control" required onchange="CallBowCalculatefn()" readonly onclick="Reimbursementopenpopup('bow');CallBowCalculatefn();" type="number" value="0" name="reimbursement" id="reimbursement">
                                 </div>
                             </div>
                             <div class="row">
@@ -1201,30 +1202,30 @@
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="cashAdvance">Cash Advance</label>
-                                    <input placeholder="Cash Advance" type="number" class="form-control" required value="0" onchange="calculateearning()" name="cashAdvance" id="cashAdvance">
+                                    <input placeholder="Cash Advance" type="number" class="form-control" required value="0" onchange="CallBowCalculatefn()" name="cashAdvance" id="cashAdvance">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="bondedStores">Bonded Stores</label>
-                                    <input placeholder="Bonded Stores" type="number" class="form-control" required value="0" onchange="calculateearning()" name="bondedStores" id="bondedStores">
+                                    <input placeholder="Bonded Stores" type="number" class="form-control" required value="0" onchange="CallBowCalculatefn()" name="bondedStores" id="bondedStores">
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="otherDeductions">Other Deductions</label>
-                                    <input placeholder="Other Deductions" class="form-control" required onchange="calculateearning()" onclick="OtherDeductionsopenpopup('bow')" value="0" type="number" name="otherDeductions" id="otherDeductions">
+                                    <input placeholder="Other Deductions" class="form-control" required onchange="CallBowCalculatefn()" readonly onclick="OtherDeductionsopenpopup('bow');CallBowCalculatefn();" value="0" type="number" name="otherDeductions" id="otherDeductions">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="allotments">Allotments</label>
-                                    <input placeholder="Allotments" class="form-control" onchange="calculateearning()" required type="number" value="0" name="allotments" id="allotments">
+                                    <input placeholder="Allotments" class="form-control" onchange="CallBowCalculatefn()" required type="number" value="0" name="allotments" id="allotments">
                                 </div>
                                 <div id="bowallotment2" class="col form-group input-container">
                                     <label for="allotment2">Allotments</label>
-                                    <input placeholder="Allotments" class="form-control" onchange="calculateearning()" required type="number" value="0" name="allotment2" id="allotment2">
+                                    <input placeholder="Allotments" class="form-control" onchange="CallBowCalculatefn()" required type="number" value="0" name="allotment2" id="allotment2">
                                 </div>
 
                                 <div class="col form-group s4">
                                     <label for="IsLeaveWagesCF">Is leave wage carry forward?</label>
-                                    <input class="form-control" onchange="calculateearning()" disabled type="checkbox" id="IsLeaveWagesCF" name="IsLeaveWagesCF" title="Is leave wage carry forward?">
+                                    <input class="form-control" onchange="CallBowCalculatefn()" disabled type="checkbox" id="IsLeaveWagesCF" name="IsLeaveWagesCF" title="Is leave wage carry forward?">
                                 </div>
                             </div>
                             <div class="row">
@@ -1312,7 +1313,7 @@
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="potHours">OT Hours</label>
-                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="potHours" onchange="calculateportageot()" id="potHours" required>
+                                    <input placeholder="OT Hours" type="number" class="form-control" value="0" name="potHours" onchange="calculateportageot();callcalculatefn();" id="potHours" required>
                                     <input id="pCrewId" name="pCrewId" hidden>
                                     <input id="pCrewListId" name="pCrewListId" hidden>
                                     <input id="pContractId" name="pContractId" hidden>
@@ -1332,20 +1333,20 @@
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pearningother">Other Earning</label>
-                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" onclick="OtherEarningsopenpopup('portage')" onchange="calculateportageearning()" name="pearningother" id="pearningother" required>
+                                    <input placeholder="Other Earnings" class="form-control" type="number" value="0" readonly onclick="OtherEarningsopenpopup('portage');callcalculatefn();" onchange="OtherEarningsopenpopup('portage');callcalculatefn()" name="pearningother" id="pearningother" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="ptransitDays">Transit Days</label>
-                                    <input placeholder="Transit Days" class="form-control" readonly onchange="calculateportageearning()" type="number" value="0" name="ptransitDays" id="ptransitDays" required>
+                                    <input placeholder="Transit Days" class="form-control" readonly onchange="callcalculatefn()" type="number" value="0" name="ptransitDays" id="ptransitDays" required>
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="preimbursement">Reimbursement</label>
                                     @*<input placeholder="Reimbursement" class="form-control" onclick="tets()" type="text" name="preimbursement">*@
-                                    <input placeholder="Reimbursement" class="form-control" type="number" value="0"
-                                           onclick="Reimbursementopenpopup('portage')" name="preimbursement"
-                                           onchange="calculateportageearning()" id="preimbursement">
+                                    <input placeholder="Reimbursement" class="form-control" type="number" value="0" readonly
+                                           onclick="Reimbursementopenpopup('portage');callcalculatefn();" name="preimbursement"
+                                           onchange="callcalculatefn()" id="preimbursement">
 
                                 </div>
                                 <div class="col form-group input-container">
@@ -1365,21 +1366,21 @@
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="pcashAdvance">Cash Advance</label>
-                                    <input placeholder="Cash Advance" type="number" class="form-control" value="0" onchange="calculateportageearning()" name="pcashAdvance" id="pcashAdvance" required>
+                                    <input placeholder="Cash Advance" type="number" class="form-control" value="0" onchange="callcalculatefn()" name="pcashAdvance" id="pcashAdvance" required>
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pbondedStores">Bonded Stores</label>
-                                    <input placeholder="Bonded Stores" type="number" class="form-control" value="0" onchange="calculateportageearning()" name="pbondedStores" id="pbondedStores" required>
+                                    <input placeholder="Bonded Stores" type="number" class="form-control" value="0" onchange="callcalculatefn()" name="pbondedStores" id="pbondedStores" required>
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="potherDeductions">Other Deductions</label>
-                                    <input placeholder="Other Deductions" class="form-control" onclick="OtherDeductionsopenpopup('portage')" onchange="calculateportageearning()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
+                                    <input placeholder="Other Deductions" class="form-control" onclick="OtherDeductionsopenpopup('portage'); callcalculatefn();" readonly onchange="callcalculatefn()" value="0" type="number" name="potherDeductions" id="potherDeductions" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col form-group input-container">
                                     <label for="pallotments">Allotments</label>
-                                    <input placeholder="Allotments" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="pallotments" id="pallotments" required>
+                                    <input placeholder="Allotments" class="form-control" onchange="callcalculatefn()" type="number" value="0" name="pallotments" id="pallotments" required>
                                 </div>
                                 <div class="col form-group input-container">
                                     <label for="pallotments">Mid month Allotment</label>
@@ -1387,7 +1388,7 @@
                                 </div>
                                 <div id="poratgeallotment2" class="col form-group input-container">
                                     <label for="pallotment2">Allotments</label>
-                                    <input placeholder="Allotments" class="form-control" onchange="calculateportageearning()" type="number" value="0" name="pallotment2" id="pallotment2" required>
+                                    <input placeholder="Allotments" class="form-control" onchange="callcalculatefn()" type="number" value="0" name="pallotment2" id="pallotment2" required>
                                 </div>
                                 @*<div class="col form-group s4">
                                         <label for="pIsLeaveWagesCF">Is leave wage carry forward?</label>
@@ -1654,7 +1655,7 @@
         </div>
     </div>
 </div> *@
-@*<script>
+<script>
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
         }
@@ -1673,7 +1674,7 @@
                 }
             }
         }
-    </script>*@
+    </script>
 <script src=”https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js”></script>
 <script>
     $(document).on({
@@ -1710,7 +1711,6 @@
                 selectedCheckboxValues.push($(this).val());
             }
         });
-        console.log('Selected values:', selectedCheckboxValues);
     }
 
     // Checkbox change event
@@ -1836,27 +1836,21 @@
         }
 
         function loadacc() {
-
             $.ajax({
                 type: "GET",
                 url: "/Portagebill/GetAccounts",
                 datatype: "Json",
                 success: function (data) {
-
-                    console.log(data);
                     $('#SelectAccountCode').append('<option value="">Account Code / Name</option>');
                     $.each(data, function (index, value) {
                         /*  $('#SelectAccountCode').append('<option value="' + value.subCodeId + '">' + value.subCode.subCode + + ' ' + value.subCode.subBudget + '</option>');*/
-
                         $('#SelectAccountCode').append(
                             `<option value="${value.subCodeId}" data-earning="${value.earning}">${value.subCode.subCode} ${value.subCode.subBudget}</option>`
                         );
-
                     })
                 }
             });
         }
-
 
         function loadOtherEarning() {
             $.ajax({
@@ -1927,7 +1921,7 @@
                         datatype: "Json",
                         success: function (data)
                         {
-                            console.log(data);
+                            
                         }
                     });
                     updateTotalEarn();
@@ -2388,7 +2382,6 @@
         let mm = [];
 
         function updateee() {
-
             if (commonArray.length > 0) {
                 commonArray.forEach(entry => {
                     mm.push({
@@ -2400,7 +2393,6 @@
                     });
                 });
             }
-            console.log(mm);
         }
 
         let oo = [];
@@ -2418,8 +2410,6 @@
                     });
                 });
             }
-            console.log(commonArrayotherEarnings);
-
         }
 
         let uppOtherdeduction = [];
@@ -2435,8 +2425,6 @@
                     });
                 });
             }
-
-            console.log(commonArrayotherDeductions);
         }
 
         var pp = '';
@@ -3074,16 +3062,10 @@
                         accountEntriesOtherearning.push(accountOtherEarning);
 
                     }
-
                     otherEarningsArray = accountEntriesOtherearning;
                     commonArrayotherEarnings = accountEntriesOtherearning;
                     populateTableotherearning(otherEarningsArray);
                 }
-
-
-
-
-                console.log(response);
             },
             error: function (err) {
                 console.error("Error fetching reimbursement details:", err);
@@ -3332,6 +3314,7 @@
               debugger
               sessionStorage.setItem('crewid', CrewId);
               sessionStorage.setItem('CrewListId', CrewListId);
+        $('#savebowdata').prop('disabled', true);
               selectbankids = [];
               $('#bowmodel').modal('show');
               $("#crewrank").text(RankName);
@@ -3396,8 +3379,6 @@
                       contentType: "application/json; charset=utf-8",
                       dataType: "json",
                       success: function (response) {
-                          console.log(response)
-                          debugger;
                           currency = (response[0].currency || 0);
                           from = response[0].from;
                           to = response[0].to;
@@ -3581,9 +3562,7 @@
           function savebowdata() {
               debugger;
               var valdata = $("#bowform").serialize();
-             console.log(valdata)
         var dateParts = $("#signOffdate").val().split('-');
-        console.log(dateParts);
         var signoffnewdate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
               var portageBillVM = {
                   PortageBillId: $("#PortageBillId").val(),
@@ -3633,25 +3612,107 @@
                   Allotment2: $("#allotment2").val(),
                   SignOffDate: signoffnewdate//$("#signOffdate").val(),
               };
-              console.log(portageBillVM)
+        debugger;
+              //add bank allotment detail
+        var addbankallotment = [];
+        $.each(selectbankids, function (k, v) {
+            var selectedbankid = v;
+            var model = "";
+            if (k == 0) {
+                model = {
+                    "BankAllotmentId": $('#BankAllotmentId1').val(),
+                    "Crew": $('#CrewId').val(),
+                    "VesselId": $('#Vesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#From').val(),
+                    "To": $('#To').val(),
+                    'Allotments': $('#allotments').val(),
+                    "IsMidMonthAllotment": 0
+                }
+                addbankallotment.push(model);
+            }
+            else {
+                model = {
+                    "BankAllotmentId": $('#BankAllotmentId2').val(),
+                    "Crew": $('#CrewId').val(),
+                    "VesselId": $('#Vesselid').val(),
+                    'BankId': selectedbankid,
+                    "From": $('#From').val(),
+                    "To": $('#To').val(),
+                    'Allotments': $('#allotment2').val(),
+                    "IsMidMonthAllotment": 0
+                }
+                addbankallotment.push(model);
+            }
+        }); 
+        debugger;
+        // add earning/deduction allotment
+        var pbearnmodel = "";
+        var addselectedPBEntry = [];
+        var currency = '';
+        if (allotmenttype == 'bow') {
+            currency = document.getElementById("currency").innerText;
+        }
+        else {
+            currency = document.getElementById("pcurrency").innerText;
+        }
+        const mergedArray = mm.concat(oo, uppOtherdeduction);
+        if (mergedArray.length > 0) {
+            mergedArray.forEach(entry => {
+                if (entry.portageEarningDeductionId > 0) {
+                    pbearnmodel = { "SubCodeId": entry.subCode, "portageEarningDeductionId": entry.portageEarningDeductionId, "Type": entry.type, "Amount": entry.Amount, "CrewId": portageBillVM.CrewId, "VesselId": portageBillVM.Vesselid, "From": portageBillVM.From, "To": portageBillVM.To, "PortageBillId": portageBillId, "Currency": currency }
+                    addselectedPBEntry.push(pbearnmodel);
+                }
+                if (entry.portageEarningDeductionId == 0 || entry.portageEarningDeductionId == undefined) {
+                    pbearnmodel = { "SubCodeId": entry.subCode, "portageEarningDeductionId": 0, "Type": entry.type, "Amount": entry.Amount, "CrewId": portageBillVM.CrewId, "VesselId": portageBillVM.Vesselid, "From": portageBillVM.From, "To": portageBillVM.To, "PortageBillId": portageBillId, "Currency": currency }
+                    addselectedPBEntry.push(pbearnmodel);
+                }
+            }
 
-              $.ajax({
-                  url: "/Portagebill/AddPortageBill",
-                  type: "POST",
-                  data: portageBillVM,
-                  dataType: 'json',
-                  success: function (response) {
-                console.log(response)
-                savebowbaksada(response);
-                      savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+            )
+        }
+        const uniqueArray = addselectedPBEntry.filter(
+            (obj, index, self) =>
+                index === self.findIndex((t) => t.SubCodeId === obj.SubCodeId && t.Type === obj.Type && t.CrewId === obj.CrewId)
+        );
 
-                      alert("Bow data has been saved.");
-                                  $('#bowmodel').modal('hide');
-                              resetbowform();
-                      var url = window.location.href;
-                      location.reload(true);
-                  }
-              })
+              debugger;
+        $.ajax({
+            url: "/Portagebill/TestADDPortagebill",
+            type: "POST",
+            data: { 'item': portageBillVM, 'PBEarningDeductionitems': uniqueArray, 'bankallotments': addbankallotment, 'itemlength': selectbankids },
+            //  data: portageBillVM,
+            dataType: 'json',
+            success: function (response) {
+                // savebaksada(response);
+                // savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+                alert('Portage Bill Updated');
+                $('#portageBillPopup').modal('hide');
+                resetportageform();
+                var url = window.location.href;
+                location.reload(true);
+            }
+        })
+
+              // $.ajax({
+              //     url: "/Portagebill/AddPortageBill",
+              //     type: "POST",
+              //     data: portageBillVM,
+              //     dataType: 'json',
+              //     success: function (response) {
+              //   console.log(response)
+              //   savebowbaksada(response);
+              //         savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+
+              //         alert("Bow data has been saved.");
+              //                     $('#bowmodel').modal('hide');
+              //                 resetbowform();
+              //         var url = window.location.href;
+              //         location.reload(true);
+              //     }
+              // })
+
+              ///////////********** */
               // $.ajax({
               //     url: "/Portagebill/AddPortageBill",
               //     type: "POST",
@@ -3845,6 +3906,11 @@
         calculatededuction();
           }
 
+    function CallBowCalculatefn() {
+        $('#savebowdata').prop('disabled', false);
+    calculateearning();
+          }
+
           /* function to calculate the earning   */
           function calculateearning() {
               debugger;
@@ -3963,11 +4029,10 @@
               dateFormat: 'dd-mm-yy',
               onSelect: function (dateText) {
                   var dateParts = dateText.split('-');
-            console.log(dateParts);
                   var signoffnewdate = dateParts[2] +'-'+ dateParts[1] +'-'+ dateParts[0];
-                  console.log(signoffnewdate);
-                  var CrewId = sessionStorage.getItem("crewid")
+                  var CrewId = sessionStorage.getItem("crewid");
                   var crewListId = sessionStorage.getItem("CrewListId");
+            $('#savebowdata').prop('disabled', false);
                   $.ajax({
                       type: "GET",
                       url: "/Portagebill/getBOWData",
@@ -4181,6 +4246,7 @@
               currency = curr;
               crewstatus = onboard;
               $("#pcurrency").text(currency);
+        $('#saveportagedata').prop('disabled', true);
               $("#portageBillPopup").modal('show');
               var vid = $('#vesselid').val();
               var month = $('#month').val();
@@ -4247,7 +4313,6 @@
                       dataType: "json",
                       success: function (response) {
                           debugger
-                    console.log(response)
                           from = response.from;
                           to = response.to;
                           basicwage = (BasicWages || 0);
@@ -4345,9 +4410,9 @@
                           $("#pleaveWagesBF").val(leaveWagesBF);
                           totalearncurrent = calculateStuff(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund,specialAllow,companyAllow, securityAllow,tempFuelAllow, OtherAllow, days, numberofdays, transitwage,
                               otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf,leavepayaddition);
-                          console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, specialAllow, companyAllow, securityAllow, tempFuelAllow, OtherAllow, days, numberofdays, transitwage,
-                              otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf, leavepayaddition);
-                          console.log(totalearncurrent)
+                         // console.log(basicwage, FixedGtOT, leavePay, UniformAllow, PensionFund, specialAllow, companyAllow, securityAllow, tempFuelAllow, OtherAllow, days, numberofdays, transitwage,
+                           //   otherEarnings, incentiveallow, seniority, tankerallow, housing, transport, utility, bonus, seafarerspf, leavepayaddition);
+                          
                           totalearning = (response.totalPayable || 0);
                           totaldeduction = (response.totalDeductions || 0);
                           finalbal = (response.finalBalance || 0);
@@ -4622,21 +4687,99 @@
                       LeaveWagesBF: $("#pleaveWagesBF").val(),
                       Allotment2: $("#pallotment2").val(),
                   };
-                  $.ajax({
-                      url: "/Portagebill/AddPortageBill",
-                      type: "POST",
-                      data: portageBillVM,
-                      dataType: 'json',
-                      success: function (response) {                        
-                    savebaksada(response);
-                          savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
-                          alert('Portage Bill Updated');
-                          $('#portageBillPopup').modal('hide');
-                          resetportageform();
-                          var url = window.location.href;
-                          location.reload(true);
-                      }
-                  })
+                   //add banks allotments
+            var addselectedbank = [];
+            $.each(selectbankids, function (k, v) {
+                var selectedbankid = v;
+                var model = "";
+                if (k == 0) {
+                    model = {
+                        "BankAllotmentId": $('#pBankAllotmentId1').val(),
+                        "Crew": $('#pCrewId').val(),
+                        "VesselId": $('#pVesselid').val(),
+                        'BankId': selectedbankid,
+                        "From": $('#pFrom').val(),
+                        "To": $('#pTo').val(),
+                        'Allotments': $('#pallotments').val(),
+                        "IsMidMonthAllotment": 0
+                    }
+                    addselectedbank.push(model);
+                }
+                else {
+                    model = {
+                        "BankAllotmentId": $('#pBankAllotmentId2').val(),
+                        "Crew": $('#pCrewId').val(),
+                        "VesselId": $('#pVesselid').val(),
+                        'BankId': selectedbankid,
+                        "From": $('#pFrom').val(),
+                        "To": $('#pTo').val(),
+                        'Allotments': $('#pallotment2').val(),
+                        "IsMidMonthAllotment": 0
+                    }
+                    addselectedbank.push(model);
+                }
+            });
+            ///
+
+            var pbearnmodel = "";
+            var addselectedPBEntry = [];
+            var currency = '';
+            if (allotmenttype == 'bow') {
+                currency = document.getElementById("currency").innerText;
+            }
+            else {
+                currency = document.getElementById("pcurrency").innerText;
+            }
+            const mergedArray = mm.concat(oo, uppOtherdeduction);
+            if (mergedArray.length > 0) {
+                mergedArray.forEach(entry => {
+                    if (entry.portageEarningDeductionId > 0) {
+                        pbearnmodel = { "SubCodeId": entry.subCode, "portageEarningDeductionId": entry.portageEarningDeductionId, "Type": entry.type, "Amount": entry.Amount, "CrewId": portageBillVM.CrewId, "VesselId": portageBillVM.Vesselid, "From": portageBillVM.From, "To": portageBillVM.To, "PortageBillId": portageBillId, "Currency": currency }
+                        addselectedPBEntry.push(pbearnmodel);
+                    }
+                    if (entry.portageEarningDeductionId == 0 || entry.portageEarningDeductionId == undefined) {
+                        pbearnmodel = { "SubCodeId": entry.subCode, "portageEarningDeductionId": 0, "Type": entry.type, "Amount": entry.Amount, "CrewId": portageBillVM.CrewId, "VesselId": portageBillVM.Vesselid, "From": portageBillVM.From, "To": portageBillVM.To, "PortageBillId": portageBillId, "Currency": currency }
+                        addselectedPBEntry.push(pbearnmodel);
+                    }
+                }
+
+                )
+            }
+            const uniqueArray = addselectedPBEntry.filter(
+                (obj, index, self) =>
+                    index === self.findIndex((t) => t.SubCodeId === obj.SubCodeId && t.Type === obj.Type && t.CrewId === obj.CrewId)
+            );         
+            $.ajax({
+                url: "/Portagebill/TestADDPortagebill",
+                type: "POST",
+                data: { 'item': portageBillVM, 'PBEarningDeductionitems': uniqueArray, 'bankallotments': addselectedbank, 'itemlength': selectbankids },
+                //  data: portageBillVM,
+                dataType: 'json',
+                success: function (response) {
+                    // savebaksada(response);
+                    // savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+                    alert('Portage Bill Updated');
+                    $('#portageBillPopup').modal('hide');
+                    resetportageform();
+                    var url = window.location.href;
+                    location.reload(true);
+                }
+            })
+                  // $.ajax({
+                  //     url: "/Portagebill/AddPortageBill",
+                  //     type: "POST",
+                  //     data: portageBillVM,
+                  //     dataType: 'json',
+                  //     success: function (response) {                        
+                  //   savebaksada(response);
+                  //         savePortageEarningDeduction(portageBillVM.CrewId, portageBillVM.Vesselid, portageBillVM.From, portageBillVM.To, response);
+                  //         alert('Portage Bill Updated');
+                  //         $('#portageBillPopup').modal('hide');
+                  //         resetportageform();
+                  //         var url = window.location.href;
+                  //         location.reload(true);
+                  //     }
+                  // })
               }
           })
 
@@ -4840,6 +4983,11 @@
               $("#pTotalDeductions").val(totaldeduction);
               $("#pFinalBalance").val(finalbal);
         this.calculateportagededuction();
+          }
+
+          function callcalculatefn(){
+        $('#saveportagedata').prop('disabled', false);
+        calculateportageearning();
           }
 
           /* function to calculate the earning   */

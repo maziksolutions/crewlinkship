@@ -31,6 +31,8 @@ using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using Syncfusion.XlsIO;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace crewlinkship.Controllers
 {
@@ -3013,5 +3015,674 @@ namespace crewlinkship.Controllers
             return View();
         }
 
+        [HttpPost]
+        public int TestADDPortagebill(TblPortageBill item, List<PortageEarningDeduction> PBEarningDeductionitems, List<TblPbbankAllotment> bankallotments, int itemlength)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {               
+                var checkdata = _context.TblPortageBills.Where(x => x.CrewId == item.CrewId && x.CrewListId == item.CrewListId && x.From == item.From && x.IsDeleted == false && x.Vesselid == item.Vesselid).FirstOrDefault();
+                if (checkdata == null)
+                {
+                    if (item.IsPromoted == null)
+                    {
+                        item.IsPromoted = false;
+                    }
+                    if (item.PortageBillId == 0)
+                    {
+                        //_context.TblPortageBills.Add(new TblPortageBill
+                        var data = new TblPortageBill
+                        {
+                            CrewId = item.CrewId,
+                            CrewListId = item.CrewListId,
+                            ContractId = item.ContractId,
+                            From = item.From,
+                            To = item.To,
+                            Days = item.Days,
+                            Othours = item.Othours,
+                            ExtraOt = item.ExtraOt,
+                            OtherEarnings = item.OtherEarnings,
+                            TransitDays = item.TransitDays,
+                            TransitWages = item.TransitWages,
+                            TotalEarnings = item.TotalEarnings,
+                            PrevMonthBal = item.PrevMonthBal,
+                            // PrevMonthBal = item.FinalBalance,
+                            Reimbursement = item.Reimbursement,
+                            TotalPayable = item.TotalPayable,
+                            LeaveWagesCf = item.LeaveWagesCf,
+                            CashAdvance = item.CashAdvance,
+                            BondedStores = item.BondedStores,
+                            OtherDeductions = item.OtherDeductions,
+                            Allotments = item.Allotments,
+                            TotalDeductions = item.TotalDeductions,
+                            SignOffDate = item.SignOffDate,
+                            Remarks = item.Remarks,
+                            LeaveWagesBf = item.LeaveWagesBf,
+                            FinalBalance = item.FinalBalance,
+                            AppliedCba = item.AppliedCba,
+                            //  CreatedBy = crewid,
+                            BankId = item.BankId,
+                            Vesselid = item.Vesselid,
+                            Udamount = item.Udamount,
+                            Tax = item.Tax,
+                            Wfamount = item.Wfamount,
+                            IsPromoted = item.IsPromoted,
+                            IsLeaveWagesCf = item.IsLeaveWagesCf,
+                            Attachment = item.Attachment,
+                            Gratuity = item.Gratuity,
+                            Avc = item.Avc,
+                            IndPfamount = item.IndPfamount,
+                            IsAddPrevBal = item.IsAddPrevBal,
+                        };
+                        _context.TblPortageBills.Add(data);
+                        _context.SaveChanges();
+                        portageBillId = data.PortageBillId;
+                        int pbid = data.PortageBillId;
+
+                       // List<PortageEarningDeduction> noDupes = PBEarningDeductionitems.Distinct().ToArray();
+                        foreach (var PBEarningDeductionitem in PBEarningDeductionitems.Distinct().ToArray())
+                            {                           
+                        if (PBEarningDeductionitem.PortageEarningDeductionId == 0)
+                        {
+                                var checkduplicate = _context.PortageEarningDeduction.Where(x=>x.SubCodeId == PBEarningDeductionitem.SubCodeId && x.Type == PBEarningDeductionitem.Type && x.PortageBillId == pbid && x.IsDeleted == false).ToList();
+                                if (checkduplicate.Count() == 0)
+                                {
+                                    var newDeduction = new PortageEarningDeduction
+                                    {
+                                        CrewId = PBEarningDeductionitem.CrewId,
+                                        Vesselid = PBEarningDeductionitem.Vesselid,
+                                        PortageBillId = pbid,
+                                        Currency = PBEarningDeductionitem.Currency,
+                                        From = PBEarningDeductionitem.From,
+                                        To = PBEarningDeductionitem.To,
+                                        RecDate = DateTime.UtcNow,
+                                        CreatedBy = 1, // Ideally, use the actual user ID
+                                        SubCodeId = PBEarningDeductionitem.SubCodeId,
+                                        Type = PBEarningDeductionitem.Type,
+                                        Amount = PBEarningDeductionitem.Amount,
+                                    };
+                                    _context.PortageEarningDeduction.Add(newDeduction);
+                                }
+                        }
+                        else // Update existing Portage Earning Deduction
+                        {
+                            var existingDeduction = _context.PortageEarningDeduction
+                                .FirstOrDefault(c => c.PortageEarningDeductionId == PBEarningDeductionitem.PortageEarningDeductionId);
+                            if (existingDeduction != null)
+                            {
+                                existingDeduction.CrewId = PBEarningDeductionitem.CrewId;
+                                existingDeduction.Vesselid = PBEarningDeductionitem.Vesselid;
+                                existingDeduction.PortageBillId = pbid;
+                                existingDeduction.Currency = PBEarningDeductionitem.Currency;
+                                existingDeduction.From = PBEarningDeductionitem.From;
+                                existingDeduction.To = PBEarningDeductionitem.To;
+                                existingDeduction.ModifiedDate = DateTime.UtcNow;
+                                existingDeduction.ModifiedBy = 1; // Ideally, use the actual user ID
+                                existingDeduction.SubCodeId = PBEarningDeductionitem.SubCodeId;
+                                existingDeduction.Type = PBEarningDeductionitem.Type;
+                                existingDeduction.Amount = PBEarningDeductionitem.Amount;
+                                //existingDeduction.IsDeleted = false;
+                                _context.PortageEarningDeduction.Update(existingDeduction);
+                            }                           
+                        }
+                        }
+
+                        foreach (var bankallotmentitem in bankallotments)
+                        {
+                                var checkportagebillid = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.BankId == bankallotmentitem.BankId && x.IsDeleted == false).FirstOrDefault();
+                                if (bankallotmentitem.BankAllotmentId == 0 && checkportagebillid == null)
+                                {
+                                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
+                                    {
+                                        Crew = bankallotmentitem.Crew,
+                                        VesselId = bankallotmentitem.VesselId,
+                                        BankId = bankallotmentitem.BankId,
+                                        From = bankallotmentitem.From,
+                                        To = bankallotmentitem.To,
+                                        Allotments = bankallotmentitem.Allotments,
+                                        IsPromoted = bankallotmentitem.IsPromoted,
+                                        IsMidMonthAllotment = bankallotmentitem.IsMidMonthAllotment,
+                                        PortageBillId = pbid
+                                    }); _context.SaveChanges();
+                                }
+                                else
+                                {
+                                    if (bankallotmentitem.IsMidMonthAllotment == false)
+                                    {
+                                        //var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == bankallotmentitem.From.Month && x.From.Year == bankallotmentitem.From.Year && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        //var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == bankallotmentitem.From.Month && x.From.Value.Year == bankallotmentitem.From.Year && x.CrewId == bankallotmentitem.Crew).FirstOrDefault();
+                                        var checkpbdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsDeleted == false).FirstOrDefault();
+                                        var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                        if (checkPbbankAllotmentdata.Count() == itemlength)
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                            checkbankdata.Crew = bankallotmentitem.Crew;
+                                            checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                            checkbankdata.BankId = bankallotmentitem.BankId;
+                                            checkbankdata.From = bankallotmentitem.From;
+                                            checkbankdata.To = bankallotmentitem.To;
+                                            checkbankdata.Allotments = bankallotmentitem.Allotments;
+                                            checkbankdata.PortageBillId = pbid;
+                                                _context.TblPbbankAllotments.Update(checkbankdata);
+                                                _context.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                foreach (var b in checkPbbankAllotmentdata)
+                                                {
+                                                    if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                    {
+                                                    checkbankdata.Crew = bankallotmentitem.Crew;
+                                                    checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                    checkbankdata.BankId = bankallotmentitem.BankId;
+                                                    checkbankdata.From = bankallotmentitem.From;
+                                                    checkbankdata.To = bankallotmentitem.To;
+                                                    checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                        _context.TblPbbankAllotments.Update(checkbankdata);
+                                                        _context.SaveChanges();
+                                                    }
+                                                    else
+                                                    {
+                                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                        datanew.IsDeleted = true;
+                                                        _context.TblPbbankAllotments.Update(datanew);
+                                                        _context.SaveChanges();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == true && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        var checkpbdata = _context.TblPortageBills.Where(x => x.PortageBillId == pbid && x.CrewId == bankallotmentitem.Crew && x.IsDeleted == false).FirstOrDefault();
+                                        var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                        if (checkPbbankAllotmentdata.Count() == itemlength)
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                            checkbankdata.Crew = bankallotmentitem.Crew;
+                                            checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                            checkbankdata.BankId = bankallotmentitem.BankId;
+                                            checkbankdata.From = bankallotmentitem.From;
+                                            checkbankdata.To = bankallotmentitem.To;
+                                            checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                _context.TblPbbankAllotments.Update(checkbankdata);
+                                                _context.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                foreach (var b in checkPbbankAllotmentdata)
+                                                {
+                                                    if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                    {
+                                                    checkbankdata.Crew = bankallotmentitem.Crew;
+                                                    checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                    checkbankdata.BankId = bankallotmentitem.BankId;
+                                                    checkbankdata.From = bankallotmentitem.From;
+                                                    checkbankdata.To = bankallotmentitem.To;
+                                                    checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                        _context.TblPbbankAllotments.Update(checkbankdata);
+                                                        _context.SaveChanges();
+                                                    }
+                                                    else
+                                                    {
+                                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                        datanew.IsDeleted = true;
+                                                        _context.TblPbbankAllotments.Update(datanew);
+                                                        _context.SaveChanges();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } 
+                        }
+                    }
+                    else
+                    {
+                        var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == item.PortageBillId);
+                        if (data != null)
+                        {
+                            data.CrewId = item.CrewId;
+                            data.CrewListId = item.CrewListId;
+                            data.ContractId = item.ContractId;
+                            data.From = item.From;
+                            data.To = item.To;
+                            data.Days = item.Days;
+                            data.Othours = item.Othours;
+                            data.ExtraOt = item.ExtraOt;
+                            data.OtherEarnings = item.OtherEarnings;
+                            data.TransitDays = item.TransitDays;
+                            data.TransitWages = item.TransitWages;
+                            data.TotalEarnings = item.TotalEarnings;
+                            data.PrevMonthBal = item.PrevMonthBal;
+                            data.Reimbursement = item.Reimbursement;
+                            data.TotalPayable = item.TotalPayable;
+                            data.LeaveWagesCf = item.LeaveWagesCf;
+                            data.CashAdvance = item.CashAdvance;
+                            data.BondedStores = item.BondedStores;
+                            data.OtherDeductions = item.OtherDeductions;
+                            data.Allotments = item.Allotments;
+                            data.TotalDeductions = item.TotalDeductions;
+                            data.LeaveWagesBf = item.LeaveWagesBf;
+                            data.FinalBalance = item.FinalBalance;
+                            if (item.SignOffDate != null)
+                                data.SignOffDate = item.SignOffDate;
+                            data.Remarks = item.Remarks;
+                            //  data.ModifiedBy = crewid;
+                            data.ModifiedDate = DateTime.UtcNow;
+                            data.AppliedCba = item.AppliedCba;
+                            data.BankId = item.BankId;
+                            data.Vesselid = item.Vesselid;
+                            data.Udamount = item.Udamount;
+                            data.Tax = item.Tax;
+                            data.Wfamount = item.Wfamount;
+                            data.IsLeaveWagesCf = item.IsLeaveWagesCf;
+                            data.Attachment = item.Attachment;
+                            data.Gratuity = item.Gratuity;
+                            data.Avc = item.Avc;
+                            data.IndPfamount = item.IndPfamount;
+                            data.IsAddPrevBal = item.IsAddPrevBal;
+                            _context.TblPortageBills.Update(data);
+                            _context.SaveChanges();
+                            int pbid = data.PortageBillId;
+                            foreach (var PBEarningDeductionitem in PBEarningDeductionitems)
+                            {
+                                if (PBEarningDeductionitem.PortageEarningDeductionId == 0)
+                                {
+                                    var newDeduction = new PortageEarningDeduction
+                                    {
+                                        CrewId = PBEarningDeductionitem.CrewId,
+                                        Vesselid = PBEarningDeductionitem.Vesselid,
+                                        PortageBillId = pbid,
+                                        Currency = PBEarningDeductionitem.Currency,
+                                        From = PBEarningDeductionitem.From,
+                                        To = PBEarningDeductionitem.To,
+                                        RecDate = DateTime.UtcNow,
+                                        CreatedBy = 1, // Ideally, use the actual user ID
+                                        SubCodeId = PBEarningDeductionitem.SubCodeId,
+                                        Type = PBEarningDeductionitem.Type,
+                                        Amount = PBEarningDeductionitem.Amount,
+                                    };
+                                    _context.PortageEarningDeduction.Add(newDeduction);
+                                }
+                                else // Update existing Portage Earning Deduction
+                                {
+                                    var existingDeduction = _context.PortageEarningDeduction
+                                        .FirstOrDefault(c => c.PortageEarningDeductionId == PBEarningDeductionitem.PortageEarningDeductionId);
+                                    if (existingDeduction != null)
+                                    {
+                                        existingDeduction.CrewId = PBEarningDeductionitem.CrewId;
+                                        existingDeduction.Vesselid = PBEarningDeductionitem.Vesselid;
+                                        existingDeduction.PortageBillId = pbid;
+                                        existingDeduction.Currency = PBEarningDeductionitem.Currency;
+                                        existingDeduction.From = PBEarningDeductionitem.From;
+                                        existingDeduction.To = PBEarningDeductionitem.To;
+                                        existingDeduction.ModifiedDate = DateTime.UtcNow;
+                                        existingDeduction.ModifiedBy = 1; // Ideally, use the actual user ID
+                                        existingDeduction.SubCodeId = PBEarningDeductionitem.SubCodeId;
+                                        existingDeduction.Type = PBEarningDeductionitem.Type;
+                                        existingDeduction.Amount = PBEarningDeductionitem.Amount;
+                                        //existingDeduction.IsDeleted = false;
+                                        _context.PortageEarningDeduction.Update(existingDeduction);
+                                    }
+                                }
+                            }
+                            foreach (var bankallotmentitem in bankallotments)
+                            {
+                                var checkportagebillid = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.BankId == bankallotmentitem.BankId && x.IsDeleted == false).FirstOrDefault();
+                                if (bankallotmentitem.BankAllotmentId == 0 && checkportagebillid == null)
+                                {
+                                    _context.TblPbbankAllotments.Add(new TblPbbankAllotment
+                                    {
+                                        Crew = bankallotmentitem.Crew,
+                                        VesselId = bankallotmentitem.VesselId,
+                                        BankId = bankallotmentitem.BankId,
+                                        From = bankallotmentitem.From,
+                                        To = bankallotmentitem.To,
+                                        Allotments = bankallotmentitem.Allotments,
+                                        IsPromoted = bankallotmentitem.IsPromoted,
+                                        IsMidMonthAllotment = bankallotmentitem.IsMidMonthAllotment,
+                                        PortageBillId = pbid
+                                    }); _context.SaveChanges();
+                                }
+                                else
+                                {
+                                    if (bankallotmentitem.IsMidMonthAllotment == false)
+                                    {
+                                        //var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == bankallotmentitem.From.Month && x.From.Year == bankallotmentitem.From.Year && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        //var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == bankallotmentitem.From.Month && x.From.Value.Year == bankallotmentitem.From.Year && x.CrewId == bankallotmentitem.Crew).FirstOrDefault();
+                                        var checkpbdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsDeleted == false).FirstOrDefault();
+                                        var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                        if (checkPbbankAllotmentdata.Count() == itemlength)
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                checkbankdata.Crew = bankallotmentitem.Crew;
+                                                checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                checkbankdata.BankId = bankallotmentitem.BankId;
+                                                checkbankdata.From = bankallotmentitem.From;
+                                                checkbankdata.To = bankallotmentitem.To;
+                                                checkbankdata.Allotments = bankallotmentitem.Allotments;
+                                                checkbankdata.PortageBillId = pbid;
+                                                _context.TblPbbankAllotments.Update(checkbankdata);
+                                                _context.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                foreach (var b in checkPbbankAllotmentdata)
+                                                {
+                                                    if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                    {
+                                                        checkbankdata.Crew = bankallotmentitem.Crew;
+                                                        checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                        checkbankdata.BankId = bankallotmentitem.BankId;
+                                                        checkbankdata.From = bankallotmentitem.From;
+                                                        checkbankdata.To = bankallotmentitem.To;
+                                                        checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                        _context.TblPbbankAllotments.Update(checkbankdata);
+                                                        _context.SaveChanges();
+                                                    }
+                                                    else
+                                                    {
+                                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                        datanew.IsDeleted = true;
+                                                        _context.TblPbbankAllotments.Update(datanew);
+                                                        _context.SaveChanges();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == true && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                        var checkpbdata = _context.TblPortageBills.Where(x => x.PortageBillId == pbid && x.CrewId == bankallotmentitem.Crew && x.IsDeleted == false).FirstOrDefault();
+                                        var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                        if (checkPbbankAllotmentdata.Count() == itemlength)
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                checkbankdata.Crew = bankallotmentitem.Crew;
+                                                checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                checkbankdata.BankId = bankallotmentitem.BankId;
+                                                checkbankdata.From = bankallotmentitem.From;
+                                                checkbankdata.To = bankallotmentitem.To;
+                                                checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                _context.TblPbbankAllotments.Update(checkbankdata);
+                                                _context.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (checkbankdata != null)
+                                            {
+                                                foreach (var b in checkPbbankAllotmentdata)
+                                                {
+                                                    if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                    {
+                                                        checkbankdata.Crew = bankallotmentitem.Crew;
+                                                        checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                        checkbankdata.BankId = bankallotmentitem.BankId;
+                                                        checkbankdata.From = bankallotmentitem.From;
+                                                        checkbankdata.To = bankallotmentitem.To;
+                                                        checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                        _context.TblPbbankAllotments.Update(checkbankdata);
+                                                        _context.SaveChanges();
+                                                    }
+                                                    else
+                                                    {
+                                                        var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                        datanew.IsDeleted = true;
+                                                        _context.TblPbbankAllotments.Update(datanew);
+                                                        _context.SaveChanges();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    var data = _context.TblPortageBills.FirstOrDefault(c => c.PortageBillId == item.PortageBillId);
+                    if (data != null)
+                    {
+                        data.CrewId = item.CrewId;
+                        data.CrewListId = item.CrewListId;
+                        data.ContractId = item.ContractId;
+                        data.From = item.From;
+                        data.To = item.To;
+                        data.Days = item.Days;
+                        data.Othours = item.Othours;
+                        data.ExtraOt = item.ExtraOt;
+                        data.OtherEarnings = item.OtherEarnings;
+                        data.TransitDays = item.TransitDays;
+                        data.TransitWages = item.TransitWages;
+                        data.TotalEarnings = item.TotalEarnings;
+                        data.PrevMonthBal = item.PrevMonthBal;
+                        data.Reimbursement = item.Reimbursement;
+                        data.TotalPayable = item.TotalPayable;
+                        data.LeaveWagesCf = item.LeaveWagesCf;
+                        data.CashAdvance = item.CashAdvance;
+                        data.BondedStores = item.BondedStores;
+                        data.OtherDeductions = item.OtherDeductions;
+                        data.Allotments = item.Allotments;
+                        data.TotalDeductions = item.TotalDeductions;
+                        data.LeaveWagesBf = item.LeaveWagesBf;
+                        data.FinalBalance = item.FinalBalance;
+                        if (item.SignOffDate != null)
+                            data.SignOffDate = item.SignOffDate;
+                        data.Remarks = item.Remarks;
+                        //  data.ModifiedBy = crewid;
+                        data.ModifiedDate = DateTime.UtcNow;
+                        data.AppliedCba = item.AppliedCba;
+                        data.BankId = item.BankId;
+                        data.Vesselid = item.Vesselid;
+                        data.Udamount = item.Udamount;
+                        data.Tax = item.Tax;
+                        data.Wfamount = item.Wfamount;
+                        data.IsLeaveWagesCf = item.IsLeaveWagesCf;
+                        data.Attachment = item.Attachment;
+                        data.Gratuity = item.Gratuity;
+                        data.Avc = item.Avc;
+                        data.IndPfamount = item.IndPfamount;
+                        data.IsAddPrevBal = item.IsAddPrevBal;
+                        _context.TblPortageBills.Update(data);
+                        _context.SaveChanges();
+                        int pbid = data.PortageBillId;
+
+                        foreach (var PBEarningDeductionitem in PBEarningDeductionitems)
+                        {
+                            if (PBEarningDeductionitem.PortageEarningDeductionId == 0)
+                            {
+                                var newDeduction = new PortageEarningDeduction
+                                {
+                                    CrewId = PBEarningDeductionitem.CrewId,
+                                    Vesselid = PBEarningDeductionitem.Vesselid,
+                                    PortageBillId = pbid,
+                                    Currency = PBEarningDeductionitem.Currency,
+                                    From = PBEarningDeductionitem.From,
+                                    To = PBEarningDeductionitem.To,
+                                    RecDate = DateTime.UtcNow,
+                                    CreatedBy = 1, // Ideally, use the actual user ID
+                                    SubCodeId = PBEarningDeductionitem.SubCodeId,
+                                    Type = PBEarningDeductionitem.Type,
+                                    Amount = PBEarningDeductionitem.Amount,
+                                };
+                                _context.PortageEarningDeduction.Add(newDeduction);
+                            }
+                            else // Update existing Portage Earning Deduction
+                            {
+                                var existingDeduction = _context.PortageEarningDeduction
+                                    .FirstOrDefault(c => c.PortageEarningDeductionId == PBEarningDeductionitem.PortageEarningDeductionId);
+                                if (existingDeduction != null)
+                                {
+                                    existingDeduction.CrewId = PBEarningDeductionitem.CrewId;
+                                    existingDeduction.Vesselid = PBEarningDeductionitem.Vesselid;
+                                    existingDeduction.PortageBillId = pbid;
+                                    existingDeduction.Currency = PBEarningDeductionitem.Currency;
+                                    existingDeduction.From = PBEarningDeductionitem.From;
+                                    existingDeduction.To = PBEarningDeductionitem.To;
+                                    existingDeduction.ModifiedDate = DateTime.UtcNow;
+                                    existingDeduction.ModifiedBy = 1; // Ideally, use the actual user ID
+                                    existingDeduction.SubCodeId = PBEarningDeductionitem.SubCodeId;
+                                    existingDeduction.Type = PBEarningDeductionitem.Type;
+                                    existingDeduction.Amount = PBEarningDeductionitem.Amount;
+                                    //existingDeduction.IsDeleted = false;
+                                    _context.PortageEarningDeduction.Update(existingDeduction);
+                                }
+                            }
+                        }
+
+                        foreach (var bankallotmentitem in bankallotments)
+                        {
+                            var checkportagebillid = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.BankId == bankallotmentitem.BankId && x.IsDeleted == false).FirstOrDefault();
+                            if (bankallotmentitem.BankAllotmentId == 0 && checkportagebillid == null)
+                            {
+                                _context.TblPbbankAllotments.Add(new TblPbbankAllotment
+                                {
+                                    Crew = bankallotmentitem.Crew,
+                                    VesselId = bankallotmentitem.VesselId,
+                                    BankId = bankallotmentitem.BankId,
+                                    From = bankallotmentitem.From,
+                                    To = bankallotmentitem.To,
+                                    Allotments = bankallotmentitem.Allotments,
+                                    IsPromoted = bankallotmentitem.IsPromoted,
+                                    IsMidMonthAllotment = bankallotmentitem.IsMidMonthAllotment,
+                                    PortageBillId = pbid
+                                }); _context.SaveChanges();
+                            }
+                            else
+                            {
+                                if (bankallotmentitem.IsMidMonthAllotment == false)
+                                {
+                                    //var checkdata = _context.TblPbbankAllotments.Where(x => x.From.Month == bankallotmentitem.From.Month && x.From.Year == bankallotmentitem.From.Year && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                    var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == false && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                    //var checkpbdata = _context.TblPortageBills.Where(x => x.From.Value.Month == bankallotmentitem.From.Month && x.From.Value.Year == bankallotmentitem.From.Year && x.CrewId == bankallotmentitem.Crew).FirstOrDefault();
+                                    var checkpbdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsDeleted == false).FirstOrDefault();
+                                    var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                    if (checkPbbankAllotmentdata.Count() == itemlength)
+                                    {
+                                        if (checkbankdata != null)
+                                        {
+                                            checkbankdata.Crew = bankallotmentitem.Crew;
+                                            checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                            checkbankdata.BankId = bankallotmentitem.BankId;
+                                            checkbankdata.From = bankallotmentitem.From;
+                                            checkbankdata.To = bankallotmentitem.To;
+                                            checkbankdata.Allotments = bankallotmentitem.Allotments;
+                                            checkbankdata.PortageBillId = pbid;
+                                            _context.TblPbbankAllotments.Update(checkbankdata);
+                                            _context.SaveChanges();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (checkbankdata != null)
+                                        {
+                                            foreach (var b in checkPbbankAllotmentdata)
+                                            {
+                                                if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                {
+                                                    checkbankdata.Crew = bankallotmentitem.Crew;
+                                                    checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                    checkbankdata.BankId = bankallotmentitem.BankId;
+                                                    checkbankdata.From = bankallotmentitem.From;
+                                                    checkbankdata.To = bankallotmentitem.To;
+                                                    checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                    _context.TblPbbankAllotments.Update(checkbankdata);
+                                                    _context.SaveChanges();
+                                                }
+                                                else
+                                                {
+                                                    var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                    datanew.IsDeleted = true;
+                                                    _context.TblPbbankAllotments.Update(datanew);
+                                                    _context.SaveChanges();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var checkPbbankAllotmentdata = _context.TblPbbankAllotments.Where(x => x.PortageBillId == pbid && x.IsMidMonthAllotment == true && x.Crew == bankallotmentitem.Crew && x.VesselId == bankallotmentitem.VesselId).ToList();
+                                    var checkpbdata = _context.TblPortageBills.Where(x => x.PortageBillId == pbid && x.CrewId == bankallotmentitem.Crew && x.IsDeleted == false).FirstOrDefault();
+                                    var checkbankdata = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == bankallotmentitem.BankAllotmentId);
+                                    if (checkPbbankAllotmentdata.Count() == itemlength)
+                                    {
+                                        if (checkbankdata != null)
+                                        {
+                                            checkbankdata.Crew = bankallotmentitem.Crew;
+                                            checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                            checkbankdata.BankId = bankallotmentitem.BankId;
+                                            checkbankdata.From = bankallotmentitem.From;
+                                            checkbankdata.To = bankallotmentitem.To;
+                                            checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                            _context.TblPbbankAllotments.Update(checkbankdata);
+                                            _context.SaveChanges();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (checkbankdata != null)
+                                        {
+                                            foreach (var b in checkPbbankAllotmentdata)
+                                            {
+                                                if (checkbankdata.BankAllotmentId == b.BankAllotmentId)
+                                                {
+                                                    checkbankdata.Crew = bankallotmentitem.Crew;
+                                                    checkbankdata.VesselId = bankallotmentitem.VesselId;
+                                                    checkbankdata.BankId = bankallotmentitem.BankId;
+                                                    checkbankdata.From = bankallotmentitem.From;
+                                                    checkbankdata.To = bankallotmentitem.To;
+                                                    checkbankdata.Allotments = bankallotmentitem.Allotments; data.PortageBillId = pbid;
+                                                    _context.TblPbbankAllotments.Update(checkbankdata);
+                                                    _context.SaveChanges();
+                                                }
+                                                else
+                                                {
+                                                    var datanew = _context.TblPbbankAllotments.FirstOrDefault(c => c.BankAllotmentId == b.BankAllotmentId);
+                                                    datanew.IsDeleted = true;
+                                                    _context.TblPbbankAllotments.Update(datanew);
+                                                    _context.SaveChanges();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return 0;
+                throw ex;
+            }
+            return 0;
+        }
     }    
 }
