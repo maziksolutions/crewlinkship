@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Syncfusion.XlsIO.Implementation.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,8 @@ namespace crewlinkship
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<shipCrewlinkContext>(opts => opts.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+           // services.AddControllersWithViews();
             services.AddControllers().AddNewtonsoftJson(options =>
          options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -61,13 +63,18 @@ namespace crewlinkship
 
                 };
             });
-            services.AddMvc().AddRazorRuntimeCompilation();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<shipCrewlinkContext>();
+
+                context.Database.Migrate();
+            }
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

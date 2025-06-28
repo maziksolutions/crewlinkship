@@ -965,7 +965,7 @@ namespace crewlinkship.Controllers
             //    Recdate = x.Recdate,
             //    IsPromoted = x.IsPromoted
             //}).ToList();
-            var PortageBills = _context.TblPortageBills.Where(x => x.IsDeleted == false && (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth) && (x.IsPortagelocked== null || x.IsPortagelocked == false)).Select(x => new
+            var PortageBills = _context.TblPortageBills.Where(x => (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth) && (x.IsPortagelocked== null || x.IsPortagelocked == false)).Select(x => new
             {
                 PortageBillId = x.PortageBillId,
                 CrewId = x.CrewId,

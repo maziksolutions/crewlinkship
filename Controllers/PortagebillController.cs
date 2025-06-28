@@ -784,8 +784,29 @@ namespace crewlinkship.Controllers
                     bill.IsDeleted = true;
                     _context.TblPortageBills.Update(bill);
                     _context.SaveChanges();
-                    return Json("success");
                 }
+                var bankallotment = _context.TblPbbankAllotments.Where(p => p.PortageBillId == id).ToList();
+                if (bankallotment.Count > 0)
+                {
+                    foreach (var rcd in bankallotment)
+                    {
+                        rcd.IsDeleted = true;
+                        _context.TblPbbankAllotments.Update(rcd);
+                    }                   
+                    _context.SaveChanges();
+                }
+                var portPortageEarningDeduction = _context.PortageEarningDeduction.Where(p => p.PortageBillId == id).ToList();
+                if (portPortageEarningDeduction.Count > 0)
+                {
+                    foreach (var rcd in portPortageEarningDeduction)
+                    {
+                        rcd.IsDeleted = true;
+                        _context.PortageEarningDeduction.Update(rcd);
+                    }                  
+                   // _context.tblimportPortageEarningDeduction.Update(portPortageEarningDeduction);
+                    _context.SaveChanges();                   
+                }
+                return Json("success");
             }
             catch (Exception ex)
             {

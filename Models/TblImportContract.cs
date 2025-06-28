@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -52,4 +54,149 @@ namespace crewlinkship.Models
         public int? CrewListId { get; set; }
         public string Gwpath { get; set; }
     }
+    //[Table("TblImportBudgetCode")]
+    //public class BudgetCode
+    //{
+    //    public int BudgetCodeId { get; set; }
+    //    public string BudgetCodeDescription { get; set; }
+    //    public string BudgetCodes { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //}
+    //[Table("TblImportBudgetSubCode")]
+    //public class BudgetSubCode
+    //{
+    //    public int SubCodeId { get; set; }
+    //    public int BudgetCodeId { get; set; }
+    //    public int SubCode { get; set; }
+    //    public string SubBudget { get; set; }
+    //    public string Description { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //}
+    //[Table("TblImportWageComponent")]   
+    //public class WageComponent
+    //{
+    //    public int WageId { get; set; }
+    //    public int? BudgetCodeId { get; set; }
+    //    public int? SubCodeId { get; set; }
+    //    public string CalculationBasis { get; set; }
+    //    public string PayableBasis { get; set; }
+    //    public string IncludedOnboard { get; set; }
+    //    public string Earning { get; set; }
+    //    public string IsCBA { get; set; }
+    //    public bool? IsShowAll { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public int? ColumnConfigId { get; set; }     
+    //}
+    //[Table("TblImportWageStructure")]
+    //public class WageStructure
+    //{
+    //    public int WageStructureId { get; set; }
+    //    public int RankId { get; set; }
+    //    public int? WageId { get; set; }
+    //    public string WageAmount { get; set; }
+    //    public int CBAId { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //}
+    //[Table("TblImportCBA")]
+    //public class CBA
+    //{
+    //    public int CBAId { get; set; }
+    //    public string CBAName { get; set; }
+    //    public string CBADescription { get; set; }
+    //    public string Currency { get; set; }
+    //    public string Version { get; set; }
+    //    public DateTime StartDate { get; set; }
+    //    public DateTime EndDate { get; set; }
+    //    public string Attachment { get; set; }
+    //    public bool? IsPF { get; set; }
+    //    public bool? IsGratuity { get; set; }
+    //    public bool? IsAVC { get; set; }
+    //    public bool? IsNUSI { get; set; }
+    //    public int? CBAUnionId { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public Boolean IsLocked { get; set; }
+    //}
+    //[Table("TblImportOverTime")]
+    //public class OverTime
+    //{
+    //    public int OTId { get; set; }
+    //    public int RankId { get; set; }
+    //    public string OTRate { get; set; }
+    //    public int CBAId { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //}
+    //[Table("TblImportCourseRegister")]
+    //public class CourseRegister
+    //{
+    //    public int CourseId { get; set; }
+    //    public string CourseName { get; set; }
+    //    public string CourseCode { get; set; }
+    //    public string CourseType { get; set; }
+    //    public string Reference { get; set; }
+    //    public string Level { get; set; }
+    //    public string Method { get; set; }
+    //    public string RankId { get; set; }
+    //    public string Group { get; set; }
+    //    public bool? ExpiryApplicable { get; set; }
+    //    public bool? RenewalRequired { get; set; }
+    //    public bool? AuthenticationRequired { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //}
+    //[Table("TblImportState")]
+    //public  class State
+    //{
+    //    public int StateId { get; set; }
+    //    public int CountryId { get; set; }
+    //    public string StateName { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //}
+    //[Table("TblImportcity")]
+    //public class City
+    //{
+    //    public int CityId { get; set; }
+    //    public int? CountryId { get; set; }
+    //    public int? StateId { get; set; }
+    //    public string CityName { get; set; }
+    //    public string DomAirport { get; set; }
+    //    public string IntAirport { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public DateTime? RecDate { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime? ModifiedDate { get; set; }
+    //}
+    //[Table("TblImportSeaport")]    
+    //public class Seaport
+    //{
+    //    public int SeaportId { get; set; }
+    //    public int? CountryId { get; set; }
+    //    public string SeaportName { get; set; }
+    //    public string Code { get; set; }
+    //    public bool? IsDeleted { get; set; }
+    //    public string ModifiedBy { get; set; }
+    //    public DateTime RecDate { get; set; }
+    //}
 }

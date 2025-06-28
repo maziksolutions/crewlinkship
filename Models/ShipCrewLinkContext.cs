@@ -78,6 +78,17 @@ namespace crewlinkship.Models
         public virtual DbSet<TblImportVessel> TblImportVessels { get; set; }
         public virtual DbSet<TblImportVesselCba> TblImportVesselCbas { get; set; }
         public virtual DbSet<TblImportVisa> TblImportVisas { get; set; }
+        public virtual DbSet<TblImportBudgetCode> TblImportBudgetCode { get; set; }
+        public virtual DbSet<TblImportBudgetSubCode> TblImportBudgetSubCode { get; set; }
+        public virtual DbSet<TblImportWageComponent> TblImportWageComponent { get; set; }
+        public virtual DbSet<TblImportWageStructure> TblImportWageStructure { get; set; }
+        public virtual DbSet<TblImportCBA> TblImportCBA { get; set; }
+        public virtual DbSet<TblImportCBAUnion> TblImportCBAUnion { get; set; }
+        public virtual DbSet<TblImportOverTime> TblImportOverTime { get; set; }
+        public virtual DbSet<TblImportCourseRegister> TblImportCourseRegister { get; set; }
+        public virtual DbSet<TblImportState> TblImportState { get; set; }
+        public virtual DbSet<TblImportcity> TblImportcity { get; set; }
+        public virtual DbSet<TblImportSeaport> TblImportSeaport { get; set; }
         public virtual DbSet<TblImportYellowfever> TblImportYellowfevers { get; set; }
         public virtual DbSet<TblInstitute> TblInstitutes { get; set; }
         public virtual DbSet<TblIssuingAuthority> TblIssuingAuthorities { get; set; }
@@ -127,6 +138,7 @@ namespace crewlinkship.Models
         public virtual DbSet<tblBackupLog> tblBackupLog { get; set; }
         public virtual DbSet<tblimportPortageEarningDedu> tblimportPortageEarningDeduction { get; set; }
         public virtual DbSet<LockPortageBill> LockPortageBill { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
           
@@ -145,7 +157,61 @@ namespace crewlinkship.Models
 
                 entity.Property(e => e.LogDescription).HasMaxLength(1000);
             });
-
+            modelBuilder.Entity<TblImportBudgetCode>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportBudgetCode");
+            });
+            modelBuilder.Entity<TblImportBudgetSubCode>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportBudgetSubCode");
+            }); 
+            modelBuilder.Entity<TblImportWageComponent>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportWageComponent");
+            }); 
+            modelBuilder.Entity<TblImportWageStructure>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportWageStructure");
+            }); 
+            modelBuilder.Entity<TblImportCBA>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportCBA");
+            });
+            modelBuilder.Entity<TblImportCBAUnion>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportCBAUnion");
+            });
+            modelBuilder.Entity<TblImportOverTime>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportOverTime");
+            }); 
+            modelBuilder.Entity<TblImportCourseRegister>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportCourseRegister");
+            });
+            modelBuilder.Entity<TblImportState>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportState");
+            });
+            modelBuilder.Entity<TblImportcity>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportcity");
+            });
+            modelBuilder.Entity<TblImportSeaport>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("TblImportSeaport");
+            });
             modelBuilder.Entity<TblActivitySignOff>(entity =>
             {
                 entity.HasKey(e => e.ActivitySignOffId);
