@@ -393,9 +393,9 @@ namespace crewlinkship.Controllers
             //    Recdate = x.Recdate,
             //    IsPromoted = x.IsPromoted
             //}).ToList();
-            var PBBankAllotment = _context.TblPbbankAllotments.Where(x =>  x.Recdate >= sixMonth).ToList();
+            var PBBankAllotment = _context.TblPbbankAllotments.Where(x =>  x.Recdate >= sixMonth && (x.IsPortagelocked == null || x.IsPortagelocked == false)).ToList();
             var PortageEarningDeduction = (from pbearn in _context.PortageEarningDeduction
-                                           where  (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth)
+                                           where  (pbearn.RecDate >= sixMonth || pbearn.ModifiedDate >= sixMonth && (pbearn.IsPortagelocked == null || pbearn.IsPortagelocked == false))
                                            select new
                                            {
                                                PortageEarningDeductionId = pbearn.PortageEarningDeductionId,
@@ -417,7 +417,7 @@ namespace crewlinkship.Controllers
                                                OfficePBId = pbearn.OfficePBId,
                                                IsPortagelocked = pbearn.IsPortagelocked
                                            }).ToList();
-            var PortageBills = _context.TblPortageBills.Where(x => (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth)).Select(x => new
+            var PortageBills = _context.TblPortageBills.Where(x => (x.RecDate >= sixMonth || x.ModifiedDate >= sixMonth) && (x.IsPortagelocked == null || x.IsPortagelocked == false)).Select(x => new
             {
                 PortageBillId = x.PortageBillId,
                 CrewId = x.CrewId,
@@ -470,6 +470,7 @@ namespace crewlinkship.Controllers
                 OfficePBId = x.OfficePBId,
                 IsPortagelocked = x.IsPortagelocked,
             }).ToList();
+            var getportageids = PortageBills.Select(x=> x.PortageBillId).ToList();
             var crewlistdats = _context.TblCrewLists.ToList();
             DataTable dtcrewlistdats = new DataTable();
             dtcrewlistdats = LINQResultToDataTable(crewlistdats);
