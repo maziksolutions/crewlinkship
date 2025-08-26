@@ -37,7 +37,7 @@ namespace crewlinkship.Models
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public int PortageSort { get; set; }
-
+        public bool? IsSeaGoing { get; set; }
         public virtual ICollection<TblActivitySignOn> TblActivitySignOns { get; set; }
         public virtual ICollection<TblAssignmentsWithOther> TblAssignmentsWithOthers { get; set; }
         public virtual ICollection<TblAssignmentsWithOur> TblAssignmentsWithOurs { get; set; }

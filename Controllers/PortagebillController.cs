@@ -245,9 +245,7 @@ namespace crewlinkship.Controllers
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             try
-            {
-
-            
+            {            
             if (accessToken != null)
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
@@ -257,18 +255,16 @@ namespace crewlinkship.Controllers
             ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == vesselidtouse), "VesselId", "VesselName");
                 ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselidtouse).ToList();
-                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes");
+                var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes").ToList();
                 var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year);
 
                     ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselidtouse).ToList().FirstOrDefault()?.BillStatus;
-
-
                     var tables = new PortageViewModel
                 {
-                    onsignersportage = data,
-                    promotionsportagebill = promotiondata,
-                    offsignersporatge = signoffcrewdata
-                };
+                    onsignersportage = data.ToList(),
+                    promotionsportagebill = promotiondata.ToList(),
+                    offsignersporatge = signoffcrewdata.ToList()
+                    };
 
                 return View(tables);
             }

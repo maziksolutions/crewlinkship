@@ -25,7 +25,7 @@ namespace crewlinkship.Models
         public DateTime? RecDate { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-
+        public int? ColumnConfigId { get; set; }
         public virtual TblBudgetCode BudgetCode { get; set; }
         public virtual TblBudgetSubCode SubCode { get; set; }
         public virtual ICollection<TblWageStructure> TblWageStructures { get; set; }
