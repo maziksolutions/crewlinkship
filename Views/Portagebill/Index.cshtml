@@ -359,10 +359,10 @@
                                 class="btn btn-success form-small p-t-3 p-b-3 m-r-5" type="button" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Export to Excel" data-original-title="" title="Generate Portage Bill Excel">
                             <i class="fas fa-file-excel" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" onclick="Lockpb('bow')" type="button" data-toggle="tooltip"
+                    @*     <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" onclick="Lockpb('bow')" type="button" data-toggle="tooltip"
                                 data-trigger="hover" data-placement="top" data-title="Send Bow & Backup">
                             <i class="fas fa-lock"></i>
-                        </button>
+                        </button> *@
                         <button class="btn btn-primary form-small p-t-3 p-b-3 m-r-5" onclick="Lockpb('portage')" type="button" data-toggle="tooltip"
                                 data-trigger="hover" data-placement="top" data-title="Lock Portage Bill & Send Backup">
                             <i class="fas fa-lock"></i>
@@ -507,12 +507,12 @@
                                                         <td>
                                                             @if (item.bowRequest == "yes")
                                                             {
-                                                                <a onclick="getdataforbow('@item.From','@item.To',@item.CrewId,@item.CrewListId,@item.ContractId,'@item.CrewName','@item.Currency','@item.RankName','@item.SignOffDate')" class="openbow" data-toggle="tooltip" data-title="Click here to complete the bow">
+                                                               @*  <a onclick="getdataforbow('@item.From','@item.To',@item.CrewId,@item.CrewListId,@item.ContractId,'@item.CrewName','@item.Currency','@item.RankName','@item.SignOffDate')" class="openbow" data-toggle="tooltip" data-title="Click here to complete the bow">
                                                                     <i class="fa fa-info-circle" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
-                                                                </a>
+                                                                </a> *@
                                                             }
                                                             else{
-                                                            <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,
+                                                            <a onclick="onsignersdata('onb',@item.PFAmount,'@item.CrewName', '@item.RankName', '@item.Currency', '@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId, '@item.From', '@item.To',@item.TotalDays,@item.BasicWages,@item.FixedGtOT,
   @item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,@item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,
 @item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,@item.contractbonus,@item.contractdedu,
 @item.OTHours,@item.otrate,@item.UDdeduction,@item.WFdeduction,@item.WHTdeduction,@item.Gratuity,@item.IndPFAmount,@item.AVC,@item.numberofday,
@@ -745,7 +745,7 @@
 @item.TransitWages,@item.OtherEarnings,@item.Vesselid,@item.LeaveWagesBF,@item.AppliedCBA,@item.PrevMonthBal,'@item.MidMonthAllotment','onboard','@item.authorityDeduction','@item.Paydate','@item.SignOnDate')" data-toggle="tooltip" data-title="Click here to complete the allotment">
                                                                 <i class="fas fa-edit" style="display: @(item.Islocked == 0? "contents" : "none")"></i>
                                                             </a> *@
-                                                            <a onclick="onsignersdata(@item.PFAmount,'@item.CrewName','@item.RankName','@item.Currency','@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId,'@item.From','@item.To',@item.TotalDays,
+                                                            <a onclick="onsignersdata('pro',@item.PFAmount,'@item.CrewName','@item.RankName','@item.Currency','@item.PortageBillId',@item.ContractId,@item.CrewId,@item.CrewListId,'@item.From','@item.To',@item.TotalDays,
 @item.BasicWages,@item.FixedGtOT,@item.LeavePay,@item.UniformAllow,@item.PensionFund,@item.SpecialAllowance,@item.CompanyAllowance,@item.SecurityAllow,@item.TempFuelAllow,@item.IncentiveAllowance,
 @item.Seniority,@item.TankerAllowance,@item.Housing,@item.Transport,@item.Utility,@item.Bonus,@item.SeafarersPF,@item.leavepayaddition,@item.OtherAllow,@item.Reimbursement,@item.contractreimbrusment,
 @item.contractbonus,@item.contractdedu,@item.OTHours,@item.otrate,'@item.UDdeduction','@item.WFdeduction','@item.WHTdeduction','@item.Gratuity','@item.IndPFAmount','@item.AVC',@item.numberofday,@item.TransitWages,
@@ -3280,9 +3280,7 @@ data-title="Click here to complete the allotment">
           var seafarerspf = 0;
           var leavepayaddition = 0;
           var OtherAllow = 0;
-
           var contractbonus = 0; var contractreimbrusment = 0; var contractdedu = 0;
-
           var totalWages = 0;
           var reimbursement = 0;
           var otrate = 0;
@@ -3293,7 +3291,7 @@ data-title="Click here to complete the allotment">
           var pfamount = 0;
           var gratuity = 0;
           var indPFAmount = 0;
-          var avc = 0;
+    var avc = 0; var checkclickbtnstatus = 0;
           var finalbal = 0;
           var filepath = 0; var BowRequestId = 0;
           var gratuity = 0; var indPFAmount = 0; var avc = 0;
@@ -4252,7 +4250,7 @@ data-title="Click here to complete the allotment">
           var PortageBillIdglobal = 0;
 
           /* portage entry pop get data */
-          function onsignersdata(npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, LeavePay, uniformallow, pensionfund,
+          function onsignersdata(clickstatus,npfamount,crewname, rank, curr, PortageBillId, ContractId, CrewId, CrewListId, From, To, TotalDays, BasicWages, fixott, LeavePay, uniformallow, pensionfund,
               SpecialAllowance, CompanyAllowance, SecurityAllow, TempFuelAllow, IncentiveAllowance, Seniority, TankerAllowance, Housing, Transport, Utility, Bonus, SeafarersPF, leavepayadditionss, otherallow,
               Reimbursement, Contractreimbrusment, Contractbonus, Contractdedu,
               OTHours, OtRate, uddeduction, wfdeduction, whtdeduction, Gratuity, IndPFAmount, AVC, numberofday, transitwages, OtherEarnings, vesselid, leaveWagesbf, cbaid, prevmonthbal, midmonthallotment, onboard, AuthorityDeduction, paycommence, signondate) {
@@ -4263,6 +4261,10 @@ data-title="Click here to complete the allotment">
               $("#pcrewname").text(crewname);
               currency = curr;
               crewstatus = onboard;
+        if (clickstatus == 'pro')
+              checkclickbtnstatus = true;
+              else
+            checkclickbtnstatus = false;
               $("#pcurrency").text(currency);
         $('#saveportagedata').prop('disabled', true);
               $("#portageBillPopup").modal('show');
@@ -4659,7 +4661,6 @@ data-title="Click here to complete the allotment">
                       PortageBillId: $("#pPortageBillId").val(),
                       From: $("#pFrom").val(),
                       To: $("#pTo").val(),
-
                       Vesselid: $("#pVesselid").val(),
                       Othours: $("#pOTHours").val(),
                       Days: $("#pDays").val(),
@@ -4680,9 +4681,7 @@ data-title="Click here to complete the allotment">
                       Allotments: parseFloat($("#pallotments").val()) + parseFloat($("#pallotment2").val()),
                       LeaveWagesBf: $("#pLeaveWagesBf").val(),
                       TotalEarnings: $("#ptotalearncurrent").val(),
-
               /*        Remarks: pp,*/
-
                       Remarks: $("#premarks").val(),
                       TransitDays: $("#ptransitDays").val(),
                       OTHours: $("#potHours").val(),
@@ -4692,7 +4691,7 @@ data-title="Click here to complete the allotment">
                       AVC: $("#pAvc").val(),
                       IsLeaveWagesCf: 0,
                       IsTransitApply: $("#pIsTransitApply").val(),
-                      IsPromoted: $("#pIsPromoted").val(),
+                      IsPromoted:checkclickbtnstatus, // $("#pIsPromoted").val(),
                       Gratuity: $("#pGratuity").val(),
                       IndPfamount: $("#pIndPfamount").val(),
                       IsAddPrevBal: $("#pIsAddPrevBal").val(),
@@ -4706,6 +4705,7 @@ data-title="Click here to complete the allotment">
                       LeaveWagesBF: $("#pleaveWagesBF").val(),
                       Allotment2: $("#pallotment2").val(),
                   };
+                  debugger;
                    //add banks allotments
             var addselectedbank = [];
             $.each(selectbankids, function (k, v) {

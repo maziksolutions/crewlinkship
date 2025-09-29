@@ -18,7 +18,7 @@ using System.Data;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
-using Ionic.Zip;
+using Ionic.Zip; 
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
@@ -250,20 +250,18 @@ namespace crewlinkship.Controllers
             {
                 ViewBag.name = HttpContext.Session.GetString("name");
 
-            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselidtouse, month, year, "no", checkpbtilldate);
-
+            var data = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("getPortageBill @p0, @p1, @p2, @p3, @p4", vesselidtouse, month, year, "no", checkpbtilldate).AsNoTracking().ToList();
             ViewBag.vessel = new SelectList(_context.TblVessels.Where(x => x.VesselId == vesselidtouse), "VesselId", "VesselName");
                 ViewBag.vesselDetails = _context.TblVessels.Include(x => x.Flag).Include(x => x.Ship).Where(x => x.IsDeleted == false && x.VesselId == vesselidtouse).FirstOrDefault();
                 ViewBag.vessels = _context.TblVessels.Where(x => x.IsDeleted == false && x.IsActive == false && x.VesselId == vesselidtouse).ToList();
                 var promotiondata = _context.PortageBillVMs.FromSqlRaw<PortageBillVM>("spPromotionPortageBill @p0, @p1, @p2, @p3", vesselidtouse, month, year, "yes").ToList();
-                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year);
-
+                var signoffcrewdata = _context.PortageBillSignoffVM.FromSqlRaw<PortageBillSignoffVM>("getPortageBillOffSigners @p0, @p1, @p2", vesselidtouse, month, year).ToList();
                     ViewBag.portBill = _context.TblPortageBills.Where(x => x.IsDeleted == false && x.From.Value.Month == month && x.From.Value.Year == year && x.Vesselid == vesselidtouse).ToList().FirstOrDefault()?.BillStatus;
                     var tables = new PortageViewModel
                 {
-                    onsignersportage = data.ToList(),
-                    promotionsportagebill = promotiondata.ToList(),
-                    offsignersporatge = signoffcrewdata.ToList()
+                    onsignersportage = data,
+                    promotionsportagebill = promotiondata,
+                    offsignersporatge = signoffcrewdata
                     };
 
                 return View(tables);
@@ -3047,50 +3045,50 @@ namespace crewlinkship.Controllers
                     }
                     if (item.PortageBillId == 0)
                     {
-                        //_context.TblPortageBills.Add(new TblPortageBill
+                        //_context.TblPortageBills.Add(new TblPortageBill                      
                         var data = new TblPortageBill
-                        {
-                            CrewId = item.CrewId,
-                            CrewListId = item.CrewListId,
-                            ContractId = item.ContractId,
-                            From = item.From,
-                            To = item.To,
-                            Days = item.Days,
-                            Othours = item.Othours,
-                            ExtraOt = item.ExtraOt,
-                            OtherEarnings = item.OtherEarnings,
-                            TransitDays = item.TransitDays,
-                            TransitWages = item.TransitWages,
-                            TotalEarnings = item.TotalEarnings,
-                            PrevMonthBal = item.PrevMonthBal,
-                            // PrevMonthBal = item.FinalBalance,
-                            Reimbursement = item.Reimbursement,
-                            TotalPayable = item.TotalPayable,
-                            LeaveWagesCf = item.LeaveWagesCf,
-                            CashAdvance = item.CashAdvance,
-                            BondedStores = item.BondedStores,
-                            OtherDeductions = item.OtherDeductions,
-                            Allotments = item.Allotments,
-                            TotalDeductions = item.TotalDeductions,
-                            SignOffDate = item.SignOffDate,
-                            Remarks = item.Remarks,
-                            LeaveWagesBf = item.LeaveWagesBf,
-                            FinalBalance = item.FinalBalance,
-                            AppliedCba = item.AppliedCba,
-                            //  CreatedBy = crewid,
-                            BankId = item.BankId,
-                            Vesselid = item.Vesselid,
-                            Udamount = item.Udamount,
-                            Tax = item.Tax,
-                            Wfamount = item.Wfamount,
-                            IsPromoted = item.IsPromoted,
-                            IsLeaveWagesCf = item.IsLeaveWagesCf,
-                            Attachment = item.Attachment,
-                            Gratuity = item.Gratuity,
-                            Avc = item.Avc,
-                            IndPfamount = item.IndPfamount,
-                            IsAddPrevBal = item.IsAddPrevBal,
-                        };
+                            {
+                                CrewId = item.CrewId,
+                                CrewListId = item.CrewListId,
+                                ContractId = item.ContractId,
+                                From = item.From,
+                                To = item.To,
+                                Days = item.Days,
+                                Othours = item.Othours,
+                                ExtraOt = item.ExtraOt,
+                                OtherEarnings = item.OtherEarnings,
+                                TransitDays = item.TransitDays,
+                                TransitWages = item.TransitWages,
+                                TotalEarnings = item.TotalEarnings,
+                                PrevMonthBal = item.PrevMonthBal,
+                                // PrevMonthBal = item.FinalBalance,
+                                Reimbursement = item.Reimbursement,
+                                TotalPayable = item.TotalPayable,
+                                LeaveWagesCf = item.LeaveWagesCf,
+                                CashAdvance = item.CashAdvance,
+                                BondedStores = item.BondedStores,
+                                OtherDeductions = item.OtherDeductions,
+                                Allotments = item.Allotments,
+                                TotalDeductions = item.TotalDeductions,
+                                SignOffDate = item.SignOffDate,
+                                Remarks = item.Remarks,
+                                LeaveWagesBf = item.LeaveWagesBf,
+                                FinalBalance = item.FinalBalance,
+                                AppliedCba = item.AppliedCba,
+                                //  CreatedBy = crewid,
+                                BankId = item.BankId,
+                                Vesselid = item.Vesselid,
+                                Udamount = item.Udamount,
+                                Tax = item.Tax,
+                                Wfamount = item.Wfamount,
+                                IsPromoted = item.IsPromoted,
+                                IsLeaveWagesCf = item.IsLeaveWagesCf,
+                                Attachment = item.Attachment,
+                                Gratuity = item.Gratuity,
+                                Avc = item.Avc,
+                                IndPfamount = item.IndPfamount,
+                                IsAddPrevBal = item.IsAddPrevBal,
+                            };
                         _context.TblPortageBills.Add(data);
                         _context.SaveChanges();
                         portageBillId = data.PortageBillId;

@@ -62,11 +62,12 @@ namespace crewlinkship.Models
         public string Earning { get; set; }
         public string IsCBA { get; set; }
         public bool? IsShowAll { get; set; }
-        public bool? IsDeleted { get; set; }
-        public DateTime? RecDate { get; set; }
+        public int? ColumnConfigId { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-        public int? ColumnConfigId { get; set; }
+        public bool? IsDeleted { get; set; }
+        public DateTime? RecDate { get; set; }     
+        
     }
 
     public class TblImportWageStructure
