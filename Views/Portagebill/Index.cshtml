@@ -4654,8 +4654,14 @@ data-title="Click here to complete the allotment">
                   return false;
               }
               else {
+                  debugger;
                   if (totalearning != totaldeduction) {
+                var ads = parseFloat($("#pTotalPayable").val()); var fdfdf = parseFloat($("#pTotalDeductions").val());
                       prevMonthBal = parseFloat($("#pTotalPayable").val()) - parseFloat($("#pTotalDeductions").val());
+                  }
+                  else
+                  {
+                      prevMonthBal = 0;
                   }
                   var portageBillVM = {
                       PortageBillId: $("#pPortageBillId").val(),
